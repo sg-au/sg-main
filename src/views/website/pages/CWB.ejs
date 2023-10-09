@@ -44,72 +44,27 @@
 
 </style>
 <body>
+  <%-include("../partials/menu")%>
 
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center">
-    <div class="container d-flex align-items-center">
-
-      <div class="logo me-auto" style="margin-left: auto;">
-        <h1 class="text-light" style="font-family: 'Oswald';"><a href="index.html"><span>Student Government</span></a></h1>
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-      </div>
-
-      <nav class="nav-menu d-none d-lg-block">
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li class="drop-down"><a href="">HoR</a>
-            <ul>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Work</a></li>
-                <li><a href="#">Committees</a></li>
-            </ul>
-          </li>
-          <li class="drop-down active"><a href="">Cabinets</a>
-            <ul>
-                <li class="active"><a href="about-cabinet.html">About</a></li>
-                <li><a href="ministries.html">Ministries</a></li>
-            </ul>
-          </li>
-          <li class="drop-down"><a href="">Documents</a>
-            <ul>
-                <li><a href="#">Governing Documents</a></li>
-                <li><a href="#">Meeting Records</a></li>
-                <li><a href="#">Financial Records</a></li>
-            </ul>
-          </li>
-          <li class="drop-down"><a href="">Resources</a>
-            <ul>
-                <li><a href="#">Amenities</a></li>
-                <li><a href="#">Food</a></li>
-                <li><a href="#">Health</a></li>
-                <li><a href="#">Helpful Resources</a></li>
-                <li><a href="#">AURA</a></li>
-            </ul>
-          </li>
-          <li><a href="">AU Website</a></li>
-          <li><a href="#contact">Press</a></li>
-          
-          <!-- <li class="get-started"><a href="#about"><i class="fa fa-search"></i></a></li> -->
-        </ul>
-      </nav><!-- .nav-menu -->
-    </div>
-  </header><!-- End Header -->
 
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex align-items-center">
 
-    <!-- Background image -->
-    <div class="text-center bg-image" style="background-image: url('assets/img/ashoka.jpg');width:100%;height: 760px;background-size: cover;background-attachment: fixed;">
-        <div style="background-color: rgba(0, 0, 0, 0.6);width: 100%;height: 100%;">
-          <div class="d-flex justify-content-center align-items-center h-100">
-            <div class="text-white">
-              <h1 class="mb-3">ABOUT THE<br>CABINET</h1>
-            </div>
+    <div style="background-image: url(assets/img/hero-img.png);background-size: cover;background-attachment: fixed;height:500px; width: 100%; justify-content: center;display: flex;align-items: center;font-family: Oswald;font-size: 100px;">
+        ASHOKA UNIVERSITY
+      <!-- <div class="row">
+        <div class="col-lg-6 pt-5 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
+          <h1 data-aos="fade-up">Grow your business with Vesperr</h1>
+          <h2 data-aos="fade-up" data-aos-delay="400">We are team of talanted designers making websites with Bootstrap</h2>
+          <div data-aos="fade-up" data-aos-delay="800">
+            <a href="#about" class="btn-get-started scrollto">Get Started</a>
           </div>
         </div>
-      </div><!-- Background image -->
+        <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="fade-left" data-aos-delay="200">
+          <img src="assets/img/hero-img.png" class="img-fluid animated" alt="">
+        </div>
+      </div> -->
+    </div>
 
   </section><!-- End Hero -->
 
@@ -120,7 +75,7 @@
       <div class="container">
 
         <div class="section-title" data-aos="fade-up">
-          <h2>What is the Cabinet?</h2>
+          <h2>About</h2>
         </div>
 
         <div class="row content">
@@ -148,116 +103,33 @@
       </div>
     </section><!-- End About Us Section -->
 
-    <!-- ======= Services Section ======= -->
-    <section id="services" class="services">
-      <div class="container">
-
-        <div class="section-title" data-aos="fade-up">
-          <h2>Mandate</h2>
-          <p>Magnam dolores commodi suscipit eius consequatur ex aliquid fug</p>
-        </div>
-
-        <div class="row">
-        <center>
-          <div class="col-md-6 col-lg-6 d-flex align-items-center mb-5 mb-lg-0">
-            <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
-              <div class="icon"><i class="bx bxl-dribbble"></i></div>
-              <h4 class="title"><a href="">Lorem Ipsum</a></h4>
-              <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
-            </div>
+    <!-- ======= F.A.Q Section ======= -->
+    <section id="faq" class="faq">
+        <div class="container">
+  
+          <div class="section-title" data-aos="fade-up">
+            <h2>Team Members</h2>
           </div>
+          <center>
+          <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-lg-6">
+              <p>
+                ABCD (UG 69)
+                <br>
+                DCBA (UG 96)
+              </p>
+            </div>
+            <div class="col-lg-6">
+              <p>
+                Diya Anand (UG 24)
+                <br>
+                Raghav Nayyar (UG 23)
+              </p>
+            </div>
+          </div><!-- End F.A.Q Item-->
         </center>
         </div>
-
-      </div>
-    </section><!-- End Services Section -->
-
-    <!-- ======= Ministries Section ======= -->
-    <section id="features" class="features">
-      <div class="container">
-
-        <div class="section-title" data-aos="fade-up">
-          <h2>Ministries</h2>
-          <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem</p>
-        </div>
-
-        <div class="row" data-aos="fade-up" data-aos-delay="300">
-          <div class="col-lg-6 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-store-line" style="color: #ffbb2c;"></i>
-              <h3><a href="">Lorem Ipsum</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-bar-chart-box-line" style="color: #5578ff;"></i>
-              <h3><a href="">Dolor Sitema</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-calendar-todo-line" style="color: #e80368;"></i>
-              <h3><a href="">Sed perspiciatis</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-paint-brush-line" style="color: #e361ff;"></i>
-              <h3><a href="">Magni Dolores</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-database-2-line" style="color: #47aeff;"></i>
-              <h3><a href="">Nemo Enim</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-gradienter-line" style="color: #ffa76e;"></i>
-              <h3><a href="">Eiusmod Tempor</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-file-list-3-line" style="color: #11dbcf;"></i>
-              <h3><a href="">Midela Teren</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-price-tag-2-line" style="color: #4233ff;"></i>
-              <h3><a href="">Pira Neve</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-anchor-line" style="color: #b2904f;"></i>
-              <h3><a href="">Dirada Pack</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-disc-line" style="color: #b20969;"></i>
-              <h3><a href="">Moton Ideal</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-base-station-line" style="color: #ff5828;"></i>
-              <h3><a href="">Verdo Park</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-fingerprint-line" style="color: #29cc61;"></i>
-              <h3><a href="">Flavor Nivelanda</a></h3>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section><!-- End Features Section -->
+      </section><!-- End F.A.Q Section -->
 
     <!-- ======= Contact Section ======= -->
     <section id="contact" class="contact">

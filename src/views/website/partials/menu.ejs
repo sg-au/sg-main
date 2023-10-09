@@ -1,0 +1,65 @@
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex align-items-center">
+
+      <div class="logo me-auto" style="margin-left: auto;">
+        <h1 class="text-light" style="font-family: 'Oswald';"><a href="index.html"><span>Student Government</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html"><img src="/static/assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+
+      <nav class="nav-menu d-none d-lg-block">
+        <ul>
+          <li class="<%= activePage === 'home' ? 'active' : '' %>"><a href="/">Home</a></li>
+          <li class="<%= activePage === 'about' ? 'active' : '' %>"><a href="/about">About</a></li>
+          <li class="<%= activePage.includes('hor') ? 'active' : '' %> drop-down"><a href="">HoR</a>
+            <ul>
+                <li class="<%= activePage === 'hor-about' ? 'active' : '' %>"><a href="/hor/about">About</a></li>
+                <li class="<%= activePage === 'hor-work' ? 'active' : '' %>"><a href="/hor/work">Work</a></li>
+                <li class="<%= activePage === 'hor-committees' ? 'active' : '' %>"><a href="/hor/committees">Committees</a></li>
+            </ul>
+          </li>
+          <li class="<%= activePage.includes('cabinet') ? 'active' : '' %> drop-down"><a href="">Cabinet</a>
+            <ul>
+                <li class="<%= activePage === 'cabinet-about' ? 'active' : '' %>"><a href="/cabinet/about">About</a></li>
+                <li class="<%= activePage === 'cabinet-culmin' ? 'active' : '' %>"><a href="/cabinet/culmin">Jazbaa</a></li>
+                <li class="<%= activePage === 'cabinet-techmin' ? 'active' : '' %>"><a href="/cabinet/techmin">Technology Ministry</a></li>
+                <li class="<%= activePage === 'cabinet-maa' ? 'active' : '' %>"><a href="/cabinet/maa">Ministry of Academic Affairs</a></li>
+                <li class="<%= activePage === 'cabinet-mpa' ? 'active' : '' %>"><a href="/cabinet/mpa">Ministry of Parliamentary Affairs</a></li>
+                <li class="<%= activePage === 'cabinet-envmin' ? 'active' : '' %>"><a href="/cabinet/envmin">Environment Ministry</a></li>
+                <li class="<%= activePage === 'cabinet-mcwb' ? 'active' : '' %>"><a href="/cabinet/mcwb">Ministry of Community and Well Being</a></li>
+                <li class="<%= activePage === 'cabinet-clm' ? 'active' : '' %>"><a href="/cabinet/clm">Campus Life Ministry</a></li>
+                <li class="<%= activePage === 'cabinet-finance' ? 'active' : '' %>"><a href="/cabinet/finance">Finance Ministry</a></li>
+            </ul>
+          </li>
+          <li class="drop-down"><a href="">Documents</a>
+            <ul>
+                <li><a href="#">Governing Documents</a></li>
+                <li><a href="#">Meeting Records</a></li>
+                <li><a href="#">Financial Records</a></li>
+            </ul>
+          </li>
+          <li class="<%= activePage.includes('resources') ? 'active' : '' %> drop-down"><a href="">Resources</a>
+            <ul>
+                <li class="<%= activePage === 'resources-amenities' ? 'active' : '' %>"><a href="/resources/amenities">Amenities</a></li>
+                <li class="<%= activePage === 'resources-food' ? 'active' : '' %>"><a href="/resources/food">Food</a></li>
+                <li class="<%= activePage === 'resources-health' ? 'active' : '' %>"><a href="/resources/health">Health</a></li>
+                <li class="<%= activePage === 'resources-helpful-resources' ? 'active' : '' %>"><a href="/resources/helpful-resources">Helpful Resources</a></li>
+                <li class="<%= activePage === 'resources-aura' ? 'active' : '' %>"><a href="/resources/aura">AURA</a></li>
+            </ul>
+          </li>
+          <li><a target="_blank" href="https://ashoka.edu.in">AU Website</a></li>
+          <li><a href="#contact">Contact</a></li>
+          
+          <!-- <li class="get-started"><a href="#about"><i class="fa fa-search"></i></a></li> -->
+        </ul>
+      </nav><!-- .nav-menu -->
+      <!-- <div class="search-container">
+        <form action="/search" method="get">
+          <input class="search expandright" id="searchright" type="search" name="q" placeholder="Search">
+          <label class="button searchbutton" for="searchright"><span class="mglass">&#9906;</span></label>
+        </form>
+      </div> -->
+    </div>
+  </header><!-- End Header -->
