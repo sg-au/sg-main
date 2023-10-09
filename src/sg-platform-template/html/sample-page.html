@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modernize Free</title>
+  <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
+  <link rel="stylesheet" href="../assets/css/styles.min.css" />
+</head>
+
+<body>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <!-- Sidebar Start -->
+    <aside class="left-sidebar">
+      <!-- Sidebar scroll-->
+      <div>
+        <div class="brand-logo d-flex align-items-center justify-content-between">
+          <a href="./index.html" class="text-nowrap logo-img">
+            <img src="../assets/images/logos/dark-logo.svg" width="180" alt="" />
+          </a>
+          <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+            <i class="ti ti-x fs-8"></i>
+          </div>
+        </div>
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+          <ul id="sidebarnav">
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Home</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span class="hide-menu">Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">UI COMPONENTS</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-article"></i>
+                </span>
+                <span class="hide-menu">Buttons</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./ui-alerts.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-alert-circle"></i>
+                </span>
+                <span class="hide-menu">Alerts</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./ui-card.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-cards"></i>
+                </span>
+                <span class="hide-menu">Card</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-file-description"></i>
+                </span>
+                <span class="hide-menu">Forms</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-typography"></i>
+                </span>
+                <span class="hide-menu">Typography</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">AUTH</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-login"></i>
+                </span>
+                <span class="hide-menu">Login</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./authentication-register.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-user-plus"></i>
+                </span>
+                <span class="hide-menu">Register</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">EXTRA</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./icon-tabler.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-mood-happy"></i>
+                </span>
+                <span class="hide-menu">Icons</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-aperture"></i>
+                </span>
+                <span class="hide-menu">Sample Page</span>
+              </a>
+            </li>
+          </ul>
+          <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
+            <div class="d-flex">
+              <div class="unlimited-access-title me-3">
+                <h6 class="fw-semibold fs-4 mb-6 text-dark w-85">Upgrade to pro</h6>
+                <a href="https://adminmart.com/product/modernize-bootstrap-5-admin-template/" target="_blank" class="btn btn-primary fs-2 fw-semibold lh-sm">Buy Pro</a>
+              </div>
+              <div class="unlimited-access-img">
+                <img src="../assets/images/backgrounds/rocket.png" alt="" class="img-fluid">
+              </div>
+            </div>
+          </div>
+        </nav>
+        <!-- End Sidebar navigation -->
+      </div>
+      <!-- End Sidebar scroll-->
+    </aside>
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <!--  Header Start -->
+      <header class="app-header">
+        <nav class="navbar navbar-expand-lg navbar-light">
+          <ul class="navbar-nav">
+            <li class="nav-item d-block d-xl-none">
+              <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+                <i class="ti ti-menu-2"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+                <i class="ti ti-bell-ringing"></i>
+                <div class="notification bg-primary rounded-circle"></div>
+              </a>
+            </li>
+          </ul>
+          <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+            <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+              <a href="https://adminmart.com/product/modernize-free-bootstrap-admin-dashboard/" target="_blank" class="btn btn-primary">Download Free</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  <img src="../assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
+                </a>
+                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                  <div class="message-body">
+                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-user fs-6"></i>
+                      <p class="mb-0 fs-3">My Profile</p>
+                    </a>
+                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-mail fs-6"></i>
+                      <p class="mb-0 fs-3">My Account</p>
+                    </a>
+                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-list-check fs-6"></i>
+                      <p class="mb-0 fs-3">My Task</p>
+                    </a>
+                    <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <!--  Header End -->
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive border-0">
+                <table class="table p-4 mb-0 table-shrink">
+                  <!-- Table head -->
+                  <thead class="table-dark">
+                    <tr>
+                      <th scope="col" class="border-0 rounded-start">Blog Name</th>
+                      <th scope="col" class="border-0">Reviewer</th>
+                      <th scope="col" class="border-0">Rating</th>
+                      <th scope="col" class="border-0">Hide/Show</th>
+                      <th scope="col" class="border-0 rounded-end">Action</th>
+                    </tr>
+                  </thead>
+                  <!-- Table body START -->
+                  <tbody class="border-top-0">
+                    <!-- Table item -->
+                    <tr>
+                      <!-- Table data -->
+                      <td>
+                        <h6 class="course-title mb-0"><a href="#">Five intermediate guide to business</a></h6>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        by Lori Stevens
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <ul class="list-inline mb-2">
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                        </ul>
+                        <p class="small course-title">Our side fail find like now Discovered travelling for insensible partiality unpleasing impossible she Sudden up my excuse to suffer ladies though or Bachelor possible marianne directly confined relation as on he <a href="#" data-bs-toggle="modal" data-bs-target="#viewReview"> Read more</a> </p>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <div class="form-check form-switch form-check-md">
+                          <input class="form-check-input" type="checkbox" id="checkReview1">
+                        </div>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <div class="dropdown">
+                          <a href="#" class="btn btn-light btn-round mb-0" role="button" id="dropdownReview" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots fa-fw"></i>
+                          </a>
+                          <!-- dropdown button -->
+                          <ul class="dropdown-menu dropdown-w-sm dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownReview">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square fa-fw me-2"></i>Edit</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-trash fa-fw me-2"></i>Delete</a></li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                    <!-- Table item -->
+                    <tr>
+                      <!-- Table data -->
+                      <td>
+                        <h6 class="course-title mb-0"><a href="#">15 reasons to choose startup</a></h6>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                         by Judy Nguyen 
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <ul class="list-inline mb-2">
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                        </ul>
+                        <p class="small course-title">Our side fail find like now Discovered travelling for insensible partiality unpleasing impossible she Sudden up my excuse to suffer ladies though or Bachelor possible marianne directly confined relation as on he <a href="#" data-bs-toggle="modal" data-bs-target="#viewReview"> Read more</a> </p>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <div class="form-check form-switch form-check-md">
+                          <input class="form-check-input" type="checkbox" id="checkReview2">
+                        </div>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <div class="dropdown">
+                          <a href="#" class="btn btn-light btn-round mb-0" role="button" id="dropdownReview2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots fa-fw"></i>
+                          </a>
+                          <!-- dropdown button -->
+                          <ul class="dropdown-menu dropdown-w-sm dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownReview2">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square fa-fw me-2"></i>Edit</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-trash fa-fw me-2"></i>Delete</a></li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                    <!-- Table item -->
+                    <tr>
+                      <!-- Table data -->
+                      <td>
+                        <h6 class="course-title mb-0"><a href="#">The pros and cons of business agency</a></h6>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                         by Billy Vasquez 
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <ul class="list-inline mb-2">
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                        </ul>
+                         <p class="course-title small">course-titleOur side fail find like now Discovered travelling for insensible partiality unpleasing impossible she Sudden up my excuse to suffer ladies though or Bachelor possible marianne directly confined relation as on he <a href="#" data-bs-toggle="modal" data-bs-target="#viewReview"> Read more</a> </p>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <div class="form-check form-switch form-check-md">
+                          <input class="form-check-input" type="checkbox" id="checkReview3">
+                        </div>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <div class="dropdown">
+                          <a href="#" class="btn btn-light btn-round mb-0" role="button" id="dropdownReview3" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots fa-fw"></i>
+                          </a>
+                          <!-- dropdown button -->
+                          <ul class="dropdown-menu dropdown-w-sm dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownReview3">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square fa-fw me-2"></i>Edit</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-trash fa-fw me-2"></i>Delete</a></li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                    <!-- Table item -->
+                    <tr>
+                      <!-- Table data -->
+                      <td>
+                        <h6 class="course-title mb-0"><a href="#">5 reasons why you shouldn't startup</a></h6>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        by Amanda Reed
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <ul class="list-inline mb-2">
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-muted"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-muted"></i></li>
+                        </ul>
+                         <p class="course-title small">course-titleOur side fail find like now Discovered travelling for insensible partiality unpleasing impossible she Sudden up my excuse to suffer ladies though or Bachelor possible marianne directly confined relation as on he <a href="#" data-bs-toggle="modal" data-bs-target="#viewReview"> Read more</a> </p>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <div class="form-check form-switch form-check-md">
+                          <input class="form-check-input" type="checkbox" id="checkReview4">
+                        </div>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <div class="dropdown">
+                          <a href="#" class="btn btn-light btn-round mb-0" role="button" id="dropdownReview4" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots fa-fw"></i>
+                          </a>
+                          <!-- dropdown button -->
+                          <ul class="dropdown-menu dropdown-w-sm dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownReview4">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square fa-fw me-2"></i>Edit</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-trash fa-fw me-2"></i>Delete</a></li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                    <!-- Table item -->
+                    <tr>
+                      <!-- Table data -->
+                      <td>
+                        <h6 class="course-title mb-0"><a href="#">Skills that you can learn from business</a></h6>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        by Larry Lawson
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <ul class="list-inline mb-2">
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-muted"></i></li>
+                        </ul>
+                         <p class="course-title small">course-titleOur side fail find like now Discovered travelling for insensible partiality unpleasing impossible she Sudden up my excuse to suffer ladies though or Bachelor possible marianne directly confined relation as on he <a href="#" data-bs-toggle="modal" data-bs-target="#viewReview"> Read more</a> </p>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <div class="form-check form-switch form-check-md">
+                          <input class="form-check-input" type="checkbox" id="checkReview5">
+                        </div>
+                      </td>
+                      <!-- Table data -->
+                      <td>
+                        <div class="dropdown">
+                          <a href="#" class="btn btn-light btn-round mb-0" role="button" id="dropdownReview5" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots fa-fw"></i>
+                          </a>
+                          <!-- dropdown button -->
+                          <ul class="dropdown-menu dropdown-w-sm dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownReview5">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square fa-fw me-2"></i>Edit</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-trash fa-fw me-2"></i>Delete</a></li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <!-- Table body END -->
+                </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+<!-- =======================
+Main contain START -->
+<section class="py-4">
+	<div class="container">
+	 
+    <div class="row g-4">
+      <!-- Profile cover and info START -->
+      <div class="col-12">
+        <div class="card mb-4 position-relative z-index-9">
+          <!-- Cover image -->
+          <div class="py-5 h-200 rounded" style="background-image:url(assets/images/blog/16by9/big/07.jpg); background-position: center bottom; background-size: cover; background-repeat: no-repeat;">
+          </div>
+          <div class="card-body pt-3 pb-0">
+            <div class="row d-flex justify-content-between">
+              <!-- Avatar -->
+              <div class="col-sm-12 col-md-auto text-center text-md-start">
+                <div class="avatar avatar-xxl mt-n5">
+                  <img class="avatar-img rounded-circle border border-white border-3 shadow" src="assets/images/avatar/03.jpg" alt="">
+                </div>
+              </div>
+              <!-- Profile info -->
+              <div class="col-sm-12 col-md text-center text-md-start d-md-flex justify-content-between align-items-center">
+                <div>
+                  <h4 class="my-1">Louis Ferguson <i class="bi bi-patch-check-fill text-info small"></i></h4>
+                  <ul class="list-inline">
+                    <li class="list-inline-item"><i class="bi bi-person-fill me-1"></i> An editor at Blogzine</li>
+                    <li class="list-inline-item"><i class="bi bi-geo-alt me-1"></i> New York</li>
+                    <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i> Joined on Jan 15, 2018</li>
+                  </ul>
+                  <p class="m-0"></p>
+                </div>
+                <!-- Links -->
+                <div class="d-flex align-items-center justify-content-center justify-content-md-end">
+                  <a href="#" class="btn btn-primary-soft me-3">Follow</a>
+                  <!-- Card action START -->
+                  <div class="dropdown ms-3">
+                    <a class="text-secondary" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                      <!-- Dropdown Icon -->
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle fill="currentColor" cx="3" cy="12" r="2.5"></circle>
+                        <circle fill="currentColor" opacity="0.5" cx="12" cy="12" r="2.5"></circle>
+                        <circle fill="currentColor" opacity="0.3" cx="21" cy="12" r="2.5"></circle>
+                      </svg>
+                    </a>               
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-share me-2 fw-icon"></i>Share profile</a></li>
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-volume-mute me-2 fw-icon"></i>Mute notification</a></li>
+                      <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-slash-circle me-2 fw-icon"></i>Delete profile</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-flag me-2 fw-icon"></i>Report a bug</a></li>
+                    </ul>
+                  </div>
+                  <!-- Card action END -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Profile info END -->
+    </div>
+
+    <div class="row g-4">
+      <!-- Left sidebar START -->
+      <div class="col-lg-7 col-xxl-8">
+        <!-- Profile START -->
+        <div class="card border mb-4">
+          <div class="card-header border-bottom p-3">
+            <h5 class="card-header-title mb-0">Profile</h5>
+          </div>
+          <div class="card-body">
+            <!-- Full name -->
+            <div class="mb-3">
+              <label class="form-label">Full name</label>
+              <div class="input-group">
+                <input type="text" class="form-control" value="Louis" placeholder="First name">
+                <input type="text" class="form-control" value="Ferguson" placeholder="Last name">
+              </div>
+            </div>
+            <!-- Username -->
+            <div class="mb-3">
+              <label class="form-label">Username</label>
+              <div class="input-group">
+                <span class="input-group-text">webestica.com</span>
+                <input type="text" class="form-control" value="louisferguson">
+              </div>
+            </div>
+            <!-- Profile picture -->
+            <div class="mb-3">
+              <label class="form-label">Profile picture</label>
+              <!-- Avatar upload START -->
+              <div class="d-flex align-items-center">
+                <div class="position-relative me-3">
+                  <!-- Avatar edit -->
+                  <div class="position-absolute top-0 end-0  z-index-9">
+                    <a class="btn btn-sm btn-light btn-round mb-0 mt-n1 me-n1" href="#"> <i class="bi bi-pencil"></i> </a>
+                  </div>
+                  <!-- Avatar preview -->
+                  <div class="avatar avatar-xl">
+                    <img class="avatar-img rounded-circle border border-white border-3 shadow" src="assets/images/avatar/03.jpg" alt="">
+                  </div>
+                </div>
+                <!-- Avatar remove button -->
+                <div class="avatar-remove">
+                  <button type="button" class="btn btn-light">Delete</button>
+                </div>
+              </div>
+              <!-- Avatar upload END -->
+            </div>
+            <!-- Job title -->
+            <div class="mb-3">
+              <label class="form-label">Job title</label>
+              <input class="form-control" type="text" value="An editor at Blogzine">
+            </div>
+            <!-- Location -->
+            <div class="mb-3">
+              <label class="form-label">Location</label>
+              <input class="form-control" type="text" value="New Hampshire">
+            </div>
+            <!-- Bio -->
+            <div class="mb-3">
+              <label class="form-label">Bio</label>
+              <textarea class="form-control" rows="3">I’ve found a way to get paid for my favorite hobby, and do so while following my dream of traveling the world.</textarea>
+              <div class="form-text">Brief description for your profile.</div> 
+            </div>
+            <!-- Birthday -->
+            <div>
+              <label class="form-label">Birthday</label>
+              <input type="text" class="form-control flatpickr-input" placeholder="DD/MM/YYYY" value="12/10/1990">
+            </div>
+            <!-- Save button -->
+            <div class="d-flex justify-content-end mt-4">
+              <a href="#" class="btn text-secondary border-0 me-2">Discard</a>
+              <a href="#" class="btn btn-primary">Save changes</a>
+            </div>
+          </div>
+        </div>
+        <!-- Profile END -->
+
+        <!-- Personal information START -->
+        <div class="card border mb-4">
+          <div class="card-header border-bottom p-3">
+            <h5 class="card-header-title mb-0">Personal information</h5>
+          </div>
+          <div class="card-body">
+            <!-- Skype -->
+            <div class="mb-3">
+              <label class="form-label">Skype</label>
+              <input class="form-control" type="text" value="iamlouisferguson">
+            </div>
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input class="form-control" type="email" value="loriferguson@wbs.com">
+            </div>
+            <!-- Address -->
+            <div class="mb-3">
+              <label class="form-label">Address</label>
+              <input class="form-control" type="text" value="750 Sing Sing Rd, Horseheads, NY, 14845 ">
+            </div>
+            <!-- Save button -->
+            <div class="d-flex justify-content-end mt-4">
+              <a href="#" class="btn btn-primary">Save changes</a>
+            </div>
+          </div>
+        </div>
+        <!-- Personal information END -->
+
+        <!-- Social links START -->
+        <div class="card border mb-4">
+          <div class="card-header border-bottom p-3">
+            <h5 class="card-header-title mb-0"> Social links</h5>
+          </div>
+          <div class="card-body">
+            <!-- Skype -->
+            <div class="mb-3">
+              <label class="form-label">Facebook</label>
+              <input class="form-control" type="text" value="https://facebook.com/">
+            </div>
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label">linkedin</label>
+              <input class="form-control" type="email" value="https://www.linkedin.com/">
+            </div>
+            <!-- Address -->
+            <div class="mb-3">
+              <label class="form-label">Twitter</label>
+              <input class="form-control" type="text" value="https://twitter.com/ ">
+            </div>
+            <!-- Save button -->
+            <div class="d-flex justify-content-end mt-4">
+              <a href="#" class="btn btn-primary">Save changes</a>
+            </div>
+          </div>
+        </div>
+        <!-- Social links END -->
+
+        <!-- Update password START -->
+        <div class="card border">
+          <div class="card-header border-bottom p-3">
+            <h5 class="card-header-title mb-0">Update password</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label">Current password</label>
+              <input class="form-control" type="password" placeholder="Enter current password">
+            </div>
+            <!-- New password -->
+            <div class="mb-3">
+              <label class="form-label" id="psw-strength-message"></label>
+              <div class="input-group">
+                <input class="form-control fakepassword" type="password" id="psw-input" placeholder="Enter new password">
+                <span class="input-group-text p-0">
+                  <i class="fakepasswordicon far fa-eye cursor-pointer p-2 w-40px"></i>
+                </span>
+              </div>
+              <div class="rounded mt-1" id="psw-strength"></div>
+            </div>
+            <!-- New password -->
+            <div>
+              <label class="form-label">Confirm new password</label>
+              <input class="form-control" type="password" placeholder="Enter new password">
+            </div>
+            <div class="d-flex justify-content-end mt-4">
+              <a href="#" class="btn btn-primary">Change password</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Left sidebar END -->
+
+      <!-- Right sidebar START -->
+      <div class="col-lg-5 col-xxl-4">
+        <!-- Profile Setting START -->
+        <div class="card border mb-4">
+          <div class="card-header border-bottom p-3">
+            <h5 class="card-header-title mb-0">Profile Setting</h5>
+          </div>
+          <div class="card-body">
+            <div class="form-check form-switch form-check-md mb-3">
+              <input class="form-check-input" type="checkbox" id="availabilityCheck" checked="">
+              <label class="form-check-label" for="availabilityCheck">Visible profile to everyone</label>
+            </div>
+            <div class="form-check form-switch form-check-md mb-3">
+              <input class="form-check-input" type="checkbox" id="proCheck" disabled="">
+              <label class="form-check-label" for="proCheck">Disable ads <span class="badge bg-primary align-middle">Pro</span></label>
+            </div>
+          </div>
+        </div>
+        <!-- Profile Setting END -->
+
+        <!-- Notifications START -->
+        <div class="card border mb-4">
+          <div class="card-header border-bottom p-3">
+            <h5 class="card-header-title mb-0">Notifications</h5>
+          </div>
+          <!-- Card body START -->
+          <div class="card-body">
+            <p>Choose type of notifications you want to receive</p>
+            <div class="form-check form-switch form-check-md mb-3">
+              <input class="form-check-input" type="checkbox" id="withdrawalCheck" checked="">
+              <label class="form-check-label" for="withdrawalCheck">Withdrawal activity</label>
+            </div>
+            <div class="form-check form-switch form-check-md mb-3">
+              <input class="form-check-input" type="checkbox" id="weeklyCheck">
+              <label class="form-check-label" for="weeklyCheck">Weekly report</label>
+            </div>
+            <div class="form-check form-switch form-check-md mb-3">
+              <input class="form-check-input" type="checkbox" id="passwordCheck" checked="">
+              <label class="form-check-label" for="passwordCheck">Password change</label>
+            </div>
+            <div class="form-check form-switch form-check-md mb-3">
+              <input class="form-check-input" type="checkbox" id="dataCheck">
+              <label class="form-check-label" for="dataCheck">Data usage alert</label>
+            </div>
+          </div>
+        <!-- Card body END -->
+        </div>
+        <!-- Notifications START -->
+
+        <!-- Deactivate account START -->
+        <div class="card border mb-4">
+          <div class="card-header border-bottom p-3">
+            <h5 class="card-header-title mb-0">Deactivate Account</h5>
+          </div>
+          <div class="card-body">
+            <h6>Before you go...</h6>
+            <ul>
+              <li>Take backup of your data <a href="#">Here</a> </li>
+              <li>Account deletion is final. There will be no way to restore your account</li>
+            </ul>
+            <div class="form-check form-check-md my-3">
+              <input class="form-check-input" type="checkbox" value="" id="deleteaccountCheck">
+              <label class="form-check-label" for="deleteaccountCheck">Yes, I'd really like to delete my account</label>
+            </div>
+            <a href="#" class="btn btn-success-soft my-1">Keep my account</a>
+            <a href="#" class="btn btn-danger my-1">Delete my account</a>
+          </div>
+        </div>
+        <!-- Deactivate account START -->
+        <p><i class="bi bi-info-circle me-2"></i>This account was created on Jan 15, 2018</p>
+
+        <div class="card bg-transparent border rounded-3 mt-4">
+          <!-- Card header -->
+          <div class="card-header bg-transparent border-bottom p-3">
+            <h5 class="card-header-title mb-0">Linked account</h5>
+          </div>
+          <!-- Card body START -->
+          <div class="card-body">
+            <!-- Google -->
+            <div class="position-relative mb-3 mt-3 d-sm-flex bg-success bg-opacity-10 border border-success p-3 rounded">
+              <!-- Title and content -->
+              <h2 class="fs-1 mb-0 me-3"><i class="fab fa-google text-google-icon"></i></h2>
+              <div>
+                <div class="position-absolute top-0 start-100 translate-middle bg-white rounded-circle lh-1 h-15">
+                  <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                </div>
+                  <h6 class="mb-1">Google</h6>
+                  <p class="mb-1 small">You are successfully connected to your Google account</p>
+                  <!-- Button -->
+                  <button type="button" class="btn btn-sm btn-danger mb-0 me-2">Invoke</button>
+                  <a href="#" class="btn btn-sm btn-link text-body mb-0">Learn more</a>
+              </div>
+            </div>
+
+            <!-- Blogger -->
+            <div class="mb-3 d-sm-flex border p-3 rounded">
+              <!-- Title and content -->
+              <h2 class="fs-1 mb-0 me-3"><i class="fab fa-blogger text-warning"></i></h2>
+              <div>
+                <h6 class="mb-1">Blogger</h6>
+                <p class="mb-1 small">Connect with Blogger account for a personalized experience</p>
+                <!-- Button -->
+                <button type="button" class="btn btn-sm btn-primary mb-0 me-2">Connect Blogger </button>
+                <a href="#" class="btn btn-sm btn-link text-body mb-0">Learn more</a>
+              </div>
+            </div>
+
+            <!-- Facebook -->
+            <div class="d-sm-flex border p-3 rounded mb-2">
+              <!-- Title and content -->
+              <h2 class="fs-1 mb-0 me-3"><i class="fab fa-facebook text-facebook"></i></h2>
+              <div>
+                <h6 class="mb-1">Facebook</h6>
+                <p class="mb-1 small">Connect with Facebook account for a personalized experience</p>
+                <!-- Button -->
+                <button type="button" class="btn btn-sm btn-primary mb-0 me-2">Connect Facebook</button>
+                <a href="#" class="btn btn-sm btn-link text-body mb-0">Learn more</a>
+              </div>
+            </div>
+          </div>
+          <!-- Card body END -->
+        </div>
+      </div>
+    </div>
+	</div>
+</section>
+<!-- =======================
+Main contain END -->
+    </div>
+  </div>
+  <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/sidebarmenu.js"></script>
+  <script src="../assets/js/app.min.js"></script>
+  <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
+</body>
+
+</html>
