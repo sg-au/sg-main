@@ -99,25 +99,28 @@ function lightMode() {
 var currentMode = localStorage.getItem('darkMode');
 if(currentMode==='true'){
     darkMode();
-    let media = document.querySelectorAll("img, picture, video");
-    media.forEach((mediaItem) => {
-        mediaItem.style.filter = "invert(1) hue-rotate(180deg)";
-    });
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
-        // Check the background image URL (assuming it's set via inline style)
-        const backgroundImage = card.style.backgroundImage;
+    window.onload = function() {
+        darkMode();
+    }
+    // let media = document.querySelectorAll("img, picture, video");
+    // media.forEach((mediaItem) => {
+    //     mediaItem.style.filter = "invert(1) hue-rotate(180deg)";
+    // });
+    // const cards = document.querySelectorAll('.card');
+    // cards.forEach(card => {
+    //     // Check the background image URL (assuming it's set via inline style)
+    //     const backgroundImage = card.style.backgroundImage;
       
-        // Check if the background image URL contains a specific image file name or URL
-        if (backgroundImage) {
-            card.style.filter = "invert(0) hue-rotate(0deg)";
-            const cardBody = card.querySelector('.card-body');
-            // Check if the 'card-body' div was found
-            if (cardBody) {
-                cardBody.style.filter = "invert(0) hue-rotate(0deg)";
-            }
-        }
-      });
+    //     // Check if the background image URL contains a specific image file name or URL
+    //     if (backgroundImage) {
+    //         card.style.filter = "invert(0) hue-rotate(0deg)";
+    //         const cardBody = card.querySelector('.card-body');
+    //         // Check if the 'card-body' div was found
+    //         if (cardBody) {
+    //             cardBody.style.filter = "invert(0) hue-rotate(0deg)";
+    //         }
+    //     }
+    //   });
 } if(currentMode==null){
     localStorage.setItem('darkMode', 'false');
 }
