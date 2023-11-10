@@ -9,6 +9,7 @@ const MongoDBStore = require("connect-mongodb-session")(session); // Store sessi
 const cors = require("cors"); // Middleware for handling Cross-Origin Resource Sharing (CORS)
 const passport = require("./config/passport-config"); // Import the Passport configuration module
 dotenv.config({ path: "../.env" }); // Load environment variables from a .env file
+const axios=require("axios");
 // Require MongoDB configuration
 const connectToMongoDB = require("./config/mongodb-config.js");
 connectToMongoDB(); // Call the function to connect to MongoDB
@@ -18,6 +19,19 @@ const store = new MongoDBStore({
   uri: process.env.MONGODB_URI,
   collection: "sessions",
 });
+
+//
+
+const axiosConfig = {
+  headers: {
+    'Content-Type': 'application/json',
+    // Include authentication headers if required by your Strapi API
+    'Authorization': `Bearer ${process.env.STRAPI_API_KEY}`,
+  },
+};
+const apiUrl = process.env.STRAPI_API_URL;
+
+//
 
 const cookieParser = require("cookie-parser"); // Middleware for parsing cookies
 const { v4: uuidv4 } = require("uuid"); // Generate UUIDs
@@ -95,15 +109,50 @@ app.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
-
-// Callback route after successful Google authentication
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
-  (req, res) => {
-    res.redirect("/platform");
+  async (req, res) => {
+    try {
+      const endpoint = '/users';
+
+      // Function to create a user in the Strapi /users collection
+      const createUserInStrapi = async (userData) => {
+        try {
+          const response = await axios.post(`${apiUrl}${endpoint}`, userData, axiosConfig);
+          console.log('User created successfully:', response.data);
+        } catch (error) {
+          console.error('Error creating user:', error);
+        }
+      };
+
+      const userData = {
+        email: req.user._json.email,
+        username: req.user._json.name,
+        profile_url: req.user._json.picture,
+        password: "XXXXXXXXXXX",
+        role: 1,
+        confirmed: req.user._json.email_verified,
+      };
+
+      // Check if a user with the same email exists
+      const response = await axios.get(`${apiUrl}${endpoint}?email=${req.user._json.email}`, axiosConfig);
+
+      if (!response.data || response.data.length === 0) {
+        // Create a new user if no matching user found
+        await createUserInStrapi(userData);
+      } else {
+        console.log("Updating user...");
+      }
+
+      res.redirect("/platform");
+    } catch (error) {
+      console.error('An error occurred:', error);
+      res.redirect("/");
+    }
   }
 );
+
 
 // Route to log the user out
 app.get("/logout", (req, res) => {
