@@ -3,7 +3,11 @@ const router = express.Router();
 
 // Define routes here
 router.get('/', (req, res) => {
-    res.send("static/pages/index")
+    res.render("platform/pages/test")
+});
+
+router.get('/test', (req, res) => {
+    res.render("platform/pages/test")
 });
 
 // Export the router

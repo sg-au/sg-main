@@ -3,7 +3,6 @@ function changeTheme(){
     const newMode = cMode === 'true' ? 'false' : 'true';
     // Toggle dark mode in localStorage
     localStorage.setItem('darkMode', newMode);
-  
     // Apply styles based on the new mode
     if (newMode === 'true') {
       // Dark mode styles
@@ -98,7 +97,7 @@ function lightMode() {
 }
 var currentMode = localStorage.getItem('darkMode');
 if(currentMode==='true'){
-    darkMode();
+    // darkMode();
     window.onload = function() {
         darkMode();
     }
