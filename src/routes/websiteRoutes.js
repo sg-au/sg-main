@@ -111,5 +111,9 @@ router.get('/resources/aura', (req, res) => {
 // RESOURCES
 
 
+router.get('/budget', (req, res) => {
+    res.render("website/pages/budget",{ activePage: 'budget' })
+});
+
 // Export the router
 module.exports = router;
