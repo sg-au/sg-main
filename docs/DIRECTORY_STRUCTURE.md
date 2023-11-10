@@ -1,3 +1,15 @@
+# Directory Structure
+
+This project follows a specific directory structure to organize its codebase.
+
+- `app/` - Application-specific code and logic.
+- `public/` - Static assets, including CSS, JavaScript, and images.
+- `routes/` - Route-specific handlers for the application.
+- `views/` - Template views for rendering pages.
+- ...
+
+Feel free to explore these directories for a better understanding of the project's organization.
+
 .
 ├── README.md
 ├── changelog.txt
