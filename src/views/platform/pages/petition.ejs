@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+</head>
+<style>
+    @media (max-width: 768px) {
+        .comment-btn {
+            margin: 10px 0 10px 0;
+        }
+    }
+
+    .petition-details {
+
+        text-align: center;
+    }
+
+    .victory-box {
+        background-color: #eaeff4;
+        /* Blue color similar to toofantalks.com */
+        color: #000000;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .supporters-count {
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    .comments-section {
+        margin-top: 30px;
+    }
+
+    /* Custom CSS for comment boxes */
+    .comment-container {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    .comment-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+        object-fit: cover;
+    }
+
+    .comment-content {
+        flex-grow: 1;
+        background-color: #f2f2f2;
+        /* Gray background */
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .comment-name {
+        font-weight: bold;
+    }
+
+    .comment-email {
+        font-style: italic;
+        color: #888;
+    }
+
+    .comment-text {
+        margin-top: 5px;
+    }
+
+    .btn-sign {
+        width: 160px;
+        height: 40px;
+        font-size: 15px;
+        background-color: transparent;
+        color: black;
+    }
+</style>
+
+<body>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <%-include("../partials/sidebar")%>
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <%-include("../partials/header")%>
+            <div class="container-fluid">
+                <div class="container-fluid">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="petition-details">
+                                        <div class="victory-box">
+                                            <h2 class="supporters-count">5</h2>
+                                            <p style="font-size: 25px;">Supporters</p>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-4 card-title" style="margin-top:20px; font-size: 25px;">Petition
+                                        Details</h3>
+                                    <h3 class="mb-4 card-title" style="margin-top:20px;">Started By</h3>
+                                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere
+                                        libero minus, magni amet molestias nostrum accusamus, eius natus voluptatem, sed
+                                        non ducimus. At, corrupti? Possimus temporibus illum quis dolor minus?</p>
+                                    <div style="text-align: center;">
+                                        <button type="button" class="btn btn-primary m-1 btn-sign">Sign This
+                                            Petition</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="signature-list" style="margin-top: 15px;">
+                                <h3 class="mb-4 card-title" style="margin-top:20px; font-size: 25px;">Recent
+                                    Signatures</h3>
+                                <ul>
+                                    <li>test@ashoka.edu.in</li>
+                                    <li>test@ashoka.edu.in</li>
+                                    <li>test@ashoka.edu.in</li>
+                                    <li>test@ashoka.edu.in</li>
+                                    <li>test@ashoka.edu.in</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body" style="margin-top: -35px;">
+                            <a href="#" class="card-link" style="margin-right: -20px;"><span
+                                    class="badge bg-primary rounded-3 fw-semibold">MAA</span></a>
+                            <a href="#" class="card-link" style="margin-right: -20px;"><span
+                                    class="badge bg-primary rounded-3 fw-semibold">OAA</span></a>
+                        </div>
+                    </div>
+                    <h3>Comments</h3>
+                    <div>
+                        <form action="" class="row">
+                            <div class="col-md-10">
+                                <textarea class="form-control" style="background-color: white;"></textarea>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-primary comment-btn">Comment</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- <div class="mb-3 col-md-10">
+                            <label for="exampleInputEmail1" class="form-label">Email address</label>
+                            <input type="text" class="form-control" 
+                                 placeholder="Add a Comment" style="height: 50px;">
+                        </div> -->
+                    <!-- <div class="col-md-2">
+                            <button type="button" class="btn btn-primary m-1">Primary</button>
+                        </div> -->
+
+                    <p class="signature-count">1 comments</p>
+                    <div class="comment-container">
+                        <img class="comment-avatar" src="https://cdn.ballotpedia.org/images/0/0b/Biden_Square.png"
+                            alt="User 1">
+                        <div class="comment-content">
+                            <p class="comment-name">Joe Biden</p>
+                            <p class="comment-email">joe.biden_ug90@ashoka.edu.in</p>
+                            <p class="comment-text">He used to say if you give a toast and you don't have any alcohol in
+                                your glass, you must use your left hand.
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="fab-container">
+            <button
+                style="box-shadow: 0px 3px 20px rgba(1, 41, 112, 0.5); width: 150px; height: 50px; font-size: 14.25px;"
+                type="button" class="btn btn-primary m-1">
+                Sign This Petition</button>
+        </div> -->
+        <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/platform/assets/js/sidebarmenu.js"></script>
+        <script src="/platform/assets/js/app.min.js"></script>
+        <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+        <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+        <script src="/platform/assets/js/dashboard.js"></script>
+        <script src="/platform/assets/js/darkmode.js"></script>
+</body>
+
+</html>

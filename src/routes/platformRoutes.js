@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Define routes here
 router.get('/', (req, res) => {
-    res.render("platform/pages/test")
+    res.render("platform/pages/index")
 });
 
 router.get('/tickets', (req, res) => {

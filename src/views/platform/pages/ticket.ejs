@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <%-include("../partials/sidebar")%>
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <%-include("../partials/header")%>
+            <div class="container-fluid">
+                <div class="container-fluid">
+                    <div class="col-lg-12 d-flex align-items-stretch">
+                        <div class="card">
+                            <div class="card-body mb-4 p-4">
+                                <div class="mb-4">
+                                    <h5 class="card-title fw-semibold">Ticket Updates</h5>
+                                </div>
+                                <div class="flex-row mb-3">
+                                    <span class="fs-3 text-dark fw-semibold">Ticket ID:</span>
+                                    <span class="fs-3 text-dark fw-semibold" id="ticketID">#123</span>
+                                    <i onclick="copyTxt()" class="ti ti-copy"></i>
+                                </div>
+                                
+                                <ul class="timeline-widget mb-0 position-relative mb-n3">
+                                    <li class="timeline-item d-flex justify-content-center position-relative overflow-hidden">
+                                        <div class="card sg-response" style="background-color: #eaeff4;">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Card title</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                                <p class="card-text">Some quick example text to build on the card title
+                                                    and
+                                                    make up the bulk of
+                                                    the
+                                                    card's content.</p>
+                                                <a href="#" class="card-link"><span
+                                                        class="badge bg-primary rounded-3 fw-semibold">MAA</span></a>
+                                                <a href="#" class="card-link"><span
+                                                        class="badge bg-primary rounded-3 fw-semibold">OAA</span></a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="timeline-item d-flex justify-content-center position-relative overflow-hidden">
+                                        <div class="timeline-time text-dark flex-shrink-0 text-end">Ticket Created</div>
+                                        <div class="timeline-badge-wrap d-flex flex-column align-items-center">
+                                            <span
+                                                class="timeline-badge border-2 border border-warning flex-shrink-0 my-8"></span>
+                                            <span class="timeline-badge-border d-block flex-shrink-0"></span>
+                                        </div>
+                                        <div class="timeline-desc fs-3 text-dark">11th November</div>
+                                    </li>
+                                    <li class="timeline-item mb-n4 d-flex justify-content-center position-relative overflow-hidden">
+                                        <div class="timeline-time text-dark flex-shrink-0 text-end">Responded on</div>
+                                        <div class="timeline-badge-wrap d-flex flex-column align-items-center">
+                                            <span
+                                                class="timeline-badge border-2 border border-success flex-shrink-0 my-8"></span>
+                                        </div>
+                                        <div class="timeline-desc fs-3 text-dark">15th November</div>
+                                    </li>
+                                    <li class="timeline-item d-flex justify-content-center position-relative overflow-hidden">
+                                        <div class="card sg-response" style="background-color: #eaeff4;">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Response</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">Reponse subtitle</h6>
+                                                <p class="card-text">Some quick example text for SG's Reply and
+                                                    make up the bulk of
+                                                    the
+                                                    card's content.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="fab-container">
+        <button style="box-shadow: 0px 3px 20px rgba(1, 41, 112, 0.5);" type="button" 
+        onclick="location.href='./new-ticket.html'" class="btn btn-primary m-1"><i
+                class="ti ti-circle-plus"></i> New Ticket</button>
+    </div>
+    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/platform/assets/js/dashboard.js"></script>
+    <script src="/platform/assets/js/darkmode.js"></script>
+    <script src="/platform/assets/js/copytext.js"></script>
+</body>
+
+</html>
