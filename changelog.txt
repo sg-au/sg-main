@@ -1,2 +1,4 @@
 Version: 1.0.0
-  - Initial Release
+  - Phase I, Initial Release (15th November, 2023)
+  [ Announcements Feature, Public Ticketing System, Public Forum, Events Calendar ]
+

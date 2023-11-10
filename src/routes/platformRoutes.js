@@ -10,5 +10,6 @@ router.get('/test', (req, res) => {
     res.render("platform/pages/test")
 });
 
+
 // Export the router
 module.exports = router;
