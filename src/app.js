@@ -90,7 +90,7 @@ app.use(
 
 // Use route handlers for website and platform routes
 app.use("/", websiteRoutes);
-app.use("/platform", ensureAuthenticated, platformRoutes);
+app.use("/platform", ensureAuthenticated, ensureIsNotBlocked, platformRoutes);
 
 // Middleware to ensure the user is authenticated before accessing platform routes
 function ensureAuthenticated(req, res, next) {
@@ -99,6 +99,41 @@ function ensureAuthenticated(req, res, next) {
   }
   res.redirect("/auth/google");
 }
+// Define a middleware function for ensuring a user is not blocked
+function ensureIsNotBlocked(req, res, next) {
+  // Assuming you have a user object or user data available after authentication
+  if (req.user) {
+    // Fetch the user's data based on the email or any other unique identifier
+    const userEmail = req.user._json.email;
+
+    // Make the GET request to fetch data
+    axios.get(`${apiUrl}/users?filters[email][$eqi]=${userEmail}`, axiosConfig)
+      .then(response => {
+        // Access the response data
+        const responseData = response.data[0];
+
+        // Check if the user is blocked
+        if (responseData && responseData.blocked) {
+          // The user is blocked, so you can take action as needed (e.g., redirect or respond with an error)
+          return res.render("platform/pages/blocked",{reason:responseData.reason_blocked || ""});
+        }
+
+        // User is not blocked, continue to the next middleware
+        next();
+      })
+      .catch(error => {
+        // Handle errors, e.g., network errors or API response errors
+        console.error('Error fetching data:', error);
+        // Optionally, you can respond with an error here
+        res.status(500).send("Internal server error");
+      });
+  } else {
+    // User is not authenticated, so you may want to handle that case as well
+    res.status(401).send("User is not authenticated");
+  }
+}
+
+
 
 
 // Set the view engine to EJS (Embedded JavaScript)
@@ -107,7 +142,7 @@ app.set("view engine", "ejs");
 // Route for initiating Google OAuth authentication
 app.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", { hd:'ashoka.edu.in',scope: ["profile", "email"] })
 );
 app.get(
   "/auth/google/callback",
@@ -136,8 +171,8 @@ app.get(
       };
 
       // Check if a user with the same email exists
-      const response = await axios.get(`${apiUrl}${endpoint}?email=${req.user._json.email}`, axiosConfig);
-
+      const response = await axios.get(`${apiUrl}${endpoint}?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
+      console.log(req.user._json.email, response)
       if (!response.data || response.data.length === 0) {
         // Create a new user if no matching user found
         await createUserInStrapi(userData);
