@@ -34,45 +34,23 @@
                   <div class="card-body pt-3 pb-0">
                     <div class="row d-flex justify-content-between">
                       <!-- Avatar -->
-                      <div class="col-sm-12 col-md-auto text-center text-md-start">
+                      <div class="col-sm-6 col-md-auto text-center text-md-start">
                         <div class="avatar avatar-xxl mt-n5">
-                          <img class="avatar-img rounded-circle border border-white border-3 shadow" src="assets/images/avatar/03.jpg" alt="">
+                          <img class="avatar-img rounded-circle border border-white border-3 shadow" src="<%=user.profile_url%>" alt="">
                         </div>
                       </div>
                       <!-- Profile info -->
                       <div class="col-sm-12 col-md text-center text-md-start d-md-flex justify-content-between align-items-center">
                         <div>
-                          <h4 class="my-1">Louis Ferguson <i class="bi bi-patch-check-fill text-info small"></i></h4>
+                          <h4 class="my-1"><%=user.username%> <i class="bi bi-patch-check-fill text-info small"></i></h4>
                           <ul class="list-inline">
-                            <li class="list-inline-item"><i class="bi bi-person-fill me-1"></i> An editor at Blogzine</li>
-                            <li class="list-inline-item"><i class="bi bi-geo-alt me-1"></i> New York</li>
-                            <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i> Joined on Jan 15, 2018</li>
+                            <li class="list-inline-item"><i class="bi bi-person-fill me-1"></i> <%=user.type%></li>
+                            <li class="list-inline-item"><i class="bi bi-geo-alt me-1"></i> Ashoka University</li>
+                            <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i>Joined <%-new Date(user.createdAt).toLocaleString()-%></li>
                           </ul>
                           <p class="m-0"></p>
                         </div>
                         <!-- Links -->
-                        <div class="d-flex align-items-center justify-content-center justify-content-md-end">
-                          <a href="#" class="btn btn-primary-soft me-3">Follow</a>
-                          <!-- Card action START -->
-                          <div class="dropdown ms-3">
-                            <a class="text-secondary" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                              <!-- Dropdown Icon -->
-                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle fill="currentColor" cx="3" cy="12" r="2.5"></circle>
-                                <circle fill="currentColor" opacity="0.5" cx="12" cy="12" r="2.5"></circle>
-                                <circle fill="currentColor" opacity="0.3" cx="21" cy="12" r="2.5"></circle>
-                              </svg>
-                            </a>               
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                              <li><a class="dropdown-item" href="#"><i class="bi bi-share me-2 fw-icon"></i>Share profile</a></li>
-                              <li><a class="dropdown-item" href="#"><i class="bi bi-volume-mute me-2 fw-icon"></i>Mute notification</a></li>
-                              <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-slash-circle me-2 fw-icon"></i>Delete profile</a></li>
-                              <li><hr class="dropdown-divider"></li>
-                              <li><a class="dropdown-item" href="#"><i class="bi bi-flag me-2 fw-icon"></i>Report a bug</a></li>
-                            </ul>
-                          </div>
-                          <!-- Card action END -->
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -90,65 +68,21 @@
                     <h5 class="card-header-title mb-0">Profile</h5>
                   </div>
                   <div class="card-body">
-                    <!-- Full name -->
-                    <div class="mb-3">
-                      <label class="form-label">Full name</label>
-                      <div class="input-group">
-                        <input type="text" class="form-control" value="Louis" placeholder="First name">
-                        <input type="text" class="form-control" value="Ferguson" placeholder="Last name">
-                      </div>
-                    </div>
                     <!-- Username -->
                     <div class="mb-3">
                       <label class="form-label">Username</label>
                       <div class="input-group">
-                        <span class="input-group-text">webestica.com</span>
-                        <input type="text" class="form-control" value="louisferguson">
+                        <span class="input-group-text">sg.ashoka.edu.in</span>
+                        <input disabled type="text" class="form-control" value="<%=user.username%>">
                       </div>
                     </div>
-                    <!-- Profile picture -->
-                    <div class="mb-3">
-                      <label class="form-label">Profile picture</label>
-                      <!-- Avatar upload START -->
-                      <div class="d-flex align-items-center">
-                        <div class="position-relative me-3">
-                          <!-- Avatar edit -->
-                          <div class="position-absolute top-0 end-0  z-index-9">
-                            <a class="btn btn-sm btn-light btn-round mb-0 mt-n1 me-n1" href="#"> <i class="bi bi-pencil"></i> </a>
-                          </div>
-                          <!-- Avatar preview -->
-                          <div class="avatar avatar-xl">
-                            <img class="avatar-img rounded-circle border border-white border-3 shadow" src="assets/images/avatar/03.jpg" alt="">
-                          </div>
-                        </div>
-                        <!-- Avatar remove button -->
-                        <div class="avatar-remove">
-                          <button type="button" class="btn btn-light">Delete</button>
-                        </div>
-                      </div>
-                      <!-- Avatar upload END -->
-                    </div>
+                    
                     <!-- Job title -->
                     <div class="mb-3">
-                      <label class="form-label">Job title</label>
-                      <input class="form-control" type="text" value="An editor at Blogzine">
+                      <label class="form-label">Batch</label>
+                      <input disabled class="form-control" type="text" value="<%=user.batch%>">
                     </div>
-                    <!-- Location -->
-                    <div class="mb-3">
-                      <label class="form-label">Location</label>
-                      <input class="form-control" type="text" value="New Hampshire">
-                    </div>
-                    <!-- Bio -->
-                    <div class="mb-3">
-                      <label class="form-label">Bio</label>
-                      <textarea class="form-control" rows="3">I’ve found a way to get paid for my favorite hobby, and do so while following my dream of traveling the world.</textarea>
-                      <div class="form-text">Brief description for your profile.</div> 
-                    </div>
-                    <!-- Birthday -->
-                    <div>
-                      <label class="form-label">Birthday</label>
-                      <input type="text" class="form-control flatpickr-input" placeholder="DD/MM/YYYY" value="12/10/1990">
-                    </div>
+                   
                     <!-- Save button -->
                     <div class="d-flex justify-content-end mt-4">
                       <a href="#" class="btn text-secondary border-0 me-2">Discard</a>
@@ -166,7 +100,7 @@
                   <div class="card-body">
                     <!-- Skype -->
                     <div class="mb-3">
-                      <label class="form-label">Skype</label>
+                      <label class="form-label">Batch</label>
                       <input class="form-control" type="text" value="iamlouisferguson">
                     </div>
                     <!-- Email -->
@@ -187,117 +121,15 @@
                 </div>
                 <!-- Personal information END -->
         
-                <!-- Social links START -->
-                <div class="card border mb-4">
-                  <div class="card-header border-bottom p-3">
-                    <h5 class="card-header-title mb-0"> Social links</h5>
-                  </div>
-                  <div class="card-body">
-                    <!-- Skype -->
-                    <div class="mb-3">
-                      <label class="form-label">Facebook</label>
-                      <input class="form-control" type="text" value="https://facebook.com/">
-                    </div>
-                    <!-- Email -->
-                    <div class="mb-3">
-                      <label class="form-label">linkedin</label>
-                      <input class="form-control" type="email" value="https://www.linkedin.com/">
-                    </div>
-                    <!-- Address -->
-                    <div class="mb-3">
-                      <label class="form-label">Twitter</label>
-                      <input class="form-control" type="text" value="https://twitter.com/ ">
-                    </div>
-                    <!-- Save button -->
-                    <div class="d-flex justify-content-end mt-4">
-                      <a href="#" class="btn btn-primary">Save changes</a>
-                    </div>
-                  </div>
-                </div>
-                <!-- Social links END -->
+               
         
                 <!-- Update password START -->
-                <div class="card border">
-                  <div class="card-header border-bottom p-3">
-                    <h5 class="card-header-title mb-0">Update password</h5>
-                  </div>
-                  <div class="card-body">
-                    <div class="mb-3">
-                      <label class="form-label">Current password</label>
-                      <input class="form-control" type="password" placeholder="Enter current password">
-                    </div>
-                    <!-- New password -->
-                    <div class="mb-3">
-                      <label class="form-label" id="psw-strength-message"></label>
-                      <div class="input-group">
-                        <input class="form-control fakepassword" type="password" id="psw-input" placeholder="Enter new password">
-                        <span class="input-group-text p-0">
-                          <i class="fakepasswordicon far fa-eye cursor-pointer p-2 w-40px"></i>
-                        </span>
-                      </div>
-                      <div class="rounded mt-1" id="psw-strength"></div>
-                    </div>
-                    <!-- New password -->
-                    <div>
-                      <label class="form-label">Confirm new password</label>
-                      <input class="form-control" type="password" placeholder="Enter new password">
-                    </div>
-                    <div class="d-flex justify-content-end mt-4">
-                      <a href="#" class="btn btn-primary">Change password</a>
-                    </div>
-                  </div>
-                </div>
               </div>
               <!-- Left sidebar END -->
         
               <!-- Right sidebar START -->
               <div class="col-lg-5 col-xxl-4">
                 <!-- Profile Setting START -->
-                <div class="card border mb-4">
-                  <div class="card-header border-bottom p-3">
-                    <h5 class="card-header-title mb-0">Profile Setting</h5>
-                  </div>
-                  <div class="card-body">
-                    <div class="form-check form-switch form-check-md mb-3">
-                      <input class="form-check-input" type="checkbox" id="availabilityCheck" checked="">
-                      <label class="form-check-label" for="availabilityCheck">Visible profile to everyone</label>
-                    </div>
-                    <div class="form-check form-switch form-check-md mb-3">
-                      <input class="form-check-input" type="checkbox" id="proCheck" disabled="">
-                      <label class="form-check-label" for="proCheck">Disable ads <span class="badge bg-primary align-middle">Pro</span></label>
-                    </div>
-                  </div>
-                </div>
-                <!-- Profile Setting END -->
-        
-                <!-- Notifications START -->
-                <div class="card border mb-4">
-                  <div class="card-header border-bottom p-3">
-                    <h5 class="card-header-title mb-0">Notifications</h5>
-                  </div>
-                  <!-- Card body START -->
-                  <div class="card-body">
-                    <p>Choose type of notifications you want to receive</p>
-                    <div class="form-check form-switch form-check-md mb-3">
-                      <input class="form-check-input" type="checkbox" id="withdrawalCheck" checked="">
-                      <label class="form-check-label" for="withdrawalCheck">Withdrawal activity</label>
-                    </div>
-                    <div class="form-check form-switch form-check-md mb-3">
-                      <input class="form-check-input" type="checkbox" id="weeklyCheck">
-                      <label class="form-check-label" for="weeklyCheck">Weekly report</label>
-                    </div>
-                    <div class="form-check form-switch form-check-md mb-3">
-                      <input class="form-check-input" type="checkbox" id="passwordCheck" checked="">
-                      <label class="form-check-label" for="passwordCheck">Password change</label>
-                    </div>
-                    <div class="form-check form-switch form-check-md mb-3">
-                      <input class="form-check-input" type="checkbox" id="dataCheck">
-                      <label class="form-check-label" for="dataCheck">Data usage alert</label>
-                    </div>
-                  </div>
-                <!-- Card body END -->
-                </div>
-                <!-- Notifications START -->
         
                 <!-- Deactivate account START -->
                 <div class="card border mb-4">
@@ -344,31 +176,6 @@
                       </div>
                     </div>
         
-                    <!-- Blogger -->
-                    <div class="mb-3 d-sm-flex border p-3 rounded">
-                      <!-- Title and content -->
-                      <h2 class="fs-1 mb-0 me-3"><i class="fab fa-blogger text-warning"></i></h2>
-                      <div>
-                        <h6 class="mb-1">Blogger</h6>
-                        <p class="mb-1 small">Connect with Blogger account for a personalized experience</p>
-                        <!-- Button -->
-                        <button type="button" class="btn btn-sm btn-primary mb-0 me-2">Connect Blogger </button>
-                        <a href="#" class="btn btn-sm btn-link text-body mb-0">Learn more</a>
-                      </div>
-                    </div>
-        
-                    <!-- Facebook -->
-                    <div class="d-sm-flex border p-3 rounded mb-2">
-                      <!-- Title and content -->
-                      <h2 class="fs-1 mb-0 me-3"><i class="fab fa-facebook text-facebook"></i></h2>
-                      <div>
-                        <h6 class="mb-1">Facebook</h6>
-                        <p class="mb-1 small">Connect with Facebook account for a personalized experience</p>
-                        <!-- Button -->
-                        <button type="button" class="btn btn-sm btn-primary mb-0 me-2">Connect Facebook</button>
-                        <a href="#" class="btn btn-sm btn-link text-body mb-0">Learn more</a>
-                      </div>
-                    </div>
                   </div>
                   <!-- Card body END -->
                 </div>

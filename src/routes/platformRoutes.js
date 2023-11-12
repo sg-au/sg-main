@@ -1,14 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
-
-
-// Parse incoming request bodies as JSON
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
 
 const axios=require("axios");
-const { route } = require('./websiteRoutes');
 
 const axiosConfig = {
     headers: {
@@ -30,13 +23,28 @@ router.get('/', (req, res) => {
     res.render("platform/pages/index")
 });
 
-const axiosConfig = {
-    headers: {
-      'Content-Type': 'application/json',
-      // Include authentication headers if required by your Strapi API
-      'Authorization': `Bearer ${process.env.STRAPI_API_KEY}`,
-    },
-  };
+
+router.get('/announcements', (req, res) => {
+    announcements=[];
+    axios.get(`${process.env.STRAPI_API_URL}/announcements?populate=department.name&populate=department.profile.profile_pic&sort[0]=createdAt:desc`,axiosConfig)
+    .then((response) => {
+        // Access the response data
+        announcements = response.data.data;
+        // You can work with departmentsData here
+        res.render("platform/pages/announcements",{announcements:announcements});
+    })
+    .catch((error) => {
+        console.error('Error fetching departments:', error);
+        // Handle error
+        res.send("An error occurred");
+    });
+});
+
+
+router.get('/course-review', (req, res) => {
+    // res.render("platform/pages/coming-soon");
+    res.send(404);
+});
 
 router.get('/tickets', (req, res) => {
     const fetchData = async () => {
@@ -190,13 +198,10 @@ router.get('/public-forum/:id', async (req, res) => {
         var endpoint = '/forums';
         var com_endpoint = '/comments';
         var petitionID = req.params.id;
+        var user_response = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
+        var userID = user_response.data[0].id;
         var response = await axios.get(`${apiUrl}${endpoint}/${petitionID}?populate=signatures,comments`, axiosConfig);
         var comments = await axios.get(`${apiUrl}${com_endpoint}?populate=author,forum`, axiosConfig);
-        var user_array = [];
-        (response.data.data.attributes.signatures.data).forEach(userSign => {
-            console.log(userSign.attributes.email);
-            user_array.push(userSign.attributes.email);
-        });
         var com_array = []
         if(comments.data.data.length != 0) {
             (comments.data.data).forEach(comment => {
@@ -205,37 +210,11 @@ router.get('/public-forum/:id', async (req, res) => {
                 } 
             });
         }
-        console.log(Number(user_array.includes(req.user._json.email)));
-        // console.log(com_array);
-        res.render("platform/pages/petition", {petition: response.data.data, comments: com_array, signed: user_array.includes(req.user._json.email)});
+        console.log(com_array);
+        res.render("platform/pages/petition", {petition: response.data.data, comments: com_array, user: userID});
     } catch (error) {
         console.error('An error occurred:', error);
     }
-});
-
-router.post('/create-comment', async (req, res) => {
-    var com_endpoint = '/comments';
-    var petitionId = Number(req.body.petitionId);
-    var commentContent = req.body.commentContent;
-    var user_response = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
-    var userId = user_response.data[0].id;   
-    const commentData = {
-        data: {
-            comment: commentContent, // Add comment content
-            author: userId, // Link the comment to the user
-            forum: petitionId, // Link the comment to the petition
-        } 
-    }
-    // console.log(commentData);
-    try {
-        // Make an API request to create a new comment in Strapi
-        var com_response = await axios.post(`${apiUrl}${com_endpoint}`, commentData, axiosConfig);
-        console.log(com_response.status);
-        res.redirect('/platform/public-forum/' + petitionId); // Redirect to the petition page after comment creation
-      } catch (error) {
-        console.error('Error creating comment:', error.response.data);
-        res.status(500).send('Error creating comment.');
-      }
 });
 
 router.put('/sign-petition', async (req, res) => {
@@ -262,8 +241,46 @@ router.put('/sign-petition', async (req, res) => {
     }
 })
 
+router.post('/create-comment', async (req, res) => {
+    var com_endpoint = '/comments';
+    var petitionID = Number(req.body.petitionId);
+    var commentContent = req.body.commentContent;
+    var user_response = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
+    var userID = user_response.data[0].id;   
+    const commentData = {
+        data: {
+            comment: commentContent, // Add comment content
+            author: userID, // Link the comment to the user
+            forum: petitionID, // Link the comment to the petition
+        } 
+    }
+    console.log(commentData);
+    try {
+        // Make an API request to create a new comment in Strapi
+        var com_response = await axios.post(`${apiUrl}${com_endpoint}`, commentData, axiosConfig);
+        console.log(com_response.status);
+        res.redirect('/platform/forum/' + petitionID); // Redirect to the petition page after comment creation
+      } catch (error) {
+        console.error('Error creating comment:', error.response.data);
+        res.status(500).send('Error creating comment.');
+      }
+});
+
 router.get('/profile', (req, res) => {
-    res.render("platform/pages/profile")
+    userEmail = req.user._json.email;
+    axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`)
+    .then((response) => {
+      // Assuming you get a single user with the specified email
+      user = response.data[0];
+      console.log(user)
+      res.render("platform/pages/profile",{user:user})
+
+      
+    })
+    .catch((error) => {
+      console.error('Error fetching user:', error);
+      // Handle error
+    });
 });
 
 router.get('/announcements', (req, res) => {
