@@ -283,10 +283,6 @@ router.get('/profile', (req, res) => {
     });
 });
 
-router.get('/announcements', (req, res) => {
-    res.render("platform/pages/announcements")
-});
-
 
 router.get('/events', (req, res) => {
     res.render("platform/pages/events")
