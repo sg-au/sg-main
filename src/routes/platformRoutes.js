@@ -186,7 +186,7 @@ router.get('/tickets/:id', (req, res) => {
 router.get('/public-forum', async (req, res) => {
     try {
         var endpoint = '/forums';
-        var response = await axios.get(`${apiUrl}${endpoint}`, axiosConfig);
+        var response = await axios.get(`${apiUrl}${endpoint}?populate=signatures`, axiosConfig);
         res.render("platform/pages/public-forum", {petitions: response.data});
     } catch (error) {
         console.error('An error occurred:', error);
@@ -198,10 +198,12 @@ router.get('/public-forum/:id', async (req, res) => {
         var endpoint = '/forums';
         var com_endpoint = '/comments';
         var petitionID = req.params.id;
-        var user_response = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
-        var userID = user_response.data[0].id;
         var response = await axios.get(`${apiUrl}${endpoint}/${petitionID}?populate=signatures,comments`, axiosConfig);
         var comments = await axios.get(`${apiUrl}${com_endpoint}?populate=author,forum`, axiosConfig);
+        var user_array = [];
+        (response.data.data.attributes.signatures.data).forEach(userSign => {
+            user_array.push(userSign.attributes.email);
+        });
         var com_array = []
         if(comments.data.data.length != 0) {
             (comments.data.data).forEach(comment => {
@@ -210,61 +212,59 @@ router.get('/public-forum/:id', async (req, res) => {
                 } 
             });
         }
-        console.log(com_array);
-        res.render("platform/pages/petition", {petition: response.data.data, comments: com_array, user: userID});
+        res.render("platform/pages/petition", {petition: response.data.data, comments: com_array, signed: user_array.includes(req.user._json.email)});
     } catch (error) {
         console.error('An error occurred:', error);
     }
 });
+router.post('/create-comment', async (req, res) => {
+    var com_endpoint = '/comments';
+    var petitionId = Number(req.body.petitionId);
+    var commentContent = req.body.commentContent;
+    var user_response = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
+    var userId = user_response.data[0].id;   
+    const commentData = {
+        data: {
+            comment: commentContent, // Add comment content
+            author: userId, // Link the comment to the user
+            forum: petitionId, // Link the comment to the petition
+        } 
+    }
+    try {
+        // Make an API request to create a new comment in Strapi
+        var com_response = await axios.post(`${apiUrl}${com_endpoint}`, commentData, axiosConfig);
+        console.log(com_response.status);
+        res.redirect('/platform/public-forum/' + petitionId); // Redirect to the petition page after comment creation
+      } catch (error) {
+        console.error('Error creating comment:', error.response.data);
+        res.status(500).send('Error creating comment.');
+      }
+});
 
-router.put('/sign-petition', async (req, res) => {
+router.post('/sign-petition', async (req, res) => {
     var endpoint = '/forums';
     var petitionId = Number(req.body.petitionId);
     var response = await axios.get(`${apiUrl}${endpoint}/${petitionId}?populate=signatures,comments`, axiosConfig);
-    var user_response = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
-    console.log(response.data.data.attributes.signatures.data);
+    var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig)).data;
+    var temp = response.data.data.attributes.signatures.data;
+    temp.push(user[0]);
     const petitionUpdate = {
         data: {
             headline: response.data.data.attributes.headline,
             content: response.data.data.attributes.content,
-            comments: response.data.data.comments,
-            signatures: response.data.data.attributes.signatures.data.push(user_response[0]),
+            comments: response.data.data.attributes.comments,
+            signatures: temp,
+            description:response.data.data.attributes.description
         }
     }
     try {
         var signPetition = await axios.put(`${apiUrl}${endpoint}/${petitionId}`, petitionUpdate, axiosConfig);
-        console.log(signPetition.status)
         res.redirect('/platform/public-forum/' + petitionId);
     } catch (error) {
         console.error("Error Signing: ", error.response.data);
         res.status(500).send("Error while signing.");
     }
 })
-
-router.post('/create-comment', async (req, res) => {
-    var com_endpoint = '/comments';
-    var petitionID = Number(req.body.petitionId);
-    var commentContent = req.body.commentContent;
-    var user_response = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
-    var userID = user_response.data[0].id;   
-    const commentData = {
-        data: {
-            comment: commentContent, // Add comment content
-            author: userID, // Link the comment to the user
-            forum: petitionID, // Link the comment to the petition
-        } 
-    }
-    console.log(commentData);
-    try {
-        // Make an API request to create a new comment in Strapi
-        var com_response = await axios.post(`${apiUrl}${com_endpoint}`, commentData, axiosConfig);
-        console.log(com_response.status);
-        res.redirect('/platform/forum/' + petitionID); // Redirect to the petition page after comment creation
-      } catch (error) {
-        console.error('Error creating comment:', error.response.data);
-        res.status(500).send('Error creating comment.');
-      }
-});
 
 router.get('/profile', (req, res) => {
     userEmail = req.user._json.email;
