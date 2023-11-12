@@ -54,42 +54,9 @@
             <%-include("../partials/header")%>
             <div class="container-fluid">
                 <div class="container-fluid" style="padding-top: 40px;">
-                    <div class="card col-md-12">
-                        <div class="card-body" value="123" id="divLink">
-                            <div class="row">
-                                <div class="col-md-4 img-div">
-                                    <img width="100%" height="100%" src="https://picsum.photos/200" alt="" srcset="">
-                                </div>
-                                <div class="col-md-8 cont-div">
-                                    <div class="card" style="background-color: #eaeff4; height: 100%;">
-                                        <div class="card-body" style="height: fit-content;">
-                                            <div>
-
-                                            </div>
-                                            <h5 class="card-title">Petition Heading</h5>
-                                            <h6 class="card-subtitle mb-2 text-muted">Created By X</h6>
-                                            <h6 class="card-subtitle mb-2 text-muted">Date Created</h6>
-                                            <h6 class="card-subtitle mb-2 text-muted">Number of Signatures</h6>
-                                            <p class="card-text" style="padding-top: 15px; padding-bottom: 15px;">Lorem
-                                                ipsum, dolor sit amet consectetur adipisicing elit. Aspernatur, cum
-                                                soluta libero vel sunt assumenda sint, molestias atque voluptate velit
-                                                facere ab! Possimus praesentium vero vel non nemo optio ipsam?</p>
-
-                                            <a href="" class="card-link" style="margin-right: -20px;"><span
-                                                    class="badge bg-primary rounded-3 fw-semibold">MAA</span></a>
-
-                                            <a href="" class="card-link" style="margin-right: -20px;"><span
-                                                    class="badge bg-primary rounded-3 fw-semibold">OAA</span></a>
-                                            <!-- <div style="width: 100%; text-align: left; margin-top: 15px; "><a href="./individual-petition.html" class="btn btn-primary m-1">View Petition</a></div> -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <% (petitions.data).forEach((petition, index) => { %>
                         <div class="card col-md-12">
-                            <div class="card-body" value="123" id="divLink" onclick="openPetition('<%= petition.id %>')">
+                            <div class="card-body" id="divLink" onclick="openPetition('<%=petition.id%>')">
                                 <div class="row">
                                     <div class="col-md-4 img-div">
                                         <img width="100%" height="100%" src="https://picsum.photos/200" alt="" srcset="">
@@ -103,8 +70,8 @@
                                                 <h5 class="card-title"><%= petition.attributes.headline %></h5>
                                                 <h6 class="card-subtitle mb-2 text-muted">Created By X</h6>
                                                 <h6 class="card-subtitle mb-2 text-muted">Date Created: <b><%= Date(petition.attributes.createdAt).substring(3,15) %></b></h6>
-                                                <h6 class="card-subtitle mb-2 text-muted">Number of Signatures</h6>
-                                                <p class="card-text" style="padding-top: 15px; padding-bottom: 15px;"><%= petition.attributes.content %></p>
+                                                <h6 class="card-subtitle mb-2 text-muted">Number of Signatures: <%= petition.attributes.signatures.data.length %></h6>
+                                                <p class="card-text" style="padding-top: 15px; padding-bottom: 15px;"><%= petition.attributes.description %></p>
     
                                                 <a href="" class="card-link" style="margin-right: -20px;"><span
                                                         class="badge bg-primary rounded-3 fw-semibold">MAA</span></a>
@@ -124,14 +91,10 @@
         </div>
     </div>
     <script>
-        var divLink = document.getElementById("divLink");
-        var id = document.getElementById("divLink").getAttribute("value");
-        divLink.onclick = function () {
-            window.location.href = './public-forum/'+id; 
-        };
+
 
         function openPetition(id) {
-            window.location.href = `./public-forum/${id}`;
+            window.location.href = `/platform/public-forum/${id}`;
         }
     </script>
 
