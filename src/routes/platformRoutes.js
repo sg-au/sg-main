@@ -1,5 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
+
+
+// Parse incoming request bodies as JSON
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
 
 const axios=require("axios");
 const { route } = require('./websiteRoutes');
@@ -23,6 +29,14 @@ const apiUrl = process.env.STRAPI_API_URL;
 router.get('/', (req, res) => {
     res.render("platform/pages/index")
 });
+
+const axiosConfig = {
+    headers: {
+      'Content-Type': 'application/json',
+      // Include authentication headers if required by your Strapi API
+      'Authorization': `Bearer ${process.env.STRAPI_API_KEY}`,
+    },
+  };
 
 router.get('/tickets', (req, res) => {
     const fetchData = async () => {
