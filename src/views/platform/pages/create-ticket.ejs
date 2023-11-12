@@ -29,34 +29,53 @@
                             <h5 class="card-title fw-semibold mb-4">Create a New Ticket</h5>
                             <div class="card">
                                 <div class="card-body">
-                                    <form>
+                                    <form id="ticketForm" action="/platform/create-ticket" method="POST">
                                         <div class="mb-3">
-                                            <label for="newTicketTitle" class="form-label">Title</label>
-                                            <input type="title" class="form-control" id="newTicketTitle">
+                                            <label for="newTicketTitle" class="form-label">Subject</label>
+                                            <input required name="subject" type="title" class="form-control" id="newTicketTitle">
                                         </div>
                                         <div class="mb-3">
-                                            <label for="newTicketBody" class="form-label">Body</label>
-                                            <input type="body" class="form-control" id="newTicketBody">
+                                            <label for="newTicketBody" class="form-label">Ticket</label>
+                                            <textarea required minlength="50" rows="5" name="ticket" class="form-control" id="newTicketBody"></textarea>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="select" class="form-label">Select Minitries to Tag</label>
-                                            <select id="select" class="form-select">
+                                            <label for="select" class="form-label">Select Category of Ticket</label>
+                                            <select required name="category" id="select" class="form-select">
                                                 <option disabled selected>Select</option>
-                                                <option>MAA</option>
-                                                <option>Jazbaa</option>
-                                                <option>Tarang</option>
-                                                <option>CWB</option>
+                                                <option>category 1</option>
+                                                <option>category 2</option>
+                                                <option>category 3</option>
+                                                <option>category 4</option>
                                             </select>
                                         </div>
-                                        <div class="mb-3 form-check">
-                                            <input type="checkbox" class="form-check-input" id="shareDetails"
-                                                aria-describedby="detailsHelp">
-                                            <label class="form-check-label" for="exampleCheck1">Share Your
-                                                Details?</label>
-                                            <div id="detailsHelp" class="form-text">Keeping this unchecked will make
-                                                your ticket anonymous.</div>
+                                        <div class="mb-3">
+                                            <label for="select" class="form-label">Select Subcategory of Ticket</label>
+                                            <select required name="subcategory" id="select" class="form-select">
+                                                <option disabled selected>Select</option>
+                                                <option>sub 1</option>
+                                                <option>sub 2</option>
+                                                <option>sub 3</option>
+                                                <option>sub 4</option>
+                                            </select>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <div class="mb-3">
+                                            <label for="select" class="form-label">Select Ministries to Tag</label>
+                                            <select required name="departments" id="select" class="form-select" multiple size="<%=departments.length+1%>">
+                                                <option disabled>Select</option>
+                                                <%for(let i=0; i<departments.length;i++) { %>
+                                                    <option value="<%=departments[i].id %>"><%=departments[i].attributes.name%></option>
+                                                <%}%>
+                                            </select>
+                                            <p style="font-size:12px;color:grey;">hold the ctrl/cmd key to select multiple options</p>
+                                        </div>
+                                        <div class="mb-3 form-check">
+                                            <input name="share" type="checkbox" class="form-check-input" id="shareDetails"
+                                                aria-describedby="detailsHelp">
+                                            <label class="form-check-label" for="exampleCheck1">Share My
+                                                Details</label>
+                                            <div id="detailsHelp" class="form-text">The reviewer does not by default know your details. Do you wish to disclose them?</div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Create Ticket</button>
                                     </form>
                                 </div>
                             </div>

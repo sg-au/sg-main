@@ -26,185 +26,48 @@
       <div class="container-fluid">
         <div class="container-fluid">
           <div class="row justify-content-between">
-            <div class="card sg-ticket">
+            <%for(var i=0;i<tickets.length;i++){%>
+            <div style="cursor: pointer" onclick="location.href='/platform/tickets/<%=tickets[i].id%>';" class="card sg-ticket">
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-12">
                     <div class="flex-row mb-2">
-                      <span class="fs-6 fw-semibold">1Titles, text, and links</span>
-                      <span class="badge badge-pill rounded-5 bg-warning m-1">In Progress</span>
+                      <span class="fs-6 fw-semibold"><%=tickets[i].subject%></span>
+                      <span class="badge badge-pill rounded-5 bg-<%-tickets[i].status==`pending`?`warning`:`success`-%> m-1"><%=tickets[i].status%></span>
                     </div>
                     <div class="flex-row">
                       <ul class="list-inline">
-                        <li class="list-inline-item">Date created: </li>
-                        <li class="list-inline-item">Date updated: </li>
+                        <span style="font-size: 10px;" class="badge badge-pill rounded-5 bg-dark m-1">
+                           Created: <%- (Math.floor((new Date() - new Date(tickets[i].createdAt)) / (1000 * 60 * 60 * 24)))==0?"today":Math.floor((new Date() - new Date(tickets[i].createdAt)) / (1000 * 60 * 60 * 24)) + " days ago" -%> 
+                        </span>                       
+                        <span style="font-size: 10px;" class="badge badge-pill rounded-5 bg-dark m-1">
+                          Last Updated: <%- (Math.floor((new Date() - new Date(tickets[i].updatedAt)) / (1000 * 60 * 60 * 24)))==0?"today":Math.floor((new Date() - new Date(tickets[i].createdAt)) / (1000 * 60 * 60 * 24)) + " days ago" -%> 
+                        </span>                       
+
                       </ul>
                     </div>
                     <div class="card" style="background-color: #eaeff4;">
                       <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle text-muted">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and
-                          make up the bulk of the card's content.</p>
+                        <h5 class="card-title"><%=tickets[i].category%></h5>
+                        <h6 class="card-subtitle text-muted"><%=tickets[i].subcategory%></h6>
+                        <p class="card-text"><%=tickets[i].ticket.substring(0,200)%></p>
+                        
                         <a href="#" class="card-link"><span
-                            class="badge bg-primary rounded-3 fw-semibold">MAA</span></a>
-                        <a href="#" class="card-link"><span
-                            class="badge bg-primary rounded-3 fw-semibold">OAA</span></a>
+                            class="badge bg-primary rounded-3 fw-semibold">OAA</span>
+                        </a>
+
                       </div>
                     </div>
                     <div class="flex-row">
                       <span class="fs-3 text-dark fw-semibold">Ticket ID:</span>
-                      <span class="fs-3 text-dark fw-semibold" id="ticketID">#123</span>
+                      <span class="fs-3 text-dark fw-semibold" id="ticketID">#<%=tickets[i].id%></span>
                       <i onclick="copyTxt()" class="ti ti-copy"></i>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="card sg-ticket">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="flex-row mb-3">
-                      <span class="fs-6 fw-semibold">2Titles, text, and links</span>
-                      <span class="badge badge-pill rounded-5 bg-warning m-1">In Progress</span>
-                    </div>
-                    <div class="flex-row">
-                      <ul class="list-inline">
-                        <li class="list-inline-item">Date created: </li>
-                        <li class="list-inline-item">Date updated: </li>
-                      </ul>
-                    </div>
-                    <div class="card" style="background-color: #eaeff4;">
-                      <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle text-muted">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and
-                          make up the bulk of the card's content.</p>
-                        <a href="#" class="card-link"><span
-                            class="badge bg-primary rounded-3 fw-semibold">MAA</span></a>
-                        <a href="#" class="card-link"><span
-                            class="badge bg-primary rounded-3 fw-semibold">OAA</span></a>
-                      </div>
-                    </div>
-                    <div class="flex-row">
-                      <span class="fs-3 text-dark fw-semibold">Ticket ID:</span>
-                      <span class="fs-3 text-dark fw-semibold" id="ticketID">#123</span>
-                      <i onclick="copyTxt()" class="ti ti-copy"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row justify-content-between">
-            <div class="card sg-ticket">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="flex-row mb-3">
-                      <span class="fs-6 fw-semibold">3Titles, text, and links</span>
-                      <span class="badge badge-pill rounded-5 bg-success m-1">Resolved</span>
-                    </div>
-                    <div class="flex-row">
-                      <ul class="list-inline">
-                        <li class="list-inline-item">Date created: </li>
-                        <li class="list-inline-item">Date updated: </li>
-                      </ul>
-                    </div>
-                    <div class="card" style="background-color: #eaeff4;">
-                      <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle text-muted">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and
-                          make up the bulk of the card's content.</p>
-                        <a href="#" class="card-link"><span
-                            class="badge bg-primary rounded-3 fw-semibold">MAA</span></a>
-                        <a href="#" class="card-link"><span
-                            class="badge bg-primary rounded-3 fw-semibold">OAA</span></a>
-                      </div>
-                    </div>
-                    <div class="flex-row">
-                      <span class="fs-3 text-dark fw-semibold">Ticket ID:</span>
-                      <span class="fs-3 text-dark fw-semibold" id="ticketID">#123</span>
-                      <i onclick="copyTxt()" class="ti ti-copy"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card sg-ticket">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="flex-row mb-3">
-                      <span class="fs-6 fw-semibold">4Titles, text, and links</span>
-                      <span class="badge badge-pill rounded-5 bg-danger m-1">Closed</span>
-                    </div>
-                    <div class="flex-row">
-                      <ul class="list-inline">
-                        <li class="list-inline-item">Date created: </li>
-                        <li class="list-inline-item">Date updated: </li>
-                      </ul>
-                    </div>
-                    <div class="card" style="background-color: #eaeff4;">
-                      <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle text-muted">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and
-                          make up the bulk of the card's content.</p>
-                        <a href="#" class="card-link"><span
-                            class="badge bg-primary rounded-3 fw-semibold">MAA</span></a>
-                        <a href="#" class="card-link"><span
-                            class="badge bg-primary rounded-3 fw-semibold">OAA</span></a>
-                      </div>
-                    </div>
-                    <div class="flex-row">
-                      <span class="fs-3 text-dark fw-semibold">Ticket ID:</span>
-                      <span class="fs-3 text-dark fw-semibold" id="ticketID">#123</span>
-                      <i onclick="copyTxt()" class="ti ti-copy"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row justify-content-between">
-            <div class="card sg-ticket">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="flex-row mb-3">
-                      <span class="fs-6 fw-semibold">5Titles, text, and links</span>
-                      <span class="badge badge-pill rounded-5 bg-success m-1">Resolved</span>
-                    </div>
-                    <div class="flex-row">
-                      <ul class="list-inline">
-                        <li class="list-inline-item">Date created: </li>
-                        <li class="list-inline-item">Date updated: </li>
-                      </ul>
-                    </div>
-                    <div class="card" style="background-color: #eaeff4;">
-                      <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle text-muted">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and
-                          make up the bulk of the card's content.</p>
-                        <a href="#" class="card-link"><span
-                            class="badge bg-primary rounded-3 fw-semibold">MAA</span></a>
-                        <a href="#" class="card-link"><span
-                            class="badge bg-primary rounded-3 fw-semibold">OAA</span></a>
-                      </div>
-                    </div>
-                    <div class="flex-row">
-                      <span class="fs-3 text-dark fw-semibold">Ticket ID:</span>
-                      <span class="fs-3 text-dark fw-semibold" id="ticketID">#123</span>
-                      <i onclick="copyTxt()" class="ti ti-copy"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <%}%>
 
           </div>
         </div>
@@ -214,7 +77,7 @@
   </div>
   <div class="fab-container">
     <button style="box-shadow: 0px 3px 20px rgba(1, 41, 112, 0.5);" type="button" 
-    onclick="location.href='./new-ticket.html'" class="btn btn-primary m-1"><i
+    onclick="location.href='/platform/create-ticket'" class="btn btn-primary m-1"><i
         class="ti ti-circle-plus"></i> New Ticket</button>
   </div>
   <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>

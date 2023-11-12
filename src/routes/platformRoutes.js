@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 const axios=require("axios");
 const { route } = require('./websiteRoutes');
 
@@ -12,21 +13,151 @@ const axiosConfig = {
 };
 const apiUrl = process.env.STRAPI_API_URL;
 
+
+
+// Parse incoming request bodies as JSON
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+
 // Define routes here
 router.get('/', (req, res) => {
     res.render("platform/pages/index")
 });
 
 router.get('/tickets', (req, res) => {
-    res.render("platform/pages/tickets")
+    const fetchData = async () => {
+        try {
+          const response = await axios.get(process.env.STRAPI_API_URL+'/users?populate[tickets][populate][departments][fields][0]=name&filters[email][$eqi]='+req.user._json.email,axiosConfig);
+          return response.data;
+        } catch (error) {
+        //   console.error('Error fetching data:', error);
+        //   throw error; // Re-throw the error to handle it at a higher level if needed
+        }
+      };
+      
+      (async () => {
+        try {
+          const data = await fetchData();
+          let temp=data[0].tickets;
+          function sortTicketsByStatusAndDate(tickets) {
+            // Define the custom sorting order for the "status" field
+            const statusOrder = { pending: 1, resolved: 2 };
+          
+            // Use the sort() method to sort the array of tickets
+            tickets.sort((a, b) => {
+              // Compare by "status" first (based on the statusOrder)
+              const statusComparison = statusOrder[a.status] - statusOrder[b.status];
+          
+              // If the "status" is the same, compare by "createdAt" in reverse order (latest to last)
+              if (statusComparison === 0) {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+                return dateB - dateA; // Reverse order for latest to last
+              }
+          
+              return statusComparison;
+            });
+          
+            return tickets;
+          }
+          data[0].tickets = sortTicketsByStatusAndDate(temp)
+          res.render("platform/pages/tickets",{tickets:data[0].tickets});
+        } catch (error) {
+          // Handle the error here if needed
+          console.error('An error occurred:', error);
+        }
+      })();
 });
 
 router.get('/create-ticket', (req, res) => {
-    res.render("platform/pages/create-ticket")
+    axios.get(`${process.env.STRAPI_API_URL}/departments`,axiosConfig)
+    .then((response) => {
+        // Access the response data
+        const departmentsData = response.data.data;
+        // You can work with departmentsData here
+        res.render("platform/pages/create-ticket",{departments:departmentsData});
+
+    })
+    .catch((error) => {
+        console.error('Error fetching departments:', error);
+        // Handle error
+    });
+});
+
+router.post('/create-ticket', (req, res) => {
+    // Define the data for the new ticket
+    const newTicketData = {
+        status: 'pending',
+        subject: req.body.subject,
+        ticket: req.body.ticket,
+        category: req.body.category,
+        subcategory: req.body.subcategory,
+    };
+  
+  // Get the user ID based on the user's email
+  // Replace 'userEmail' with the actual email you want to look up
+  const userEmail = req.user._json.email; // Replace with the email
+  let userId;
+  
+  axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`)
+    .then((response) => {
+      // Assuming you get a single user with the specified email
+      userId = response.data[0].id;
+  
+      // Add the author field to the new ticket data
+      newTicketData.author = userId;
+      newTicketData.departments = req.body.departments;
+      // Send a POST request to create the new ticket
+      axios.post(`${process.env.STRAPI_API_URL}/tickets`, {
+        data: newTicketData
+      }, axiosConfig)
+        .then((response) => {
+          console.log('New ticket created:', response.data);
+          res.redirect("/platform/tickets")
+          // Handle success
+        })
+        .catch((error) => {
+          console.error('Error creating ticket:', error);
+          // Handle error
+        });
+    })
+    .catch((error) => {
+      console.error('Error fetching user:', error);
+      // Handle error
+    });
 });
 
 router.get('/tickets/:id', (req, res) => {
-    res.render("platform/pages/ticket")
+    const fetchData = async () => {
+        try {
+          const response = await axios.get(process.env.STRAPI_API_URL+'/users?populate[tickets][populate][departments][fields][0]=name&populate[tickets][populate][response][fields][0]=response&filters[email][$eqi]='+req.user._json.email,axiosConfig);
+          return response.data;
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          throw error; // Re-throw the error to handle it at a higher level if needed
+        }
+      };
+      
+      (async () => {
+        try {
+          const data = await fetchData();
+          userTicket=null;
+          data[0].tickets.forEach(function(ticket){
+            if(ticket.id==req.params.id){
+                userTicket=ticket;
+            }
+          });
+          if(userTicket){
+            console.log(userTicket)
+            res.render("platform/pages/ticket",{ticket:userTicket});
+          }else{
+            res.send("error 404");
+          }
+    } catch (error) {
+          // Handle the error here if needed
+          console.error('An error occurred:', error);
+        }
+      })();
 });
 
 
