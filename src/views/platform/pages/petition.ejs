@@ -110,10 +110,11 @@
                                     <h3 class="mb-4 card-title" style="margin-top:20px; font-size: 25px;"><%= petition.attributes.headline %></h3>
                                     <h3 class="mb-4 card-title" style="margin-top:20px;">Started By</h3>
                                     <p class="card-text"><%- petition.attributes.content.replace(/\n/g, '<br>') %></p>
-                                    <div style="text-align: center;">
-                                        <button type="button" onclick="signPetition('<%= petition.id %>')" class="btn btn-primary m-1 btn-sign">Sign This Petition</button>
-                                    </div>
-
+                                    <% if (!signed) { %>
+                                        <div style="text-align: center;">
+                                            <button id="signButton" type="button" class="btn btn-primary m-1 btn-sign">Sign This Petition</button>
+                                        </div>
+                                    <% } %>
                                 </div>
                             </div>
                             <div class="signature-list" style="margin-top: 15px;">
@@ -214,12 +215,33 @@
             });
         </script>
         <script>
-            // document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function() {
+              const commentForm = document.getElementById('comment-form');
+            
+              signButton.addEventListener('click', async function() {
+            
+                const petitionId = "<%= petition.id %>";                
+                try {
+                    const signResponse = await fetch('/platform/sign-petition', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            petitionId,
+                        }),
+                    });
 
-            // }
-            // function signPetition (petitionId) {
-                
-            // }
+                    if (signResponse.status === 200) {
+                        location.reload();
+                    } else {
+                        console.error('Sign petition failed.');
+                    }
+                } catch(error) {
+                    console.log('An error occured:', error);
+                }
+              });
+            });
         </script>
         <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
         <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
