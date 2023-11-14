@@ -52,7 +52,7 @@ router.get('/tickets', (req, res) => {
           const response = await axios.get(process.env.STRAPI_API_URL+'/users?populate[tickets][populate][departments][fields][0]=name&filters[email][$eqi]='+req.user._json.email,axiosConfig);
           return response.data;
         } catch (error) {
-        //   console.error('Error fetching data:', error);
+          console.error('Error fetching data:', error);
         //   throw error; // Re-throw the error to handle it at a higher level if needed
         }
       };
@@ -134,7 +134,7 @@ router.post('/create-ticket', (req, res) => {
         data: newTicketData
       }, axiosConfig)
         .then((response) => {
-          console.log('New ticket created:', response.data);
+        //   console.log('New ticket created:', response.data);
           res.redirect("/platform/tickets")
           // Handle success
         })
@@ -170,7 +170,6 @@ router.get('/tickets/:id', (req, res) => {
             }
           });
           if(userTicket){
-            console.log(userTicket)
             res.render("platform/pages/ticket",{ticket:userTicket});
           }else{
             res.send("error 404");
@@ -233,7 +232,6 @@ router.post('/create-comment', async (req, res) => {
     try {
         // Make an API request to create a new comment in Strapi
         var com_response = await axios.post(`${apiUrl}${com_endpoint}`, commentData, axiosConfig);
-        console.log(com_response.status);
         res.redirect('/platform/public-forum/' + petitionId); // Redirect to the petition page after comment creation
       } catch (error) {
         console.error('Error creating comment:', error.response.data);
@@ -272,7 +270,6 @@ router.get('/profile', (req, res) => {
     .then((response) => {
       // Assuming you get a single user with the specified email
       user = response.data[0];
-      console.log(user)
       res.render("platform/pages/profile",{user:user})
 
       
