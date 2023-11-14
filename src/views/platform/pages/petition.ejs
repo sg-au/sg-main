@@ -108,7 +108,9 @@
                                         </div>
                                     </div>
                                     <h3 class="mb-4 card-title" style="margin-top:20px; font-size: 25px;"><%= petition.attributes.headline %></h3>
-                                    <h3 class="mb-4 card-title" style="margin-top:20px;">Started By</h3>
+                                    <a href="#" class="card-link" style="margin-right: -20px;"><span
+                                        class="badge bg-primary rounded-3 fw-semibold">Started By <%= petition.attributes.department.data.attributes.name %></span></a>
+                                
                                     <p class="card-text"><%- petition.attributes.content.replace(/\n/g, '<br>') %></p>
                                     <% if (!signed) { %>
                                         <div style="text-align: center;">
@@ -118,20 +120,14 @@
                                 </div>
                             </div>
                             <div class="signature-list" style="margin-top: 15px;">
-                                <h3 class="mb-4 card-title" style="margin-top:20px; font-size: 25px;">Recent
-                                    Signatures</h3>
+                                <h3 class="mb-4 card-title" style="margin-top:20px; font-size: 25px;">
+                                    <%=petition.attributes.signatures.data.length%> Signature(s)</h3>
                                 <ul>
                                     <% (petition.attributes.signatures.data).forEach((signature, index) => { %>
                                         <li><%= signature.attributes.email %></li>
                                     <% }); %>
                                 </ul>
                             </div>
-                        </div>
-                        <div class="card-body" style="margin-top: -35px;">
-                            <a href="#" class="card-link" style="margin-right: -20px;"><span
-                                    class="badge bg-primary rounded-3 fw-semibold">MAA</span></a>
-                            <a href="#" class="card-link" style="margin-right: -20px;"><span
-                                    class="badge bg-primary rounded-3 fw-semibold">OAA</span></a>
                         </div>
                     </div>
                     <h3>Comments</h3>

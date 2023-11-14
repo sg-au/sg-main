@@ -44,7 +44,14 @@
                                                 <h6 class="card-subtitle mb-2 text-muted"><%=ticket.subcategory%></h6>
                                                 <p class="card-text"><%=ticket.ticket%></p>
                                                 <a href="#" class="card-link"><span
-                                                        class="badge bg-primary rounded-3 fw-semibold">ticket.departments[i].name%></span></a>
+                                                        class="badge bg-primary rounded-3 fw-semibold">
+                                                        <%for(var j=0;j<ticket.departments.length;j++){%>
+                                                            <%if(j!=0){%>
+                                                              ,<br />
+                                                            <%}%>
+                                                            <%=ticket.departments[j].name%>
+                                                        <%}%>
+                                                    </span></a>
                                                 </div>
                                         </div>
                                     </li>

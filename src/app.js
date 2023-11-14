@@ -106,7 +106,7 @@ function putImage(req, res, next) {
   if (req.user) {
     // Fetch the user's picture
     const userPicture = req.user._json.picture;
-    res.locals.imageUrl = userPicture;
+    res.locals.imageUrl = encodeURI(userPicture);
     next();
     // Make the GET request to fetch data
   }
@@ -174,7 +174,8 @@ app.get(
           console.error('Error creating user:', error);
         }
       };
-
+      // find the text between the underscore and the @, and capitalise it
+      batch=(req.user._json.email.match(/_(.*?)@/) || [])[1]?.toUpperCase() || "";
       const userData = {
         email: req.user._json.email,
         username: req.user._json.name,
@@ -182,11 +183,13 @@ app.get(
         password: "XXXXXXXXXXX",
         role: 1,
         confirmed: req.user._json.email_verified,
+        batch:batch
       };
+
 
       // Check if a user with the same email exists
       const response = await axios.get(`${apiUrl}${endpoint}?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
-      console.log(req.user._json.email, response)
+      // console.log(req.user._json.email, response)
       if (!response.data || response.data.length === 0) {
         // Create a new user if no matching user found
         await createUserInStrapi(userData);
@@ -201,8 +204,6 @@ app.get(
     }
   }
 );
-
-
 // Route to log the user out
 app.get("/logout", (req, res) => {
   req.logout(function(err) {

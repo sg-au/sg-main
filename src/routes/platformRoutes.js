@@ -42,8 +42,7 @@ router.get('/announcements', (req, res) => {
 
 
 router.get('/course-review', (req, res) => {
-    // res.render("platform/pages/coming-soon");
-    res.send(404);
+    res.render("platform/pages/course-review");
 });
 
 router.get('/tickets', (req, res) => {
@@ -52,7 +51,7 @@ router.get('/tickets', (req, res) => {
           const response = await axios.get(process.env.STRAPI_API_URL+'/users?populate[tickets][populate][departments][fields][0]=name&filters[email][$eqi]='+req.user._json.email,axiosConfig);
           return response.data;
         } catch (error) {
-        //   console.error('Error fetching data:', error);
+          console.error('Error fetching data:', error);
         //   throw error; // Re-throw the error to handle it at a higher level if needed
         }
       };
@@ -82,7 +81,7 @@ router.get('/tickets', (req, res) => {
           
             return tickets;
           }
-          data[0].tickets = sortTicketsByStatusAndDate(temp)
+          data[0].tickets = sortTicketsByStatusAndDate(temp);
           res.render("platform/pages/tickets",{tickets:data[0].tickets});
         } catch (error) {
           // Handle the error here if needed
@@ -108,13 +107,28 @@ router.get('/create-ticket', (req, res) => {
 
 router.post('/create-ticket', (req, res) => {
     // Define the data for the new ticket
-    const newTicketData = {
-        status: 'pending',
-        subject: req.body.subject,
-        ticket: req.body.ticket,
-        category: req.body.category,
-        subcategory: req.body.subcategory,
-    };
+    var newTicketData=null;
+    if(req.body.share=="on"){
+        newTicketData = {
+            status: 'pending',
+            subject: req.body.subject,
+            ticket: req.body.ticket,
+            category: req.body.category,
+            subcategory: req.body.subcategory,
+            details:{
+                name:req.user._json.name,
+                email:req.user._json.email
+            }
+        };
+    }else{
+        newTicketData = {
+            status: 'pending',
+            subject: req.body.subject,
+            ticket: req.body.ticket,
+            category: req.body.category,
+            subcategory: req.body.subcategory
+        };
+    }
   
   // Get the user ID based on the user's email
   // Replace 'userEmail' with the actual email you want to look up
@@ -134,7 +148,7 @@ router.post('/create-ticket', (req, res) => {
         data: newTicketData
       }, axiosConfig)
         .then((response) => {
-          console.log('New ticket created:', response.data);
+        //   console.log('New ticket created:', response.data);
           res.redirect("/platform/tickets")
           // Handle success
         })
@@ -170,7 +184,6 @@ router.get('/tickets/:id', (req, res) => {
             }
           });
           if(userTicket){
-            console.log(userTicket)
             res.render("platform/pages/ticket",{ticket:userTicket});
           }else{
             res.send("error 404");
@@ -186,7 +199,7 @@ router.get('/tickets/:id', (req, res) => {
 router.get('/public-forum', async (req, res) => {
     try {
         var endpoint = '/forums';
-        var response = await axios.get(`${apiUrl}${endpoint}?populate=signatures`, axiosConfig);
+        var response = await axios.get(`${apiUrl}${endpoint}?populate=signatures,department`, axiosConfig);
         res.render("platform/pages/public-forum", {petitions: response.data});
     } catch (error) {
         console.error('An error occurred:', error);
@@ -198,7 +211,7 @@ router.get('/public-forum/:id', async (req, res) => {
         var endpoint = '/forums';
         var com_endpoint = '/comments';
         var petitionID = req.params.id;
-        var response = await axios.get(`${apiUrl}${endpoint}/${petitionID}?populate=signatures,comments`, axiosConfig);
+        var response = await axios.get(`${apiUrl}${endpoint}/${petitionID}?populate=signatures,comments,department`, axiosConfig);
         var comments = await axios.get(`${apiUrl}${com_endpoint}?populate=author,forum`, axiosConfig);
         var user_array = [];
         (response.data.data.attributes.signatures.data).forEach(userSign => {
@@ -233,7 +246,6 @@ router.post('/create-comment', async (req, res) => {
     try {
         // Make an API request to create a new comment in Strapi
         var com_response = await axios.post(`${apiUrl}${com_endpoint}`, commentData, axiosConfig);
-        console.log(com_response.status);
         res.redirect('/platform/public-forum/' + petitionId); // Redirect to the petition page after comment creation
       } catch (error) {
         console.error('Error creating comment:', error.response.data);
@@ -272,7 +284,6 @@ router.get('/profile', (req, res) => {
     .then((response) => {
       // Assuming you get a single user with the specified email
       user = response.data[0];
-      console.log(user)
       res.render("platform/pages/profile",{user:user})
 
       
