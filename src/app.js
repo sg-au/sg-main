@@ -106,7 +106,7 @@ function putImage(req, res, next) {
   if (req.user) {
     // Fetch the user's picture
     const userPicture = req.user._json.picture;
-    res.locals.imageUrl = userPicture;
+    res.locals.imageUrl = encodeURI(userPicture);
     next();
     // Make the GET request to fetch data
   }
