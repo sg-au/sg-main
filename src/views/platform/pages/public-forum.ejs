@@ -68,16 +68,15 @@
     
                                                 </div>
                                                 <h5 class="card-title"><%= petition.attributes.headline %></h5>
-                                                <h6 class="card-subtitle mb-2 text-muted">Created By X</h6>
+                                                <!-- <h6 class="card-subtitle mb-2 text-muted">Created By X</h6> -->
                                                 <h6 class="card-subtitle mb-2 text-muted">Date Created: <b><%= Date(petition.attributes.createdAt).substring(3,15) %></b></h6>
                                                 <h6 class="card-subtitle mb-2 text-muted">Number of Signatures: <%= petition.attributes.signatures.data.length %></h6>
                                                 <p class="card-text" style="padding-top: 15px; padding-bottom: 15px;"><%= petition.attributes.description %></p>
     
                                                 <a href="" class="card-link" style="margin-right: -20px;"><span
-                                                        class="badge bg-primary rounded-3 fw-semibold">MAA</span></a>
+                                                        class="badge bg-primary rounded-3 fw-semibold">Started By: <%=petition.attributes.department.data.attributes.name%></span></a>
     
-                                                <a href="" class="card-link" style="margin-right: -20px;"><span
-                                                        class="badge bg-primary rounded-3 fw-semibold">OAA</span></a>
+                                                
                                                 <!-- <div style="width: 100%; text-align: left; margin-top: 15px; "><a href="./individual-petition.html" class="btn btn-primary m-1">View Petition</a></div> -->
                                             </div>
                                         </div>

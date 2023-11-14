@@ -82,12 +82,16 @@
                       <label class="form-label">Batch</label>
                       <input disabled class="form-control" type="text" value="<%=user.batch%>">
                     </div>
+                    <div class="mb-3">
+                      <label class="form-label">Confirmed</label>
+                      <input disabled class="form-control" type="text" value="<%=user.confirmed%>">
+                    </div>
                    
                     <!-- Save button -->
-                    <div class="d-flex justify-content-end mt-4">
+                    <!-- <div class="d-flex justify-content-end mt-4">
                       <a href="#" class="btn text-secondary border-0 me-2">Discard</a>
                       <a href="#" class="btn btn-primary">Save changes</a>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
                 <!-- Profile END -->
@@ -100,22 +104,34 @@
                   <div class="card-body">
                     <!-- Skype -->
                     <div class="mb-3">
-                      <label class="form-label">Batch</label>
-                      <input class="form-control" type="text" value="iamlouisferguson">
+                      <label class="form-label">Pronouns</label>
+                      <input disabled class="form-control" type="text" value="<%=user.pronouns%>">
                     </div>
                     <!-- Email -->
                     <div class="mb-3">
-                      <label class="form-label">Email</label>
-                      <input class="form-control" type="email" value="loriferguson@wbs.com">
+                      <label class="form-label">Major</label>
+                      <input disabled class="form-control" type="text" value="<%=user.major%>">
                     </div>
                     <!-- Address -->
                     <div class="mb-3">
-                      <label class="form-label">Address</label>
-                      <input class="form-control" type="text" value="750 Sing Sing Rd, Horseheads, NY, 14845 ">
+                      <label class="form-label">Minor</label>
+                      <input disabled class="form-control" type="text" value="<%=user.minor%>">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Concentration</label>
+                      <input disabled class="form-control" type="text" value="<%=user.concentration%>">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">RH</label>
+                      <input disabled class="form-control" type="text" value="<%=user.RH%>">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Floor</label>
+                      <input disabled class="form-control" type="text" value="<%=user.floor%>">
                     </div>
                     <!-- Save button -->
                     <div class="d-flex justify-content-end mt-4">
-                      <a href="#" class="btn btn-primary">Save changes</a>
+                      <button disabled class="btn btn-primary">Save changes</button>
                     </div>
                   </div>
                 </div>
@@ -139,15 +155,15 @@
                   <div class="card-body">
                     <h6>Before you go...</h6>
                     <ul>
-                      <li>Take backup of your data <a href="#">Here</a> </li>
+                      <li>Take backup of your data</li>
                       <li>Account deletion is final. There will be no way to restore your account</li>
                     </ul>
                     <div class="form-check form-check-md my-3">
-                      <input class="form-check-input" type="checkbox" value="" id="deleteaccountCheck">
+                      <input disabled class="form-check-input" type="checkbox" value="" id="deleteaccountCheck">
                       <label class="form-check-label" for="deleteaccountCheck">Yes, I'd really like to delete my account</label>
                     </div>
-                    <a href="#" class="btn btn-success-soft my-1">Keep my account</a>
-                    <a href="#" class="btn btn-danger my-1">Delete my account</a>
+                    <a class="btn btn-success-soft my-1">Keep my account</a>
+                    <button disabled class="btn btn-danger my-1">Delete my account</button>
                   </div>
                 </div>
                 <!-- Deactivate account START -->
@@ -171,7 +187,7 @@
                           <h6 class="mb-1">Google</h6>
                           <p class="mb-1 small">You are successfully connected to your Google account</p>
                           <!-- Button -->
-                          <button type="button" class="btn btn-sm btn-danger mb-0 me-2">Invoke</button>
+                          <button type="button" disabled class="btn btn-sm btn-danger mb-0 me-2">Invoke</button>
                           <a href="#" class="btn btn-sm btn-link text-body mb-0">Learn more</a>
                       </div>
                     </div>

@@ -47,10 +47,16 @@
                         <h5 class="card-title"><%=tickets[i].category%></h5>
                         <br>
                         <p class="card-text"><%=tickets[i].ticket.substring(0,200)%></p>
-                        
                         <a href="#" class="card-link"><span
-                            class="badge bg-primary rounded-3 fw-semibold">OAA</span>
-                        </a>
+                          class="badge bg-primary rounded-3 fw-semibold">
+                        <%for(var j=0;j<tickets[i].departments.length;j++){%>
+                            <%if(j!=0){%>
+                              ,<br />
+                            <%}%>
+                            <%=tickets[i].departments[j].name%>
+                        <%}%>
+                      </span>
+                    </a>
 
                       </div>
                     </div>
@@ -66,8 +72,8 @@
                   </div>
                 </div>
               </div>
-            </div>
             <%}%>
+          </div>
 
           </div>
         </div>
