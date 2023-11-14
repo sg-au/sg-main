@@ -10,7 +10,7 @@
 @import "../css/icons/tabler-icons/tabler-icons.css";
 :root,
 [data-bs-theme="light"] {
-  --bs-blue: #093862;
+  --bs-blue: #5d87ff;
   --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
   --bs-pink: #d63384;
@@ -33,7 +33,7 @@
   --bs-gray-700: #495057;
   --bs-gray-800: #343a40;
   --bs-gray-900: #212529;
-  --bs-primary: #093862;
+  --bs-primary: #5d87ff;
   --bs-secondary: #49beff;
   --bs-success: #13deb9;
   --bs-info: #539bff;
@@ -239,7 +239,7 @@ body {
   
   /* Track */
 ::-webkit-scrollbar-track {
-    background: var(--bs-gray-200); 
+    background: #fff; 
 }
    
   /* Handle */
@@ -3460,7 +3460,7 @@ textarea.form-control.is-invalid {
   --bs-btn-font-size: 14;
   --bs-btn-font-weight: 500;
   --bs-btn-line-height: 1.5;
-  --bs-btn-color: #093862;
+  --bs-btn-color: #5d87ff;
   --bs-btn-bg: transparent;
   --bs-btn-border-width: var(--bs-border-width);
   --bs-btn-border-color: transparent;
@@ -3564,8 +3564,8 @@ fieldset:disabled .btn {
 }
 .btn-primary {
   --bs-btn-color: #fff;
-  --bs-btn-bg: #093862;
-  --bs-btn-border-color: #093862;
+  --bs-btn-bg: #5d87ff;
+  --bs-btn-border-color: #5d87ff;
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #4f73d9;
   --bs-btn-hover-border-color: #4a6ccc;
@@ -3575,8 +3575,8 @@ fieldset:disabled .btn {
   --bs-btn-active-border-color: #4665bf;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #093862;
-  --bs-btn-disabled-border-color: #093862;
+  --bs-btn-disabled-bg: #5d87ff;
+  --bs-btn-disabled-border-color: #5d87ff;
 }
 .btn-secondary {
   --bs-btn-color: #fff;
