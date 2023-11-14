@@ -90,7 +90,7 @@ app.use(
 
 // Use route handlers for website and platform routes
 app.use("/", websiteRoutes);
-app.use("/platform", ensureAuthenticated, ensureIsNotBlocked, platformRoutes);
+app.use("/platform", ensureAuthenticated, ensureIsNotBlocked, putImage, platformRoutes);
 
 // Middleware to ensure the user is authenticated before accessing platform routes
 function ensureAuthenticated(req, res, next) {
@@ -99,6 +99,20 @@ function ensureAuthenticated(req, res, next) {
   }
   res.redirect("/auth/google");
 }
+
+// Define a middleware function for image url
+function putImage(req, res, next) {
+  // Assuming you have a user object or user data available after authentication
+  if (req.user) {
+    // Fetch the user's picture
+    const userPicture = req.user._json.picture;
+    res.locals.imageUrl = userPicture;
+    next();
+    // Make the GET request to fetch data
+  }
+}
+
+
 // Define a middleware function for ensuring a user is not blocked
 function ensureIsNotBlocked(req, res, next) {
   // Assuming you have a user object or user data available after authentication
