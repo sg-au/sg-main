@@ -266,6 +266,10 @@ router.post('/sign-petition', async (req, res) => {
     }
 })
 
+router.get('/notice', (req, res) => {
+    res.render("platform/pages/notice");
+}) ;
+
 router.get('/profile', (req, res) => {
     userEmail = req.user._json.email;
     axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`)
@@ -285,6 +289,10 @@ router.get('/profile', (req, res) => {
 
 
 router.get('/events', (req, res) => {
+    res.render("platform/pages/events-2")
+});
+
+router.get('/event', (req, res) => {
     res.render("platform/pages/events")
 });
 
