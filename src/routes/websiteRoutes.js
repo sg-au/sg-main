@@ -81,6 +81,14 @@ router.get('/cabinet/finance', (req, res) => {
 router.get('/cabinet/mpa', (req, res) => {
     res.render("website/pages/MPA",{ activePage: 'cabinet-mpa' })
 });
+
+router.get('/cabinet/sport', (req, res) => {
+    res.render("website/pages/sports",{ activePage: 'cabinet-mpa' })
+});
+
+router.get('/cabinet/tarang', (req, res) => {
+    res.render("website/pages/tarang",{ activePage: 'cabinet-mpa' })
+});
 // CABINET AND MINISTRIES
 
 
