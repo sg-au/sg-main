@@ -42,7 +42,7 @@ router.get('/announcements', (req, res) => {
 
 
 router.get('/course-review', (req, res) => {
-    res.render("platform/pages/course-review");
+    res.render("platform/pages/course-reviews");
 });
 
 router.get('/tickets', (req, res) => {
@@ -307,6 +307,13 @@ router.get('/event', (req, res) => {
     res.render("platform/pages/events")
 });
 
+router.get('/course-wise', (req, res) => {
+  res.render("platform/pages/course-wise")
+});
+
+router.get('/prof-wise', (req, res) => {
+  res.render("platform/pages/prof-wise")
+});
 
 // Export the router
 module.exports = router;
