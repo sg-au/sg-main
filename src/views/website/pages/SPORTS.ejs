@@ -15,14 +15,17 @@
   <!-- Favicons -->
   <link href="/website/assets/img/favicon.png" rel="icon">
   <link href="/website/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald">
 
   <!-- Vendor CSS Files -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link href="/website/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="/website/assets/vendor/icofont/icofont.min.css" rel="stylesheet">
   <link href="/website/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
@@ -33,6 +36,9 @@
 
   <!-- Template Main CSS File -->
   <link href="/website/assets/css/style.css" rel="stylesheet">
+  <link href="/website/assets/css/new.css" rel="stylesheet">
+
+  <!-- <link href="/website/assets/css/cabinet.css" rel="stylesheet"> -->
 
   <!-- =======================================================
   * Template Name: Vesperr - v3.0.3
@@ -42,18 +48,36 @@
   ======================================================== -->
 </head>
 <style>
+  .team .member {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
 
+  .team .member .member-img {
+    flex-grow: 1;
+  }
 
+  .team .member img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
+  .faq {
+    text-align: center;
+  }
+  .faq-item div {
+    padding-top: 15px;
+  }
 </style>
+
 <body>
   <%-include("../partials/menu")%>
 
-
     <!-- ======= Hero Section ======= -->
     <section id="hero" class="d-flex align-items-center">
-      <div
-        style="
+      <div style="
           background-image: url(/website/assets/img/sport.jpeg);
           background-size: cover;
           background-attachment: fixed;
@@ -64,8 +88,8 @@
           align-items: center;
           font-family: Oswald;
           font-size: 100px;
-        "
-      >
+          color: #FFFFFF;
+        ">
         SPORTS MINISTRY
         <!-- <div class="row">
         <div class="col-lg-6 pt-5 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
@@ -92,41 +116,29 @@
           </div>
 
           <div class="row content">
-            <div
-              class="col-lg-6 pt-4 pt-lg-0"
-              data-aos="fade-up"
-              data-aos-delay="300"
-            >
-              <p>
-                The Sports Ministry works relentlessly to ensure immaculately
-                maintained sporting facilities, cultivate a wholesome sporting
-                culture, and encourage participation in competitive sports.
-                Every member of the ministry is expected to show commitment to
-                the ministry's vision and is promised respect and equal
-                participation in any decision making. Apart from department
-                specific work, the Sports Ministry will work on, and be open to,
-                many other issues such as (but not limited to) providing spare
-                equipment (e.g. Non-marking shoes) to those who do not have
-                access to it, improving the quality of food available to
-                sportspeople, sports co-curriculars and extra-curriculars, and
-                finding an answer to: What goes into fighting toxicity in
-                sports? How do we deal with this systemic problem? The ministry
-                will also work on all ideas brought to the table by the members
-                and the student body. We believe in making the ministry and the
-                concept of sports closer to the student body, and we can't do
-                that if we don't know the students' reactions to certain ideas.
+            <div class="col-lg-6 pt-4 pt-lg-0" data-aos="fade-up" data-aos-delay="300">
+              <p style="text-align: justify; padding-right: 20px;">
+                The Sports Ministry in your university is dedicated to
+                maintaining top-notch sporting facilities and fostering a
+                positive sporting culture. We aim to encourage active
+                participation in competitive sports and value commitment from
+                every member, ensuring equal participation in decision-making
+                processes. In addition to our core responsibilities, the
+                ministry addresses various issues, including providing essential
+                equipment to those in need, enhancing the quality of food for
+                athletes, organizing sports-related extra-curriculars, and
+                tackling toxicity in sports. We prioritize student input,
+                believing in a collaborative approach to bridge the gap between
+                the ministry and the student body.
               </p>
               <!-- <a href="#" class="btn-learn-more">Learn More</a> -->
             </div>
             <div class="col-lg-6" data-aos="fade-up" data-aos-delay="150">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+              <p>Our Mandate is:</p>
               <ul>
                 <li>
                   <i class="ri-check-double-line"></i>Ensure communication with
-                  the administration on sports
+                  the administration on sports.
                 </li>
                 <li>
                   <i class="ri-check-double-line"></i> Push for adequate
@@ -143,15 +155,15 @@
                 </li>
                 <li>
                   <i class="ri-check-double-line"></i> Work towards more
-                  efficient organisation of sports events
+                  efficient organisation of sports events.
                 </li>
                 <li>
                   <i class="ri-check-double-line"></i> Bridge the gap between
                   sports and academics.
                 </li>
                 <li>
-                  <i class="ri-check-double-line"></i> Promote physical
-                  literacy on campus.
+                  <i class="ri-check-double-line"></i> Promote physical literacy
+                  on campus.
                 </li>
                 <li>
                   <i class="ri-check-double-line"></i> Empower sportspersons by
@@ -163,6 +175,55 @@
         </div>
       </section>
       <!-- End About Us Section -->
+      <!-- team -->
+
+      <section id="team" class="team section-bg">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Team</h2>
+            <!-- <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem</p> -->
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-4 d-flex align-items-stretch">
+              <div class="member" data-aos="fade-up" data-aos-delay="100">
+                <div class="member-img">
+                  <img src="/website/assets/img/sportMin/KokaSportd.jpeg" class="img-fluid" alt="">
+                </div>
+                <div class="member-info">
+                  <h4>Pranav Koka</h4>
+                  <span>Minister</span>
+                </div>
+              </div>
+            </div>
+            <!-- 2 -->
+            <div class="col-lg-4 col-md-4 d-flex align-items-stretch">
+              <div class="member" data-aos="fade-up" data-aos-delay="200">
+                <div class="member-img">
+                  <img src="/website/assets/img/sportMin/RiyaSportsMin.jpeg" class="img-fluid" alt="">
+                </div>
+                <div class="member-info">
+                  <h4>Riya Jethithor</h4>
+                  <span>Deputy Minister</span>
+                </div>
+              </div>
+            </div>
+            <!-- 3 -->
+            <div class="col-lg-4 col-md-4 d-flex align-items-stretch">
+              <div class="member" data-aos="fade-up" data-aos-delay="100">
+                <div class="member-img">
+                  <img src="/website/assets/img/sportMin/aryamaanSports.jpeg" class="img-fluid" alt="">
+                </div>
+                <div class="member-info">
+                  <h4>Aryamaan Girish</h4>
+                  <span>Deputy Minister</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
 
       <!-- ======= F.A.Q Section ======= -->
       <section id="faq" class="faq">
@@ -170,117 +231,98 @@
           <div class="section-title" data-aos="fade-up">
             <h2>Team Members</h2>
           </div>
-          <center>
-            <div
-              class="row faq-item d-flex align-items-stretch"
-              data-aos="fade-up"
-              data-aos-delay="100"
-            >
-              <div class="col-lg-5">
-                <h4>Resources Department</h4>
-              </div>
-              <div class="col-lg-7">
-                <p>
-                  Diya Anand (UG 24)
-                  <br />
-                  Raghav Nayyar (UG 23)
-                </p>
-              </div>
-            </div>
-            <!-- End F.A.Q Item-->
 
-            <div
-              class="row faq-item d-flex align-items-stretch"
-              data-aos="fade-up"
-              data-aos-delay="200"
-            >
-              <div class="col-lg-5">
-                <i class="ri-question-line"></i>
-                <h4>
-                  Feugiat scelerisque varius morbi enim nunc faucibus a
-                  pellentesque?
-                </h4>
-              </div>
-              <div class="col-lg-7">
-                <p>
-                  Dolor sit amet consectetur adipiscing elit pellentesque
-                  habitant morbi. Id interdum velit laoreet id donec ultrices.
-                  Fringilla phasellus faucibus scelerisque eleifend donec
-                  pretium. Est pellentesque elit ullamcorper dignissim.
-                </p>
-              </div>
+          <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-lg-5">
+              <h4>Athlete Representative</h4>
             </div>
-            <!-- End F.A.Q Item-->
+            <div class="col-lg-7">
+              <p>
+                Prithvi Bapna
+                <br />
+              </p>
+            </div>
+          </div>
+          <!-- End F.A.Q Item-->
 
-            <div
-              class="row faq-item d-flex align-items-stretch"
-              data-aos="fade-up"
-              data-aos-delay="300"
-            >
-              <div class="col-lg-5">
-                <i class="ri-question-line"></i>
-                <h4>
-                  Dolor sit amet consectetur adipiscing elit pellentesque
-                  habitant morbi?
-                </h4>
-              </div>
-              <div class="col-lg-7">
-                <p>
-                  Eleifend mi in nulla posuere sollicitudin aliquam ultrices
-                  sagittis orci. Faucibus pulvinar elementum integer enim. Sem
-                  nulla pharetra diam sit amet nisl suscipit. Rutrum tellus
-                  pellentesque eu tincidunt. Lectus urna duis convallis
-                  convallis tellus.
-                </p>
-              </div>
-            </div>
-            <!-- End F.A.Q Item-->
+          <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+            <div class="col-lg-5">
 
-            <div
-              class="row faq-item d-flex align-items-stretch"
-              data-aos="fade-up"
-              data-aos-delay="400"
-            >
-              <div class="col-lg-5">
-                <i class="ri-question-line"></i>
-                <h4>
-                  Ac odio tempor orci dapibus. Aliquam eleifend mi in nulla?
-                </h4>
-              </div>
-              <div class="col-lg-7">
-                <p>
-                  Aperiam itaque sit optio et deleniti eos nihil quidem cumque.
-                  Voluptas dolorum accusantium sunt sit enim. Provident
-                  consequuntur quam aut reiciendis qui rerum dolorem sit odio.
-                  Repellat assumenda soluta sunt pariatur error doloribus fuga.
-                </p>
-              </div>
+              <h4>
+                Events
+              </h4>
             </div>
-            <!-- End F.A.Q Item-->
+            <div class="col-lg-7">
+              <p>
+                Rehaan Raha (HOD)<br> Akhil Madhavan (HOD)<br> Saransh Goel<br> Arya Shah<br> Aarya Toshniwal <br>
+                Sarthak Gandhi <br>Divyanshi Kaushik<br> Prabhveer Bedi <br> Artharva Dawar <br> Snehal Papnoi<br>
+                Zaahrah Merchant<br> Sridhanya Karumanchi.
+              </p>
+            </div>
+          </div>
+          <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+            <div class="col-lg-5">
 
-            <div
-              class="row faq-item d-flex align-items-stretch"
-              data-aos="fade-up"
-              data-aos-delay="500"
-            >
-              <div class="col-lg-5">
-                <i class="ri-question-line"></i>
-                <h4>
-                  Tempus quam pellentesque nec nam aliquam sem et tortor
-                  consequat?
-                </h4>
-              </div>
-              <div class="col-lg-7">
-                <p>
-                  Molestie a iaculis at erat pellentesque adipiscing commodo.
-                  Dignissim suspendisse in est ante in. Nunc vel risus commodo
-                  viverra maecenas accumsan. Sit amet nisl suscipit adipiscing
-                  bibendum est. Purus gravida quis blandit turpis cursus in
-                </p>
-              </div>
+              <h4>
+                Policies
+
+              </h4>
             </div>
-            <!-- End F.A.Q Item-->
-          </center>
+            <div class="col-lg-7">
+              <p>
+                Manya Malhotra (HOD)<br> Nikhil Mishra<br> Chitrakshi Siwach<br> Anurag Moyde
+
+              </p>
+            </div>
+          </div>
+          <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+            <div class="col-lg-5">
+
+              <h4>
+                Inclusivity
+
+              </h4>
+            </div>
+            <div class="col-lg-7">
+              <p>
+                Shveni Anjaria (HOD)<br> Dhrthi Bhat<br> Fatima Zahra<br> Serene Joshua<br> Aadya Shukla Tiwari<br>
+                Tanisha Iyer
+
+              </p>
+            </div>
+          </div>
+          <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+            <div class="col-lg-5">
+
+              <h4>
+                Finance
+
+              </h4>
+            </div>
+            <div class="col-lg-7">
+              <p>
+                Bhavya Gupta (HOD)<br> Lakshya Bamal<br> Keshav Agrawal<br> Vaibhav Saraf <br>Neetya Batra<br> Gautam
+                Gupta.
+
+              </p>
+            </div>
+          </div>
+          <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+            <div class="col-lg-5">
+
+              <h4>
+                Social Media & Marketing
+
+              </h4>
+            </div>
+            <div class="col-lg-7">
+              <p>
+                Shyan Sahadev(HOD)<br> Simar Bawa<br> Veer Kagrecha<br> Hrishita Ghosh
+              </p>
+            </div>
+          </div>
+          <!-- End F.A.Q Item-->
+          <!-- End F.A.Q Item-->
         </div>
       </section>
       <!-- End F.A.Q Section -->
@@ -293,11 +335,7 @@
           </div>
 
           <div class="row">
-            <div
-              class="col-lg-4 col-md-6"
-              data-aos="fade-up"
-              data-aos-delay="100"
-            >
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
               <div class="contact-about">
                 <h3>Vesperr</h3>
                 <p>
@@ -307,27 +345,15 @@
                   congue.
                 </p>
                 <div class="social-links">
-                  <a href="#" class="twitter"
-                    ><i class="icofont-twitter"></i
-                  ></a>
-                  <a href="#" class="facebook"
-                    ><i class="icofont-facebook"></i
-                  ></a>
-                  <a href="#" class="instagram"
-                    ><i class="icofont-instagram"></i
-                  ></a>
-                  <a href="#" class="linkedin"
-                    ><i class="icofont-linkedin"></i
-                  ></a>
+                  <a href="#" class="twitter"><i class="icofont-twitter"></i></a>
+                  <a href="#" class="facebook"><i class="icofont-facebook"></i></a>
+                  <a href="#" class="instagram"><i class="icofont-instagram"></i></a>
+                  <a href="#" class="linkedin"><i class="icofont-linkedin"></i></a>
                 </div>
               </div>
             </div>
 
-            <div
-              class="col-lg-3 col-md-6 mt-4 mt-md-0"
-              data-aos="fade-up"
-              data-aos-delay="200"
-            >
+            <div class="col-lg-3 col-md-6 mt-4 mt-md-0" data-aos="fade-up" data-aos-delay="200">
               <div class="info">
                 <div>
                   <i class="ri-map-pin-line"></i>
@@ -346,62 +372,26 @@
               </div>
             </div>
 
-            <div
-              class="col-lg-5 col-md-12"
-              data-aos="fade-up"
-              data-aos-delay="300"
-            >
-              <form
-                action="forms/contact.php"
-                method="post"
-                role="form"
-                class="php-email-form"
-              >
+            <div class="col-lg-5 col-md-12" data-aos="fade-up" data-aos-delay="300">
+              <form action="forms/contact.php" method="post" role="form" class="php-email-form">
                 <div class="form-group">
-                  <input
-                    type="text"
-                    name="name"
-                    class="form-control"
-                    id="name"
-                    placeholder="Your Name"
-                    data-rule="minlen:4"
-                    data-msg="Please enter at least 4 chars"
-                  />
+                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name"
+                    data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
                   <div class="validate"></div>
                 </div>
                 <div class="form-group">
-                  <input
-                    type="email"
-                    class="form-control"
-                    name="email"
-                    id="email"
-                    placeholder="Your Email"
-                    data-rule="email"
-                    data-msg="Please enter a valid email"
-                  />
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email"
+                    data-rule="email" data-msg="Please enter a valid email" />
                   <div class="validate"></div>
                 </div>
                 <div class="form-group">
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="subject"
-                    id="subject"
-                    placeholder="Subject"
-                    data-rule="minlen:4"
-                    data-msg="Please enter at least 8 chars of subject"
-                  />
+                  <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject"
+                    data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
                   <div class="validate"></div>
                 </div>
                 <div class="form-group">
-                  <textarea
-                    class="form-control"
-                    name="message"
-                    rows="5"
-                    data-rule="required"
-                    data-msg="Please write something for us"
-                    placeholder="Message"
-                  ></textarea>
+                  <textarea class="form-control" name="message" rows="5" data-rule="required"
+                    data-msg="Please write something for us" placeholder="Message"></textarea>
                   <div class="validate"></div>
                 </div>
                 <div class="mb-3">
@@ -423,22 +413,44 @@
     </main>
     <!-- End #main -->
 
-  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+    <!-- ======= Footer ======= -->
+    <footer id="footer">
+      <div class="container">
+        <div class="row d-flex align-items-center">
+          <div class="col-lg-6 text-lg-left text-center">
+            <div class="copyright">
+              &copy; Copyright <strong>Vesperr</strong>. All Rights Reserved
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <nav class="footer-links text-lg-right text-center pt-2 pt-lg-0">
+              <a href="#intro" class="scrollto">Home</a>
+              <a href="#about" class="scrollto">About</a>
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Use</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- End Footer -->
 
-  <!-- Vendor JS Files -->
-  <script src="/website/assets/vendor/jquery/jquery.min.js"></script>
-  <script src="/website/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/website/assets/vendor/jquery.easing/jquery.easing.min.js"></script>
-  <script src="/website/assets/vendor/php-email-form/validate.js"></script>
-  <script src="/website/assets/vendor/waypoints/jquery.waypoints.min.js"></script>
-  <script src="/website/assets/vendor/counterup/counterup.min.js"></script>
-  <script src="/website/assets/vendor/owl.carousel/owl.carousel.min.js"></script>
-  <script src="/website/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="/website/assets/vendor/venobox/venobox.min.js"></script>
-  <script src="/website/assets/vendor/aos/aos.js"></script>
+    <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
 
-  <!-- Template Main JS File -->
-  <script src="/website/assets/js/main.js"></script>
+    <!-- Vendor JS Files -->
+    <script src="/website/assets/vendor/jquery/jquery.min.js"></script>
+    <script src="/website/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/website/assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+    <script src="/website/assets/vendor/php-email-form/validate.js"></script>
+    <script src="/website/assets/vendor/waypoints/jquery.waypoints.min.js"></script>
+    <script src="/website/assets/vendor/counterup/counterup.min.js"></script>
+    <script src="/website/assets/vendor/owl.carousel/owl.carousel.min.js"></script>
+    <script src="/website/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="/website/assets/vendor/venobox/venobox.min.js"></script>
+    <script src="/website/assets/vendor/aos/aos.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="/website/assets/js/main.js"></script>
 
 </body>
 
