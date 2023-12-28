@@ -1,0 +1,31 @@
+/* Section with Photos */
+.team .member {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.team .member .member-img {
+    flex-grow: 1;
+}
+
+.team .member img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.faq {
+    text-align: center;
+}
+
+.faq-item div {
+    padding-top: 15px;
+}
+
+#about-desc {
+    text-align: justify;
+    padding-right: 20px;
+}
+
+
