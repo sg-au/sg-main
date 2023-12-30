@@ -42,7 +42,24 @@ router.get('/announcements', (req, res) => {
 
 
 router.get('/course-review', (req, res) => {
-    res.render("platform/pages/course-reviews");
+  var reviewWindow={
+    from:{
+      semester:"spring",
+      year:2022
+    },
+    to:{
+      semester:"monsoon",
+      year:2023
+    }
+  };
+  const maxCoursesToLoad=1000;
+  axios.get(`${process.env.STRAPI_API_URL}/courses?fields[0]=courseCode&fields[1]=courseTitle&fields[2]=semester&fields[3]=year&fields[4]=uid&populate[0]=faculties&populate[1]=course_reviews&pagination[pageSize]=${maxCoursesToLoad}&sort[0]=year:desc`,axiosConfig)
+  .then((response) => {
+    res.render("platform/pages/course-reviews",{data:response.data.data});
+  })
+  .catch((error) => {
+      console.error('Error fetching departments:', error);
+  });
 });
 
 router.get('/tickets', (req, res) => {
@@ -135,7 +152,7 @@ router.post('/create-ticket', (req, res) => {
   const userEmail = req.user._json.email; // Replace with the email
   let userId;
   
-  axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`)
+  axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`,axiosConfig)
     .then((response) => {
       // Assuming you get a single user with the specified email
       userId = response.data[0].id;
@@ -284,7 +301,7 @@ router.get('/notice', (req, res) => {
 
 router.get('/profile', (req, res) => {
     userEmail = req.user._json.email;
-    axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`)
+    axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`,axiosConfig)
     .then((response) => {
       // Assuming you get a single user with the specified email
       user = response.data[0];
@@ -307,7 +324,7 @@ router.get('/event', (req, res) => {
     res.render("platform/pages/events")
 });
 
-router.get('/course-wise', (req, res) => {
+router.get('/course-reviews/:course', (req, res) => {
   res.render("platform/pages/course-wise")
 });
 
