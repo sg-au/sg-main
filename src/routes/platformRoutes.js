@@ -45,20 +45,7 @@ router.get('/course-reviews', (req, res) => {
   const maxCoursesToLoad = 1000;
   axios.get(`${process.env.STRAPI_API_URL}/courses?fields[0]=courseCode&fields[1]=courseTitle&fields[2]=semester&fields[3]=year&populate[0]=faculties&populate[1]=course_reviews&pagination[pageSize]=${maxCoursesToLoad}&sort[0]=year:desc`, axiosConfig)
     .then((response) => {
-      const sortedCourses = response.data.data.sort((courseA, courseB) => {
-        const hasReviewsA = courseA.attributes.course_reviews.length > 0;
-        const hasReviewsB = courseB.attributes.course_reviews.length > 0;
-
-        if (hasReviewsA && !hasReviewsB) {
-          return -1;
-        } else if (!hasReviewsA && hasReviewsB) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
-
-      res.render("platform/pages/course-reviews", { data: sortedCourses });
+      res.render("platform/pages/course-reviews", { data: response.data.data });
     })
     .catch((error) => {
       console.error('Error fetching departments:', error);
