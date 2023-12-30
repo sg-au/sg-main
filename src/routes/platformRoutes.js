@@ -41,26 +41,46 @@ router.get('/announcements', (req, res) => {
 });
 
 
-router.get('/course-review', (req, res) => {
-  var reviewWindow={
-    from:{
-      semester:"spring",
-      year:2022
-    },
-    to:{
-      semester:"monsoon",
-      year:2023
-    }
-  };
-  const maxCoursesToLoad=1000;
-  axios.get(`${process.env.STRAPI_API_URL}/courses?fields[0]=courseCode&fields[1]=courseTitle&fields[2]=semester&fields[3]=year&fields[4]=uid&populate[0]=faculties&populate[1]=course_reviews&pagination[pageSize]=${maxCoursesToLoad}&sort[0]=year:desc`,axiosConfig)
+router.get('/course-reviews', (req, res) => {
+  const maxCoursesToLoad = 1000;
+  axios.get(`${process.env.STRAPI_API_URL}/courses?fields[0]=courseCode&fields[1]=courseTitle&fields[2]=semester&fields[3]=year&populate[0]=faculties&populate[1]=course_reviews&pagination[pageSize]=${maxCoursesToLoad}&sort[0]=year:desc`, axiosConfig)
+    .then((response) => {
+      const sortedCourses = response.data.data.sort((courseA, courseB) => {
+        const hasReviewsA = courseA.attributes.course_reviews.length > 0;
+        const hasReviewsB = courseB.attributes.course_reviews.length > 0;
+
+        if (hasReviewsA && !hasReviewsB) {
+          return -1;
+        } else if (!hasReviewsA && hasReviewsB) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
+      res.render("platform/pages/course-reviews", { data: sortedCourses });
+    })
+    .catch((error) => {
+      console.error('Error fetching departments:', error);
+    });
+});
+
+
+
+router.get('/course-reviews/:id', (req, res) => {
+  axios.get(`${process.env.STRAPI_API_URL}/courses/${req.params.id}?populate[0]=faculties&populate[1]=course_reviews`,axiosConfig)
   .then((response) => {
-    res.render("platform/pages/course-reviews",{data:response.data.data});
+    // console.log(response.data.data)response.data.data.attributes.description
+    response.data.data.attributes.description = response.data.data.attributes.description.replace(/<h4>.*?<\/h4>/, '');
+    response.data.data.attributes.description = response.data.data.attributes.description.replace('<p class="cmsDescp">', '');
+    response.data.data.attributes.description = response.data.data.attributes.description.replace('</p>', '');
+    res.render("platform/pages/course",{data:response.data.data.attributes});
   })
   .catch((error) => {
       console.error('Error fetching departments:', error);
   });
 });
+
 
 router.get('/tickets', (req, res) => {
     const fetchData = async () => {
@@ -322,10 +342,6 @@ router.get('/events', (req, res) => {
 
 router.get('/event', (req, res) => {
     res.render("platform/pages/events")
-});
-
-router.get('/course-reviews/:course', (req, res) => {
-  res.render("platform/pages/course-wise")
 });
 
 router.get('/prof-wise', (req, res) => {

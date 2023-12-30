@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modernize Free</title>
+  <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+  <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+
+  <style>
+    .rating-color{
+      color:#fbc634 !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <%-include("../partials/sidebar")%>
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <%-include("../partials/header")%>
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="row justify-content-between">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="flex-row mb-2">
+                      <span class="fs-6 fw-semibold"><%=data.courseTitle%></span>
+                    </div>
+                    <div class="flex-row mb-3">
+                      <ul class="list-inline">
+                        <!-- <span style="font-size: 10px;" class="fs-3 text-dark fw-semibold">
+                          <%for(var j=0;j<data.faculties.data.length;j++){%>
+                              Faculty: <%=data.faculties.data[j].attributes.email%>  
+                          <%}%>
+                        </span>   -->
+                        <span style="float: right;" class="fs-3 text-dark fw-semibold">
+                            Offered:  <%=data.semester.charAt(0).toUpperCase()%><%=data.semester.substring(1)%>  <%=data.year%>
+                        </span>                                            
+                      </ul>
+                    </div>
+                    <div class="card" style="background-color: #eaeff4;">
+                        <div class="card-body">
+                          <h5 class="card-title">Description</h5>
+                          <div id="description" value="false" class="card-text"><%-data.description.substring(0,500)%>...</div>
+                        </div>
+                    </div>
+                    <%if(data.description.length>500){%>
+                    <div><a href="javascript:void(0)" id="more" onclick="toggleDescription()">read more</a></div>
+                    <%}%>
+                    <br />
+                    <div class="col-md-12">
+                        <div style="box-shadow: none;" class="card">
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                      <span style="font-size: 10px;" class="fs-3 text-dark fw-semibold">Overall Rating:</span>
+                                       <div style="padding-left: 2%;" class="small-ratings">
+                                        <i class="fa fa-star rating-color"></i>
+                                        <i class="fa fa-star rating-color"></i>
+                                        <i class="fa fa-star rating-color"></i>
+                                        <i class="fa fa-star-half rating-color"></i>
+                                        <span style="padding-left: 2px;" class="card-text">(3.5)</span>
+                                      </div>
+                                    </button>
+                                  </h2>
+                                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                      <div class="mt-1 d-flex justify-content-between align-items-center">
+                                        <span class="card-text fw-semibold">Grading Transparency</span>
+                                          <div class="small-ratings">
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <span style="padding-left: 2px;" class="card-text">(3.1)</span>
+                                          </div>
+                                          
+                                      </div>
+                                      
+                                      <div class="mt-1 d-flex justify-content-between align-items-center">
+                                        <span class="card-text fw-semibold">Assignment Relatability</span>
+                                          <div class="small-ratings">
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star rating-color"></i>
+                                          </div>
+                                      </div>
+                                      
+                                      
+                                      <div class="mt-1 d-flex justify-content-between align-items-center">
+                                        <span class="card-text fw-semibold">Distributed Grading</span>
+                                          <div class="small-ratings">
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star rating-color"></i>
+                                          </div>
+                                      </div>
+                                      
+                                      
+                                      <div class="mt-1 d-flex justify-content-between align-items-center">
+                                        <span class="card-text fw-semibold">Lecture Quality</span>
+                                          <div class="small-ratings">
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star-half rating-color"></i>
+                                          </div>
+                                      </div>
+                                      
+                                      
+                                      <div class="mt-1 d-flex justify-content-between align-items-center">
+                                        <span class="card-text fw-semibold">Influence of TF/TA</span>
+                                          <div class="small-ratings">
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star rating-color"></i>
+                                          </div>
+                                      </div>
+                                      
+                                      <div class="mt-1 d-flex justify-content-between align-items-center">
+                                        <span class="card-text fw-semibold">Recommended</span>
+                                          <div class="small-ratings">
+                                              <i class="fa fa-star rating-color"></i>
+                                              <i class="fa fa-star rating-color"></i>
+                                          </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div style="box-shadow: none;" class="card">
+                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                          <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                <span style="font-size: 10px;" class="fs-3 text-dark fw-semibold">Question 1</span>
+                              </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                              <div class="accordion-body">
+                                <div class="card" style="margin-bottom: 10px; box-shadow:none; background-color: #eaeff4;">
+                                  <div class="card-body">
+                                    <p class="card-text">Here goes the course review</p>
+                                  </div>
+                                </div>
+                                <div class="card" style="margin-bottom: 10px; box-shadow:none; background-color: #eaeff4;">
+                                  <div class="card-body">
+                                    <p class="card-text">Here goes the course review</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                                <span style="font-size: 10px;" class="fs-3 text-dark fw-semibold">Question 2</span>
+                              </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                              <div class="accordion-body">
+                                <div class="accordion-body">
+                                  <div class="card" style="margin-bottom: 10px; box-shadow:none; background-color: #eaeff4;">
+                                    <div class="card-body">
+                                      <p class="card-text">Here goes the course review</p>
+                                    </div>
+                                  </div>
+                                  <div class="card" style="margin-bottom: 10px; box-shadow:none; background-color: #eaeff4;">
+                                    <div class="card-body">
+                                      <p class="card-text">Here goes the course review</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                                <span style="font-size: 10px;" class="fs-3 text-dark fw-semibold">Question 3</span>
+                              </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                              <div class="accordion-body">
+                                <div class="accordion-body">
+                                  <div class="card" style="margin-bottom: 10px; box-shadow:none; background-color: #eaeff4;">
+                                    <div class="card-body">
+                                      <p class="card-text">Here goes the course review</p>
+                                    </div>
+                                  </div>
+                                  <div class="card" style="margin-bottom: 10px; box-shadow:none; background-color: #eaeff4;">
+                                    <div class="card-body">
+                                      <p class="card-text">Here goes the course review</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="fab-container">
+    <button style="box-shadow: 0px 3px 20px rgba(1, 41, 112, 0.5);" type="button" 
+    onclick="location.href='/platform/create-ticket'" class="btn btn-primary m-1"><i
+        class="ti ti-circle-plus"></i> Add Review</button>
+  </div>
+  <script>
+    function toggleDescription(){
+      element = document.getElementById("description");
+      link = document.getElementById("more");
+      if(element.value=="true"){
+        element.innerHTML=`<%-data.description.substring(0,500)%>`;
+        link.innerText="read more"
+        element.value="false";
+        return 0;
+      }else{
+        element.innerHTML="";
+        element.innerText="";
+        element.innerHTML=`<%-data.description%>`;
+        link.innerHTML="<br />read less"
+        element.value="true";
+        return 0;
+      }
+    }
+  </script>
+  <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/platform/assets/js/sidebarmenu.js"></script>
+  <script src="/platform/assets/js/app.min.js"></script>
+  <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/platform/assets/js/dashboard.js"></script>
+  <script src="/platform/assets/js/theme.js"></script>
+</body>
+
+</html>
