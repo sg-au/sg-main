@@ -12,6 +12,11 @@
     <link
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
         rel="stylesheet">
+    <style>
+        .rating-color{
+            color:#fbc634 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -32,6 +37,112 @@
                     <form id="ticketForm" action="/platform/fill-course-review" method="POST">
                         <div class="card">
                             <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="flex-row mb-2">
+                                        <span class="fs-6 fw-semibold">Introduction to Computer Programming</span>
+                                      </div>
+                                      <div class="flex-row mb-3">
+                                        <ul class="list-inline">
+                                          
+                                          <span style="float: right;" class="fs-3 text-dark fw-semibold">
+                                              Offered: Monsoon, 2023
+                                          </span>                                            
+                                        </ul>
+                                      </div>
+                                      <div class="card" style="background-color: #eaeff4;">
+                                          <div class="card-body">
+                                            <h5 class="card-title">Description</h5>
+                                            <div id="description" value="false" class="card-text">Concept of an algorithm; principle of mathematical induction; correctness of algorithms; efficiency of algorithms - time and space measures; algorithms to programs; specification, top-down development and step-wise refinement; the notion of state and finite state machine; imperative programs; correctness and loop invariants; basic algorithm design techniques; encapsulation, abstractions and modularity; basics of object-oriented programming; basic logic, soundness and completeness, example of a propositional resolution; an example of concurrency; an intro to numerical computation.</div>
+                                          </div>
+                                      </div>
+                                      <div><a href="javascript:void(0)" id="more" onclick="toggleDescription()">read more</a></div>
+                                      <br />
+                                      <div class="col-md-12">
+                                          <div style="box-shadow: none;" class="card">
+                                              <div class="accordion" id="accordionExample">
+                                                  <div class="accordion-item">
+                                                    <h2 class="accordion-header" id="headingTwo">
+                                                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                        <span style="font-size: 10px;" class="fs-3 text-dark fw-semibold">Overall Rating:</span>
+                                                         <div style="padding-left: 2%;" class="small-ratings">
+                                                          <i class="fa fa-star rating-color"></i>
+                                                          <i class="fa fa-star rating-color"></i>
+                                                          <i class="fa fa-star rating-color"></i>
+                                                          <i class="fa fa-star-half rating-color"></i>
+                                                          <span style="padding-left: 2px;" class="card-text">(3.5)</span>
+                                                        </div>
+                                                      </button>
+                                                    </h2>
+                                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                                      <div class="accordion-body">
+                                                        <div class="mt-1 d-flex justify-content-between align-items-center">
+                                                          <span class="card-text fw-semibold">Grading Transparency</span>
+                                                            <div class="small-ratings">
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <span style="padding-left: 2px;" class="card-text">(3.1)</span>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        
+                                                        <div class="mt-1 d-flex justify-content-between align-items-center">
+                                                          <span class="card-text fw-semibold">Assignment Relatability</span>
+                                                            <div class="small-ratings">
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star rating-color"></i>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        
+                                                        <div class="mt-1 d-flex justify-content-between align-items-center">
+                                                          <span class="card-text fw-semibold">Distributed Grading</span>
+                                                            <div class="small-ratings">
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star rating-color"></i>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        
+                                                        <div class="mt-1 d-flex justify-content-between align-items-center">
+                                                          <span class="card-text fw-semibold">Lecture Quality</span>
+                                                            <div class="small-ratings">
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star-half rating-color"></i>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        
+                                                        <div class="mt-1 d-flex justify-content-between align-items-center">
+                                                          <span class="card-text fw-semibold">Influence of TF/TA</span>
+                                                            <div class="small-ratings">
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star rating-color"></i>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="mt-1 d-flex justify-content-between align-items-center">
+                                                          <span class="card-text fw-semibold">Recommended</span>
+                                                            <div class="small-ratings">
+                                                                <i class="fa fa-star rating-color"></i>
+                                                                <i class="fa fa-star rating-color"></i>
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                          </div>
+                                      </div>
+                                      </div>
+                                    </div>
                                 <h5 class="card-title fw-semibold mb-4">Submit a course review</h5>
                                 <div class="card" id="firstPart">
                                     <div style="background-color: #eaeff4;" class="card-body">
