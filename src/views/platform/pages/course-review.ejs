@@ -29,53 +29,137 @@
                         <div class="timeline-desc fs-3 text-dark mt-n1 mb-2">This is a platform to collate course reviews for students that enable them to make better more informed academic choices. </div>
                         <a href="#" class="d-block">Link to the policy</a>
                       </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title fw-semibold mb-4">Submit a course review</h5>
-                            <div class="card">
-                                <div class="card-body">
-                                    <form id="ticketForm" action="/platform/create-ticket" method="POST">
-                                        <div class="mb-3">
-                                            <label for="newTicketTitle" class="form-label">Course Name</label>
-                                            <input required name="subject" type="course" class="form-control" id="newTicketTitle">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="newTicketTitle" class="form-label">Professor Name</label>
-                                            <input required name="subject" type="professor" class="form-control" id="newTicketTitle">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="newTicketBody" class="form-label">Review</label>
-                                            <textarea required minlength="50" rows="5" name="review" class="form-control" id="newTicketBody"></textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="select" class="form-label">Select Helpfulness Rating of Professor</label>
-                                            <select required name="category" id="select" class="form-select">
-                                                <option disabled selected>Select</option>
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="select" class="form-label">Select Teaching Rating of Professor</label>
-                                            <select required name="subcategory" id="select" class="form-select">
-                                                <option disabled selected>Select</option>
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
-                                            </select>
-                                        </div>
-                                        <p>The review you are submitting is completely anonymous. Be sure to read the policy before you submit a review.</p>
-                                        <button type="submit" class="btn btn-primary">Submit Review</button>
-                                    </form>
+                    <form id="ticketForm" action="/platform/fill-course-review" method="POST">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title fw-semibold mb-4">Submit a course review</h5>
+                                <div class="card">
+                                    <div style="background-color: #eaeff4;" class="card-body">
+                                        
+                                            <div class="mb-3">
+                                                <label for="newTicketTitle" class="form-label">Course Name</label>
+                                                <input disabled required name="subject" type="course" class="form-control" id="name" placeholder="NameofCourse">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="newTicketTitle" class="form-label">Faculty</label>
+                                                <input disabled required name="subject" type="faculty" class="form-control" id="faculty">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">Select Your Batch</label>
+                                                <select required name="Batch" id="batch" class="form-select">
+                                                    <option disabled selected>Select</option>
+                                                    <option>UG 2023 (First Years)</option>
+                                                    <option>UG 25</option>
+                                                    <option>UG 24</option>
+                                                    <option>ASP 23</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">Select Grade Received</label>
+                                                <select required name="category" id="grade" class="form-select">
+                                                    <option disabled selected>Select</option>
+                                                    <option>A/A-</option>
+                                                    <option>B+/B/B-</option>
+                                                    <option>C+/C/C-</option>
+                                                    <option>D+/D/D-</option>
+                                                    <option>F</option>
+                                                    <option>Have Not Received Yet</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">Course Conducted</label>
+                                                <select required name="category" id="courseConducted" class="form-select">
+                                                    <option disabled selected>Select</option>
+                                                    <option>Online</option>
+                                                    <option>Offline</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">Course Grading</label>
+                                                <select required name="category" id="courseGrading" class="form-select">
+                                                    <option disabled selected>Select</option>
+                                                    <option>Absolute</option>
+                                                    <option>Relative</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="newTicketBody" class="form-label">Do You Have Any General Comments On The Course?</label>
+                                                <textarea rows="5" name="generalComments" class="form-control" id="generalComments"></textarea>
+                                            </div>
+                                    </div>
                                 </div>
+                                <div class="card">
+                                    <div style="background-color: #eaeff4;" class="card-body">
+
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">How Transparent Was The Grading System?</label>
+                                                <select required name="transparent" id="transparent" class="form-select">
+                                                    <option disabled selected>1 - Highly Ambiguous; 5 - Highly Transparent</option>
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">Extra Credit Provided</label>
+                                                <select required name="extraCredit" id="extraCredit" class="form-select">
+                                                    <option disabled selected>Yes/No</option>
+                                                    <option>Yes</option>
+                                                    <option>No</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">How Relatable Were Assignments</label>
+                                                <select required name="assignmentRel" id="assignmentRel" class="form-select">
+                                                    <option disabled selected>1 - Unrelated 5 - Taught</option>
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">Is the professor a good orator/communicator/lecturer?</label>
+                                                <select required name="goodOrator" id="goodOrator" class="form-select">
+                                                    <option disabled selected>1 - Bad; 5 - Good</option>
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">How Highly Would You Recommend The Course</label>
+                                                <select required name="recommend" id="recommend" class="form-select">
+                                                    <option disabled selected>1 - No; 5 - Yes</option>
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="newTicketBody" class="form-label">Do You Have Any Feedback/Suggestions For The Review System?</label>
+                                                <textarea rows="5" name="feedback" class="form-control" id="feedback"></textarea>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input name="share" type="checkbox" class="form-check-input" id="shareDetails"
+                                        aria-describedby="detailsHelp">
+                                    <label class="form-check-label" for="exampleCheck1">Share My
+                                        Details</label>
+                                    <div id="detailsHelp" class="form-text">Student will not by default know your details. Do you wish to disclose them?</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit Review</button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

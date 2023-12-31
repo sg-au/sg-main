@@ -104,6 +104,9 @@ router.get('/course-reviews/:id', (req, res) => {
   });
 });
 
+router.get('/fill-course-review', (req, res) => {
+  res.render("platform/pages/course-review")
+})
 
 router.get('/tickets', (req, res) => {
     const fetchData = async () => {

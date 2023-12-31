@@ -17,6 +17,14 @@
   <link
     href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
     rel="stylesheet">
+  <style>
+    @media screen {
+      .scroll {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
 </head>
 <script>
     function capitalizeFirstLetter(string) {
@@ -50,7 +58,7 @@
                       </ul>
                     </div>
                     <br>
-                    <table id="example" class="table table-striped" style="width:100%">
+                    <table id="example" class="table table-striped scroll" style="width:100%">
                       <thead>
                           <tr>
                               <th></th>
