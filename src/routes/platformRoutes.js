@@ -57,11 +57,47 @@ router.get('/course-reviews', (req, res) => {
 router.get('/course-reviews/:id', (req, res) => {
   axios.get(`${process.env.STRAPI_API_URL}/courses/${req.params.id}?populate[0]=faculties&populate[1]=course_reviews`,axiosConfig)
   .then((response) => {
-    // console.log(response.data.data)response.data.data.attributes.description
+    let gradingTransparencyTotal = 0;
+    let assignmentRelatabilityTotal = 0;
+    let distributedGradingTotal = 0;
+    let lecturerQuality = 0;
+    let influenceOfTFTATotal = 0;
+    let recommendedTotal = 0;
+    courseReviews=response.data.data.attributes.course_reviews.data;
+    // Loop through each course review
+    courseReviews.forEach(review => {
+        gradingTransparencyTotal += (review.attributes.grading_transparent?review.attributes.grading_transparent:0);
+        assignmentRelatabilityTotal += (review.attributes.assignment_relatability?review.attributes.assignment_relatability:0);
+        distributedGradingTotal += (review.attributes.distributed_grading_components?review.attributes.distributed_grading_components:0);
+        lecturerQuality+= (review.attributes.good_lecturer?review.attributes.good_lecturer:0);
+        influenceOfTFTATotal += (review.attributes.influence_of_tf?review.attributes.influence_of_tf:0);
+        recommendedTotal += (review.attributes.recommend?review.attributes.recommend:0);
+    });
+
+    // Total number of reviews
+    const totalReviews = courseReviews.length;
+    
+    // Calculate Average
+    const gradingTransparencyAvg = gradingTransparencyTotal / totalReviews;
+    const assignmentRelatabilityAvg = assignmentRelatabilityTotal / totalReviews;
+    const distributedGradingAvg = distributedGradingTotal / totalReviews;
+    const goodLecturer = lecturerQuality / totalReviews;
+    const influenceOfTFTAAvg = influenceOfTFTATotal / totalReviews;
+    const overall = recommendedTotal / totalReviews;
+
+    const ratings={
+      overall,
+      gradingTransparencyAvg,
+      assignmentRelatabilityAvg,
+      distributedGradingAvg,
+      goodLecturer,
+      influenceOfTFTAAvg,
+    }
     response.data.data.attributes.description = response.data.data.attributes.description.replace(/<h4>.*?<\/h4>/, '');
     response.data.data.attributes.description = response.data.data.attributes.description.replace('<p class="cmsDescp">', '');
     response.data.data.attributes.description = response.data.data.attributes.description.replace('</p>', '');
-    res.render("platform/pages/course",{data:response.data.data.attributes});
+
+    res.render("platform/pages/course",{data:response.data.data.attributes,ratings:ratings});
   })
   .catch((error) => {
       console.error('Error fetching departments:', error);
