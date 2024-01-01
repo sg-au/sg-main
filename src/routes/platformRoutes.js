@@ -41,9 +41,160 @@ router.get('/announcements', (req, res) => {
 });
 
 
-router.get('/course-review', (req, res) => {
-    res.render("platform/pages/course-review");
+router.get('/course-reviews', (req, res) => {
+  const maxCoursesToLoad = 1000;
+  axios.get(`${process.env.STRAPI_API_URL}/courses?fields[0]=courseCode&fields[1]=courseTitle&fields[2]=semester&fields[3]=year&populate[0]=faculties&populate[1]=course_reviews&populate[2]=reviews&pagination[pageSize]=${maxCoursesToLoad}&sort[0]=year:desc`, axiosConfig)
+    .then((response) => {
+      res.render("platform/pages/course-reviews", { data: response.data.data });
+    })
+    .catch((error) => {
+      console.error('Error fetching departments:', error);
+    });
 });
+
+
+
+router.get('/course-reviews/:id', (req, res) => {
+  axios.get(`${process.env.STRAPI_API_URL}/courses/${req.params.id}?populate[0]=faculties&populate[1]=reviews&populate[2]=course_reviews&populate[3]=reviews.author`,axiosConfig)
+  .then((response) => {
+    // Ratings
+    let transparentTotal = 0;
+    let relatabilityTotal = 0;
+    let strictTotal = 0;
+    let fairnessTotal = 0;
+    let lecturerTotal = 0;
+    let overallTotal = 0;
+    courseReviews=response.data.data.attributes.reviews.data;
+    // Loop through each course review
+    courseReviews.forEach(review => {
+        transparentTotal += (review.attributes.transparent?review.attributes.transparent:0);
+        relatabilityTotal += (review.attributes.relatability?review.attributes.relatability:0);
+        strictTotal += (review.attributes.strict?review.attributes.strict:0);
+        fairnessTotal+= (review.attributes.fair?review.attributes.fair:0);
+        lecturerTotal += (review.attributes.lecturer?review.attributes.lecturer:0);
+        overallTotal += (review.attributes.overall?review.attributes.overall:0);
+    });
+
+    // Total number of reviews
+    const totalReviews = courseReviews.length;
+    
+    // Calculate Average
+    const transparent = transparentTotal / totalReviews;
+    const relatability = relatabilityTotal / totalReviews;
+    const strict = strictTotal / totalReviews;
+    const fair = fairnessTotal / totalReviews;
+    const lecturer = lecturerTotal / totalReviews;
+    const overall = overallTotal / totalReviews;
+    const bool = totalReviews == 0?false:true;
+
+    const ratings={
+      transparent,
+      relatability,
+      strict,
+      fair,
+      lecturer,
+      overall,
+      bool
+    }
+    // Ratings
+    // console.log(ratings)
+
+    // Description
+    response.data.data.attributes.description = response.data.data.attributes.description.replace(/<h4>.*?<\/h4>/, '');
+    response.data.data.attributes.description = response.data.data.attributes.description.replace('<p class="cmsDescp">', '');
+    response.data.data.attributes.description = response.data.data.attributes.description.replace('</p>', '');
+    // Description
+
+
+    // Reviews
+    var reviews=[];
+    courseReviews.forEach(rw => {
+      // console.log(rw.attributes.author)
+      if(rw.attributes.author && rw.attributes.author.data){
+        object = {
+          review:rw.attributes.review,
+          grade:rw.attributes.grade,
+          batch:rw.attributes.batch,
+          major:rw.attributes.major,
+          name:rw.attributes.author.data.attributes.username,
+          overall:rw.attributes.overall
+        }
+      }else{
+      object = {
+        review:rw.attributes.review,
+        grade:rw.attributes.grade,
+        batch:rw.attributes.batch,
+        major:rw.attributes.major,
+        overall:rw.attributes.overall,
+        name:""
+      }
+    }
+    // console.log(object)
+      reviews.push(object);
+    });
+    // Reviews
+
+
+    res.render("platform/pages/course",{data:response.data.data.attributes,ratings:ratings,id:response.data.data.id, reviews:reviews});
+  })
+  .catch((error) => {
+      console.error('Error fetching departments:', error);
+      res.send(404);
+
+  });
+});
+
+router.get('/add-course-review/:id', (req, res) => {
+  axios.get(`${process.env.STRAPI_API_URL}/courses/${req.params.id}?populate[0]=faculties&populate[1]=course_reviews`,axiosConfig)
+  .then((response) => {
+    response.data.data.attributes.description = response.data.data.attributes.description.replace(/<h4>.*?<\/h4>/, '');
+    response.data.data.attributes.description = response.data.data.attributes.description.replace('<p class="cmsDescp">', '');
+    response.data.data.attributes.description = response.data.data.attributes.description.replace('</p>', '');
+    res.render("platform/pages/add-course-review",{data:response.data.data.attributes,id:response.data.data.id});
+  })
+  .catch((error) => {
+      console.error('Error fetching departments:', error);
+      res.send(404);
+
+  });
+})
+
+router.post('/add-course-review/:id', (req, res) => {
+  // console.log(req.body);
+  if (req.body.name && req.body.name === 'on') {
+    // If req.body has a key called 'name' and its value is 'on', leave it blank
+    userEmail=req.user._json.email;
+    axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`,axiosConfig)
+    .then((response) => {
+      // Assuming you get a single user with the specified email
+      userId = response.data[0].id;
+      req.body = { ...req.body, course: [req.params.id], author:[userId]};
+      axios.post(`${process.env.STRAPI_API_URL}/reviews`,{data:req.body}, axiosConfig)
+        .then((response) => {
+          res.redirect("/platform/course-reviews")
+        })
+        .catch((error) => {
+            console.log(error)
+            res.send("An error occurred");
+        });
+    })
+    .catch((error) => {
+      console.error('Error fetching user:', error);
+      // Handle error
+      res.send("An error occurred");
+    });
+  } else {
+    req.body = { ...req.body, course: [req.params.id]};
+    axios.post(`${process.env.STRAPI_API_URL}/reviews`,{data:req.body}, axiosConfig)
+        .then((response) => {
+          res.redirect("/platform/course-reviews")
+        })
+        .catch((error) => {
+          console.log(error)
+          res.send("An error occurred");
+        });
+  }
+})
 
 router.get('/tickets', (req, res) => {
     const fetchData = async () => {
@@ -135,7 +286,7 @@ router.post('/create-ticket', (req, res) => {
   const userEmail = req.user._json.email; // Replace with the email
   let userId;
   
-  axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`)
+  axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`,axiosConfig)
     .then((response) => {
       // Assuming you get a single user with the specified email
       userId = response.data[0].id;
@@ -284,7 +435,7 @@ router.get('/notice', (req, res) => {
 
 router.get('/profile', (req, res) => {
     userEmail = req.user._json.email;
-    axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`)
+    axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`,axiosConfig)
     .then((response) => {
       // Assuming you get a single user with the specified email
       user = response.data[0];
@@ -307,6 +458,9 @@ router.get('/event', (req, res) => {
     res.render("platform/pages/events")
 });
 
+router.get('/prof-wise', (req, res) => {
+  res.render("platform/pages/prof-wise")
+});
 
 // Export the router
 module.exports = router;

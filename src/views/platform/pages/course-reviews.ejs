@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modernize Free</title>
+  <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.gstatic.com" rel="preconnect" />
+  <link rel="stylesheet" href="/platform/assets/css/dataTables.css" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+  <style>
+    @media screen {
+      .scroll {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<script>
+    function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+</script>
+
+<body>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <%-include("../partials/sidebar")%>
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <%-include("../partials/header")%>
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="row justify-content-between">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="flex-row mb-2">
+                      <span class="fs-6 fw-semibold">Course Review System</span>
+                    </div>
+                    <div class="flex-row mb-3">
+                      <ul class="list-inline">
+                        <span style="font-size: 10px;" class="fs-3 fw-semibold">
+                          Explore Courses: Click on any course to view or add reviews. Entries in lighter color indicate they don't have reviews yet. Feel free to select and add reviews to any of these entries.
+                          Share your experiences and encourage friends to add their reviews too. Together, let's build a comprehensive resource for everyone.
+                                                </span>                                         
+                      </ul>
+                    </div>
+                    <br>
+                    <table id="example" class="table table-striped scroll" style="width:100%">
+                      <thead>
+                          <tr>
+                              <th></th>
+                              <th>Course Code</th>
+                              <th>Course Title</th>
+                              <!-- <th>Semester-Year</th> -->
+                              <th>Faculty</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <%for(i=0;i<data.length;i++){%>
+                         <%if(data[i].attributes.reviews.data.length!=0){%>
+                          <tr style="cursor: pointer;" onclick="window.open('/platform/course-reviews/<%=data[i].id%>', '_blank');">
+                              <td style="display:hidden">-</td>
+                              <td><%=data[i].attributes.courseCode.substring(0,25)%></td>
+                              <td><%=data[i].attributes.courseTitle%> <br /><span style="font-size:10px"><%=data[i].attributes.semester.charAt(0).toUpperCase()%><%=data[i].attributes.semester.slice(1)%> <%=data[i].attributes.year%></span></td>
+                              <!-- <td><b><%=data[i].attributes.semester%> - <%=data[i].attributes.year%></b></td> -->
+                            <td>
+                                <% let concatenatedEmails = ''; %>
+                                <% for (let j = 0; j< data[i].attributes.faculties.data.length; j++) { %>
+                                    <% const email = data[i].attributes.faculties.data[j].attributes.email; %>
+                                    <% if (email && email.indexOf('_') === -1) { %>
+                                    <% concatenatedEmails += email; %>
+                                    <% } %>
+                                <% } %>
+                                <%= concatenatedEmails.substring(0, 12) %><%= concatenatedEmails.length > 12 ? '...' : '' %>
+                            </td>
+                          </tr>
+                           <%}else{%>
+                            <tr style="opacity:0.5; cursor:pointer" onclick="window.open('/platform/course-reviews/<%=data[i].id%>', '_blank');">
+                                <td style="display:hidden">_</td>
+                                <td><%=data[i].attributes.courseCode.substring(0,25)%></td>
+                                <td><%=data[i].attributes.courseTitle%> <br /><span style="font-size:10px"><%=data[i].attributes.semester.charAt(0).toUpperCase()%><%=data[i].attributes.semester.slice(1)%> <%=data[i].attributes.year%></span></td>
+                                <!-- <td><%=data[i].attributes.semester%> - <%=data[i].attributes.year%></td> -->
+                                <td>
+                                    <% let concatenatedEmails = ''; %>
+                                    <% for (let j = 0; j < data[i].attributes.faculties.data.length; j++) { %>
+                                      <% const email = data[i].attributes.faculties.data[j].attributes.email; %>
+                                      <% if (email && email.indexOf('_') === -1) { %>
+                                        <% concatenatedEmails += email; %>
+                                      <% } %>
+                                    <% } %>
+                                    <%= concatenatedEmails.substring(0, 12) %><%= concatenatedEmails.length > 12 ? '...' : '' %>
+                                  </td>
+                            </tr>
+                           <%}%>
+                          <%}%>
+                      </tbody>
+                      <tfoot>
+                          <tr>
+                            <th></th>
+                            <th>Course Code</th>
+                            <th>Course Title</th>
+                            <!-- <th>Semester-Year</th> -->
+                            <th>Faculty</th>
+                          </tr>
+                      </tfoot>
+                  </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/platform/assets/js/sidebarmenu.js"></script>
+  <script src="/platform/assets/js/app.min.js"></script>
+  <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/platform/assets/js/dashboard.js"></script>
+  <script src="/platform/assets/js/theme.js"></script>
+  <script src="/platform/assets/js/main.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> -->
+  <script src="/platform/assets/js/dataTables.js"></script>
+  <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
+  <script>
+    new DataTable('#example');
+  </script>
+</body>
+
+</html>

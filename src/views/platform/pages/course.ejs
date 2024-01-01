@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modernize Free</title>
+  <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+  <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+
+  <style>
+    .rating-color{
+      color:#fbc634 !important;
+    }
+    .review-section {
+        margin-top: 30px;
+    }
+
+    /* Custom CSS for comment boxes */
+    .review-container {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    .comment-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+        object-fit: cover;
+    }
+
+    .review-content {
+        flex-grow: 1;
+        background-color: #eaeff4;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .review-name {
+        font-weight: bold;
+    }
+
+    .review-info {
+        font-size: 12px;
+        color: #888;
+    }
+
+    .review-text {
+        margin-top: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <%-include("../partials/sidebar")%>
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <%-include("../partials/header")%>
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="row justify-content-between">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="flex-row mb-2">
+                      <span class="fs-6 fw-semibold"><%=data.courseTitle%> (<%=data.courseCode%>) offered in <%=data.semester.charAt(0).toUpperCase()%><%=data.semester.substring(1)%>  <%=data.year%></span>
+                    </div>
+                    <div class="flex-row mb-3">
+                      <ul class="list-inline">
+                        <span style="float: right;" class="fs-3 text-dark fw-semibold">
+                            Offered:  <%=data.semester.charAt(0).toUpperCase()%><%=data.semester.substring(1)%>  <%=data.year%>
+                        </span>                                            
+                      </ul>
+                    </div>
+                    <div value="false" style="display: none;" class="card" id="description" style="background-color: #eaeff4;">
+                      <div class="card-body">
+                        <h5 class="card-title">Description</h5>
+                        <div class="card-text"><%-data.description%></div>
+                      </div>
+                    </div>
+                    <div><a href="javascript:void(0)" id="more" onclick="toggleDescription()">view description</a></div>
+                    <br />
+                    <div class="col-md-12">
+                      <%if(ratings.bool){%>
+
+                        <div style="box-shadow: none;" class="card">
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                      <span style="font-size: 10px;" class="fs-3 text-dark fw-semibold">Overall Rating:</span>
+                                       <div style="padding-left: 2%;" class="small-ratings">
+                                        <%for(var i=1;i<=ratings.overall;i++){%>
+                                        <i class="fa fa-star rating-color"></i>
+                                        <%}%>
+                                        <%if(ratings.overall%1!=0){%>
+                                          <i class="fa fa-star-half rating-color"></i>
+                                        <%}%>
+                                        <span style="padding-left: 2px;" class="card-text"><%=ratings.overall%></span>
+                                      </div>
+                                    </button>
+                                  </h2>
+                                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                      <div class="mt-1 d-flex justify-content-between align-items-center">
+                                        <span class="card-text fw-semibold">Grading Transparency</span>
+                                          <div class="small-ratings">
+                                            <%for(var i=1;i<=ratings.transparent;i++){%>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <%}%>
+                                              <%if(ratings.transparent%1!=0){%>
+                                                <i class="fa fa-star-half rating-color"></i>
+                                              <%}%>
+                                              <span style="padding-left: 2px;" class="card-text">(<%=ratings.transparent%>)</span>
+                                          </div>
+                                          
+                                      </div>
+                                      
+                                      <div class="mt-1 d-flex justify-content-between align-items-center">
+                                        <span class="card-text fw-semibold">Assignment Relatability</span>
+                                          <div class="small-ratings">
+                                            <%for(var i=1;i<=ratings.relatability;i++){%>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <%}%>
+                                              <%if(ratings.relatability%1!=0){%>
+                                                <i class="fa fa-star-half rating-color"></i>
+                                              <%}%>
+                                              <span style="padding-left: 2px;" class="card-text">(<%=ratings.relatability%>)</span>
+                                          </div>
+                                      </div>
+                                      
+                                      
+                                      <div class="mt-1 d-flex justify-content-between align-items-center">
+                                        <span class="card-text fw-semibold">Strict Grading</span>
+                                          <div class="small-ratings">
+                                            <%for(var i=1;i<=ratings.strict;i++){%>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <%}%>
+                                              <%if(ratings.strict%1!=0){%>
+                                                <i class="fa fa-star-half rating-color"></i>
+                                              <%}%>
+                                              <span style="padding-left: 2px;" class="card-text">(<%=ratings.strict%>)</span>
+                                          </div>
+                                      </div>
+                                      
+                                      
+                                      <div class="mt-1 d-flex justify-content-between align-items-center">
+                                        <span class="card-text fw-semibold">Was the grading fair?</span>
+                                          <div class="small-ratings">
+                                            <%for(var i=1;i<=ratings.fair;i++){%>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <%}%>
+                                              <%if(ratings.fair%1!=0){%>
+                                                <i class="fa fa-star-half rating-color"></i>
+                                              <%}%>
+                                              <span style="padding-left: 2px;" class="card-text">(<%=ratings.fair%>)</span>
+                                          </div>
+                                      </div>
+                                      
+                                      
+                                      <div class="mt-1 d-flex justify-content-between align-items-center">
+                                        <span class="card-text fw-semibold">How good is the lecturer?</span>
+                                          <div class="small-ratings">
+                                            <%for(var i=1;i<=ratings.lecturer;i++){%>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <%}%>
+                                              <%if(ratings.lecturer%1!=0){%>
+                                                <i class="fa fa-star-half rating-color"></i>
+                                              <%}%>
+                                              <span style="padding-left: 2px;" class="card-text">(<%=ratings.lecturer%>)</span>
+                                          </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                        </div>
+                        <%}else{%>
+                          <h5>No reviews for this course yet. Please ask your friends to add reviews to this page by clicking add review below.</h5>
+                        <%}%>
+                    </div>
+                    </div>
+                  </div>
+                  <%if(ratings.bool){%>
+                  <div class="flex-row mb-2">
+                    <span class="fs-6 fw-semibold">Reviews:</span>
+                  </div>
+                  <br>
+                  <%for(var i=0;i<reviews.length;i++){%>
+                  <div class="review-container">
+                    <div class="review-content">
+                        <%if(reviews[i].name!=""){%>
+                        <p style="margin-bottom: 0;" class="review-name"><%=reviews[i].name%></p>
+                        <%}%>
+                        <p class="review-info">Batch: <%=reviews[i].batch%>;<br /> Grade Gotten: <%=reviews[i].grade%>; <br />Major: <%=reviews[i].major%></p>
+                        <p class="review-text">Recommends this course:
+                          <%for(var j=0;j<reviews[i].overall;j++){%>
+                            <i class="fa fa-star rating-color"></i>
+                          <%}%>
+                        </p>
+                        <p class="review-text"> <%=reviews[i].review%></p>
+                    </div>
+                  </div>
+                  <%}%>
+                <%}%>
+                </div>
+              </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="fab-container">
+    <button style="box-shadow: 0px 3px 20px rgba(1, 41, 112, 0.5);" type="button" 
+    onclick="location.href='/platform/add-course-review/<%=id%>'" class="btn btn-primary m-1"><i
+        class="ti ti-circle-plus"></i> Add Review</button>
+  </div>
+  <script>
+    function toggleDescription(){
+      element = document.getElementById("description");
+      link = document.getElementById("more");
+      if(element.value=="true"){
+        element.style.display="none";
+        link.innerText="view description"
+        element.value="false";
+        return 0;
+      }else{
+        element.style.display="block";
+        link.innerHTML="hide description"
+        element.value="true";
+        return 0;
+      }
+    }
+  </script>
+  <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/platform/assets/js/sidebarmenu.js"></script>
+  <script src="/platform/assets/js/app.min.js"></script>
+  <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/platform/assets/js/dashboard.js"></script>
+  <script src="/platform/assets/js/theme.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <%-include("../partials/sidebar")%>
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <%-include("../partials/header")%>
+            <div class="container-fluid">
+                <div class="container-fluid">
+                    <div class="mb-4">
+                        <h4 class="my-1 mb-2">Submit a Course Review for '<%=data.courseTitle%> (<%=data.courseCode%>) which was/is offered in <%=data.semester.charAt(0).toUpperCase()%><%=data.semester.substring(1)%>  <%=data.year%>'</h4>
+                        <div class="timeline-desc fs-3 text-dark mt-n1 mb-2">This is a platform to collate course reviews for students that enable them to make better more informed academic choices. </div>
+                        <a href="https://docs.google.com/document/d/1RrYbcIZIHuGR8QVf8vC5ybxMsIXNfa0NeHZTxG_dxCg/edit?usp=gmail_thread" target="_blank" class="d-block">Link to the policy</a>
+                      </div>
+                    <form id="ticketForm" action="/platform/add-course-review/<%=id%>" method="POST">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="flex-row mb-2">
+                                        <!-- <span class="fs-6 fw-semibold"><%=data.courseTitle%></span> -->
+                                      </div>
+                                      <div class="flex-row mb-3">
+                                        <ul class="list-inline">
+                                          <span style="float: right;" class="fs-3 text-dark fw-semibold">
+                                              Offered:  <%=data.semester.charAt(0).toUpperCase()%><%=data.semester.substring(1)%>  <%=data.year%>
+                                          </span>                                            
+                                        </ul>
+                                      </div>
+                                      <div class="card" style="background-color: #eaeff4;">
+                                          <div class="card-body">
+                                            <h5 class="card-title">Course Description</h5>
+                                            <div style="display: none;" id="description" value="false" class="card-text"><%-data.description%></div>
+                                            <div><a href="javascript:void(0)" id="more" onclick="toggleDescription()">view description</a></div>
+                                          </div>
+                                      </div>
+                                      <br />
+                                      </div>
+                                    </div>
+                                    <br>
+                                <h5 class="card-title fw-semibold mb-4">Submit a Course Evaluation</h5>
+                                <div class="card" id="firstPart">
+                                    <div style="background-color: #eaeff4;" class="card-body">
+                                        <div class="mb-3">
+                                            <h5 class="card-title fw-semibold mb-4">Section 1: Review</h5>
+                                            <label for="newTicketBody" class="form-label">What was your experience taking this course? <span style="color:rgb(177, 58, 58)">*</span>
+                                            </label>
+                                            <span style="float:right">
+                                                <svg onclick="toggleExplanation('explanation1')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                                                </svg>
+                                            </span>
+                                            <div class="explanation" id="explanation1" style="display: none;">
+                                                <!-- Explanation content goes here -->
+                                                <small>Feel free to be as elaborate as you wish, but if you could specify some overarching details about the course – such as grading rubric (if you can recollect), experience during LS and DS, provision of accommodations and their nature, so on and so forth. </small>
+                                            </div><br />
+                                            <textarea required rows="8" name="review" class="form-control" id="review"></textarea>
+                                        </div>
+                                        <button type="button" style="float: right;" onclick="nextSection1()" class="btn btn-primary">Next</button>
+                                    </div>
+                                </div>
+                                <div class="card" style="display: none;" id="secondPart">
+                                    <div style="background-color: #eaeff4;" class="card-body">
+
+                                            <div class="mb-3">
+                                                <h5 class="card-title fw-semibold mb-4">Section 2: Ratings</h5>
+                                                <label for="select" class="form-label">How Transparent Was The Grading System?
+                                                    <span style="color:rgb(177, 58, 58)">*</span>
+                                                </label>
+                                                <span style="float:right">
+                                                    <svg onclick="toggleExplanation('explanation2')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                                                    </svg>
+                                                </span>
+                                                <div class="explanation" id="explanation2" style="display: none;">
+                                                    <!-- Explanation content goes here -->
+                                                    <small>
+                                                        1- Highly ambiguous: I have no idea how the course was graded, and there was no information provided regarding grading criteria or boundaries.
+
+                                                        2 - Ambiguous: Some aspects were known to me, but certain components were ambiguously graded. For example, I was unaware of how the grade boundaries were established, or I do not know the criteria for grading specific assignments.
+
+                                                        3 - Neutral: I cannot gauge the transparency of the course’s grading rubric due to lack of information or clarity. 
+
+                                                        4 – Transparent: Most aspects of the course were graded according to the details mentioned at the start of the semester. However, there were extraneous factors that may have caused ambiguity. 
+
+                                                        5- Highly transparent: All aspects of the course were clearly defined in a grading rubric at the start of the semester, leaving no room for confusion.
+                                                    </small>
+                                                </div><br />
+                                                <select required name="transparent" id="transparent" class="form-select">
+                                                    <option disabled selected>1 - Highly Ambiguous; 5 - Highly Transparent</option>
+                                                    <option value="1">1 - Highly Ambiguous</option>
+                                                    <option value="2">2 - Ambiguous</option>
+                                                    <option value="3">3 - Neutral</option>
+                                                    <option value="4">4 – Transparent</option>
+                                                    <option value="5">5- Highly transparent</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">How strict was the grading in this course?
+                                                    <span style="color:rgb(177, 58, 58)">*</span>
+                                                </label>
+                                                <span style="float:right">
+                                                    <svg onclick="toggleExplanation('explanation3')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                                                    </svg>
+                                                </span>
+                                                <div class="explanation" id="explanation3" style="display: none;">
+                                                    <!-- Explanation content goes here -->
+                                                    <small>1 - Extremely strict: Grades were considerably harder than expected, offering little leniency and expecting a high standard of output from students.
+
+
+                                                        2 - Somewhat strict: Grading was stricter than anticipated, allowing limited flexibility.
+                                                        
+                                                        
+                                                        3 - Neutral: The grading was generally fair and aligned with expectations specified in the grading rubric of the course. 
+                                                        
+                                                        
+                                                        4 - Somewhat lenient: Grading tended to be more forgiving than anticipated.
+                                                        
+                                                        
+                                                        5 - Extremely lenient: Grades were significantly easier than expected or deserved. 
+                                                    </small>
+                                                </div><br />
+                                                <select required name="strict" id="strict" class="form-select">
+                                                    <option disabled selected>1 - Extremely strict; 5 - Extremely lenient</option>
+                                                    <option value="1">1 - Extremely strict</option>
+                                                    <option value="2">2 - Somewhat strict</option>
+                                                    <option value="3">3 - Neutral</option>
+                                                    <option value="4">4 - Somewhat lenient</option>
+                                                    <option value="5">5 - Extremely lenient</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">How was the fairness in the evaluations of the course?
+                                                    <span style="color:rgb(177, 58, 58)">*</span>
+                                                </label>
+                                                <span style="float:right">
+                                                    <svg onclick="toggleExplanation('explanation4')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                                                    </svg>
+                                                </span>
+                                                <div class="explanation" id="explanation4" style="display: none;">
+                                                    <!-- Explanation content goes here -->
+                                                    <small>1 - Unfair: Evaluation appeared biased or unjust, not reflecting effort or performance across all o components or significantly weighted components of the final grade. For instance, the instructor correcting a final paper was more likely to offer a higher grade to those confirming their views than those opposing it. 
+
+                                                        2 - Somewhat Unfair: Evaluation reflects  bias or inconsistency affecting fairness within some components of the final grade. For instance, arbitrary elements such as participation often favoured people whom the instructor knew or favoured implicitly 
+                                                        
+                                                        3 - Moderately Fair: Overall evaluation was fair but had occasional discrepancies. For instance, some elements were arbitrarily graded, but not to the extent of negatively affecting a student. 
+                                                        
+                                                        4 - Fair: Evaluation was consistently fair, aligning with effort and performance.
+                                                        
+                                                        5 - Completely Fair: Evaluation was entirely impartial and reflective of effort and performance. Consistent effort will fetch you a good grade for this course. 
+                                                        
+                                                        </small>
+                                                </div><br />
+                                                <select required name="fair" id="fair" class="form-select">
+                                                    <option disabled selected>1 - Unfair; 5 - Completely fair</option>
+                                                    <option value="1">1 - Unfair</option>
+                                                    <option value="2">2 - Somewhat Unfair</option>
+                                                    <option value="3">3 - Moderately Fair</option>
+                                                    <option value="4">4 - Fair</option>
+                                                    <option value="5">5 - Completely Fair</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">How effective was the professor as a communicator/lecturer?
+                                                    <span style="color:rgb(177, 58, 58)">*</span>
+                                                </label>
+                                                <span style="float:right">
+                                                    <svg onclick="toggleExplanation('explanation5')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                                                    </svg>
+                                                </span>
+                                                <div class="explanation" id="explanation5" style="display: none;">
+                                                    <!-- Explanation content goes here -->
+                                                    <small>1 - Very Poor: Difficulty in communicating key concepts of a course; poor communication skills.
+
+                                                        2 - Poor: Some challenges in understanding or maintaining engagement during lectures or teaching very specific concepts
+                                                        
+                                                        3 - Average: Communication of ideas was clear, but engagement could have been better.
+                                                        
+                                                        4 - Good: Clear communication and engaging lectures; effective delivery of course material.
+                                                        
+                                                        5 - Excellent: Outstanding communication skills, highly engaging lectures; exceptional delivery of course material.
+                                                    </small>
+                                                </div><br />
+                                                <select required name="lecturer" id="lecturer" class="form-select">
+                                                    <option disabled selected>1 - Very Poor; 5 - Excellent</option>
+                                                    <option value="1">1 - Very Poor</option>
+                                                    <option value="2">2 - Poor</option>
+                                                    <option value="3">3 - Average</option>
+                                                    <option value="4">4 - Good</option>
+                                                    <option value="5">5 - Excellent</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">How would you rate the relatability of assignments and assessments in relation to the content taught in class?
+                                                    <span style="color:rgb(177, 58, 58)">*</span>
+                                                </label>
+                                                <span style="float:right">
+                                                    <svg onclick="toggleExplanation('explanation6')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                                                    </svg>
+                                                </span>
+                                                <div class="explanation" id="explanation6" style="display: none;">
+                                                    <!-- Explanation content goes here -->
+                                                    <small>
+                                                        1- Highly Unrelated: Assignments and assessments were significantly disconnected from the class content, offering little or no relevance to what was taught.
+                                                        2- Moderately Unrelated: While some components were related, several assignments were beyond the scope of class concepts, indicating a moderate lack of alignment.
+                                                        3- Partially Related: Assignments were mostly tied to class concepts but included some elements to encourage critical thinking, introducing a partial but intentional deviation.
+                                                        4- Mostly Related: The majority of assessments covered concepts taught in class, with only a few deviations, maintaining a strong overall alignment.
+                                                        5- Perfectly Related: All assignments and assessments were directly linked and aligned with class content, showcasing a seamless integration of course concepts.
+                                                    </small>
+                                                </div><br />
+                                                <select required name="relatability" id="relatability" class="form-select">
+                                                    <option disabled selected>1- Highly Unrelated; 5- Perfectly Related</option>
+                                                    <option value="1">1- Highly Unrelated</option>
+                                                    <option value="2">2- Moderately Unrelated</option>
+                                                    <option value="3">3- Partially Related</option>
+                                                    <option value="4">4- Mostly Related</option>
+                                                    <option value="5">5- Perfectly Related</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">At an overall level, would you recommend this course with this professor to others? 
+                                                    <span style="color:rgb(177, 58, 58)">*</span>
+                                                </label>
+                                                <span style="float:right">
+                                                    <svg onclick="toggleExplanation('explanation7')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                                                    </svg>
+                                                </span>
+                                                <div class="explanation" id="explanation7" style="display: none;">
+                                                    <!-- Explanation content goes here -->
+                                                    <small>
+                                                        1 - Strongly Discommend: I would strongly advise against taking this course with this professor.
+
+                                                        2 - Discommend: I would not recommend taking this course with this professor.
+
+                                                        3 - Neutral: I have mixed feelings and wouldn't strongly recommend or disrecommend.
+
+                                                        4 - Recommend: I would recommend taking this course with this professor.
+
+                                                        5 - Strongly Recommend: I would highly encourage others to take this course with this professor.
+                                                    </small>
+                                                </div><br />
+                                                <select required name="overall" id="overall" class="form-select">
+                                                    <option disabled selected>1 - Strongly Discommend; 5 - Strongly Recommend</option>
+                                                    <option value="1">1 - Strongly Discommend</option>
+                                                    <option value="2">2 - Discommend</option>
+                                                    <option value="3">3 - Neutral</option>
+                                                    <option value="4">4 - Recommend</option>
+                                                    <option value="5">5 - Strongly Recommend</option>
+                                                </select>
+                                            </div>
+                                            <button type="button" onclick="prevSection1()" class="btn btn-primary">Back</button>
+                                            <button style="float: right;" onclick="nextSection2()" type="button" class="btn btn-primary">Next</button>
+                                    </div>
+                                </div>
+                                <div style="display: none;" class="card" id="thirdPart">
+                                    <div style="background-color: #eaeff4;" class="card-body">
+                                        <h5 class="card-title fw-semibold mb-4">Section 3.1: Course Details</h5>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">Course Conducted <span style="color:rgb(177, 58, 58)">*</span></label>
+                                                <select required name="mode" id="courseConducted" class="form-select">
+                                                    <option disabled selected>Online/Offline</option>
+                                                    <option value="online">Online</option>
+                                                    <option value="offline">Offline</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">Nature of Grading System <span style="color:rgb(177, 58, 58)">*</span></label>
+                                                <select required name="grading_type" id="courseGrading" class="form-select">
+                                                    <option disabled selected>Absolute/Relative</option>
+                                                    <option value="absolute">Absolute</option>
+                                                    <option value="relative">Relative</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">Extra Credit Provided <span style="color:rgb(177, 58, 58)">*</span></label>
+                                                <span style="float:right">
+                                                    <svg onclick="toggleExplanation('explanation8')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                                                    </svg>
+                                                </span>
+                                                <div class="explanation" id="explanation8" style="display: none;">
+                                                    <!-- Explanation content goes here -->
+                                                    <small>Was any extracredit assignment or assessment provided to cover up for lost grade?
+                                                    </small>
+                                                </div><br />
+                                                <select required name="extracredit" id="extraCredit" class="form-select">
+                                                    <option disabled selected>Yes/No</option>
+                                                    <option value="true">Yes</option>
+                                                    <option value="false">No</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="newTicketBody" class="form-label">To what degree Was the course influenced by TAs/TFs, and do you have any recommendations for students on them?</label>
+                                                <textarea rows="3" name="tf" class="form-control" id="feedback"></textarea>
+                                            </div>
+                                            <br />
+                                            <h5 class="card-title fw-semibold mb-4">Section 3.2: Personal Details</h5>
+
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">Select Your Batch <span style="color:rgb(177, 58, 58)">*</span></label>
+                                                <select required name="batch" id="batch" class="form-select">
+                                                    <option disabled selected>Select</option>
+                                                    <option value="UG2023">UG 2023 (First Years)</option>
+                                                    <option value="UG25">UG 25</option>
+                                                    <option value="UG24">UG 24</option>
+                                                    <option value="ASP23">ASP 23</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">Select Your Major <span style="color:rgb(177, 58, 58)">*</span></label>
+                                                <select required name="major" id="batch" class="form-select">
+                                                    <option disabled selected>Select</option>
+                                                    <option value="Psychology and Philosophy">Psychology and Philosophy</option>
+                                                    <option value="Philosophy and Computer Science">Philosophy and Computer Science</option>
+                                                    <option value="Economics">Economics</option>
+                                                    <option value="Mathematics and Computer Science">Mathematics and Computer Science</option>
+                                                    <option value="Psychology">Psychology</option>
+                                                    <option value="Politics &amp; Society">Politics &amp; Society</option>
+                                                    <option value="English and Creative Writing">English and Creative Writing</option>
+                                                    <option value="Philosophy">Philosophy</option>
+                                                    <option value="Computer Science &amp; Entrepreneurial Leadership">Computer Science &amp; Entrepreneurial Leadership</option>
+                                                    <option value="History &amp; International Relations">History &amp; International Relations</option>
+                                                    <option value="Biology">Biology</option>
+                                                    <option value="Economics and History">Economics and History</option>
+                                                    <option value="English">English</option>
+                                                    <option value="Sociology and Anthropology">Sociology and Anthropology</option>
+                                                    <option value="Mathematics">Mathematics</option>
+                                                    <option value="Computer Science">Computer Science</option>
+                                                    <option value="Physics">Physics</option>
+                                                    <option value="History">History</option>
+                                                    <option value="Chemistry">Chemistry</option>
+                                                    <option value="Political Science">Political Science</option>
+                                                    <option value="Economics &amp; Finance">Economics &amp; Finance</option>
+                                                    <option value="Politics Philosophy &amp; Economics">Politics Philosophy &amp; Economics</option>
+                                                    <option value="English and Media Studies">English and Media Studies</option>
+                                                    <option value="English and Performing Arts">English and Performing Arts</option>
+                                                    <option value="Other">Other</option></select>
+ 
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="select" class="form-label">Select Grade Received <span style="color:rgb(177, 58, 58)">*</span></label>
+                                                <select required name="grade" id="grade" class="form-select">
+                                                    <option disabled selected>Select</option>
+                                                    <option value="A/A-">A/A-</option>
+                                                    <option value="B+/B/B-">B+/B/B-</option>
+                                                    <option value="C+/C/C-">C+/C/C-</option>
+                                                    <option value="D+/D/D-">D+/D/D-</option>
+                                                    <option value="F">F</option>
+                                                    <option value="have not received yet">Have Not Received Yet</option>
+                                                    <option value="do not wish to reveal">Do Not Wish to Reveal</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3 form-check">
+                                                <input style="border: 0.2px solid rgb(125, 122, 122);" name="name" type="checkbox" class="form-check-input" id="name" aria-describedby="detailsHelp">
+                                                <label class="form-check-label" for="exampleCheck1">Review Under My Name</label>
+                                                <div id="detailsHelp" class="form-text">Reviews are by default published anonymously. Do you wish to disclose your name and other details?</div>
+                                            </div>
+                                            <button type="button" onclick="prevSection2()" class="btn btn-primary">Back</button>
+                                            <button style="float: right;" type="submit" class="btn btn-primary">Submit Review</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/platform/assets/js/dashboard.js"></script>
+    <script src="/platform/assets/js/darkmode.js"></script>
+    <script src="/platform/assets/js/copytext.js"></script>
+    <script>
+        function toggleDescription(){
+      element = document.getElementById("description");
+      link = document.getElementById("more");
+      if(element.value=="true"){
+        element.style.display="none";
+        link.innerText="view description"
+        element.value="false";
+        return 0;
+      }else{
+        element.style.display="block";
+        link.innerHTML="hide description"
+        element.value="true";
+        return 0;
+      }
+    }
+
+        function toggleExplanation(id) {
+            const explanation = document.getElementById(id);
+            if (explanation.style.display === "none") {
+                explanation.style.display = "block";
+            } else {
+                explanation.style.display = "none";
+            } 
+        }
+      </script>
+    <script>
+        function nextSection1() {
+            var sectionTwo = document.getElementById('secondPart');
+            var sectionOne = document.getElementById('firstPart');
+            sectionOne.style.display = 'none';
+            sectionTwo.style.display = 'block';
+        }
+        function nextSection2() {
+            var sectionTwo = document.getElementById('secondPart');
+            var sectionThree = document.getElementById('thirdPart');
+            sectionTwo.style.display = 'none';
+            sectionThree.style.display = 'block';
+            window.scrollTo({ top: window.scrollY - 350, behavior: 'smooth' }); // Scroll up by 100 pixels, adjust as needed
+
+        }
+        function prevSection1() {
+            var sectionTwo = document.getElementById('secondPart');
+            var sectionOne = document.getElementById('firstPart');
+            sectionTwo.style.display = 'none';
+            sectionOne.style.display = 'block';
+        }
+        function prevSection2() {
+            var sectionTwo = document.getElementById('secondPart');
+            var sectionThree = document.getElementById('thirdPart');
+            sectionThree.style.display = 'none';
+            sectionTwo.style.display = 'block';
+            window.scrollTo({ top: window.scrollY - 400, behavior: 'smooth' }); // Scroll up by 100 pixels, adjust as needed
+        }
+    </script>
+</body>
+
+</html>
