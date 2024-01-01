@@ -3,8 +3,8 @@
   <header id="header" class="fixed-top d-flex align-items-center">
     <div class="container d-flex align-items-center">
 
-      <div class="logo me-auto" style="margin-left: auto;">
-        <h1 class="text-light" style="font-family: 'Oswald';"><a href="index.html"><span>Student Government</span></a></h1>
+      <div class="logo me-auto" style="position: relative; bottom: 5px;">
+        <h1 class="text-light" style="font-family: 'Oswald';"><a href="index.html" style="font-size: 25px;"><span>A.U.S.G.</span></a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html"><img src="/static/assets/img/logo.png" alt="" class="img-fluid"></a>-->
       </div>
@@ -31,6 +31,7 @@
                 <li class="<%= activePage === 'cabinet-mcwb' ? 'active' : '' %>"><a href="/cabinet/mcwb">Ministry of Community and Well Being</a></li>
                 <li class="<%= activePage === 'cabinet-clm' ? 'active' : '' %>"><a href="/cabinet/clm">Campus Life Ministry</a></li>
                 <li class="<%= activePage === 'cabinet-finance' ? 'active' : '' %>"><a href="/cabinet/finance">Finance Ministry</a></li>
+                <li class="<%= activePage === 'cabinet-sport' ? 'active' : '' %>"><a href="/cabinet/sport">Sports Ministry</a></li>
             </ul>
           </li>
           <li class="drop-down"><a href="">Documents</a>
@@ -51,16 +52,18 @@
           </li>
           <li><a target="_blank" href="https://ashoka.edu.in">AU Website</a></li>
           <li><a href="#contact">Contact</a></li>
+          <li><button style="border-color: #007BFF; padding: 5.5px 5px; margin-left: 20px; color: #007BFF; font-size: 14px;" class="btn btn-sm" onclick="window.location.href='/platform'">Platform</button></li>
           
           <!-- <li class="get-started"><a href="#about"><i class="fa fa-search"></i></a></li> -->
         </ul>
+        <!-- <div class="search-container"> -->
+          <!-- <form action="/search" method="get">
+            <input class="search expandright" id="searchright" type="search" name="q" placeholder="Search">
+            <label class="button searchbutton" for="searchright"><span class="mglass">&#9906;</span></label>
+          </form> -->
+          <!-- <button class="btn btn-primary btn-sm" onclick="window.location.href='/platform'">Platform</button> -->
+        <!-- </div> -->
       </nav><!-- .nav-menu -->
-      <div class="search-container">
-        <!-- <form action="/search" method="get">
-          <input class="search expandright" id="searchright" type="search" name="q" placeholder="Search">
-          <label class="button searchbutton" for="searchright"><span class="mglass">&#9906;</span></label>
-        </form> -->
-        <button class="btn btn-primary btn-sm" onclick="window.location.href='/platform'">Platform</button>
-      </div>
+
     </div>
   </header><!-- End Header -->
