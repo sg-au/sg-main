@@ -25,6 +25,7 @@
       }
     }
   </style>
+  <%-include("../partials/preloader-css")%>
 </head>
 <script>
     function capitalizeFirstLetter(string) {
@@ -34,6 +35,7 @@
 
 <body>
   <!--  Body Wrapper -->
+  <%-include("../partials/preloader")%>
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
     <%-include("../partials/sidebar")%>
@@ -145,6 +147,7 @@
   <script>
     new DataTable('#example');
   </script>
+  <%-include("../partials/preloader-js")%>
 </body>
 
 </html>

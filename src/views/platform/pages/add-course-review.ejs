@@ -12,9 +12,11 @@
     <link
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
         rel="stylesheet">
+    <%-include("../partials/preloader-css")%>
 </head>
 
 <body>
+    <%-include("../partials/preloader")%>
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
         data-sidebar-position="fixed" data-header-position="fixed">
@@ -462,6 +464,7 @@
             window.scrollTo({ top: window.scrollY - 400, behavior: 'smooth' }); // Scroll up by 100 pixels, adjust as needed
         }
     </script>
+    <%-include("../partials/preloader-js")%>
 </body>
 
 </html>
