@@ -88,7 +88,7 @@
                             </td>
                           </tr>
                            <%}else{%>
-                            <tr style="opacity:0.5">
+                            <tr style="opacity:0.5; cursor:pointer" onclick="window.open('/platform/course-reviews/<%=data[i].id%>', '_blank');">
                                 <td style="display:hidden">_</td>
                                 <td><%=data[i].attributes.courseCode.substring(0,25)%></td>
                                 <td><%=data[i].attributes.courseTitle%> <br /><span style="font-size:10px"><%=data[i].attributes.semester.charAt(0).toUpperCase()%><%=data[i].attributes.semester.slice(1)%> <%=data[i].attributes.year%></span></td>
