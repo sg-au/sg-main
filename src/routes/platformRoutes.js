@@ -96,16 +96,32 @@ router.get('/course-reviews/:id', (req, res) => {
     response.data.data.attributes.description = response.data.data.attributes.description.replace(/<h4>.*?<\/h4>/, '');
     response.data.data.attributes.description = response.data.data.attributes.description.replace('<p class="cmsDescp">', '');
     response.data.data.attributes.description = response.data.data.attributes.description.replace('</p>', '');
-
-    res.render("platform/pages/course",{data:response.data.data.attributes,ratings:ratings});
+    res.render("platform/pages/course",{data:response.data.data.attributes,ratings:ratings,id:response.data.data.id});
   })
   .catch((error) => {
       console.error('Error fetching departments:', error);
+      res.send(404);
+
   });
 });
 
-router.get('/fill-course-review', (req, res) => {
-  res.render("platform/pages/course-review")
+router.get('/add-course-review/:id', (req, res) => {
+  axios.get(`${process.env.STRAPI_API_URL}/courses/${req.params.id}?populate[0]=faculties&populate[1]=course_reviews`,axiosConfig)
+  .then((response) => {
+    response.data.data.attributes.description = response.data.data.attributes.description.replace(/<h4>.*?<\/h4>/, '');
+    response.data.data.attributes.description = response.data.data.attributes.description.replace('<p class="cmsDescp">', '');
+    response.data.data.attributes.description = response.data.data.attributes.description.replace('</p>', '');
+    res.render("platform/pages/add-course-review",{data:response.data.data.attributes,id:response.data.data.id});
+  })
+  .catch((error) => {
+      console.error('Error fetching departments:', error);
+      res.send(404);
+
+  });
+})
+
+router.post('/add-course-review/:id', (req, res) => {
+  console.log(req.body)
 })
 
 router.get('/tickets', (req, res) => {

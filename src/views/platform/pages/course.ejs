@@ -78,11 +78,6 @@
                     </div>
                     <div class="flex-row mb-3">
                       <ul class="list-inline">
-                        <!-- <span style="font-size: 10px;" class="fs-3 text-dark fw-semibold">
-                          <%for(var j=0;j<data.faculties.data.length;j++){%>
-                              Faculty: <%=data.faculties.data[j].attributes.email%>  
-                          <%}%>
-                        </span>   -->
                         <span style="float: right;" class="fs-3 text-dark fw-semibold">
                             Offered:  <%=data.semester.charAt(0).toUpperCase()%><%=data.semester.substring(1)%>  <%=data.year%>
                         </span>                                            
@@ -208,7 +203,7 @@
   </div>
   <div class="fab-container">
     <button style="box-shadow: 0px 3px 20px rgba(1, 41, 112, 0.5);" type="button" 
-    onclick="location.href='/platform/fill-course-review'" class="btn btn-primary m-1"><i
+    onclick="location.href='/platform/add-course-review/<%=id%>'" class="btn btn-primary m-1"><i
         class="ti ti-circle-plus"></i> Add Review</button>
   </div>
   <script>
