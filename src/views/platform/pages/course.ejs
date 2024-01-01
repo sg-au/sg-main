@@ -83,15 +83,13 @@
                         </span>                                            
                       </ul>
                     </div>
-                    <div class="card" style="background-color: #eaeff4;">
-                        <div class="card-body">
-                          <h5 class="card-title">Description</h5>
-                          <div id="description" value="false" class="card-text"><%-data.description.substring(0,500)%>...</div>
-                        </div>
+                    <div value="false" style="display: none;" class="card" id="description" style="background-color: #eaeff4;">
+                      <div class="card-body">
+                        <h5 class="card-title">Description</h5>
+                        <div class="card-text"><%-data.description%></div>
+                      </div>
                     </div>
-                    <%if(data.description.length>500){%>
-                    <div><a href="javascript:void(0)" id="more" onclick="toggleDescription()">read more</a></div>
-                    <%}%>
+                    <div><a href="javascript:void(0)" id="more" onclick="toggleDescription()">view description</a></div>
                     <br />
                     <div class="col-md-12">
                       <%if(ratings.bool){%>
@@ -236,15 +234,13 @@
       element = document.getElementById("description");
       link = document.getElementById("more");
       if(element.value=="true"){
-        element.innerHTML=`<%-data.description.substring(0,500)%>`;
-        link.innerText="read more"
+        element.style.display="none";
+        link.innerText="view description"
         element.value="false";
         return 0;
       }else{
-        element.innerHTML="";
-        element.innerText="";
-        element.innerHTML=`<%-data.description%>`;
-        link.innerHTML="<br />read less"
+        element.style.display="block";
+        link.innerHTML="hide description"
         element.value="true";
         return 0;
       }

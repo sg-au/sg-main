@@ -47,12 +47,10 @@
                                       <div class="card" style="background-color: #eaeff4;">
                                           <div class="card-body">
                                             <h5 class="card-title">Course Description</h5>
-                                            <div id="description" value="false" class="card-text"><%-data.description.substring(0,500)%>...</div>
+                                            <div style="display: none;" id="description" value="false" class="card-text"><%-data.description%></div>
+                                            <div><a href="javascript:void(0)" id="more" onclick="toggleDescription()">view description</a></div>
                                           </div>
                                       </div>
-                                      <%if(data.description.length>500){%>
-                                      <div><a href="javascript:void(0)" id="more" onclick="toggleDescription()">read more</a></div>
-                                      <%}%>
                                       <br />
                                       </div>
                                     </div>
@@ -411,22 +409,20 @@
     <script src="/platform/assets/js/copytext.js"></script>
     <script>
         function toggleDescription(){
-          element = document.getElementById("description");
-          link = document.getElementById("more");
-          if(element.value=="true"){
-            element.innerHTML=`<%-data.description.substring(0,500)%>`;
-            link.innerText="read more"
-            element.value="false";
-            return 0;
-          }else{
-            element.innerHTML="";
-            element.innerText="";
-            element.innerHTML=`<%-data.description%>`;
-            link.innerHTML="<br />read less"
-            element.value="true";
-            return 0;
-          }
-        }
+      element = document.getElementById("description");
+      link = document.getElementById("more");
+      if(element.value=="true"){
+        element.style.display="none";
+        link.innerText="view description"
+        element.value="false";
+        return 0;
+      }else{
+        element.style.display="block";
+        link.innerHTML="hide description"
+        element.value="true";
+        return 0;
+      }
+    }
 
         function toggleExplanation(id) {
             const explanation = document.getElementById(id);
