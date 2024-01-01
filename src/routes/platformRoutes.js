@@ -121,7 +121,40 @@ router.get('/add-course-review/:id', (req, res) => {
 })
 
 router.post('/add-course-review/:id', (req, res) => {
-  console.log(req.body)
+  // console.log(req.body);
+  if (req.body.name && req.body.name === 'on') {
+    // If req.body has a key called 'name' and its value is 'on', leave it blank
+    userEmail=req.user._json.email;
+    axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`,axiosConfig)
+    .then((response) => {
+      // Assuming you get a single user with the specified email
+      userId = response.data[0].id;
+      req.body = { ...req.body, course: [req.params.id], author:[userId]};
+      axios.post(`${process.env.STRAPI_API_URL}/reviews`,{data:req.body}, axiosConfig)
+        .then((response) => {
+          res.redirect("/platform/course-reviews")
+        })
+        .catch((error) => {
+          console.log(error)
+            res.send(404);
+        });
+    })
+    .catch((error) => {
+      console.error('Error fetching user:', error);
+      // Handle error
+      res.send("An error occurred");
+    });
+  } else {
+    req.body = { ...req.body, course: [req.params.id]};
+    axios.post(`${process.env.STRAPI_API_URL}/reviews`,{data:req.body}, axiosConfig)
+        .then((response) => {
+          res.redirect("/platform/course-reviews")
+        })
+        .catch((error) => {
+          console.log(error)
+            res.send(404);
+        });
+  }
 })
 
 router.get('/tickets', (req, res) => {
