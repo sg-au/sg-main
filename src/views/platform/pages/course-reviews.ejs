@@ -71,7 +71,7 @@
                       </thead>
                       <tbody>
                         <%for(i=0;i<data.length;i++){%>
-                         <%if(data[i].attributes.course_reviews.data.length!=0){%>
+                         <%if(data[i].attributes.reviews.data.length!=0){%>
                           <tr style="cursor: pointer;" onclick="window.open('/platform/course-reviews/<%=data[i].id%>', '_blank');">
                               <td style="display:hidden">-</td>
                               <td><%=data[i].attributes.courseCode.substring(0,25)%></td>

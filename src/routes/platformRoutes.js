@@ -43,7 +43,7 @@ router.get('/announcements', (req, res) => {
 
 router.get('/course-reviews', (req, res) => {
   const maxCoursesToLoad = 1000;
-  axios.get(`${process.env.STRAPI_API_URL}/courses?fields[0]=courseCode&fields[1]=courseTitle&fields[2]=semester&fields[3]=year&populate[0]=faculties&populate[1]=course_reviews&pagination[pageSize]=${maxCoursesToLoad}&sort[0]=year:desc`, axiosConfig)
+  axios.get(`${process.env.STRAPI_API_URL}/courses?fields[0]=courseCode&fields[1]=courseTitle&fields[2]=semester&fields[3]=year&populate[0]=faculties&populate[1]=course_reviews&populate[2]=reviews&pagination[pageSize]=${maxCoursesToLoad}&sort[0]=year:desc`, axiosConfig)
     .then((response) => {
       res.render("platform/pages/course-reviews", { data: response.data.data });
     })
@@ -55,48 +55,87 @@ router.get('/course-reviews', (req, res) => {
 
 
 router.get('/course-reviews/:id', (req, res) => {
-  axios.get(`${process.env.STRAPI_API_URL}/courses/${req.params.id}?populate[0]=faculties&populate[1]=course_reviews`,axiosConfig)
+  axios.get(`${process.env.STRAPI_API_URL}/courses/${req.params.id}?populate[0]=faculties&populate[1]=reviews&populate[2]=course_reviews&populate[3]=reviews.author`,axiosConfig)
   .then((response) => {
-    let gradingTransparencyTotal = 0;
-    let assignmentRelatabilityTotal = 0;
-    let distributedGradingTotal = 0;
-    let lecturerQuality = 0;
-    let influenceOfTFTATotal = 0;
-    let recommendedTotal = 0;
-    courseReviews=response.data.data.attributes.course_reviews.data;
+    // Ratings
+    let transparentTotal = 0;
+    let relatabilityTotal = 0;
+    let strictTotal = 0;
+    let fairnessTotal = 0;
+    let lecturerTotal = 0;
+    let overallTotal = 0;
+    courseReviews=response.data.data.attributes.reviews.data;
     // Loop through each course review
     courseReviews.forEach(review => {
-        gradingTransparencyTotal += (review.attributes.grading_transparent?review.attributes.grading_transparent:0);
-        assignmentRelatabilityTotal += (review.attributes.assignment_relatability?review.attributes.assignment_relatability:0);
-        distributedGradingTotal += (review.attributes.distributed_grading_components?review.attributes.distributed_grading_components:0);
-        lecturerQuality+= (review.attributes.good_lecturer?review.attributes.good_lecturer:0);
-        influenceOfTFTATotal += (review.attributes.influence_of_tf?review.attributes.influence_of_tf:0);
-        recommendedTotal += (review.attributes.recommend?review.attributes.recommend:0);
+        transparentTotal += (review.attributes.transparent?review.attributes.transparent:0);
+        relatabilityTotal += (review.attributes.relatability?review.attributes.relatability:0);
+        strictTotal += (review.attributes.strict?review.attributes.strict:0);
+        fairnessTotal+= (review.attributes.fair?review.attributes.fair:0);
+        lecturerTotal += (review.attributes.lecturer?review.attributes.lecturer:0);
+        overallTotal += (review.attributes.overall?review.attributes.overall:0);
     });
 
     // Total number of reviews
     const totalReviews = courseReviews.length;
     
     // Calculate Average
-    const gradingTransparencyAvg = gradingTransparencyTotal / totalReviews;
-    const assignmentRelatabilityAvg = assignmentRelatabilityTotal / totalReviews;
-    const distributedGradingAvg = distributedGradingTotal / totalReviews;
-    const goodLecturer = lecturerQuality / totalReviews;
-    const influenceOfTFTAAvg = influenceOfTFTATotal / totalReviews;
-    const overall = recommendedTotal / totalReviews;
+    const transparent = transparentTotal / totalReviews;
+    const relatability = relatabilityTotal / totalReviews;
+    const strict = strictTotal / totalReviews;
+    const fair = fairnessTotal / totalReviews;
+    const lecturer = lecturerTotal / totalReviews;
+    const overall = overallTotal / totalReviews;
+    const bool = totalReviews == 0?false:true;
 
     const ratings={
+      transparent,
+      relatability,
+      strict,
+      fair,
+      lecturer,
       overall,
-      gradingTransparencyAvg,
-      assignmentRelatabilityAvg,
-      distributedGradingAvg,
-      goodLecturer,
-      influenceOfTFTAAvg,
+      bool
     }
+    // Ratings
+    // console.log(ratings)
+
+    // Description
     response.data.data.attributes.description = response.data.data.attributes.description.replace(/<h4>.*?<\/h4>/, '');
     response.data.data.attributes.description = response.data.data.attributes.description.replace('<p class="cmsDescp">', '');
     response.data.data.attributes.description = response.data.data.attributes.description.replace('</p>', '');
-    res.render("platform/pages/course",{data:response.data.data.attributes,ratings:ratings,id:response.data.data.id});
+    // Description
+
+
+    // Reviews
+    var reviews=[];
+    courseReviews.forEach(rw => {
+      // console.log(rw.attributes.author)
+      if(rw.attributes.author && rw.attributes.author.data){
+        object = {
+          review:rw.attributes.review,
+          grade:rw.attributes.grade,
+          batch:rw.attributes.batch,
+          major:rw.attributes.major,
+          name:rw.attributes.author.data.attributes.username,
+          overall:rw.attributes.overall
+        }
+      }else{
+      object = {
+        review:rw.attributes.review,
+        grade:rw.attributes.grade,
+        batch:rw.attributes.batch,
+        major:rw.attributes.major,
+        overall:rw.attributes.overall,
+        name:""
+      }
+    }
+    // console.log(object)
+      reviews.push(object);
+    });
+    // Reviews
+
+
+    res.render("platform/pages/course",{data:response.data.data.attributes,ratings:ratings,id:response.data.data.id, reviews:reviews});
   })
   .catch((error) => {
       console.error('Error fetching departments:', error);
@@ -135,8 +174,8 @@ router.post('/add-course-review/:id', (req, res) => {
           res.redirect("/platform/course-reviews")
         })
         .catch((error) => {
-          console.log(error)
-            res.send(404);
+            console.log(error)
+            res.send("An error occurred");
         });
     })
     .catch((error) => {
@@ -152,7 +191,7 @@ router.post('/add-course-review/:id', (req, res) => {
         })
         .catch((error) => {
           console.log(error)
-            res.send(404);
+          res.send("An error occurred");
         });
   }
 })
