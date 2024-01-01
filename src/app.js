@@ -88,6 +88,7 @@ app.use(
   })
 );
 
+var returnTo="/platform";
 // Use route handlers for website and platform routes
 app.use("/", websiteRoutes);
 app.use("/platform", ensureAuthenticated, ensureIsNotBlocked, putImage, platformRoutes);
@@ -97,6 +98,7 @@ function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
+  returnTo = req.originalUrl;
   res.redirect("/auth/google");
 }
 
@@ -197,7 +199,7 @@ app.get(
         console.log("Updating user...");
       }
 
-      res.redirect("/platform");
+      res.redirect(returnTo);
     } catch (error) {
       console.error('An error occurred:', error);
       res.redirect("/");
