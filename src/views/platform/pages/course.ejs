@@ -305,7 +305,7 @@
                           <%}%>
                         </p>
                         <p class="review-text"> <%=reviews[i].review%></p>
-                        <%if(reviews.tf!=""){%>
+                        <%if(reviews.tf.trim().length!=0){%>
                           <p class="review-text">Influence of TA/TF: <%=reviews[i].tf%></p>
                         <%}%>
                     </div>
