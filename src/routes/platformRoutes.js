@@ -64,27 +64,56 @@ router.get('/course-reviews/:id', (req, res) => {
     let fairnessTotal = 0;
     let lecturerTotal = 0;
     let overallTotal = 0;
+
+    let transparentCount=0;
+    let relatabilityCount=0;
+    let strictCount=0;
+    let fairnessCount=0;
+    let lecturerCount=0;
+    let overallCount=0;
+
     courseReviews=response.data.data.attributes.reviews.data;
     // Loop through each course review
     courseReviews.forEach(review => {
         transparentTotal += (review.attributes.transparent?review.attributes.transparent:0);
+        transparentCount += (review.attributes.transparent && review.attributes.transparent>0)?1:0;
+        
         relatabilityTotal += (review.attributes.relatability?review.attributes.relatability:0);
+        relatabilityCount += (review.attributes.relatability && review.attributes.relatability>0)?1:0;
+
         strictTotal += (review.attributes.strict?review.attributes.strict:0);
+        strictCount += (review.attributes.strict && review.attributes.strict>0)?1:0;
+
+
         fairnessTotal+= (review.attributes.fair?review.attributes.fair:0);
+        fairnessCount += (review.attributes.fair && review.attributes.fair>0)?1:0;
+
+
         lecturerTotal += (review.attributes.lecturer?review.attributes.lecturer:0);
+        lecturerCount += (review.attributes.lecturer && review.attributes.lecturer>0)?1:0;
+
         overallTotal += (review.attributes.overall?review.attributes.overall:0);
+        overallCount += (review.attributes.overall && review.attributes.overall>0)?1:0;
+
     });
 
     // Total number of reviews
     const totalReviews = courseReviews.length;
+
+    transparentBool=transparentCount==0?false:true;
+    relatabilityBool=relatabilityCount==0?false:true;
+    strictBool=strictCount==0?false:true;
+    fairBool=fairnessCount==0?false:true;
+    lecturerBool=lecturerCount==0?false:true;
+    overallBool=overallCount==0?false:true;
     
     // Calculate Average
-    const transparent = transparentTotal / totalReviews;
-    const relatability = relatabilityTotal / totalReviews;
-    const strict = strictTotal / totalReviews;
-    const fair = fairnessTotal / totalReviews;
-    const lecturer = lecturerTotal / totalReviews;
-    const overall = overallTotal / totalReviews;
+    const transparent = transparentTotal / transparentCount;
+    const relatability = relatabilityTotal / relatabilityCount;
+    const strict = strictTotal / strictCount;
+    const fair = fairnessTotal / fairnessCount;
+    const lecturer = lecturerTotal / lecturerCount;
+    const overall = overallTotal / overallCount;
     const bool = totalReviews == 0?false:true;
 
     const ratings={
@@ -94,7 +123,13 @@ router.get('/course-reviews/:id', (req, res) => {
       fair,
       lecturer,
       overall,
-      bool
+      bool,
+      transparentBool,
+      relatabilityBool,
+      strictBool,
+      fairBool,
+      lecturerBool,
+      overallBool
     }
     // Ratings
     // console.log(ratings)

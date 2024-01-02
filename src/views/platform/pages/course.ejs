@@ -95,7 +95,6 @@
                     <br />
                     <div class="col-md-12">
                       <%if(ratings.bool){%>
-
                         <div style="box-shadow: none;" class="card">
                             <div class="accordion" id="accordionExample">
                                 <div class="accordion-item">
@@ -103,13 +102,15 @@
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                                       <span style="font-size: 10px;" class="fs-3 text-dark fw-semibold">Overall Rating:</span>
                                        <div style="padding-left: 2%;" class="small-ratings">
-                                        <%for(var i=1;i<=ratings.overall;i++){%>
-                                        <i class="fa fa-star rating-color"></i>
-                                        <%}%>
-                                        <%if(ratings.overall%1!=0){%>
-                                          <i class="fa fa-star-half rating-color"></i>
-                                        <%}%>
+                                        <%if(overallBool){%>
+                                          <%for(var i=1;i<=ratings.overall;i++){%>
+                                          <i class="fa fa-star rating-color"></i>
+                                          <%}%>
+                                          <%if(ratings.overall%1!=0){%>
+                                            <i class="fa fa-star-half rating-color"></i>
+                                          <%}%>
                                         <span style="padding-left: 2px;" class="card-text"><%=ratings.overall%></span>
+                                        <%}%>
                                       </div>
                                     </button>
                                   </h2>
@@ -118,27 +119,34 @@
                                       <div class="mt-1 d-flex justify-content-between align-items-center">
                                         <span class="card-text fw-semibold">Grading Transparency</span>
                                           <div class="small-ratings">
-                                            <%for(var i=1;i<=ratings.transparent;i++){%>
+                                            <%if(transparentBool){%>
+                                              <%for(var i=1;i<=ratings.transparent;i++){%>
                                               <i class="fa fa-star rating-color"></i>
                                               <%}%>
                                               <%if(ratings.transparent%1!=0){%>
                                                 <i class="fa fa-star-half rating-color"></i>
                                               <%}%>
                                               <span style="padding-left: 2px;" class="card-text">(<%=ratings.transparent%>)</span>
+                                            <%}else{%>
+                                              <span style="padding-left: 2px;" class="card-text">No ratings yet</span>
+                                            <%}%>
                                           </div>
-                                          
                                       </div>
                                       
                                       <div class="mt-1 d-flex justify-content-between align-items-center">
                                         <span class="card-text fw-semibold">Assignment Relatability</span>
                                           <div class="small-ratings">
-                                            <%for(var i=1;i<=ratings.relatability;i++){%>
-                                              <i class="fa fa-star rating-color"></i>
+                                            <%if(relatabilityBool){%>
+                                              <%for(var i=1;i<=ratings.relatability;i++){%>
+                                                <i class="fa fa-star rating-color"></i>
                                               <%}%>
                                               <%if(ratings.relatability%1!=0){%>
-                                                <i class="fa fa-star-half rating-color"></i>
+                                                  <i class="fa fa-star-half rating-color"></i>
                                               <%}%>
                                               <span style="padding-left: 2px;" class="card-text">(<%=ratings.relatability%>)</span>
+                                            <%}else{%>
+                                              <span style="padding-left: 2px;" class="card-text">No ratings yet</span>
+                                            <%}%>
                                           </div>
                                       </div>
                                       
@@ -146,13 +154,17 @@
                                       <div class="mt-1 d-flex justify-content-between align-items-center">
                                         <span class="card-text fw-semibold">Strict Grading</span>
                                           <div class="small-ratings">
-                                            <%for(var i=1;i<=ratings.strict;i++){%>
+                                            <%if(strictBool){%>
+                                              <%for(var i=1;i<=ratings.strict;i++){%>
                                               <i class="fa fa-star rating-color"></i>
                                               <%}%>
                                               <%if(ratings.strict%1!=0){%>
                                                 <i class="fa fa-star-half rating-color"></i>
                                               <%}%>
                                               <span style="padding-left: 2px;" class="card-text">(<%=ratings.strict%>)</span>
+                                            <%}else{%>
+                                              <span style="padding-left: 2px;" class="card-text">No ratings yet</span>
+                                            <%}%>
                                           </div>
                                       </div>
                                       
@@ -160,6 +172,7 @@
                                       <div class="mt-1 d-flex justify-content-between align-items-center">
                                         <span class="card-text fw-semibold">Was the grading fair?</span>
                                           <div class="small-ratings">
+                                          <%if(fairBool){%>
                                             <%for(var i=1;i<=ratings.fair;i++){%>
                                               <i class="fa fa-star rating-color"></i>
                                               <%}%>
@@ -167,21 +180,28 @@
                                                 <i class="fa fa-star-half rating-color"></i>
                                               <%}%>
                                               <span style="padding-left: 2px;" class="card-text">(<%=ratings.fair%>)</span>
-                                          </div>
+                                          <%}else{%>
+                                            <span style="padding-left: 2px;" class="card-text">No ratings yet</span>
+                                          <%}%>
+                                            </div>
                                       </div>
                                       
                                       
                                       <div class="mt-1 d-flex justify-content-between align-items-center">
                                         <span class="card-text fw-semibold">How good is the lecturer?</span>
                                           <div class="small-ratings">
-                                            <%for(var i=1;i<=ratings.lecturer;i++){%>
+                                            <%if(lecturerBool){%>
+                                              <%for(var i=1;i<=ratings.lecturer;i++){%>
                                               <i class="fa fa-star rating-color"></i>
                                               <%}%>
                                               <%if(ratings.lecturer%1!=0){%>
                                                 <i class="fa fa-star-half rating-color"></i>
                                               <%}%>
                                               <span style="padding-left: 2px;" class="card-text">(<%=ratings.lecturer%>)</span>
-                                          </div>
+                                            <%}else{%>
+                                              <span style="padding-left: 2px;" class="card-text">No ratings yet</span>
+                                            <%}%>
+                                            </div>
                                       </div>
                                     </div>
                                   </div>
@@ -194,9 +214,9 @@
                     </div>
                     </div>
                   </div>
-                  <%if(ratings.bool){%>
+                  <%if(ratings.bool && reviews.length>0){%>
                   <div class="flex-row mb-2">
-                    <span class="fs-6 fw-semibold">Reviews:</span>
+                    <span class="fs-6 fw-semibold">Reviews: (<%=reviews.length%>)</span>
                   </div>
                   <br>
                   <%for(var i=0;i<reviews.length;i++){%>
