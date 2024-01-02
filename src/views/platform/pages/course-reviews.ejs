@@ -63,14 +63,46 @@
                       </ul>
                     </div>
                     <br>
+                    <!-- <table class="inputs">
+                      <tbody>
+                        <tr>
+                          <td>Filter by Semester:</td>
+                          <td><input type="text" id="sem" name="sem"></td>
+                        </tr>
+                        <tr>
+                          <td>Filter by Year:</td>
+                          <td><input type="text" id="max" name="max"></td>
+                        </tr>
+                      </tbody>
+                    </table> -->
+                    <form>
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <select class="form-select" id="sem" name="sem">
+                            <option disabled selected>Filter by Semester</option>
+                            <option value="Monsoon">Monsoon</option>
+                            <option value="Spring">Spring</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-6">
+                          <select class="form-select" id="year" name="year">
+                            <option disabled selected>Filter by Year</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                          </select>
+                        </div>
+                      </div>
+                    </form>
+                    <br />
                     <table id="example" class="table table-striped scroll" style="width:100%">
                       <thead>
                           <tr>
                               <th></th>
                               <th>Course Code</th>
                               <th>Course Title</th>
-                              <!-- <th>Semester-Year</th> -->
                               <th>Faculty</th>
+                              <th>Semester</th>
+                              <th>Year</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -81,16 +113,18 @@
                               <td><%=data[i].attributes.courseCode.substring(0,25)%></td>
                               <td><%=data[i].attributes.courseTitle%> <br /><span style="font-size:10px"><%=data[i].attributes.semester.charAt(0).toUpperCase()%><%=data[i].attributes.semester.slice(1)%> <%=data[i].attributes.year%></span></td>
                               <!-- <td><b><%=data[i].attributes.semester%> - <%=data[i].attributes.year%></b></td> -->
-                            <td>
-                                <% let concatenatedEmails = ''; %>
-                                <% for (let j = 0; j< data[i].attributes.faculties.data.length; j++) { %>
-                                    <% const email = data[i].attributes.faculties.data[j].attributes.email; %>
-                                    <% if (email && email.indexOf('_') === -1) { %>
-                                    <% concatenatedEmails += email; %>
-                                    <% } %>
-                                <% } %>
-                                <%= concatenatedEmails.substring(0, 12) %><%= concatenatedEmails.length > 12 ? '...' : '' %>
-                            </td>
+                              <td>
+                                  <% let concatenatedEmails = ''; %>
+                                  <% for (let j = 0; j< data[i].attributes.faculties.data.length; j++) { %>
+                                      <% const email = data[i].attributes.faculties.data[j].attributes.email; %>
+                                      <% if (email && email.indexOf('_') === -1) { %>
+                                      <% concatenatedEmails += email; %>
+                                      <% } %>
+                                  <% } %>
+                                  <%= concatenatedEmails.substring(0, 12) %><%= concatenatedEmails.length > 12 ? '...' : '' %>
+                              </td>
+                              <td><%=data[i].attributes.semester.charAt(0).toUpperCase()%><%=data[i].attributes.semester.slice(1)%></td>
+                              <td><%=data[i].attributes.year%></td>
                           </tr>
                            <%}else{%>
                             <tr style="opacity:0.5; cursor:pointer" onclick="window.open('/platform/course-reviews/<%=data[i].id%>', '_blank');">
@@ -108,6 +142,8 @@
                                     <% } %>
                                     <%= concatenatedEmails.substring(0, 12) %><%= concatenatedEmails.length > 12 ? '...' : '' %>
                                   </td>
+                                <td><%=data[i].attributes.semester.charAt(0).toUpperCase()%><%=data[i].attributes.semester.slice(1)%></td>
+                                <td><%=data[i].attributes.year%></td>
                             </tr>
                            <%}%>
                           <%}%>
@@ -117,8 +153,9 @@
                             <th></th>
                             <th>Course Code</th>
                             <th>Course Title</th>
-                            <!-- <th>Semester-Year</th> -->
                             <th>Faculty</th>
+                            <th>Semester</th>
+                            <th>Year</th>
                           </tr>
                       </tfoot>
                   </table>
@@ -147,7 +184,38 @@
   <script src="/platform/assets/js/dataTables.js"></script>
   <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
   <script>
-    new DataTable('#example');
+    const semEl = document.querySelector('#sem');
+    const yearEl = document.querySelector('#year');
+    
+    // Custom range filtering function
+    DataTable.ext.search.push(function (settings, data, dataIndex) {
+        let sem = semEl.value;
+        let year = parseInt(yearEl.value, 10);
+        let semdata = (data[4]) || 0;
+        let yeardata = (data[5]) || 0;
+        console.log(year);
+        if (
+            (sem == "Filter by Semester" && isNaN(year)) ||
+            (semdata.includes(sem) && isNaN(year)) ||
+            (sem == "Filter by Semester" && yeardata.includes(year)) ||
+            (semdata.includes(sem) && yeardata.includes(year))
+        ) {
+            // console.log(sem)
+            return true;
+        }
+    
+        return false;
+    });
+    
+    const table = new DataTable('#example');
+    
+    // Changes to the inputs will trigger a redraw to update the table
+    semEl.addEventListener('change', function () {
+        table.draw();
+    });
+    yearEl.addEventListener('change', function () {
+        table.draw();
+    });
   </script>
   <!-- <%-include("../partials/preloader-js")%> -->
 </body>
