@@ -157,7 +157,7 @@ function ensureIsStudent(req, res, next) {
     if(userEmail && userEmail.includes('_')){
       next();
     }else{
-      res.render("")
+      res.render("not-student")
     }
   } else {
     // User is not authenticated, so you may want to handle that case as well
