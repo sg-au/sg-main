@@ -160,7 +160,11 @@ router.get('/course-reviews/:id', (req, res) => {
           batch:rw.attributes.batch,
           major:rw.attributes.major,
           name:rw.attributes.author.data.attributes.username,
-          overall:rw.attributes.overall
+          overall:rw.attributes.overall,
+          tf:rw.attributes.tf,
+          gradingType:rw.attributes.grading_type,
+          extracredit:rw.attributes.extracredit,
+          mode:rw.attributes.mode
         }
       }else{
       object = {
@@ -169,7 +173,11 @@ router.get('/course-reviews/:id', (req, res) => {
         batch:rw.attributes.batch,
         major:rw.attributes.major,
         overall:rw.attributes.overall,
-        name:""
+        name:"",
+        tf:rw.attributes.tf,
+        gradingType:rw.attributes.grading_type,
+        extracredit:rw.attributes.extracredit,
+        mode:rw.attributes.mode
       }
     }
     // console.log(object)
