@@ -180,7 +180,7 @@ router.get('/course-reviews/:id', (req, res) => {
         mode:rw.attributes.mode
       }
     }
-    // console.log(object)
+      // console.log(object)
       reviews.push(object);
     });
     // Reviews
