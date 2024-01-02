@@ -91,7 +91,7 @@ app.use(
 var returnTo="/platform";
 // Use route handlers for website and platform routes
 app.use("/", websiteRoutes);
-app.use("/platform", ensureAuthenticated, ensureIsNotBlocked, putImage, platformRoutes);
+app.use("/platform", ensureAuthenticated, putImage, ensureIsNotBlocked, platformRoutes);
 
 // Middleware to ensure the user is authenticated before accessing platform routes
 function ensureAuthenticated(req, res, next) {
