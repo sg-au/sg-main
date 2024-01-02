@@ -118,7 +118,7 @@
                                   <% for (let j = 0; j< data[i].attributes.faculties.data.length; j++) { %>
                                       <% const email = data[i].attributes.faculties.data[j].attributes.email; %>
                                       <% if (email && email.indexOf('_') === -1) { %>
-                                      <% concatenatedEmails += email; %>
+                                        <% concatenatedEmails += email+ ` `; %>
                                       <% } %>
                                   <% } %>
                                   <%= concatenatedEmails.substring(0, 12) %><%= concatenatedEmails.length > 12 ? '...' : '' %>
@@ -137,7 +137,7 @@
                                     <% for (let j = 0; j < data[i].attributes.faculties.data.length; j++) { %>
                                       <% const email = data[i].attributes.faculties.data[j].attributes.email; %>
                                       <% if (email && email.indexOf('_') === -1) { %>
-                                        <% concatenatedEmails += email; %>
+                                        <% concatenatedEmails += email+ ` `; %>
                                       <% } %>
                                     <% } %>
                                     <%= concatenatedEmails.substring(0, 12) %><%= concatenatedEmails.length > 12 ? '...' : '' %>
