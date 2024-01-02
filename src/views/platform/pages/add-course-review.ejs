@@ -410,6 +410,13 @@
     <script src="/platform/assets/js/darkmode.js"></script>
     <script src="/platform/assets/js/copytext.js"></script>
     <script>
+        // console.log(screen.width);
+        if(screen.width<768){
+            // console.log("HI");
+            document.getElementById("review").rows=20;
+        }
+    </script>
+    <script>
         function toggleDescription(){
       element = document.getElementById("description");
       link = document.getElementById("more");
