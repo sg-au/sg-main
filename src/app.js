@@ -91,7 +91,7 @@ app.use(
 var returnTo="/platform";
 // Use route handlers for website and platform routes
 app.use("/", websiteRoutes);
-app.use("/platform", ensureAuthenticated, putImage, ensureIsNotBlocked, platformRoutes);
+app.use("/platform", ensureAuthenticated, putImage, ensureIsStudent, ensureIsNotBlocked, platformRoutes);
 
 // Middleware to ensure the user is authenticated before accessing platform routes
 function ensureAuthenticated(req, res, next) {
@@ -149,7 +149,21 @@ function ensureIsNotBlocked(req, res, next) {
   }
 }
 
-
+// Define a middleware function for image url
+function ensureIsStudent(req, res, next) {
+  // Assuming you have a user object or user data available after authentication
+  if (req.user) {
+    const userEmail = req.user._json.email;
+    if(userEmail && userEmail.includes('_')){
+      next();
+    }else{
+      res.render("")
+    }
+  } else {
+    // User is not authenticated, so you may want to handle that case as well
+    res.status(401).send("User is not authenticated");
+  }
+}
 
 
 // Set the view engine to EJS (Embedded JavaScript)
