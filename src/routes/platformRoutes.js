@@ -108,14 +108,14 @@ router.get('/course-reviews/:id', (req, res) => {
     overallBool=overallCount==0?false:true;
     
     // Calculate Average
-    const transparent = Math.round((transparentTotal / transparentCount)*10)/10;
-    const relatability = Math.round((relatabilityTotal / relatabilityCount)*10)/10;
-    const strict = Math.round((strictTotal / strictCount)*10)/10;
-    const fair = Math.round((fairnessTotal / fairnessCount)*10)/10;
-    const lecturer = Math.round((lecturerTotal / lecturerCount)*10)/10;
-    const overall = Math.round((overallTotal / overallCount)*10)/10;
+    const transparent = transparentCount>0?(Math.round((transparentTotal / transparentCount)*10)/10):0;
+    const relatability = relatabilityCount>0?(Math.round((relatabilityTotal / relatabilityCount)*10)/10):0;
+    const strict = strictCount>0?(Math.round((strictTotal / strictCount)*10)/10):0;
+    const fair = fairnessCount>0?(Math.round((fairnessTotal / fairnessCount)*10)/10):0;
+    const lecturer = lecturerCount>0?(Math.round((lecturerTotal / lecturerCount)*10)/10):0;
+    const overall = overallCount>0?(Math.round((overallTotal / overallCount)*10)/10):0;
     const bool = totalReviews == 0?false:true;
-    const rating = Math.round(((transparent+relatability+strict+fair+lecturer+overall)/6)*10)/10;
+    const rating = (Math.round(((transparent+relatability+strict+fair+lecturer+overall)/6)*10)/10);
 
     const ratings={
       transparent,
