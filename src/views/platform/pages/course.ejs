@@ -55,6 +55,11 @@
     .review-text {
         margin-top: 5px;
     }
+    @media screen and (max-width: 768px) {
+      .acc-div {
+        margin: 0 -25px 0 -25px;
+      }
+    }
   </style>
   <%-include("../partials/preloader-css")%>
 </head>
@@ -93,7 +98,7 @@
                     </div>
                     <div><a href="javascript:void(0)" id="more" onclick="toggleDescription()">view description</a></div>
                     <br />
-                    <div class="col-md-12">
+                    <div class="col-md-12 acc-div">
                       <%if(ratings.bool){%>
                         <div style="box-shadow: none;" class="card">
                             <div class="accordion" id="accordionExample">
@@ -103,13 +108,13 @@
                                       <span style="font-size: 10px;" class="fs-3 text-dark fw-semibold">Overall Rating:</span>
                                        <div style="padding-left: 2%;" class="small-ratings">
                                         <%if(overallBool){%>
-                                          <%for(var i=1;i<=ratings.overall;i++){%>
+                                          <%for(var i=1;i<=ratings.rating;i++){%>
                                           <i class="fa fa-star rating-color"></i>
                                           <%}%>
-                                          <%if(ratings.overall%1!=0){%>
+                                          <%if(ratings.rating%1!=0){%>
                                             <i class="fa fa-star-half rating-color"></i>
                                           <%}%>
-                                        <span style="padding-left: 2px;" class="card-text"><%=ratings.overall%></span>
+                                        <span style="padding-left: 2px;" class="card-text">(<%=ratings.rating%>)</span>
                                         <%}%>
                                       </div>
                                     </button>
@@ -117,7 +122,10 @@
                                   <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                       <div class="mt-1 d-flex justify-content-between align-items-center">
-                                        <span class="card-text fw-semibold">Grading Transparency</span>
+                                        <div>
+                                          <span class="card-text fw-semibold">Grading Transparency</span>
+                                          <br/><span style="font-size:10px"><%=ratings.transparentCount%> Review(s)</span>
+                                        </div>
                                           <div class="small-ratings">
                                             <%if(transparentBool){%>
                                               <%for(var i=1;i<=ratings.transparent;i++){%>
@@ -134,7 +142,10 @@
                                       </div>
                                       
                                       <div class="mt-1 d-flex justify-content-between align-items-center">
-                                        <span class="card-text fw-semibold">Assignment Relatability</span>
+                                        <div>
+                                          <span class="card-text fw-semibold">Assignment Relatability</span>
+                                          <br/><span style="font-size:10px"><%=ratings.relatabilityCount%> Review(s)</span>
+                                        </div>
                                           <div class="small-ratings">
                                             <%if(relatabilityBool){%>
                                               <%for(var i=1;i<=ratings.relatability;i++){%>
@@ -152,7 +163,10 @@
                                       
                                       
                                       <div class="mt-1 d-flex justify-content-between align-items-center">
-                                        <span class="card-text fw-semibold">Strict Grading</span>
+                                        <div>
+                                          <span class="card-text fw-semibold">Strict Grading</span>
+                                          <br/><span style="font-size:10px"><%=ratings.strictCount%> Review(s)</span>
+                                        </div>
                                           <div class="small-ratings">
                                             <%if(strictBool){%>
                                               <%for(var i=1;i<=ratings.strict;i++){%>
@@ -170,7 +184,10 @@
                                       
                                       
                                       <div class="mt-1 d-flex justify-content-between align-items-center">
-                                        <span class="card-text fw-semibold">Was the grading fair?</span>
+                                        <div>
+                                          <span class="card-text fw-semibold">Grading Fairness</span>
+                                          <br/><span style="font-size:10px"><%=ratings.fairnessCount%> Review(s)</span>
+                                        </div>
                                           <div class="small-ratings">
                                           <%if(fairBool){%>
                                             <%for(var i=1;i<=ratings.fair;i++){%>
@@ -188,7 +205,10 @@
                                       
                                       
                                       <div class="mt-1 d-flex justify-content-between align-items-center">
-                                        <span class="card-text fw-semibold">How good is the lecturer?</span>
+                                        <div>
+                                          <span class="card-text fw-semibold">Lecture Quality</span>
+                                          <br/><span style="font-size:10px"><%=ratings.lecturerCount%> Review(s)</span>
+                                        </div>
                                           <div class="small-ratings">
                                             <%if(lecturerBool){%>
                                               <%for(var i=1;i<=ratings.lecturer;i++){%>
@@ -203,6 +223,27 @@
                                             <%}%>
                                             </div>
                                       </div>
+
+                                      <div class="mt-1 d-flex justify-content-between align-items-center">
+                                        <div>
+                                          <span class="card-text fw-semibold">Overall Recommended</span>
+                                          <br/><span style="font-size:10px"><%=ratings.overallCount%> Review(s)</span>
+                                        </div>
+                                          <div class="small-ratings">
+                                            <%if(overallBool){%>
+                                              <%for(var i=1;i<=ratings.overall;i++){%>
+                                              <i class="fa fa-star rating-color"></i>
+                                              <%}%>
+                                              <%if(ratings.overall%1!=0){%>
+                                                <i class="fa fa-star-half rating-color"></i>
+                                              <%}%>
+                                              <span style="padding-left: 2px;" class="card-text">(<%=ratings.overall%>)</span>
+                                            <%}else{%>
+                                              <span style="padding-left: 2px;" class="card-text">No ratings yet</span>
+                                            <%}%>
+                                            </div>
+                                      </div>
+
                                     </div>
                                   </div>
                                 </div>
