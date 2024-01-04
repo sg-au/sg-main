@@ -304,7 +304,7 @@
                             <i class="fa fa-star rating-color"></i>
                           <%}%>
                         </p>
-                        <p class="review-text"> <%=reviews[i].review%></p>
+                        <p class="review-text"> <%-reviews[i].review.replaceAll(`\n`,`<br>`)%></p>
                         <%if(reviews[i].tf!=``){%>
                           <p class="review-text">Influence of TA/TF: <%=reviews[i].tf%></p>
                         <%}%>
