@@ -84,7 +84,7 @@ router.get('/cabinet/mpa', (req, res) => {
 
 
 router.get('/cabinet/sport', (req, res) => {
-    res.render("website/pages/sports",{ activePage: 'cabinet-mpa' })
+    res.render("website/pages/sportsmin",{ activePage: 'cabinet-mpa' })
 });
 
 router.get('/cabinet/tarang', (req, res) => {
