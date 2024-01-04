@@ -29,8 +29,8 @@ router.get('/hor/about', (req, res) => {
     res.render("website/pages/hor-about",{ activePage: 'hor-about' })
 });
 
-router.get('/hor/work', (req, res) => {
-    res.render("website/pages/hor-work",{ activePage: 'hor-work' })
+router.get('/council', (req, res) => {
+    res.render("website/pages/council",{ activePage: 'council' })
 });
 
 router.get('/hor/committees', (req, res) => {
