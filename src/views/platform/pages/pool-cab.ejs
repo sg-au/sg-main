@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SG Platform</title>
+  <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.gstatic.com" rel="preconnect" />
+  <link rel="stylesheet" href="/platform/assets/css/dataTables.css" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+  <style>
+    @media screen and (max-width: 768px) {
+      .scroll {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+  <%-include("../partials/preloader-css")%>
+  <%-include("../partials/preloader-js")%>
+
+</head>
+<%-include("../partials/post-head")%>
+
+<script>
+    function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+</script>
+
+<body>
+  <!--  Body Wrapper -->
+  <%-include("../partials/preloader")%>
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <%-include("../partials/sidebar")%>
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <%-include("../partials/header")%>
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="row justify-content-between">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="flex-row mb-2">
+                      <span class="fs-6 fw-semibold">Pool Your Cab</span>
+                    </div>
+                    <div class="flex-row mb-3">
+                      <ul class="list-inline">
+                        <span style="font-size: 10px;" class="fs-3 fw-semibold">
+                          Find and contact people to pool cabs with.
+                        </span>                                         
+                      </ul>
+                    </div>
+                    <br>
+                    <!-- <table class="inputs">
+                      <tbody>
+                        <tr>
+                          <td>Filter by Semester:</td>
+                          <td><input type="text" id="sem" name="sem"></td>
+                        </tr>
+                        <tr>
+                          <td>Filter by Year:</td>
+                          <td><input type="text" id="max" name="max"></td>
+                        </tr>
+                      </tbody>
+                    </table> -->
+                    <form>
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <select class="form-select" id="day" name="day">
+                            <option  selected>Filter by Day</option>
+                            <option value = "19">19th January</option>
+                            <option value = "20">20th January</option>
+                            <option value = "21">21st January</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-6">
+                          <select class="form-select" id="route" name="route">
+                            <option selected>Filter by Route</option>
+                            <option value="Airport to Campus">Airport to Campus</option>
+                            <option value="Airport to Jahangirpuri">Airport to Jahangirpuri</option>
+                            <option value="Jahangirpuri to Campus">Jahangirpuri to Campus</option>
+                          </select>
+                        </div>
+                      </div>
+                    </form>
+                    <br />
+                    <table id="pool" class="table table-striped scroll" style="width:100%">
+                      <thead>
+                          <tr>
+                              <th>Name</th>
+                              <th>Contact</th>
+                              <th>Time</th>
+                              <th>Route</th>
+                              <th>Day</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                            <td>Ibrahim Khalil</td>
+                            <td>9834254802</td>
+                            <td>3:00 PM</td>
+                            <td>Airport to Campus</td>
+                            <td>20th January</td>
+                        </tr>
+                        <tr>
+                          <td>John Doe</td>
+                          <td>9876543210</td>
+                          <td>2:30 PM</td>
+                          <td>Jahangirpuri to Campus</td>
+                          <td>19th January</td>
+                      </tr>
+                      <tr>
+                          <td>Alice Smith</td>
+                          <td>9123456789</td>
+                          <td>4:15 PM</td>
+                          <td>Airport to Jahangirpuri</td>
+                          <td>21st January</td>
+                      </tr>
+                      <tr>
+                          <td>Mia Johnson</td>
+                          <td>9654321876</td>
+                          <td>1:45 PM</td>
+                          <td>Jahangirpuri to Campus</td>
+                          <td>20th January</td>
+                      </tr>
+                      <tr>
+                          <td>Rahul Verma</td>
+                          <td>9988776655</td>
+                          <td>3:45 PM</td>
+                          <td>Airport to Campus</td>
+                          <td>19th January</td>
+                      </tr>
+                      <tr>
+                          <td>Sarah Ahmed</td>
+                          <td>9234567890</td>
+                          <td>5:30 PM</td>
+                          <td>Airport to Jahangirpuri</td>
+                          <td>21st January</td>
+                      </tr>                      
+                      </tbody>
+                      <tfoot>
+                          <tr>
+                              <th>Name</th>
+                              <th>Contact</th>
+                              <th>Time</th>
+                              <th>Route</th>
+                              <th>Day</th>
+                          </tr>
+                      </tfoot>
+                  </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/platform/assets/js/sidebarmenu.js"></script>
+  <script src="/platform/assets/js/app.min.js"></script>
+  <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/platform/assets/js/dashboard.js"></script>
+  <script src="/platform/assets/js/theme.js"></script>
+  <script src="/platform/assets/js/main.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> -->
+  <script src="/platform/assets/js/dataTables.js"></script>
+  <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
+  <script>
+    const dayEl = document.querySelector('#day');
+    const routeEl = document.querySelector('#route');
+    
+    // Custom range filtering function
+    DataTable.ext.search.push(function (settings, data, dataIndex) {
+        let day = dayEl.value;
+        let route = routeEl.value;
+        let daydata = (data[4]) || 0;
+        let routedata = (data[3]) || 0;
+        // console.log(year);
+        if (
+            (day == "Filter by Day" && route == "Filter by Route") ||
+            (daydata.includes(day) && route == "Filter by Route") ||
+            (day == "Filter by Day" && routedata.includes(route)) ||
+            (daydata.includes(day) && routedata.includes(route))
+        ) {
+            // console.log(sem)
+            return true;
+        }
+    
+        return false;
+    });
+    
+    const table = new DataTable('#pool');
+    
+    // Changes to the inputs will trigger a redraw to update the table
+    dayEl.addEventListener('change', function () {
+        table.draw();
+    });
+    routeEl.addEventListener('change', function () {
+        table.draw();
+    });
+  </script>
+  <!-- <%-include("../partials/preloader-js")%> -->
+</body>
+
+</html>

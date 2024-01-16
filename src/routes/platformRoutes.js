@@ -513,5 +513,9 @@ router.get('/prof-wise', (req, res) => {
   res.render("platform/pages/prof-wise")
 });
 
+router.get('/pool-cab', (req, res) => {
+  res.render("platform/pages/pool-cab")
+})
+
 // Export the router
 module.exports = router;
