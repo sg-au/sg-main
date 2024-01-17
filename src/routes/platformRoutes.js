@@ -517,5 +517,9 @@ router.get('/pool-cab', (req, res) => {
   res.render("platform/pages/pool-cab")
 })
 
+router.get('/shuttle-service', (req, res) => {
+  res.render("platform/pages/shuttle-service")
+})
+
 // Export the router
 module.exports = router;
