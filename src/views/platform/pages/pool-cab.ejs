@@ -57,12 +57,12 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="flex-row mb-2">
-                      <span class="fs-6 fw-semibold">Pool Your Cab</span>
+                      <span class="fs-6 fw-semibold">Pool a Cab</span>
                     </div>
                     <div class="flex-row mb-3">
                       <ul class="list-inline">
                         <span style="font-size: 10px;" class="fs-3 fw-semibold">
-                          Find and contact people to pool cabs with.
+                          Below is the list of all people using the service. Please find a person closest to your arrival time and route, and reach out to them using their contact details. Please make sure that they're avaiable for pooling under the status bar before contacting them.
                         </span>                                         
                       </ul>
                     </div>
@@ -95,6 +95,8 @@
                             <option value="Airport to Campus">Airport to Campus</option>
                             <option value="Airport to Jahangirpuri">Airport to Jahangirpuri</option>
                             <option value="Jahangirpuri to Campus">Jahangirpuri to Campus</option>
+                            <option value="New Delhi to Campus">New Delhi to Campus</option>
+                            <option value="New Delhi to Jahangirpuri">New Delhi to Jahangirpuri</option>
                           </select>
                         </div>
                       </div>
@@ -121,12 +123,7 @@
                               <td><%=pools[i].attributes.pooler.data.attributes.phone%></td>
                               <td><%=new Date('1970-01-01T' + pools[i].attributes.time).toLocaleTimeString('en-US', { hour12: true }) %></td>
                               <td>
-                                <%let route = pools[i].attributes.journey;%>
-                                <%let temp = route.split(" ");%>
-                                <%temp[0] = temp[0].charAt(0).toUpperCase() + temp[0].slice(1);%>
-                                <%temp[2] = temp[2].charAt(0).toUpperCase() + temp[2].slice(1);%>
-                                <%route = temp.join(" ");%>
-                                <%=route%>
+                                <%=pools[i].attributes.journey.replace(/\b(?:(?!to)\w)/g, match => match.toUpperCase())%>
                               </td>
                               <td>
                                 <%let date = new Date(pools[i].attributes.day);%>
@@ -183,12 +180,12 @@
                   <div class="row">
                     <div class="col-md-12">
                       <div class="flex-row mb-2">
-                        <span class="fs-6 fw-semibold">Your Details:</span>
+                        <span class="fs-6 fw-semibold">Trip Details:</span>
                       </div>
                       <div class="flex-row mb-3">
                         <ul class="list-inline">
                           <span style="font-size: 10px;" class="fs-3 fw-semibold">
-                            Update your time or status.
+                            If you found a person to pool a cab with, or wish to change your estimated time of arrival then please use the below section to update your details so that others can contact you for the right trips                           
                           </span>                                         
                         </ul>
                       </div>
@@ -207,12 +204,7 @@
                           <div class="col-md-6">
                             <div class="mb-3">
                               <label class="form-label">Route</label>
-                              <%let user_route = user_detail.journey;%>
-                              <%let user_temp = user_route.split(" ");%>
-                              <%user_temp[0] = user_temp[0].charAt(0).toUpperCase() + user_temp[0].slice(1);%>
-                              <%user_temp[2] = user_temp[2].charAt(0).toUpperCase() + user_temp[2].slice(1);%>
-                              <%user_route = user_temp.join(" ");%>
-                              <input disabled class="form-control" type="text" value="<%=user_route%>">
+                              <input disabled class="form-control" type="text" value="<%=user_detail.journey.replace(/\b(?:(?!to)\w)/g, match => match.toUpperCase())%>">
                             </div>
                           </div>
                         </div>
@@ -238,7 +230,7 @@
                         <div class="row" style="float: right;">
                           <div style="text-align: center;" class="col-md-12">
                             <button type="submit" class="btn btn-primary upper">Update My Details</button>
-                            <a onclick="window.open(`https://forms.google.com`)" class="btn btn-danger">Cancel My Request</a>
+                            <button disabled onclick="window.location.href=`https://forms.gle/VdWrAC4PB9CQamDq9`" class="btn btn-danger">Cancel My Request</button>
                           </div>
                         </div>
                       </form>

@@ -29,12 +29,19 @@
                 <div class="container-fluid">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title fw-semibold mb-4">Please Intimate Your Timing And Route</h5>
+                            <h5 class="card-title fw-semibold mb-4">Pool a Cab With a Fellow Ashokan</h5>
+                            <div class="flex-row mb-3">
+                                <ul class="list-inline">
+                                  <span style="font-size: 10px;" class="fs-3 fw-semibold">
+                                    In order to pool a cab with, fill out the form below with the details. You will then be able to connect to others who are also using the same service and find a person to pool a cab with from any of the available routes.                        
+                                  </span>                                         
+                                </ul>
+                              </div>
                             <div class="card">
                                 <div class="card-body">
                                     <form id="ticketForm" action="/platform/pool-submit" method="POST">
                                         <div class="mb-3">
-                                            <label for="select" class="form-label">Select Day</label>
+                                            <label for="select" class="form-label">Select Which Day to Pool on <span style="color:rgb(177, 58, 58)">*</span></label>
                                             <select required name="day" id="select" class="form-select">
                                                 <option disabled selected>Select</option>
                                                 <option value = "01/19/2024">Jan 19</option>
@@ -43,23 +50,25 @@
                                             </select>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="select" class="form-label">Select Route</label>
+                                            <label for="select" class="form-label">Select Which Route to Pool On <span style="color:rgb(177, 58, 58)">*</span></label>
                                             <select required name="journey" id="select" class="form-select">
                                                 <option disabled selected>Select</option>
                                                 <option value="airport to campus">Airport to Campus</option>
                                                 <option value="airport to jahangirpuri">Airport to Jahangirpuri</option>
                                                 <option value="jahangirpuri to campus">Jahangirpuri to Campus</option>
+                                                <option value="new delhi to campus">New Delhi (Railway Station/Metro) to Campus</option>
+                                                <option value="new delhi to jahangirpuri">New Delhi (Railway Station/Metro) to Jahangirpuri</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="newTicketTitle" class="form-label">Estimated Time of Arrival</label>
+                                            <label for="newTicketTitle" class="form-label">Enter Time When You Want to Pool At <span style="color:rgb(177, 58, 58)">*</span></label>
                                             <input required name="time" type="time" class="form-control" id="time">
                                         </div>
                                         <div class="mb-3">
-                                            <label for="newTicketTitle" class="form-label">Your Contact Number</label>
+                                            <label for="newTicketTitle" class="form-label">Enter Your Contact Number <span style="color:rgb(177, 58, 58)">*</span></label>
                                             <input required name="phone" type="text" class="form-control" id="phoneNumber">
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Submit Choice</button>
+                                        <button type="submit" class="btn btn-primary">Pool a Cab</button>
                                     </form>
                                 </div>
                             </div>
