@@ -23,6 +23,9 @@
         display: block;
         overflow-x: auto;
       }
+      .upper {
+        margin-bottom: 5px;
+      }
     }
   </style>
   <%-include("../partials/preloader-css")%>
@@ -239,12 +242,10 @@
                           </div>
                         </div>
                         <br>
-                        <div class="row">
-                          <div style="text-align: center;" class="col-md-6">
+                        <div class="row" style="float: right;">
+                          <div style="text-align: center;" class="col-md-12">
+                            <button class="btn btn-primary upper">Update My Details</button>
                             <button class="btn btn-danger">Cancel My Request</button>
-                          </div>
-                          <div style="text-align: center;" class="col-md-6">
-                            <button class="btn btn-primary">Update My Details</button>
                           </div>
                         </div>
                       </form>
