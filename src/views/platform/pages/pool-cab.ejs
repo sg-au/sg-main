@@ -100,24 +100,29 @@
                     <table id="pool" class="table table-striped scroll" style="width:100%">
                       <thead>
                           <tr>
+                              <th></th>
                               <th>Name</th>
                               <th>Contact</th>
                               <th>Time</th>
                               <th>Route</th>
                               <th>Day</th>
+                              <th>Status</th>
                           </tr>
                       </thead>
                       <tbody>
                         <tr>
+                            <td><span style="padding-left: 4px; font-size: x-small; color: #6EC531;"><i class="fa fa-circle"></i></span></td>
                             <td>Ibrahim Khalil</td>
                             <td>9834254802</td>
                             <td>3:00 PM</td>
                             <td>Airport to Campus</td>
                             <td>Jan 20</td>
+                            <td>Available</td>
                         </tr>
                         <%for(i=0;i<pools.length;i++){%>
                           <%if(pools[i].attributes.status == 'available'){%>
                             <tr>
+                              <td><span style="padding-left: 4px; font-size: x-small; color: #6EC531;"><i class="fa fa-circle"></i></span></td>
                               <td><%=pools[i].attributes.pooler.data.attributes.username%></td>
                               <td><%=pools[i].attributes.pooler.data.attributes.phone%></td>
                               <td><%=pools[i].attributes.time%></td>
@@ -135,17 +140,42 @@
                                 <%date = date.slice(3,10);%>
                                 <%=date%>
                               </td>
+                              <td><%=pools[i].attributes.status.charAt(0).toUpperCase() + pools[i].attributes.status.slice(1)%></td>
+                            </tr>
+                          <%} else if(pools[i].attributes.status == 'pooled'){%>
+                            <tr style="opacity:0.5;">
+                              <td><span style="padding-left: 4px; font-size: x-small; color: gray;"><i class="fa fa-circle"></i></span></td>
+                              <td><%=pools[i].attributes.pooler.data.attributes.username%></td>
+                              <td><%=pools[i].attributes.pooler.data.attributes.phone%></td>
+                              <td><%=pools[i].attributes.time%></td>
+                              <td>
+                                <%let route = pools[i].attributes.journey;%>
+                                <%let temp = route.split(" ");%>
+                                <%temp[0] = temp[0].charAt(0).toUpperCase() + temp[0].slice(1);%>
+                                <%temp[2] = temp[2].charAt(0).toUpperCase() + temp[2].slice(1);%>
+                                <%route = temp.join(" ");%>
+                                <%=route%>
+                              </td>
+                              <td>
+                                <%let date = new Date(pools[i].attributes.day);%>
+                                <%date = date.toString();%>
+                                <%date = date.slice(3,10);%>
+                                <%=date%>
+                              </td>
+                              <td><%=pools[i].attributes.status.charAt(0).toUpperCase() + pools[i].attributes.status.slice(1)%></td>
                             </tr>
                           <%}%>
                         <%}%>                      
                       </tbody>
                       <tfoot>
                           <tr>
+                              <th></th>
                               <th>Name</th>
                               <th>Contact</th>
                               <th>Time</th>
                               <th>Route</th>
                               <th>Day</th>
+                              <th>Status</th>
                           </tr>
                       </tfoot>
                   </table>
@@ -153,8 +183,78 @@
                   </div>
                 </div>
               </div>
-          </div>
-
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="flex-row mb-2">
+                        <span class="fs-6 fw-semibold">Your Details:</span>
+                      </div>
+                      <div class="flex-row mb-3">
+                        <ul class="list-inline">
+                          <span style="font-size: 10px;" class="fs-3 fw-semibold">
+                            Update your time or status.
+                          </span>                                         
+                        </ul>
+                      </div>
+                      <br>
+                      <form>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label">Date</label>
+                              <%let user_date = new Date(user_detail.day);%>
+                              <%user_date = user_date.toString();%>
+                              <%user_date = user_date.slice(3,10);%>
+                              <input disabled class="form-control" type="text" value="<%=user_date%>">
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label">Route</label>
+                              <%let user_route = user_detail.journey;%>
+                              <%let user_temp = user_route.split(" ");%>
+                              <%user_temp[0] = user_temp[0].charAt(0).toUpperCase() + user_temp[0].slice(1);%>
+                              <%user_temp[2] = user_temp[2].charAt(0).toUpperCase() + user_temp[2].slice(1);%>
+                              <%user_route = user_temp.join(" ");%>
+                              <input disabled class="form-control" type="text" value="<%=user_route%>">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label">Time</label>
+                              <input class="form-control" type="time" value="<%=user_detail.time%>">
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label">Status</label>
+                              <select class="form-select" id="status" name="status" aria-placeholder="<%=user_detail.status.charAt(0).toUpperCase() + user_detail.status.slice(1)%>">
+                                <option value="available">Available</option>
+                                <option value="pooled">Pooled</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                          <div style="text-align: center;" class="col-md-6">
+                            <button class="btn btn-danger">Cancel My Request</button>
+                          </div>
+                          <div style="text-align: center;" class="col-md-6">
+                            <button class="btn btn-primary">Update My Details</button>
+                          </div>
+                        </div>
+                      </form>
+                      <br />
+                      
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
           </div>
         </div>
       </div>
