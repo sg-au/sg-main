@@ -29,35 +29,35 @@
                 <div class="container-fluid">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title fw-semibold mb-4">Create a New Ticket</h5>
+                            <h5 class="card-title fw-semibold mb-4">Please Intimidate Your Timing And Route</h5>
                             <div class="card">
                                 <div class="card-body">
-                                    <form id="ticketForm" action="/platform/create-ticket" method="POST">
+                                    <form id="ticketForm" action="/platform/pool-submit" method="POST">
                                         <div class="mb-3">
                                             <label for="select" class="form-label">Select Day</label>
                                             <select required name="category" id="select" class="form-select">
                                                 <option disabled selected>Select</option>
-                                                <option value = "19">19th January</option>
-                                                <option value = "20">20th January</option>
-                                                <option value = "21">21st January</option>
+                                                <option value = "Jan 19">Jan 19</option>
+                                                <option value = "Jan 20">Jan 20</option>
+                                                <option value = "Jan 21">Jan 21</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
                                             <label for="select" class="form-label">Select Route</label>
                                             <select required name="subcategory" id="select" class="form-select">
                                                 <option disabled selected>Select</option>
-                                                <option value="AC">Airport to Campus</option>
-                                                <option value="AJ">Airport to Jahangirpuri</option>
-                                                <option value="JC">Jahangirpuri to Campus</option>
+                                                <option value="airport to campus">Airport to Campus</option>
+                                                <option value="airport to jahangirpuri">Airport to Jahangirpuri</option>
+                                                <option value="jahangirpuri to campus">Jahangirpuri to Campus</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="newTicketTitle" class="form-label">Estimated Time</label>
-                                            <input required name="time" type="title" class="form-control" id="time">
+                                            <label for="newTicketTitle" class="form-label">Estimated Time (24 hr Format)</label>
+                                            <input required name="time" type="time" class="form-control" id="time">
                                         </div>
                                         <div class="mb-3">
                                             <label for="newTicketTitle" class="form-label">Your Contact Number</label>
-                                            <input required name="phoneNumber" type="Number" class="form-control" id="phoneNumber">
+                                            <input required name="phoneNumber" type="text" class="form-control" id="phoneNumber">
                                         </div>
                                         <button type="submit" class="btn btn-primary">Submit Choice</button>
                                     </form>

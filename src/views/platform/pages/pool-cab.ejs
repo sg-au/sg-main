@@ -81,9 +81,9 @@
                         <div class="col-lg-6">
                           <select class="form-select" id="day" name="day">
                             <option  selected>Filter by Day</option>
-                            <option value = "19">19th January</option>
-                            <option value = "20">20th January</option>
-                            <option value = "21">21st January</option>
+                            <option value = "19">Jan 19</option>
+                            <option value = "20">Jan 20</option>
+                            <option value = "21">Jan 21</option>
                           </select>
                         </div>
                         <div class="col-lg-6">
@@ -113,43 +113,31 @@
                             <td>9834254802</td>
                             <td>3:00 PM</td>
                             <td>Airport to Campus</td>
-                            <td>20th January</td>
+                            <td>Jan 20</td>
                         </tr>
-                        <tr>
-                          <td>John Doe</td>
-                          <td>9876543210</td>
-                          <td>2:30 PM</td>
-                          <td>Jahangirpuri to Campus</td>
-                          <td>19th January</td>
-                      </tr>
-                      <tr>
-                          <td>Alice Smith</td>
-                          <td>9123456789</td>
-                          <td>4:15 PM</td>
-                          <td>Airport to Jahangirpuri</td>
-                          <td>21st January</td>
-                      </tr>
-                      <tr>
-                          <td>Mia Johnson</td>
-                          <td>9654321876</td>
-                          <td>1:45 PM</td>
-                          <td>Jahangirpuri to Campus</td>
-                          <td>20th January</td>
-                      </tr>
-                      <tr>
-                          <td>Rahul Verma</td>
-                          <td>9988776655</td>
-                          <td>3:45 PM</td>
-                          <td>Airport to Campus</td>
-                          <td>19th January</td>
-                      </tr>
-                      <tr>
-                          <td>Sarah Ahmed</td>
-                          <td>9234567890</td>
-                          <td>5:30 PM</td>
-                          <td>Airport to Jahangirpuri</td>
-                          <td>21st January</td>
-                      </tr>                      
+                        <%for(i=0;i<pools.length;i++){%>
+                          <%if(pools[i].attributes.status == 'available'){%>
+                            <tr>
+                              <td><%=pools[i].attributes.pooler.data.attributes.username%></td>
+                              <td><%=pools[i].attributes.pooler.data.attributes.phone%></td>
+                              <td><%=pools[i].attributes.time%></td>
+                              <td>
+                                <%let route = pools[i].attributes.journey;%>
+                                <%let temp = route.split(" ");%>
+                                <%temp[0] = temp[0].charAt(0).toUpperCase() + temp[0].slice(1);%>
+                                <%temp[2] = temp[2].charAt(0).toUpperCase() + temp[2].slice(1);%>
+                                <%route = temp.join(" ");%>
+                                <%=route%>
+                              </td>
+                              <td>
+                                <%let date = new Date(pools[i].attributes.day);%>
+                                <%date = date.toString();%>
+                                <%date = date.slice(3,10);%>
+                                <%=date%>
+                              </td>
+                            </tr>
+                          <%}%>
+                        <%}%>                      
                       </tbody>
                       <tfoot>
                           <tr>

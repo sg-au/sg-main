@@ -432,6 +432,7 @@ router.get('/public-forum/:id', async (req, res) => {
         console.error('An error occurred:', error);
     }
 });
+
 router.post('/create-comment', async (req, res) => {
     var com_endpoint = '/comments';
     var petitionId = Number(req.body.petitionId);
@@ -513,8 +514,25 @@ router.get('/prof-wise', (req, res) => {
   res.render("platform/pages/prof-wise")
 });
 
-router.get('/pool-cab', (req, res) => {
-  res.render("platform/pages/pool-cab")
+router.get('/pool-cab', async (req, res) => {
+  try{
+    var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=pools`, axiosConfig);
+    var pool_data = await axios.get(`${apiUrl}/pools?populate=pooler`, axiosConfig);
+    // console.log(pool_data.data.data);
+    var pools = pool_data.data.data;
+    var user_detail = user_filled.data[0].pools;
+    if (user_filled.data[0].pools.length == 0) {
+      res.render("platform/pages/pool-cab-form")
+    }else{
+      res.render("platform/pages/pool-cab", {pools:pools, user_detail:user_detail[0]});
+    }
+  }catch(error){
+    console.error('An error occurred:', error);
+  }
+})
+
+router.post('/pool-submit', async(req, res) => {
+  console.log(req.body);
 })
 
 // router.get('/shuttle-service', async (req, res) => {
