@@ -517,14 +517,28 @@ router.get('/prof-wise', (req, res) => {
 router.get('/pool-cab', async (req, res) => {
   try{
     var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=pools`, axiosConfig);
-    var pool_data = await axios.get(`${apiUrl}/pools?populate=pooler`, axiosConfig);
-    // console.log(pool_data.data.data);
-    var pools = pool_data.data.data;
     var user_detail = user_filled.data[0].pools;
-    if (user_filled.data[0].pools.length == 0) {
+    // console.log(user_detail)
+    var userAvailablePools=0;
+    for(var i=0;i<user_detail.length;i++){
+      if(user_detail[i].status=="available"){
+        userAvailablePools++;
+      }
+    }
+    if (user_detail.length == 0 || userAvailablePools==0) {
       res.render("platform/pages/pool-cab-form")
-    }else{
+    }else if(user_detail.length == 1){
+      var pool_data = await axios.get(`${apiUrl}/pools?populate=pooler`, axiosConfig);
+      var pools = pool_data.data.data;
       res.render("platform/pages/pool-cab", {pools:pools, user_detail:user_detail[0]});
+    }else{
+      var pool_data = await axios.get(`${apiUrl}/pools?populate=pooler`, axiosConfig);
+      var pools = pool_data.data.data;
+      var i=0;
+      while(i<user_detail.length && user_detail[i]!="available"){
+        i++;
+      }
+      res.render("platform/pages/pool-cab", {pools:pools, user_detail:user_detail[i-1]});
     }
   }catch(error){
     console.error('An error occurred:', error);
@@ -532,8 +546,34 @@ router.get('/pool-cab', async (req, res) => {
 })
 
 router.post('/pool-submit', async(req, res) => {
-  console.log(req.body);
-})
+  var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
+  updateduser=user.data[0];
+  updateduser.phone=req.body.phone;
+  await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);      
+  delete req.body.phone;
+  req.body.status="available";
+  req.body.day=new Date(req.body.day).toISOString();
+  req.body.time=req.body.time + ":00.000"
+  req.body.pooler=updateduser;
+  axios.post(`${process.env.STRAPI_API_URL}/pools`,{data:req.body}, axiosConfig)
+        .then((response) => {
+          res.redirect("/platform/pool-cab")
+        })
+        .catch((error) => {
+            console.log(error)
+            res.send("An error occurred");
+        });
+});
+
+
+router.post('/update-pool', async(req, res) => {
+  var pool = (await axios.get(`${apiUrl}/pools/${atob(req.body.pool_id)}`, axiosConfig));
+  updatedPool = pool.data.data;
+  updatedPool.attributes.time= req.body.time + ":00.000";
+  updatedPool.attributes.status=req.body.status;
+  await axios.put(`${apiUrl}/pools/${atob(req.body.pool_id)}`, {data:updatedPool.attributes}, axiosConfig);
+  res.redirect("/platform/pool-cab")     
+});
 
 // router.get('/shuttle-service', async (req, res) => {
 //   var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=bids`, axiosConfig);

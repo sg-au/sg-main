@@ -84,9 +84,9 @@
                         <div class="col-lg-6">
                           <select class="form-select" id="day" name="day">
                             <option  selected>Filter by Day</option>
-                            <option value = "19">Jan 19</option>
-                            <option value = "20">Jan 20</option>
-                            <option value = "21">Jan 21</option>
+                            <option value = "Jan 19">Jan 19</option>
+                            <option value = "Jan 20">Jan 20</option>
+                            <option value = "Jan 21">Jan 21</option>
                           </select>
                         </div>
                         <div class="col-lg-6">
@@ -113,22 +113,13 @@
                           </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                            <td><span style="padding-left: 4px; font-size: x-small; color: #6EC531;"><i class="fa fa-circle"></i></span></td>
-                            <td>Ibrahim Khalil</td>
-                            <td>9834254802</td>
-                            <td>3:00 PM</td>
-                            <td>Airport to Campus</td>
-                            <td>Jan 20</td>
-                            <td>Available</td>
-                        </tr>
                         <%for(i=0;i<pools.length;i++){%>
                           <%if(pools[i].attributes.status == 'available'){%>
                             <tr>
                               <td><span style="padding-left: 4px; font-size: x-small; color: #6EC531;"><i class="fa fa-circle"></i></span></td>
                               <td><%=pools[i].attributes.pooler.data.attributes.username%></td>
                               <td><%=pools[i].attributes.pooler.data.attributes.phone%></td>
-                              <td><%=pools[i].attributes.time%></td>
+                              <td><%=new Date('1970-01-01T' + pools[i].attributes.time).toLocaleTimeString('en-US', { hour12: true }) %></td>
                               <td>
                                 <%let route = pools[i].attributes.journey;%>
                                 <%let temp = route.split(" ");%>
@@ -150,7 +141,8 @@
                               <td><span style="padding-left: 4px; font-size: x-small; color: gray;"><i class="fa fa-circle"></i></span></td>
                               <td><%=pools[i].attributes.pooler.data.attributes.username%></td>
                               <td><%=pools[i].attributes.pooler.data.attributes.phone%></td>
-                              <td><%=pools[i].attributes.time%></td>
+                              <td><%=new Date('1970-01-01T' + pools[i].attributes.time).toLocaleTimeString('en-US', { hour12: true }) %>
+                                </td>
                               <td>
                                 <%let route = pools[i].attributes.journey;%>
                                 <%let temp = route.split(" ");%>
@@ -201,7 +193,7 @@
                         </ul>
                       </div>
                       <br>
-                      <form>
+                      <form action="/platform/update-pool" method="POST">
                         <div class="row">
                           <div class="col-md-6">
                             <div class="mb-3">
@@ -228,15 +220,16 @@
                           <div class="col-md-6">
                             <div class="mb-3">
                               <label class="form-label">Time</label>
-                              <input class="form-control" type="time" value="<%=user_detail.time%>">
+                              <input class="form-control" name="time" type="time" value="<%=user_detail.time.substr(0, user_detail.time.lastIndexOf(':'))%>">
+                              <input class="form-control" name="pool_id" type="hidden" value="<%-btoa(user_detail.id)%>">
                             </div>
                           </div>
                           <div class="col-md-6">
                             <div class="mb-3">
                               <label class="form-label">Status</label>
                               <select class="form-select" id="status" name="status" aria-placeholder="<%=user_detail.status.charAt(0).toUpperCase() + user_detail.status.slice(1)%>">
-                                <option value="available">Available</option>
-                                <option value="pooled">Pooled</option>
+                                <option value="available" <%= user_detail.status === 'available' ? 'selected' : '' %>>Available</option>
+                                <option value="pooled" <%= user_detail.status === 'pooled' ? 'selected' : '' %>>Pooled</option>                              
                               </select>
                             </div>
                           </div>
@@ -244,8 +237,8 @@
                         <br>
                         <div class="row" style="float: right;">
                           <div style="text-align: center;" class="col-md-12">
-                            <button class="btn btn-primary upper">Update My Details</button>
-                            <button class="btn btn-danger">Cancel My Request</button>
+                            <button type="submit" class="btn btn-primary upper">Update My Details</button>
+                            <a onclick="window.open(`https://forms.google.com`)" class="btn btn-danger">Cancel My Request</a>
                           </div>
                         </div>
                       </form>
@@ -282,8 +275,8 @@
     DataTable.ext.search.push(function (settings, data, dataIndex) {
         let day = dayEl.value;
         let route = routeEl.value;
-        let daydata = (data[4]) || 0;
-        let routedata = (data[3]) || 0;
+        let daydata = (data[5]) || 0;
+        let routedata = (data[4]) || 0;
         // console.log(year);
         if (
             (day == "Filter by Day" && route == "Filter by Route") ||
