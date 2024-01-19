@@ -578,7 +578,7 @@ router.post('/update-pool', async(req, res) => {
 router.get('/cancel-pool-1997', async(req, res) => {
   userEmail=req.user._json.email;
   var pool = (await axios.get(`${apiUrl}/pools?pooler.email=${userEmail}&filters[status][$eqi]=available`, axiosConfig));
-  // console.log(pool.data.data);
+  console.log(pool.data.data);
   if(pool.data.data.length!=0){
     canceled=pool.data.data[0].attributes;
     canceled.status="canceled";
