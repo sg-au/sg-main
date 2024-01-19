@@ -528,7 +528,7 @@ router.get('/pool-cab', async (req, res) => {
     if (user_detail.length == 0 || userAvailablePools==0) {
       res.render("platform/pages/pool-cab-form")
     }else if(user_detail.length == 1){
-      var pool_data = await axios.get(`${apiUrl}/pools?populate=pooler`, axiosConfig);
+      var pool_data = await axios.get(`${apiUrl}/pools?populate=pooler&pagination[pageSize]=2000`, axiosConfig);
       var pools = pool_data.data.data;
       res.render("platform/pages/pool-cab", {pools:pools, user_detail:user_detail[0]});
     }else{
