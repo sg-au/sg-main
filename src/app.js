@@ -10,9 +10,12 @@ const cors = require("cors"); // Middleware for handling Cross-Origin Resource S
 const passport = require("./config/passport-config"); // Import the Passport configuration module
 dotenv.config({ path: "../.env" }); // Load environment variables from a .env file
 const axios=require("axios");
+const fs = require('fs');
+
 // Require MongoDB configuration
 const connectToMongoDB = require("./config/mongodb-config.js");
 connectToMongoDB(); // Call the function to connect to MongoDB
+const whitelist = JSON.parse(fs.readFileSync('../whitelist.json'));
 
 // Create a new MongoDBStore instance to store sessions
 const store = new MongoDBStore({
@@ -154,7 +157,7 @@ function ensureIsStudent(req, res, next) {
   // Assuming you have a user object or user data available after authentication
   if (req.user) {
     const userEmail = req.user._json.email;
-    if((userEmail && userEmail.includes('_')) || userEmail.includes("ministry") || userEmail.includes("campus.life")){
+    if((userEmail && userEmail.includes('_')) || userEmail.includes("ministry") || userEmail.includes("campus.life") ||   whitelist.includes(userEmail)){
       next();
     }else{
       res.render("platform/pages/not-student")
