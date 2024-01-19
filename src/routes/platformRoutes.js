@@ -575,6 +575,23 @@ router.post('/update-pool', async(req, res) => {
   res.redirect("/platform/pool-cab")     
 });
 
+router.get('/cancel-pool-1997', async(req, res) => {
+  userEmail=req.user._json.email;
+  var pool = (await axios.get(`${apiUrl}/pools?pooler.email=${userEmail}&filters[status][$eqi]=available`, axiosConfig));
+  // console.log(pool.data.data);
+  if(pool.data.data.length!=0){
+    canceled=pool.data.data[0].attributes;
+    canceled.status="canceled";
+    await axios.put(`${apiUrl}/pools/${pool.data.data[0].id}`, {data:canceled}, axiosConfig);
+  }
+  res.redirect("/platform/pool-cab")
+  // updatedPool = pool.data.data;
+  // updatedPool.attributes.time= req.body.time + ":00.000";
+  // updatedPool.attributes.status=req.body.status;
+  // await axios.put(`${apiUrl}/pools/${atob(req.body.pool_id)}`, {data:updatedPool.attributes}, axiosConfig);
+  // res.redirect("/platform/pool-cab")     
+});
+
 // router.get('/shuttle-service', async (req, res) => {
 //   var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=bids`, axiosConfig);
 //   if (user_filled.data[0].bids.length == 0) {
