@@ -577,19 +577,28 @@ router.post('/update-pool', async(req, res) => {
 
 router.get('/cancel-pool-1997', async(req, res) => {
   userEmail=req.user._json.email;
-  var pool = (await axios.get(`${apiUrl}/pools?pooler.email=${userEmail}&filters[status][$eqi]=available`, axiosConfig));
-  console.log(pool.data.data);
-  if(pool.data.data.length!=0){
-    canceled=pool.data.data[0].attributes;
+  // var pool = (await axios.get(`${apiUrl}/pools?[pooler][email]=${userEmail}&filters[status][$eqi]=available`, axiosConfig));
+  // console.log(pool.data.data);
+  var userpools = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=pools`, axiosConfig);
+  // console.log(userpools.data[0].pools);
+  obj=[];
+  for(var i=0;i<userpools.data[0].pools.length;i++){
+    if(userpools.data[0].pools[i].status=="available"){
+      obj.push(userpools.data[0].pools[i]);
+    }
+  };
+  if(obj.length!=0){
+    canceled=obj[0];
+    // console.log(obj);
+    id=(obj[0].id);
     canceled.status="canceled";
-    await axios.put(`${apiUrl}/pools/${pool.data.data[0].id}`, {data:canceled}, axiosConfig);
+    delete canceled.id;
+    delete canceled.createdAt;
+    delete canceled.updatedAt;
+    // console.log(canceled)
+    await axios.put(`${apiUrl}/pools/${id}`, {data:canceled}, axiosConfig);
   }
-  res.redirect("/platform/pool-cab")
-  // updatedPool = pool.data.data;
-  // updatedPool.attributes.time= req.body.time + ":00.000";
-  // updatedPool.attributes.status=req.body.status;
-  // await axios.put(`${apiUrl}/pools/${atob(req.body.pool_id)}`, {data:updatedPool.attributes}, axiosConfig);
-  // res.redirect("/platform/pool-cab")     
+  res.redirect("/platform/pool-cab")   
 });
 
 // router.get('/shuttle-service', async (req, res) => {
