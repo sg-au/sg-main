@@ -107,8 +107,10 @@
                                 <div class="col-md-12">
                                     <div class="petition-details">
                                         <div class="victory-box">
-                                            <h2 class="supporters-count"><%= petition.attributes.signatures.data.length %></h2>
-                                            <p style="font-size: 25px;">Supporters</p>
+                                            <!-- <h2 class="supporters-count"><%= petition.attributes.signatures.data.length %></h2>
+                                            <p style="font-size: 25px;">Supporters</p> -->
+                                            <h2 class="supporters-count"><%= petition.attributes.comments.data.length %></h2>
+                                            <p style="font-size: 25px;">Contributors</p>
                                         </div>
                                     </div>
                                     <h3 class="mb-4 card-title" style="margin-top:20px; font-size: 25px;"><%= petition.attributes.headline %></h3>
@@ -123,15 +125,16 @@
                                     <% } %>
                                 </div>
                             </div>
-                            <div class="signature-list" style="margin-top: 15px;">
+                            <!-- <div class="signature-list" style="margin-top: 15px;">
                                 <h3 class="mb-4 card-title" style="margin-top:20px; font-size: 25px;">
-                                    <%=petition.attributes.signatures.data.length%> Signature(s)</h3>
+                                    <%=petition.attributes.signatures.data.length%> Signature(s)
+                                </h3>
                                 <ul>
                                     <% (petition.attributes.signatures.data).forEach((signature, index) => { %>
                                         <li><%= signature.attributes.email %></li>
                                     <% }); %>
                                 </ul>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <h3>Comments</h3>
