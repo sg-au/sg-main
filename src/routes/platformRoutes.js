@@ -434,11 +434,22 @@ router.get('/public-forum/:id', async (req, res) => {
 });
 
 router.post('/create-comment', async (req, res) => {
+  function sanitizeInput(inputString) {
+    // Regular expression to match HTML tags
+    var htmlTagsRegex = /<\/?[^>]+(>|$)/g;
+
+    // Replace HTML tags with an empty string
+    var sanitizedString = inputString.replace(htmlTagsRegex, '');
+
+    return sanitizedString;
+} 
     var com_endpoint = '/comments';
     var petitionId = Number(req.body.petitionId);
-    var commentContent = req.body.commentContent;
+    var commentContent = sanitizeInput(req.body.commentContent);
+
+    commentContent=commentContent.replaceAll("\n","</br>");
     var user_response = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
-    var userId = user_response.data[0].id;   
+    var userId = user_response.data[0].id;  
     const commentData = {
         data: {
             comment: commentContent, // Add comment content

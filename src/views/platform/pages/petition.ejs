@@ -166,7 +166,7 @@
                                 <div class="comment-content">
                                     <p class="comment-name"><%= comment.attributes.author.data.attributes.username %></p>
                                     <p class="comment-email"><%= comment.attributes.author.data.attributes.email %></p>
-                                    <p class="comment-text"><%= comment.attributes.comment %></p>
+                                    <p class="comment-text"><%- comment.attributes.comment -%></p>
                                 </div>
                             </div>
                         <% }); %>
