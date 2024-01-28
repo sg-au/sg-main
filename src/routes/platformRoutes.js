@@ -401,7 +401,7 @@ router.get('/tickets/:id', (req, res) => {
 router.get('/public-forum', async (req, res) => {
     try {
         var endpoint = '/forums';
-        var response = await axios.get(`${apiUrl}${endpoint}?populate=signatures,department`, axiosConfig);
+        var response = await axios.get(`${apiUrl}${endpoint}?populate=comments,signatures,department`, axiosConfig);
         res.render("platform/pages/public-forum", {petitions: response.data});
     } catch (error) {
         console.error('An error occurred:', error);
