@@ -195,9 +195,10 @@ app.get(
       };
       // find the text between the underscore and the @, and capitalise it
       batch=(req.user._json.email.match(/_(.*?)@/) || [])[1]?.toUpperCase() || "";
+      username=req.user._json.name.length>2?req.user._json.name:req.user._json.name.padStart(3, ' ');
       const userData = {
         email: req.user._json.email,
-        username: req.user._json.name,
+        username: username,
         profile_url: req.user._json.picture,
         password: "XXXXXXXXXXX",
         role: 1,
@@ -248,4 +249,3 @@ app.get("*", (req, res) => {
 app.listen(port, () => {
   console.log("Listening on port " + port);
 });
-
