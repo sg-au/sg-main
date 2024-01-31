@@ -116,12 +116,19 @@
                                     <h3 class="mb-4 card-title" style="margin-top:20px; font-size: 25px;"><%= petition.attributes.headline %></h3>
                                     <a href="#" class="card-link" style="margin-right: -20px;"><span
                                         class="badge bg-primary rounded-3 fw-semibold">Started By <%= petition.attributes.department.data.attributes.name %></span></a>
-                                
+                                    <%if(petition.attributes.content){%>
                                     <div id="content" class="card-text">
                                         <%- petition.attributes.content.replace(/\n/g, '<br>') %>
                                         <a id="expand-rules" href="javascript:expand()">Read Competition Rules</a>
                                     </div>
-                                    <div style="display:none" id="content2" class="card-text"><%- petition.attributes.content2.replace(/\n/g, '<br>') %></div>
+                                    <%}%>
+                                    <%if(petition.attributes.content2){%>
+                                    <div style="display:none" id="content2" class="card-text">
+                                        <%- petition.attributes.content2.replace(/\n/g, '<br>') %>
+                                        <a id="collapse-rules" href="javascript:collapse()">Collapse Competition Rules</a>
+                                    </div>
+                                    <%}%>
+
                                     <!-- <% if (!signed) { %>
                                         <div style="text-align: center;">
                                             <button id="signButton" type="button" class="btn btn-primary m-1 btn-sign">Sign This Petition</button>
@@ -225,6 +232,10 @@
             function expand(){
                 document.getElementById("content2").style.display="block";
                 document.getElementById("expand-rules").style.display="none";
+            }
+            function collapse(){
+                document.getElementById("content2").style.display="none";
+                document.getElementById("expand-rules").style.display="block";
             }
         </script>
         
