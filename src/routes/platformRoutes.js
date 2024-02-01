@@ -586,6 +586,10 @@ router.post('/update-pool', async(req, res) => {
   res.redirect("/platform/pool-cab")     
 });
 
+router.get('/resources', async(req, res) => {
+  res.render("platform/pages/resources");  
+});
+
 router.get('/cancel-pool-1997', async(req, res) => {
   userEmail=req.user._json.email;
   // var pool = (await axios.get(`${apiUrl}/pools?[pooler][email]=${userEmail}&filters[status][$eqi]=available`, axiosConfig));
