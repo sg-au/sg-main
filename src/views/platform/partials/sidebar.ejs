@@ -1,68 +1,95 @@
 <!-- Sidebar Start -->
 <aside class="left-sidebar">
-    <!-- Sidebar scroll-->
-    <div>
-      <div class="brand-logo d-flex align-items-center justify-content-between">
-        <a href="/platform" class="text-nowrap logo-img">
-          <img src="/platform/assets/images/logos/SGLogo.png" alt="" width="50" height="50" class="rounded-circle">
-          <span class="fw-semibold" style="font-size: medium; margin: 5px;">AUSG '23</span>
-        </a>
-        <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-          <i class="ti ti-x fs-8"></i>
-        </div>
+  <!-- Sidebar scroll-->
+  <div>
+    <div class="brand-logo d-flex align-items-center justify-content-between">
+      <a href="/platform" class="text-nowrap logo-img">
+        <img
+          src="/platform/assets/images/logos/SGLogo.png"
+          alt=""
+          width="50"
+          height="50"
+          class="rounded-circle"
+        />
+        <span class="fw-semibold" style="font-size: medium; margin: 5px"
+          >AUSG '23</span
+        >
+      </a>
+      <div
+        class="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
+        id="sidebarCollapse"
+      >
+        <i class="ti ti-x fs-8"></i>
       </div>
-      <!-- Sidebar navigation-->
-      <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-        <ul id="sidebarnav">
-          <li class="nav-small-cap">
-            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-            <span class="hide-menu">Home</span>
-          </li>
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/platform/" aria-expanded="false">
-              <span>
-                <i class="ti ti-layout-dashboard"></i>
-              </span>
-              <span class="hide-menu">Dashboard</span>
-            </a>
-          </li>
-          <li class="nav-small-cap">
-            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-            <span class="hide-menu">MY ASHOKA</span>
-          </li>
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/platform/announcements" aria-expanded="false">
-              <span>
-                <i class="ti ti-article"></i>
-              </span>
-              <span class="hide-menu">Announcements</span>
-            </a>
-          </li>
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/platform/pool-cab" aria-expanded="false">
-              <span>
-                <i class="ti ti-car"></i>
-              </span>
-              <span class="hide-menu">Pool a Cab</span>
-            </a>
-          </li>
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/platform/tickets" aria-expanded="false">
-              <span>
-                <i class="ti ti-alert-circle"></i>
-              </span>
-              <span class="hide-menu">My Tickets</span>
-            </a>
-          </li>
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/platform/public-forum" aria-expanded="false">
-              <span>
-                <i class="ti ti-cards"></i>
-              </span>
-              <span class="hide-menu">Public Forum</span>
-            </a>
-          </li>
-          <!-- <li class="sidebar-item">
+    </div>
+    <!-- Sidebar navigation-->
+    <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+      <ul id="sidebarnav">
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Home</span>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="/platform/" aria-expanded="false">
+            <span>
+              <i class="ti ti-layout-dashboard"></i>
+            </span>
+            <span class="hide-menu">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">MY ASHOKA</span>
+        </li>
+        <li class="sidebar-item">
+          <a
+            class="sidebar-link"
+            href="/platform/announcements"
+            aria-expanded="false"
+          >
+            <span>
+              <i class="ti ti-article"></i>
+            </span>
+            <span class="hide-menu">Announcements</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a
+            class="sidebar-link"
+            href="/platform/pool-cab"
+            aria-expanded="false"
+          >
+            <span>
+              <i class="ti ti-car"></i>
+            </span>
+            <span class="hide-menu">Pool a Cab</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a
+            class="sidebar-link"
+            href="/platform/tickets"
+            aria-expanded="false"
+          >
+            <span>
+              <i class="ti ti-alert-circle"></i>
+            </span>
+            <span class="hide-menu">My Tickets</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a
+            class="sidebar-link"
+            href="/platform/public-forum"
+            aria-expanded="false"
+          >
+            <span>
+              <i class="ti ti-cards"></i>
+            </span>
+            <span class="hide-menu">Public Forum</span>
+          </a>
+        </li>
+        <!-- <li class="sidebar-item">
             <a class="sidebar-link" href="/platform/events" aria-expanded="false">
               <span>
                 <i class="ti ti-file-description"></i>
@@ -70,35 +97,47 @@
               <span class="hide-menu">Events Calendar</span>
             </a>
           </li> -->
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/platform/course-reviews" aria-expanded="false">
-              <span>
-                <i class="ti ti-file-description"></i>
-              </span>
-              <span class="hide-menu">Course Review</span>
-            </a>
-          </li>
-          
-          <!-- <li class="sidebar-item">
-            <a class="sidebar-link" href="https://calendly.com/sg--exk/office-hours-with-sg" target="_blank" aria-expanded="false">
-              <span>
-                <i class="ti ti-album"></i>
-              </span>
-              <span class="hide-menu">Office Hours</span>
-            </a>
-          </li> -->
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/platform/profile" aria-expanded="false">
-              <span>
-                <i class="ti ti-user-plus"></i>
-              </span>
-              <span class="hide-menu">My Profile</span>
-            </a>
-          </li>
+        <li class="sidebar-item">
+          <a
+            class="sidebar-link"
+            href="/platform/course-reviews"
+            aria-expanded="false"
+          >
+            <span>
+              <i class="ti ti-file-description"></i>
+            </span>
+            <span class="hide-menu">Course Review</span>
+          </a>
+        </li>
 
-          <!--Extras-->
+        <li class="sidebar-item">
+          <a
+            class="sidebar-link"
+            href="/platform/resources"
+            aria-expanded="false"
+          >
+            <span>
+              <i class="ti ti-album"></i>
+            </span>
+            <span class="hide-menu">Resources</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a
+            class="sidebar-link"
+            href="/platform/profile"
+            aria-expanded="false"
+          >
+            <span>
+              <i class="ti ti-user-plus"></i>
+            </span>
+            <span class="hide-menu">My Profile</span>
+          </a>
+        </li>
 
-          <!--             
+        <!--Extras-->
+
+        <!--             
           <li class="nav-small-cap">
             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
             <span class="hide-menu">AUTH</span>
@@ -139,9 +178,8 @@
               <span class="hide-menu">Sample Page</span>
             </a>
           </li> -->
-
-        </ul>
-        <!-- <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
+      </ul>
+      <!-- <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
           <div class="d-flex">
             <div class="unlimited-access-title me-3">
               <h6 class="fw-semibold fs-4 mb-6 text-dark w-85">Upgrade to pro</h6>
@@ -152,9 +190,9 @@
             </div>
           </div>
         </div> -->
-      </nav>
-      <!-- End Sidebar navigation -->
-    </div>
-    <!-- End Sidebar scroll-->
-  </aside>
-  <!--  Sidebar End -->
+    </nav>
+    <!-- End Sidebar navigation -->
+  </div>
+  <!-- End Sidebar scroll-->
+</aside>
+<!--  Sidebar End -->
