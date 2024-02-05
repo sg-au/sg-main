@@ -22,7 +22,22 @@
     <%-include("../partials/preloader-css")%>
   </head>
   <%-include("../partials/post-head")%>
+  <style>
+    .container {
+  padding: 10px;
+}
 
+ul li {
+  list-style: none;
+  
+}
+.badge{
+  margin:8px 0;
+}
+.card-title{
+  color : #5d87ff
+}
+  </style>
   <body>
     <%-include("../partials/preloader")%>
     <!--  Body Wrapper -->
@@ -39,10 +54,83 @@
       <!--  Main wrapper -->
       <div class="body-wrapper">
         <%-include("../partials/header")%>
-        <div class="container-fluid"></div>
+        <div class="container-fluid">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-12 mb-3">
+                <input type="text" id="myFilter" class="form-control" onkeyup="myFunction()" placeholder="Search for names..">
+              </div>
+            </div>
+            <div class="row" id="myItems">
+              <div class="col-sm-12 mb-3">
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card One</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Some text.</p>
+                  </div>
+                </div>
+          
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">infirmary</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Some text.</p>
+                  </div>
+                </div>
+          
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card Three</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-success">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Some text.</p>
+                  </div>
+                </div>
+                
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card Four</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Subtitle</span>
+                    <p class="card-text">Some text.</p>
+                  </div>
+                </div>
+                
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card Five</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Some text.</p>
+                  </div>
+                </div>
+                
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card Six</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Some text.</p>
+                  </div>
+                </div>
+                
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card Seven</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Some text.</p>
+                  </div>
+                </div>
+                
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card Eight</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Some text.</p>
+                  </div>
+                </div>      
+              </div>    
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/platform/assets/js/sidebarmenu.js"></script>
     <script src="/platform/assets/js/app.min.js"></script>
@@ -52,4 +140,22 @@
     <script src="/platform/assets/js/theme.js"></script>
     <%-include("../partials/preloader-js")%>
   </body>
+  <script>
+    function myFunction() {
+    var input, filter, cards, cardContainer, h5, title, subtitle, i; // Added subtitle variable
+    input = document.getElementById("myFilter");
+    filter = input.value.toUpperCase();
+    cardContainer = document.getElementById("myItems");
+    cards = cardContainer.getElementsByClassName("card");
+    for (i = 0; i < cards.length; i++) {
+        title = cards[i].querySelector(".card-body h5.card-title");
+        subtitle = cards[i].querySelector(".card-body span.badge.bg-secondary"); // Updated subtitle query
+        if (title.innerText.toUpperCase().indexOf(filter) > -1 || subtitle.innerText.toUpperCase().indexOf(filter) > -1) { // Updated condition to include subtitle
+            cards[i].style.display = "";
+        } else {
+            cards[i].style.display = "none";
+        }
+    }
+}
+  </script>
 </html>
