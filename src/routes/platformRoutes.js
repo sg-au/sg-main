@@ -587,7 +587,8 @@ router.post('/update-pool', async(req, res) => {
 });
 
 router.get('/resources', async(req, res) => {
-  res.render("platform/pages/resources");  
+  var resources = (await axios.get(`${apiUrl}/resources`, axiosConfig));
+  res.render("platform/pages/resources",{cards:resources.data.data});  
 });
 
 router.get('/cancel-pool-1997', async(req, res) => {
