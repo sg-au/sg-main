@@ -66,7 +66,7 @@ ul li {
                 <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
                   <div class="card-body">
                     <h5 class="card-title">Card One</h5> <!-- Removed anchor tag -->
-                    <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <span class="badge bg-secondary">Some</span> <!-- Replaced Tags with Subtitle -->
                     <p class="card-text">Some text.</p>
                   </div>
                 </div>
@@ -74,7 +74,7 @@ ul li {
                 <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
                   <div class="card-body">
                     <h5 class="card-title">infirmary</h5> <!-- Removed anchor tag -->
-                    <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <span class="badge bg-secondary">West</span> <!-- Replaced Tags with Subtitle -->
                     <p class="card-text">Some text.</p>
                   </div>
                 </div>
@@ -83,7 +83,7 @@ ul li {
                   <div class="card-body">
                     <h5 class="card-title">Card Three</h5> <!-- Removed anchor tag -->
                     <span class="badge bg-success">Subtitle</span> <!-- Replaced Tags with Subtitle -->
-                    <p class="card-text">Some text.</p>
+                    <p class="card-text">Blue text.</p>
                   </div>
                 </div>
                 
@@ -99,13 +99,13 @@ ul li {
                   <div class="card-body">
                     <h5 class="card-title">Card Five</h5> <!-- Removed anchor tag -->
                     <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
-                    <p class="card-text">Some text.</p>
+                    <p class="card-text">Lol text.</p>
                   </div>
                 </div>
                 
                 <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
                   <div class="card-body">
-                    <h5 class="card-title">Card Six</h5> <!-- Removed anchor tag -->
+                    <h5 class="card-title">Card Test</h5> <!-- Removed anchor tag -->
                     <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
                     <p class="card-text">Some text.</p>
                   </div>
@@ -115,14 +115,14 @@ ul li {
                   <div class="card-body">
                     <h5 class="card-title">Card Seven</h5> <!-- Removed anchor tag -->
                     <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
-                    <p class="card-text">Some text.</p>
+                    <p class="card-text">Some Try.</p>
                   </div>
                 </div>
                 
                 <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
                   <div class="card-body">
                     <h5 class="card-title">Card Eight</h5> <!-- Removed anchor tag -->
-                    <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <span class="badge bg-secondary">Eighty</span> <!-- Replaced Tags with Subtitle -->
                     <p class="card-text">Some text.</p>
                   </div>
                 </div>      
@@ -141,21 +141,26 @@ ul li {
     <%-include("../partials/preloader-js")%>
   </body>
   <script>
-    function myFunction() {
-    var input, filter, cards, cardContainer, h5, title, subtitle, i; // Added subtitle variable
+function myFunction() {
+    var input, filter, cards, cardContainer, cardContent, i;
     input = document.getElementById("myFilter");
     filter = input.value.toUpperCase();
     cardContainer = document.getElementById("myItems");
     cards = cardContainer.getElementsByClassName("card");
+    
     for (i = 0; i < cards.length; i++) {
-        title = cards[i].querySelector(".card-body h5.card-title");
-        subtitle = cards[i].querySelector(".card-body span.badge.bg-secondary"); // Updated subtitle query
-        if (title.innerText.toUpperCase().indexOf(filter) > -1 || subtitle.innerText.toUpperCase().indexOf(filter) > -1) { // Updated condition to include subtitle
+        cardContent = cards[i].querySelector(".card-body");
+        
+        // Concatenate all relevant text content within the card
+        var cardText = cardContent.textContent || cardContent.innerText;
+        
+        if (cardText.toUpperCase().indexOf(filter) > -1) {
             cards[i].style.display = "";
         } else {
             cards[i].style.display = "none";
         }
     }
 }
+
   </script>
 </html>
