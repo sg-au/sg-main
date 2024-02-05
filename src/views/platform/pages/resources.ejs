@@ -22,7 +22,22 @@
     <%-include("../partials/preloader-css")%>
   </head>
   <%-include("../partials/post-head")%>
+  <style>
+    .container {
+  padding: 10px;
+}
 
+ul li {
+  list-style: none;
+  
+}
+.badge{
+  margin:8px 0;
+}
+.card-title{
+  color : #5d87ff
+}
+  </style>
   <body>
     <%-include("../partials/preloader")%>
     <!--  Body Wrapper -->
@@ -39,10 +54,86 @@
       <!--  Main wrapper -->
       <div class="body-wrapper">
         <%-include("../partials/header")%>
-        <div class="container-fluid"></div>
+        <div class="container-fluid">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-12 mb-3">
+                <input type="text" id="myFilter" class="form-control" onkeyup="myFunction()" placeholder="Search for names..">
+              </div>
+            </div>
+            <div class="row" id="myItems">
+              <div class="col-sm-12 mb-3">
+                <%for(var i=0;i<50;i++){%>
+                
+          
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">infirmary</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">West</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Some text.</p>
+                  </div>
+                </div>
+          
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card Three</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-success">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Blue text.</p>
+                  </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card One</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Some</span> <!-- Replaced Tags with Subtitle -->
+<p style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);color:rgb(34, 34, 34);font-family:georgia, serif;font-size:small;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:1.38;margin-bottom:0pt;margin-top:0pt;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;" dir="ltr"><span style="background-color:transparent;color:rgb(0,0,0);font-size:11pt;"><span style="font-variant-alternates:normal;font-variant-east-asian:normal;font-variant-numeric:normal;vertical-align:baseline;"><strong>TL:DR: With the World Cup over, there is not much to do in the evenings. Come join us with your friends for a fun quiz with questions from various interesting categories!</strong></span></span></p><p style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);color:rgb(34, 34, 34);font-family:georgia, serif;font-size:small;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:1.38;margin-bottom:0pt;margin-top:0pt;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;" dir="ltr">&nbsp;</p><p style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);color:rgb(34, 34, 34);font-family:georgia, serif;font-size:small;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:1.38;margin-bottom:0pt;margin-top:0pt;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;" dir="ltr"><span style="background-color:transparent;color:rgb(0,0,0);font-size:11pt;"><span style="font-variant-alternates:normal;font-variant-east-asian:normal;font-variant-numeric:normal;vertical-align:baseline;">Greetings Ashokans!</span></span></p><p style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);color:rgb(34, 34, 34);font-family:georgia, serif;font-size:small;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:1.38;margin-bottom:0pt;margin-top:0pt;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;" dir="ltr">&nbsp;</p><p style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);color:rgb(34, 34, 34);font-family:georgia, serif;font-size:small;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:1.38;margin-bottom:0pt;margin-top:0pt;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;" dir="ltr"><span style="background-color:transparent;color:rgb(0,0,0);font-size:11pt;"><span style="font-variant-alternates:normal;font-variant-east-asian:normal;font-variant-numeric:normal;vertical-align:baseline;">I hope this email finds you well. The Ashoka University Economics Society is excited to bring you a thrilling and intellectually stimulating event – <strong>Econ+ Trivia</strong>! This is a fantastic opportunity for you and your peers to have some fun before you all get busy with exams. It will include questions from diverse categories like economics, music, literature, sports, current, events, etc.</span></span></p><p style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);color:rgb(34, 34, 34);font-family:georgia, serif;font-size:small;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:1.38;margin-bottom:0pt;margin-top:0pt;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;" dir="ltr">&nbsp;</p><p style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);color:rgb(34, 34, 34);font-family:georgia, serif;font-size:small;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:1.38;margin-bottom:0pt;margin-top:0pt;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;" dir="ltr"><span style="background-color:transparent;color:rgb(0,0,0);font-size:11pt;"><span style="font-variant-alternates:normal;font-variant-east-asian:normal;font-variant-numeric:normal;vertical-align:baseline;"><strong>Event Details:</strong></span></span></p><p style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);color:rgb(34, 34, 34);font-family:georgia, serif;font-size:small;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:1.38;margin-bottom:0pt;margin-top:0pt;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;" dir="ltr"><span style="background-color:transparent;color:rgb(0,0,0);font-size:11pt;"><span style="font-variant-alternates:normal;font-variant-east-asian:normal;font-variant-numeric:normal;vertical-align:baseline;">Date: Wednesday, 22nd November 2023</span></span></p><p style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);color:rgb(34, 34, 34);font-family:georgia, serif;font-size:small;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:1.38;margin-bottom:0pt;margin-top:0pt;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;" dir="ltr"><span style="background-color:transparent;color:rgb(0,0,0);font-size:11pt;"><span style="font-variant-alternates:normal;font-variant-east-asian:normal;font-variant-numeric:normal;vertical-align:baseline;">Time: 5:00 PM - 6:00 PM</span></span></p><p style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);color:rgb(34, 34, 34);font-family:georgia, serif;font-size:small;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:1.38;margin-bottom:0pt;margin-top:0pt;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;" dir="ltr"><span style="background-color:transparent;color:rgb(0,0,0);font-size:11pt;"><span style="font-variant-alternates:normal;font-variant-east-asian:normal;font-variant-numeric:normal;vertical-align:baseline;">Venue: TBD</span></span></p><p style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);color:rgb(34, 34, 34);font-family:georgia, serif;font-size:small;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:1.38;margin-bottom:0pt;margin-top:0pt;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;" dir="ltr">&nbsp;</p><p style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);color:rgb(34, 34, 34);font-family:georgia, serif;font-size:small;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:1.38;margin-bottom:0pt;margin-top:0pt;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;" dir="ltr"><span style="background-color:transparent;color:rgb(0,0,0);font-size:11pt;"><span style="font-variant-alternates:normal;font-variant-east-asian:normal;font-variant-numeric:normal;vertical-align:baseline;">We invite teams of <strong>2-3 members</strong> to participate and compete for the title of the <strong>Ultimate Quiz Champions</strong>. Whether you're an economics enthusiast or just looking for a fun and challenging activity, this event is perfect for you!</span></span></p>                            <p></p>                  </div>
+                </div>
+                
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card Four</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Subtitle</span>
+                    <p class="card-text">Some text.</p>
+                  </div>
+                </div>
+                
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card Five</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Lol text.</p>
+                  </div>
+                </div>
+                
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card Test</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Some text.</p>
+                  </div>
+                </div>
+                
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card Seven</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Subtitle</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Some Try.</p>
+                  </div>
+                </div>
+                
+                <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+                  <div class="card-body">
+                    <h5 class="card-title">Card Eight</h5> <!-- Removed anchor tag -->
+                    <span class="badge bg-secondary">Eighty</span> <!-- Replaced Tags with Subtitle -->
+                    <p class="card-text">Some text.</p>
+                  </div>
+                </div>
+              <%}%>    
+              </div>    
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/platform/assets/js/sidebarmenu.js"></script>
     <script src="/platform/assets/js/app.min.js"></script>
@@ -52,4 +143,27 @@
     <script src="/platform/assets/js/theme.js"></script>
     <%-include("../partials/preloader-js")%>
   </body>
+  <script>
+function myFunction() {
+    var input, filter, cards, cardContainer, cardContent, i;
+    input = document.getElementById("myFilter");
+    filter = input.value.toUpperCase();
+    cardContainer = document.getElementById("myItems");
+    cards = cardContainer.getElementsByClassName("card");
+    
+    for (i = 0; i < cards.length; i++) {
+        cardContent = cards[i].querySelector(".card-body");
+        
+        // Concatenate all relevant text content within the card
+        var cardText = cardContent.textContent || cardContent.innerText;
+        
+        if (cardText.toUpperCase().indexOf(filter) > -1) {
+            cards[i].style.display = "";
+        } else {
+            cards[i].style.display = "none";
+        }
+    }
+}
+
+  </script>
 </html>
