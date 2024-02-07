@@ -180,12 +180,12 @@
                                 <img class="comment-avatar" src="<%= comment.attributes.author.data.attributes.profile_url %>" alt="User 1">
                                 <div class="comment-content">
                                     <p class="comment-name"><%- comment.attributes.author.data.attributes.username.substring(0,33) -%>
-                                    <%if(matchMedia('(max-width: 768px)').matches && comment.attributes.author.data.attributes.username.length>33){%>
+                                    <%if(window.innerWidth <= 768 && comment.attributes.author.data.attributes.username.length>33){%>
                                     ...
                                     <%}%>
                                     </p>
                                     <p class="comment-email"><%- comment.attributes.author.data.attributes.email.substring(0,33) -%>
-                                        <%if(matchMedia('(max-width: 768px)').matches && comment.attributes.author.data.attributes.email.length>33){%>
+                                        <%if(window.innerWidth <= 768 && comment.attributes.author.data.attributes.email.length>33){%>
                                             ...
                                         <%}%>
                                     </p>
