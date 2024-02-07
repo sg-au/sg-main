@@ -185,7 +185,7 @@
                                     <%}%>
                                     </p>
                                     <p class="comment-email"><%- comment.attributes.author.data.attributes.email.substring(0,33) -%>
-                                        <%if(&& comment.attributes.author.data.attributes.email.length>33){%>
+                                        <%if(comment.attributes.author.data.attributes.email.length>33){%>
                                             ...
                                         <%}%>
                                     </p>
