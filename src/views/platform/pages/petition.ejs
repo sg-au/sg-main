@@ -89,7 +89,11 @@
         color: black;
     }
 </style>
-
+<script>
+    function isMobile() {
+        return window.innerWidth <= 768; // Adjust the threshold as needed
+    }
+</script>
 <body>
     <%-include("../partials/preloader")%>
     <!--  Body Wrapper -->
@@ -246,11 +250,7 @@
                 document.getElementById("expand-rules").style.display="block";
             }
         </script>
-        <script>
-            function isMobile() {
-                return window.innerWidth <= 768; // Adjust the threshold as needed
-            }
-        </script>
+        
         
         <script>
             document.addEventListener('DOMContentLoaded', function() {
