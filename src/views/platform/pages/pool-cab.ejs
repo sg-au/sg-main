@@ -84,19 +84,34 @@
                         <div class="col-lg-6">
                           <select class="form-select" id="day" name="day">
                             <option  selected>Filter by Day</option>
-                            <option value = "Jan 19">Jan 19</option>
-                            <option value = "Jan 20">Jan 20</option>
-                            <option value = "Jan 21">Jan 21</option>
+                            <% for (let i = 0; i < 5; i++) { %>
+                              <%
+                                  const date = new Date();
+                                  date.setDate(date.getDate() + i);
+                                  const formattedDate = `${date.toLocaleString('en', { month: 'short' })} ${date.getDate()}`;
+                              %>
+                              <option value="<%= formattedDate %>"><%= formattedDate %></option>
+                          <% } %>>
                           </select>
                         </div>
                         <div class="col-lg-6">
                           <select class="form-select" id="route" name="route">
                             <option selected>Filter by Route</option>
-                            <option value="Airport to Campus">Airport to Campus</option>
+                            <!-- <option value="Airport to Campus">Airport to Campus</option>
                             <option value="Airport to Jahangirpuri">Airport to Jahangirpuri</option>
                             <option value="Jahangirpuri to Campus">Jahangirpuri to Campus</option>
                             <option value="New Delhi to Campus">New Delhi to Campus</option>
-                            <option value="New Delhi to Jahangirpuri">New Delhi to Jahangirpuri</option>
+                            <option value="New Delhi to Jahangirpuri">New Delhi to Jahangirpuri</option> -->
+
+                            <option value="Jahangirpuri to Campus">Jahangirpuri to Campus</option>
+                            <option value="Campus to Jahangirpuri">Campus to Jahangirpuri</option>
+
+                            <option value="New Delhi to Campus">New Delhi to Campus</option>
+                            <option value="Campus to New Delhi">Campus to New Delhi</option>
+
+                            <option value="Gurgaon to Campus">Gurgaon to Campus</option>
+                            <option value="Campus to Gurgaon">Campus to Gurgaon</option>
+                          
                           </select>
                         </div>
                       </div>
@@ -213,6 +228,7 @@
                             <div class="mb-3">
                               <label class="form-label">Time</label>
                               <input class="form-control" name="time" type="time" value="<%=user_detail.time.substr(0, user_detail.time.lastIndexOf(':'))%>">
+                              <label for="time">If you wish to change the time of your trip, please select your new time here and click 'Update My Time' button below</label>
                               <input class="form-control" name="pool_id" type="hidden" value="<%-btoa(user_detail.id)%>">
                             </div>
                           </div>
@@ -229,8 +245,9 @@
                         <br>
                         <div class="row" style="float: right;">
                           <div style="text-align: center;" class="col-md-12">
-                            <button type="submit" class="btn btn-primary upper">Update My Details</button>
-                            <a onclick="window.location.href=`https://forms.gle/VdWrAC4PB9CQamDq9`" class="btn btn-danger">Cancel My Request</a>
+                            <button onclick="changeStatusAndClickUpdateButton()" class="btn btn-success upper">Found a Cab Pool</button>
+                            <button id="update" type="submit" class="btn btn-primary upper">Update My Time</button>
+                            <a href="/platform/cancel-cab-pool" class="btn btn-danger">Cancel My Request</a>
                           </div>
                         </div>
                       </form>
@@ -292,6 +309,12 @@
     routeEl.addEventListener('change', function () {
         table.draw();
     });
+  </script>
+  <script>
+    function changeStatusAndClickUpdateButton(){
+      document.getElementById("status").value="pooled";
+      document.getElementById("update").click();
+    }
   </script>
   <!-- <%-include("../partials/preloader-js")%> -->
 </body>

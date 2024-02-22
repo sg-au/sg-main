@@ -527,6 +527,23 @@ router.get('/prof-wise', (req, res) => {
 
 router.get('/pool-cab', async (req, res) => {
   try{
+    // Get the current date
+    let currentDate = new Date();
+
+    // Get the date 5 days from now
+    let futureDate = new Date();
+    futureDate.setDate(currentDate.getDate() + 4);
+
+    // Format the dates to ISO format (YYYY-MM-DD)
+    let formattedCurrentDate = currentDate.toISOString().split('T')[0];
+    let formattedFutureDate = futureDate.toISOString().split('T')[0];
+
+    // Create an object with the current date and future date
+    let dateRange = {
+        currentDate: formattedCurrentDate,
+        futureDate: formattedFutureDate
+    };
+
     var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=pools`, axiosConfig);
     var user_detail = user_filled.data[0].pools;
     // console.log(user_detail)
@@ -539,17 +556,28 @@ router.get('/pool-cab', async (req, res) => {
     if (user_detail.length == 0 || userAvailablePools==0) {
       res.render("platform/pages/pool-cab-form")
     }else if(user_detail.length == 1){
-      var pool_data = await axios.get(`${apiUrl}/pools?populate=pooler&pagination[pageSize]=2000`, axiosConfig);
+      var pool_data = await axios.get(`${apiUrl}/pools?populate=pooler&pagination[pageSize]=2000&_where[day_gte]=${dateRange.currentDate}&_where[day_lt]=${dateRange.futureDate}`, axiosConfig);
       var pools = pool_data.data.data;
-      res.render("platform/pages/pool-cab", {pools:pools, user_detail:user_detail[0]});
+      // next 5 days only
+      let filteredPools = pools.filter(pool => {
+        let poolDate = new Date(pool.attributes.day);
+        return poolDate >= currentDate && poolDate < futureDate;
+      });
+      res.render("platform/pages/pool-cab", {pools:filteredPools, user_detail:user_detail[0]});
     }else{
-      var pool_data = await axios.get(`${apiUrl}/pools?populate=pooler`, axiosConfig);
+      // console.log(dateRange.currentDate)
+      var pool_data = await axios.get(`${apiUrl}/pools?populate=pooler&pagination[pageSize]=2000&_where[day_gte]=${dateRange.currentDate}&_where[day_lt]=${dateRange.futureDate}`, axiosConfig);
       var pools = pool_data.data.data;
+      // next 5 days only
+      let filteredPools = pools.filter(pool => {
+        let poolDate = new Date(pool.attributes.day);
+        return poolDate >= currentDate && poolDate < futureDate;
+     });
       var i=0;
       while(i<user_detail.length && user_detail[i]!="available"){
         i++;
       }
-      res.render("platform/pages/pool-cab", {pools:pools, user_detail:user_detail[i-1]});
+      res.render("platform/pages/pool-cab", {pools:filteredPools, user_detail:user_detail[i-1]});
     }
   }catch(error){
     console.error('An error occurred:', error);
@@ -591,7 +619,7 @@ router.get('/resources', async(req, res) => {
   res.render("platform/pages/resources",{cards:resources.data.data});  
 });
 
-router.get('/cancel-pool-1997', async(req, res) => {
+router.get('/cancel-cab-pool', async(req, res) => {
   userEmail=req.user._json.email;
   // var pool = (await axios.get(`${apiUrl}/pools?[pooler][email]=${userEmail}&filters[status][$eqi]=available`, axiosConfig));
   // console.log(pool.data.data);

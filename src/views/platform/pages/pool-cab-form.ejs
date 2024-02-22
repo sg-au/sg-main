@@ -44,20 +44,35 @@
                                             <label for="select" class="form-label">Select Which Day to Pool on <span style="color:rgb(177, 58, 58)">*</span></label>
                                             <select required name="day" id="select" class="form-select">
                                                 <option disabled selected>Select</option>
-                                                <option value = "01/19/2024">Jan 19</option>
-                                                <option value = "01/20/2024">Jan 20</option>
-                                                <option value = "01/21/2024">Jan 21</option>
+                                                <% for (let i = 0; i < 5; i++) { %>
+                                                    <%
+                                                        const date = new Date();
+                                                        date.setDate(date.getDate() + i);
+                                                        const formattedDate = `${date.toLocaleString('en', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
+                                                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                                                        const day = String(date.getDate()).padStart(2, '0');
+                                                        const year = date.getFullYear();
+                                                        const value = `${month}/${day}/${year}`;
+                                                    %>
+                                                    <option value="<%= value %>"><%= formattedDate %></option>
+                                                <% } %>
                                             </select>
                                         </div>
                                         <div class="mb-3">
                                             <label for="select" class="form-label">Select Which Route to Pool On <span style="color:rgb(177, 58, 58)">*</span></label>
                                             <select required name="journey" id="select" class="form-select">
                                                 <option disabled selected>Select</option>
-                                                <option value="airport to campus">Airport to Campus</option>
-                                                <option value="airport to jahangirpuri">Airport to Jahangirpuri</option>
+                                                <!-- <option value="airport to campus">Airport to Campus</option> -->
+                                                <!-- <option value="airport to jahangirpuri">Airport to Jahangirpuri</option> -->
+                                                <!-- <option value="new delhi to jahangirpuri">New Delhi (Railway Station/Metro) to Jahangirpuri</option> -->
                                                 <option value="jahangirpuri to campus">Jahangirpuri to Campus</option>
-                                                <option value="new delhi to campus">New Delhi (Railway Station/Metro) to Campus</option>
-                                                <option value="new delhi to jahangirpuri">New Delhi (Railway Station/Metro) to Jahangirpuri</option>
+                                                <option value="campus to jahangirpuri">Campus to Jahangirpuri</option>
+
+                                                <option value="new delhi to campus">New Delhi to Campus</option>
+                                                <option value="campus to new delhi">Campus to New Delhi</option>
+
+                                                <option value="gurgaon to campus">Gurgaon to Campus</option>
+                                                <option value="campus to gurgaon">Campus to Gurgaon</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
