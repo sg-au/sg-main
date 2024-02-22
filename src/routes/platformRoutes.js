@@ -529,6 +529,7 @@ router.get('/pool-cab', async (req, res) => {
   try{
     // Get the current date
     let currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 2);
 
     // Get the date 5 days from now
     let futureDate = new Date();
@@ -549,6 +550,10 @@ router.get('/pool-cab', async (req, res) => {
     // console.log(user_detail)
     var userAvailablePools=0;
     for(var i=0;i<user_detail.length;i++){
+      // console.log(new Date(user_detail[i].day));
+      // console.log(currentDate);
+      // console.log(new Date(user_detail[i].day) > currentDate , new Date(user_detail[i].day) < futureDate)
+
       if(user_detail[i].status=="available" && new Date(user_detail[i].day) >= currentDate && new Date(user_detail[i].day) < futureDate){
         userAvailablePools++;
       }
