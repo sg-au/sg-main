@@ -549,7 +549,7 @@ router.get('/pool-cab', async (req, res) => {
     // console.log(user_detail)
     var userAvailablePools=0;
     for(var i=0;i<user_detail.length;i++){
-      if(user_detail[i].status=="available" && user_detail[i].day >= currentDate && user_detail[i].day < futureDate){
+      if(user_detail[i].status=="available" && new Date(user_detail[i].day) >= currentDate && new Date(user_detail[i].day) < futureDate){
         userAvailablePools++;
       }
     }
