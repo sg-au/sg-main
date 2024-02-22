@@ -529,11 +529,20 @@ router.get('/pool-cab', async (req, res) => {
   try{
     // Get the current date
     let currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() - 2);
+    currentDate.setDate(currentDate.getDate());
 
     // Get the date 5 days from now
     let futureDate = new Date();
-    futureDate.setDate(currentDate.getDate() + 4);
+    futureDate.setDate(currentDate.getDate() + 5);
+
+    let acceptableDates = [];
+    for (let i = 0; i < 5; i++) {
+      let date = new Date();
+      date.setDate(date.getDate() + i);
+      let dateString = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+      acceptableDates.push(dateString);
+    }
+
 
     // Format the dates to ISO format (YYYY-MM-DD)
     let formattedCurrentDate = currentDate.toISOString().split('T')[0];
@@ -547,14 +556,10 @@ router.get('/pool-cab', async (req, res) => {
 
     var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=pools`, axiosConfig);
     var user_detail = user_filled.data[0].pools;
-    // console.log(user_detail)
     var userAvailablePools=0;
     for(var i=0;i<user_detail.length;i++){
-      // console.log(new Date(user_detail[i].day));
-      // console.log(currentDate);
-      // console.log(new Date(user_detail[i].day) > currentDate , new Date(user_detail[i].day) < futureDate)
-
-      if(user_detail[i].status=="available" && new Date(user_detail[i].day) >= currentDate && new Date(user_detail[i].day) < futureDate){
+      var poolDate=new Date(user_detail[i].day);
+      if(user_detail[i].status=="available" && acceptableDates.includes(`${poolDate.getMonth() + 1}/${poolDate.getDate()}/${poolDate.getFullYear()}`)){
         userAvailablePools++;
       }
     }
@@ -566,18 +571,19 @@ router.get('/pool-cab', async (req, res) => {
       // next 5 days only
       let filteredPools = pools.filter(pool => {
         let poolDate = new Date(pool.attributes.day);
-        return poolDate >= currentDate && poolDate < futureDate;
+        let poolDateString = `${poolDate.getMonth() + 1}/${poolDate.getDate()}/${poolDate.getFullYear()}`;
+        return acceptableDates.includes(poolDateString);
       });
       res.render("platform/pages/pool-cab", {pools:filteredPools, user_detail:user_detail[0]});
     }else{
-      // console.log(dateRange.currentDate)
       var pool_data = await axios.get(`${apiUrl}/pools?populate=pooler&pagination[pageSize]=2000&_where[day_gte]=${dateRange.currentDate}&_where[day_lt]=${dateRange.futureDate}`, axiosConfig);
       var pools = pool_data.data.data;
       // next 5 days only
       let filteredPools = pools.filter(pool => {
         let poolDate = new Date(pool.attributes.day);
-        return poolDate >= currentDate && poolDate < futureDate;
-     });
+        let poolDateString = `${poolDate.getMonth() + 1}/${poolDate.getDate()}/${poolDate.getFullYear()}`;
+        return acceptableDates.includes(poolDateString);
+      });
       var i=0;
       while(i<user_detail.length && user_detail[i]!="available"){
         i++;
@@ -587,7 +593,7 @@ router.get('/pool-cab', async (req, res) => {
   }catch(error){
     console.error('An error occurred:', error);
   }
-})
+});
 
 router.post('/pool-submit', async(req, res) => {
   var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
@@ -596,7 +602,9 @@ router.post('/pool-submit', async(req, res) => {
   await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);      
   delete req.body.phone;
   req.body.status="available";
-  req.body.day=new Date(req.body.day).toISOString();
+  let parts = req.body.day.split('/');
+  let formattedDate = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+  req.body.day=formattedDate;
   req.body.time=req.body.time + ":00.000"
   req.body.pooler=updateduser;
   axios.post(`${process.env.STRAPI_API_URL}/pools`,{data:req.body}, axiosConfig)
@@ -647,7 +655,7 @@ router.get('/cancel-cab-pool', async(req, res) => {
     // console.log(canceled)
     await axios.put(`${apiUrl}/pools/${id}`, {data:canceled}, axiosConfig);
   }
-  res.redirect("/platform/pool-cab")   
+  res.redirect("/platform/")   
 });
 
 // router.get('/shuttle-service', async (req, res) => {
