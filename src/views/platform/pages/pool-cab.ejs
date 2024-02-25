@@ -83,7 +83,7 @@
                       <div class="row">
                         <div class="col-lg-6">
                           <select class="form-select" id="day" name="day">
-                            <option>Filter by Day</option>
+                            <option selected>Filter by Day</option>
                             <% for (let i = 0; i < 5; i++) { %>
                               <%
                                   const date = new Date();
@@ -92,11 +92,13 @@
                                   const userDate = new Date(user_detail.day);
                                   const userFormattedDate = `${userDate.toLocaleString('en', { month: 'short' })} ${userDate.getDate()}`;
                               %>
-                              <%if(userFormattedDate == formattedDate){%>
+                              <!-- <%if(userFormattedDate == formattedDate){%>
                                 <option selected value="<%= formattedDate %>"><%= formattedDate %></option>
                               <%}else{%>
                                 <option value="<%= formattedDate %>"><%= formattedDate %></option>
-                              <%}%>
+                              <%}%> -->
+                              
+                              <option value="<%= formattedDate %>"><%= formattedDate %></option>
                           <% } %>
                           </select>
                         </div>
@@ -116,30 +118,21 @@
                             <option value="Campus to New Delhi">Campus to New Delhi</option>
 
                             <option value="Gurgaon to Campus">Gurgaon to Campus</option>
-                            <option value="Campus to Gurgaon">Campus to Gurgaon</option>
-                          
+                            <option value="Campus to Gurgaon">Campus to Gurgaon</option>      
                           </select>
                           <script>
                             function selectMatchingOption() {
-                                // Get the select element
-                                var selectElement = document.getElementById('route');
-                                
-                                // Get the value to match
-                                var matchValue = '<%=user_detail.journey.replace(/\b(?:(?!to)\w)/g, match => match.toUpperCase())%>';
-                                
-                                // Iterate through each option
-                                for (var i = 0; i < selectElement.options.length; i++) {
-                                    var option = selectElement.options[i];
-                                    
-                                    // Check if the option's value matches the matchValue
-                                    if (option.value === matchValue) {
-                                        // If it matches, set the selected attribute and break the loop
-                                        option.selected = true;
-                                        break;
-                                    }
-                                }
+                              var selectElement = document.getElementById('route');
+                              var matchValue = '<%=user_detail.journey.replace(/\b(?:(?!to)\w)/g, match => match.toUpperCase())%>';
+                              for (var i = 0; i < selectElement.options.length; i++) {
+                                  var option = selectElement.options[i];
+                                  if (option.value === matchValue) {
+                                      option.selected = true;
+                                      break;
+                                  }
+                              }
                             }
-                            selectMatchingOption();
+                            // selectMatchingOption();
                           </script>
                         </div>
                       </div>
