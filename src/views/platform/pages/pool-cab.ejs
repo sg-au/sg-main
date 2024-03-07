@@ -88,9 +88,9 @@
                               <%
                                   const date = new Date();
                                   date.setDate(date.getDate() + i);
-                                  const formattedDate = `${date.toLocaleString('en', { month: 'short' })} ${date.getDate()}`;
+                                  const formattedDate = `${date.toLocaleString('en', { month: 'short' })} ${String(date.getDate()).padStart(2, '0')}`;
                                   const userDate = new Date(user_detail.day);
-                                  const userFormattedDate = `${userDate.toLocaleString('en', { month: 'short' })} ${userDate.getDate()}`;
+                                  const userFormattedDate = `${userDate.toLocaleString('en', { month: 'short' })} ${String(userDate.getDate()).padStart(2, '0')}`;
                               %>
                               <!-- <%if(userFormattedDate == formattedDate){%>
                                 <option selected value="<%= formattedDate %>"><%= formattedDate %></option>
