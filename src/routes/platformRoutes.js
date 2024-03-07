@@ -617,7 +617,6 @@ router.post('/pool-submit', async(req, res) => {
         });
 });
 
-
 router.post('/update-pool', async(req, res) => {
   var pool = (await axios.get(`${apiUrl}/pools/${atob(req.body.pool_id)}`, axiosConfig));
   updatedPool = pool.data.data;
