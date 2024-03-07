@@ -92,10 +92,23 @@
                                             <p>Please check the appropriate 24 hour/12 hour time format before submitting</p>
                                             <input required name="time" type="time" class="form-control" id="time">
                                         </div>
+                                                                                
                                         <div class="mb-3">
                                             <label for="newTicketTitle" class="form-label">Enter Your Contact Number <span style="color:rgb(177, 58, 58)">*</span></label>
-                                            <input required name="phone" type="text" class="form-control" id="phoneNumber">
+                                            <input
+                                            required
+                                            minlength="10"
+                                            maxlength="14"
+                                            name="phone"
+                                            type="tel"
+                                            class="form-control"
+                                            id="phoneNumber"
+                                            pattern="[0-9]{10}"
+                                            title="Please enter a valid 10-digit phone number without spaces or special characters."
+                                            >
+                                            <div id="phone-number-error" class="text-danger"></div>
                                         </div>
+  
                                         <button onclick="disableButton()" id="submit-button" type="submit" class="btn btn-primary">Pool a Cab</button>
                                     </form>
                                 </div>
@@ -106,6 +119,36 @@
             </div>
         </div>
     </div>
+    <script>
+    const phoneNumberInput = document.getElementById('phoneNumber');
+const phoneNumberError = document.getElementById('phone-number-error');
+let timeoutId;
+
+phoneNumberInput.addEventListener('keyup', function() {
+    clearTimeout(timeoutId); // Clear any existing timeout
+    timeoutId = setTimeout(validatePhoneNumber, 500); // Set a new timeout
+});
+
+function validatePhoneNumber() {
+    // Allow phone numbers with optional country code (1-2 digits) and varying separators
+    const regex = /^\+?(\d{1,2})[- ]?\d{3}[- ]?\d{3}[- ]?\d{4}$/;
+
+    if (!phoneNumberInput.value.match(regex) && phoneNumberInput.value.length !== 10) {
+        phoneNumberError.textContent = 'Please enter a valid phone number.';
+        phoneNumberInput.classList.add('is-invalid'); // Add Bootstrap class for visual feedback
+    } else {
+        phoneNumberError.textContent = '';
+        phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
+    }
+}
+
+// Remove the validation message quickly after the user starts typing again
+phoneNumberInput.addEventListener('keydown', function() {
+    clearTimeout(timeoutId); // Clear the timeout to remove the message quickly
+    phoneNumberError.textContent = '';
+    phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
+});
+      </script>
     <script>
         function disableButton(){
             document.getElementById("submit-button").disabled=true;
