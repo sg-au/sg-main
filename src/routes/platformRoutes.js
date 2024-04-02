@@ -323,7 +323,7 @@ router.get('/create-ticket', (req, res) => {
 router.post('/save-ticket-new', (req, res) => {
     const mailOptions = {
       from: `Public Ticketing System <${process.env.SGMAIL_ID}>`,
-      to: req.body.email,
+      to: req.body._cc,
       subject: req.body.subject,
       html: `
       <!DOCTYPE html>
