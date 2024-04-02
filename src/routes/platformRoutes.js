@@ -381,7 +381,7 @@ router.post('/save-ticket-new', (req, res) => {
       <body>
       <div class="container">
       <h1>Confirmation of Ticket Receipt</h1>
-      <p class="greeting">Dear User,<hr/><br> This message is to confirm the receipt of your ticket. Your ticket ID for future reference is ${ticketId}. The Ministry/body will get back to you on your query as soon as possible. Thank you for your trust and cooperation.</p>
+      <p class="greeting">Dear User,<hr/><br> This message is to confirm the receipt of your ticket. Your ticket ID for future reference is <span style="color: #0078be;">#${ticketId}</span>. <br/><br/>The Ministry/body will get back to you on your query as soon as possible. <br/><br/>Thank you for your trust and cooperation.</p>
       <table>
           <tr>
               <th>Field</th>
