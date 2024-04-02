@@ -321,6 +321,7 @@ router.get('/create-ticket', (req, res) => {
 
 
 router.post('/save-ticket-new', (req, res) => {
+    const ticketId= createTicketId('SG', 8);
     const mailOptions = {
       from: `Public Ticket System <${process.env.SGMAIL_ID}>`,
       to: req.body._cc,
@@ -378,40 +379,40 @@ router.post('/save-ticket-new', (req, res) => {
           </style>
       </head>
       <body>
-          <div class="container">
-              <h1>User's Ticket</h1>
-              <p class="greeting">Dear Ministr(y/ies),<hr/><br> Please find below a ticket for your ministry. We hope you can reply and help them at the earliest! </p>
-              <table>
-                  <tr>
-                      <th>Field</th>
-                      <th>Value</th>
-                  </tr>
-                  <tr>
-                      <td>Ticket ID</td>
-                      <td>${createTicketId('SG', 8)}</td>
-                  </tr>
-                  <tr>
-                      <td>Subject</td>
-                      <td>${req.body.subject}</td>
-                  </tr>
-                  <tr>
-                      <td>Category</td>
-                      <td style="color: #0078be;">${req.body.category}</td>
-                  </tr>
-                  <tr>
-                      <td>Subcategory</td>
-                      <td style="color: #0078be;">${req.body.subcategory}</td>
-                  </tr>
-                  <tr>
-                      <td>Ticket</td>
-                      <td>${req.body.ticket}</td>
-                  </tr>
-                  <tr>
-                      <td>Date and Time Created</td>
-                      <td>${(new Date()).toLocaleDateString()} ${(new Date()).toLocaleTimeString()}</td>
-                  </tr>
-              </table>
-          </div>
+      <div class="container">
+      <h1>Confirmation of Ticket Receipt</h1>
+      <p class="greeting">Dear User,<hr/><br> This message is to confirm the receipt of your ticket. Your ticket ID for future reference is ${ticketId}. The Ministry/body will get back to you on your query as soon as possible. Thank you for your trust and cooperation.</p>
+      <table>
+          <tr>
+              <th>Field</th>
+              <th>Value</th>
+          </tr>
+          <tr>
+              <td>Ticket ID</td>
+              <td>${ticketId}</td>
+          </tr>
+          <tr>
+              <td>Subject</td>
+              <td>${req.body.subject}</td>
+          </tr>
+          <tr>
+              <td>Category</td>
+              <td style="color: #0078be;">${req.body.category}</td>
+          </tr>
+          <tr>
+              <td>Subcategory</td>
+              <td style="color: #0078be;">${req.body.subcategory}</td>
+          </tr>
+          <tr>
+              <td>Ticket</td>
+              <td>${req.body.ticket}</td>
+          </tr>
+          <tr>
+              <td>Date and Time Created</td>
+              <td>${(new Date()).toLocaleDateString()} ${(new Date()).toLocaleTimeString()}</td>
+          </tr>
+      </table>
+  </div>
       </body>
       </html>
       
