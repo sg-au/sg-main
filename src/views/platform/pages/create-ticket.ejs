@@ -32,7 +32,9 @@
                             <h5 class="card-title fw-semibold mb-4">Create a New Ticket</h5>
                             <div class="card">
                                 <div class="card-body">
-                                    <form id="ticketForm" action="/platform/create-ticket" method="POST">
+                                    <!-- action="/platform/create-ticket" -->
+                                    <form id="ticketForm" method="POST">
+                                        <input name="email" type="hidden" class="form-control" id="userEmail" value="<%=userEmail%>">
                                         <div class="mb-3">
                                             <label for="newTicketTitle" class="form-label">Subject</label>
                                             <input required name="subject" type="title" class="form-control" id="newTicketTitle">
@@ -70,19 +72,21 @@
                                             <select required name="departments" id="select" class="form-select" multiple size="<%=departments.length+1%>">
                                                 <option disabled>Select</option>
                                                 <%for(let i=0; i<departments.length;i++) { %>
-                                                    <option value="<%=departments[i].id %>"><%=departments[i].attributes.name%></option>
+                                                    <%if(departments[i].attributes.profile && departments[i].attributes.profile.data){%>
+                                                    <option value="<%=departments[i].attributes.profile.data.attributes.email %>"><%=departments[i].attributes.name%></option>
+                                                    <%}%>
                                                 <%}%>
                                             </select>
                                             <p style="font-size:12px;color:grey;">hold the ctrl/cmd key to select multiple options</p>
                                         </div>
-                                        <div class="mb-3 form-check">
+                                        <!-- <div class="mb-3 form-check">
                                             <input name="share" type="checkbox" class="form-check-input" id="shareDetails"
                                                 aria-describedby="detailsHelp">
                                             <label class="form-check-label" for="exampleCheck1">Share My
                                                 Details</label>
                                             <div id="detailsHelp" class="form-text">The reviewer does not by default know your details. Do you wish to disclose them?</div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Create Ticket</button>
+                                        </div> -->
+                                        <button id="create-button" type="submit" class="btn btn-primary">Create Ticket</button>
                                     </form>
                                 </div>
                             </div>
@@ -92,6 +96,46 @@
             </div>
         </div>
     </div>
+    <script>
+    document.getElementById("ticketForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the default form submission
+    var form = event.target;
+    var formData = new FormData(form);
+    var body = {};
+    formData.forEach(function(value, key){
+        if (key === "departments") {
+            var selectedOptions = Array.from(form.elements[key].selectedOptions);
+            var emails = selectedOptions.map(option => option.value).join(",");
+            body["_cc"] = emails;
+        } else {
+            body[key] = value;
+        }
+    });
+    form.reset();
+    document.getElementById("create-button").disabled = true;
+        
+    fetch("/platform/save-ticket-new", {
+        method: "POST",
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(body),
+    })
+    .then(data => {
+        // Display success message to the user
+        alert("Form submitted successfully!");
+        document.getElementById("create-button").disabled = false;
+    })
+    .catch(error => {
+        // Check if the request was aborted due to timeout
+            alert("An error occurred while submitting the form. Please try again later.");
+            console.error('There was an error with the fetch request:', error);
+    });
+});
+
+
+    </script>
     <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/platform/assets/js/sidebarmenu.js"></script>

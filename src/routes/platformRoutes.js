@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const transporter = require("../config/nodemailer-config"); // Import the Nodemailer configuration module
 
 const axios=require("axios");
 
@@ -10,7 +11,18 @@ const axiosConfig = {
       'Authorization': `Bearer ${process.env.STRAPI_API_KEY}`,
     },
 };
+
+
 const apiUrl = process.env.STRAPI_API_URL;
+
+function createTicketId(prefix, length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let randomPart = '';
+  for (let i = 0; i < length; i++) {
+      randomPart += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return `${prefix}-${randomPart}`;
+}
 
 
 
@@ -293,12 +305,12 @@ router.get('/tickets', (req, res) => {
 });
 
 router.get('/create-ticket', (req, res) => {
-    axios.get(`${process.env.STRAPI_API_URL}/departments`,axiosConfig)
+    axios.get(`${process.env.STRAPI_API_URL}/departments?populate[0]=profile.email`,axiosConfig)
     .then((response) => {
         // Access the response data
         const departmentsData = response.data.data;
         // You can work with departmentsData here
-        res.render("platform/pages/create-ticket",{departments:departmentsData});
+        res.render("platform/pages/create-ticket",{departments:departmentsData,userEmail:req.user._json.email});
 
     })
     .catch((error) => {
@@ -306,6 +318,118 @@ router.get('/create-ticket', (req, res) => {
         // Handle error
     });
 });
+
+
+router.post('/save-ticket-new', (req, res) => {
+    const mailOptions = {
+      from: `Public Ticketing System <${process.env.SGMAIL_ID}>`,
+      to: req.body.email,
+      subject: req.body.subject,
+      html: `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Email Template</title>
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+                  line-height: 1.6;
+                  background-color: #f4f4f4;
+                  margin: 0;
+                  padding: 0;
+              }
+              .container {
+                  max-width: 600px;
+                  margin: 0 auto;
+                  padding: 20px;
+                  border-radius: 10px;
+                  background-color: #ffffff;
+                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+              }
+              h1 {
+                  text-align: center;
+                  color: #0078be;
+                  margin-bottom: 20px;
+              }
+              table {
+                  width: 100%;
+                  border-collapse: collapse;
+                  margin-bottom: 20px;
+              }
+              table, th, td {
+                  border: 1px solid #ddd;
+              }
+              th, td {
+                  padding: 8px;
+                  text-align: left;
+              }
+              th {
+                  background-color: #f2f2f2;
+              }
+              .greeting {
+                  color: #0078be;
+                  font-size: 1.2em;
+                  text-align: center;
+                  margin-bottom: 20px;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <h1>User's Ticket</h1>
+              <p class="greeting">Dear Ministr(y/ies),<hr/><br> Please find below a ticket for your ministry. We hope you can reply and help them at the earliest! </p>
+              <table>
+                  <tr>
+                      <th>Field</th>
+                      <th>Value</th>
+                  </tr>
+                  <tr>
+                      <td>Ticket ID</td>
+                      <td>${createTicketId('SG', 8)}</td>
+                  </tr>
+                  <tr>
+                      <td>Subject</td>
+                      <td>${req.body.subject}</td>
+                  </tr>
+                  <tr>
+                      <td>Category</td>
+                      <td style="color: #0078be;">${req.body.category}</td>
+                  </tr>
+                  <tr>
+                      <td>Subcategory</td>
+                      <td style="color: #0078be;">${req.body.subcategory}</td>
+                  </tr>
+                  <tr>
+                      <td>Ticket</td>
+                      <td>${req.body.ticket}</td>
+                  </tr>
+                  <tr>
+                      <td>Date and Time Created</td>
+                      <td>${(new Date()).toLocaleDateString()} ${(new Date()).toLocaleTimeString()}</td>
+                  </tr>
+              </table>
+          </div>
+      </body>
+      </html>
+      
+      `,
+      replyTo:req.user._json.email
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error occurred:', error.message);
+        res.sendStatus(400);
+        return;
+      }
+      console.log('Email sent successfully!', info.messageId);
+      res.sendStatus(202);
+    });
+});
+
 
 router.post('/create-ticket', (req, res) => {
     // Define the data for the new ticket
