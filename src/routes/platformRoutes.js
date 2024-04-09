@@ -812,9 +812,6 @@ router.get('/cancel-cab-pool', async(req, res) => {
 });
 
 
-router.get('/raju-img', async(req, res) => {
-  res.sendFile("./data/raju.png");  
-});
 
 
 

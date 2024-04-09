@@ -124,5 +124,9 @@ router.get('/budget', (req, res) => {
     res.render("website/pages/budget",{ activePage: 'budget' })
 });
 
+router.get('/raju-img', async(req, res) => {
+    res.sendFile("./data/raju.png");  
+  });
+
 // Export the router
 module.exports = router;
