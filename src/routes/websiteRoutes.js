@@ -125,7 +125,7 @@ router.get('/budget', (req, res) => {
 });
 
 router.get('/raju-img', async(req, res) => {
-    res.sendFile(__dirname+"../data/raju.png");  
+    res.sendFile(__dirname+"/../data/raju.png");  
   });
 
 // Export the router
