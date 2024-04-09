@@ -785,11 +785,6 @@ router.get('/resources', async(req, res) => {
   res.render("platform/pages/resources",{cards:resources.data.data});  
 });
 
-
-router.get('/raju-img', async(req, res) => {
-  res.sendFile("./data/raju.png");  
-});
-
 router.get('/cancel-cab-pool', async(req, res) => {
   userEmail=req.user._json.email;
   // var pool = (await axios.get(`${apiUrl}/pools?[pooler][email]=${userEmail}&filters[status][$eqi]=available`, axiosConfig));
@@ -817,8 +812,11 @@ router.get('/cancel-cab-pool', async(req, res) => {
 });
 
 
+router.get('/raju-img', async(req, res) => {
+  res.sendFile("./data/raju.png");  
+});
 
-// TESTING EMAIL SEND:
+
 
 // router.get('/shuttle-service', async (req, res) => {
 //   var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=bids`, axiosConfig);
