@@ -47,46 +47,18 @@
                                             <label for="select" class="form-label">Select Category of Ticket</label>
                                             <select required name="category" id="select-category" class="form-select">
                                                 <option disabled selected>Select</option>
-                                                <option>Events</option>
-                                                <option>Logistics</option>
-                                                <option>Diversity and Inclusion</option>
-                                                <option>Borrow/Inventory</option>
-                                                <option>Academic</option>
-                                                <option>Clubs & Socs.</option>
-                                                <option>Health and Wellness</option>
-                                                <option>Facilities</option>
-                                                <option>Safety and Security</option>
-                                                <option>Other</option>
+                                                <%for(var i=0;i<categoryList.length;i++){%>
+                                                    <option><%=categoryList[i]%></option>
+                                                <%}%>
                                             </select>
                                         </div>
                                         <div class="mb-3">
                                             <label for="select" class="form-label">Select Subcategory of Ticket</label>
                                             <select required name="subcategory" id="select-subcategory" class="form-select">
                                                 <option disabled selected>Select</option>
-                                                <option>Event Details</option>
-                                                <option>Intercollegiate Events</option>
-                                                <option>Festivals</option>
-                                                <option>Accommodations</option>
-                                                <option>Transport (Shuttles)</option>
-                                                <option>Decor Inventory</option>
-                                                <option>Phone Borrowing</option>
-                                                <option>Major/Minor Declaration</option>
-                                                <option>Grade Appeal</option>
-                                                <option>Pre-registration</option>
-                                                <option>Registration</option>
-                                                <option>NEP</option>
-                                                <option>Academic Accommodations</option>
-                                                <option>Clubs and Societies queries/problems</option>
-                                                <option>Mess/Dining Hall</option>
-                                                <option>Residence Halls</option>
-                                                <option>Restrooms + Hygiene</option>
-                                                <option>Security</option>
-                                                <option>Food Outlets</option>
-                                                <option>WiFi</option>
-                                                <option>Infirmary</option>
-                                                <option>ACWB (Ashoka Center for Wellbeing)</option>
-                                                <option>OLS (Office of Learning Support)</option>
-                                                <option>Other</option>
+                                                <%for(var i=0;i<subcategoryList.length;i++){%>
+                                                    <option><%=subcategoryList[i]%></option>
+                                                <%}%>
                                             </select>
                                         </div>
                                         <div class="mb-3">
@@ -167,17 +139,7 @@
         }
 
         // Show subcategories based on the selected category
-        var categorySubcategoriesMap = {
-            'Events': ['Event Details', 'Intercollegiate Events', 'Festivals', 'SLO Communication', 'Collaborative events with student initiatives'],
-            'Logistics': ['Accommodations', 'Transport (Shuttles)'],
-            'Diversity and Inclusion': ['Clubs and Societies queries/problems'],
-            'Borrow/Inventory': ['Decor Inventory', 'Phone Borrowing'],
-            'Academic': ['Major/Minor Declaration', 'Grade Appeal', 'Pre-registration','Registration','NEP','Academic Accommodations'],
-            'Clubs & Socs.': ['Clubs and Societies queries/problems'],
-            'Health and Wellness': ['Infirmary', 'ACWB (Ashoka Center for Wellbeing)', 'OLS (Office of Learning Support)'],
-            'Facilities': ['Mess/ Dining Hall', 'Residence Halls', 'Restrooms + Hygiene', 'Security', 'Transport (Shuttles)', 'Food Outlets', 'WiFi'],
-            'Safety and Security': ['Security']
-        };
+        var categorySubcategoriesMap = JSON.parse('<%-categorySubcategoryMap%>');
 
         if (categorySubcategoriesMap[selectedCategory]) {
             showSubcategories(categorySubcategoriesMap[selectedCategory]);
@@ -207,36 +169,7 @@
         // ministriesDropdown.selectedIndex = 0;
 
         // Map subcategories to ministries
-        var subcategoryMinistriesMap = {
-            'Event Details': ['Cultural Ministry'],
-            'Intercollegiate Events': ['Cultural Ministry'],
-            'Festivals': ['Cultural Ministry'],
-            'SLO Communication': ['Cultural Ministry'],
-            'Collaborative events with student initiatives': ['Cultural Ministry'],
-            'Accommodations': ['Campus Life Ministry'],
-            'Transport (Shuttles)': ['Campus Life Ministry'],
-            'Decor Inventory': ['Cultural Ministry'],
-            'Phone Borrowing': ['Technology Ministry'],
-            'Major/Minor declaration': ['Ministry of Academic Affairs'],
-            'Grade Appeal': ['Ministry of Academic Affairs'],
-            'Pre-registration': ['Ministry of Academic Affairs'],
-            'Registration': ['Ministry of Academic Affairs'],
-            'Academic Accommodations': ['Ministry of Academic Affairs'],
-            'NEP': ['Ministry of Academic Affairs'],
-            'Clubs and Societies queries/problems': ['Cultural Ministry'],
-            'Mess/Dining Hall': ['Campus Life Ministry'],
-            'Residence Halls': ['Campus Life Ministry'],
-            'Restrooms + Hygiene': ['Campus Life Ministry'],
-            'Security': ['Campus Life Ministry'],
-            'Food Outlets': ['Campus Life Ministry'],
-            'WiFi': ['Technology Ministry','Campus Life Ministry'],
-            'Infirmary': ['Ministry of Community Well Being'],
-            'ACWB (Ashoka Center for Wellbeing)': ['Ministry of Community Well Being'],
-            'OLS (Office of Learning Support)': ['Ministry of Community Well Being'],
-            'Waste Segregation': ['Environment Ministry'],
-            'Recycling': ['Environment Ministry'],
-            'Thrifting': ['Environment Ministry']
-        };
+        var subcategoryMinistriesMap = JSON.parse('<%-subcategoryMinistryMap%>');
 
         // Select ministries based on the selected subcategory
         if (subcategoryMinistriesMap[selectedSubcategory]) {

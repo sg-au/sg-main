@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const transporter = require("../config/nodemailer-config"); // Import the Nodemailer configuration module
+const fs = require('fs');
+const publicTicketCategories = JSON.parse(fs.readFileSync('./data/public-tickets-all.json', 'utf8'));
 
 const axios=require("axios");
 
@@ -310,7 +312,33 @@ router.get('/create-ticket', (req, res) => {
         // Access the response data
         const departmentsData = response.data.data;
         // You can work with departmentsData here
-        res.render("platform/pages/create-ticket",{departments:departmentsData,userEmail:req.user._json.email});
+        // Extract CategoryList
+        const categoryList = publicTicketCategories.categories.map(category => category.name);
+
+        // Extract SubcategoryList
+        const subcategoryList = publicTicketCategories.categories.reduce((acc, category) => {
+            category.subcategories.forEach(subcategory => {
+                if (!acc.includes(subcategory.name)) {
+                    acc.push(subcategory.name);
+                }
+            });
+            return acc;
+        }, []);
+
+        // Extract CategorySubcategoryMap
+        const categorySubcategoryMap = {};
+        publicTicketCategories.categories.forEach(category => {
+            categorySubcategoryMap[category.name] = category.subcategories.map(subcategory => subcategory.name);
+        });
+
+        // Extract SubCategoryMinistryMap
+        const subcategoryMinistryMap = {};
+        publicTicketCategories.categories.forEach(category => {
+            category.subcategories.forEach(subcategory => {
+                subcategoryMinistryMap[subcategory.name] = subcategory.ministries;
+            });
+        });
+        res.render("platform/pages/create-ticket",{departments:departmentsData,userEmail:req.user._json.email,categoryList:categoryList,subcategoryList:subcategoryList,categorySubcategoryMap:JSON.stringify(categorySubcategoryMap),subcategoryMinistryMap:JSON.stringify(subcategoryMinistryMap)});
 
     })
     .catch((error) => {

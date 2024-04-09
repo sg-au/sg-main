@@ -1,0 +1,157 @@
+{
+    "categories": [
+      {
+        "name": "Events",
+        "subcategories": [
+          {
+            "name": "Event Details",
+            "ministries": ["Cultural Ministry"]
+          },
+          {
+            "name": "Intercollegiate Events",
+            "ministries": ["Cultural Ministry"]
+          },
+          {
+            "name": "Festivals",
+            "ministries": ["Cultural Ministry"]
+          },
+          {
+            "name": "SLO Communication",
+            "ministries": ["Cultural Ministry"]
+          },
+          {
+            "name": "Collaborative events with student initiatives",
+            "ministries": ["Cultural Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "Logistics",
+        "subcategories": [
+          {
+            "name": "Accommodations",
+            "ministries": ["Campus Life Ministry"]
+          },
+          {
+            "name": "Transport (Shuttles)",
+            "ministries": ["Campus Life Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "Diversity and Inclusion",
+        "subcategories": [
+          {
+            "name": "Clubs and Societies queries/problems",
+            "ministries": ["Cultural Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "Inventory",
+        "subcategories": [
+          {
+            "name": "Decor Inventory",
+            "ministries": ["Cultural Ministry"]
+          },
+          {
+            "name": "Phone Borrowing",
+            "ministries": ["Technology Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "Academic",
+        "subcategories": [
+          {
+            "name": "Major/Minor declaration",
+            "ministries": ["Ministry of Academic Affairs"]
+          },
+          {
+            "name": "Grade Appeal",
+            "ministries": ["Ministry of Academic Affairs"]
+          },
+          {
+            "name": "Pre-registration",
+            "ministries": ["Ministry of Academic Affairs"]
+          },
+          {
+            "name": "Registration",
+            "ministries": ["Ministry of Academic Affairs"]
+          },
+          {
+            "name": "Academic Accommodations",
+            "ministries": ["Ministry of Academic Affairs"]
+          },
+          {
+            "name": "NEP",
+            "ministries": ["Ministry of Academic Affairs"]
+          }
+        ]
+      },
+      {
+        "name": "Clubs & Socs.",
+        "subcategories": [
+          {
+            "name": "Clubs and Societies queries/problems",
+            "ministries": ["Cultural Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "Health and Wellness",
+        "subcategories": [
+          {
+            "name": "Infirmary",
+            "ministries": ["Ministry of Community Well Being"]
+          },
+          {
+            "name": "ACWB (Ashoka Center for Wellbeing)",
+            "ministries": ["Ministry of Community Well Being"]
+          },
+          {
+            "name": "OLS (Office of Learning Support)",
+            "ministries": ["Ministry of Community Well Being"]
+          }
+        ]
+      },
+      {
+        "name": "Facilities",
+        "subcategories": [
+          {
+            "name": "Mess/Dining Hall",
+            "ministries": ["Campus Life Ministry"]
+          },
+          {
+            "name": "Residence Halls",
+            "ministries": ["Campus Life Ministry"]
+          },
+          {
+            "name": "Restrooms + Hygiene",
+            "ministries": ["Campus Life Ministry"]
+          },
+          {
+            "name": "Security",
+            "ministries": ["Campus Life Ministry"]
+          },
+          {
+            "name": "Food Outlets",
+            "ministries": ["Campus Life Ministry"]
+          },
+          {
+            "name": "WiFi",
+            "ministries": ["Technology Ministry", "Campus Life Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "Safety and Security",
+        "subcategories": [
+          {
+            "name": "Security",
+            "ministries": ["Campus Life Ministry"]
+          }
+        ]
+      }
+    ]
+  }
