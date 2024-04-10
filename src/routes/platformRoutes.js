@@ -3,6 +3,8 @@ const router = express.Router();
 const transporter = require("../config/nodemailer-config"); // Import the Nodemailer configuration module
 const fs = require('fs');
 const publicTicketCategories = JSON.parse(fs.readFileSync('./data/public-tickets-all.json', 'utf8'));
+const jsonfile = require('jsonfile')
+const file = './data/tickets.jsonl'
 
 const axios=require("axios");
 
@@ -24,6 +26,27 @@ function createTicketId(prefix, length) {
       randomPart += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return `${prefix}-${randomPart}`;
+}
+
+function formatDate(date) {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  // Get year, month, day, hours, minutes
+  const year = date.getFullYear();
+  const monthIndex = date.getMonth();
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, '0'); // Add leading zero for single digits
+
+  // Get AM/PM indicator
+  const ampm = hours >= 12 ? 'pm' : 'am';
+
+  // Adjust for 12-hour format
+  let adjustedHours = hours % 12;
+  adjustedHours = adjustedHours === 0 ? 12 : adjustedHours;
+
+  return `${days[date.getDay()]}, ${day} ${months[monthIndex]} ${year} ${adjustedHours}:${minutes} ${ampm}`;
 }
 
 
@@ -347,9 +370,27 @@ router.get('/create-ticket', (req, res) => {
     });
 });
 
-
 router.post('/save-ticket-new', (req, res) => {
     const ticketId= createTicketId('SG', 8);
+    
+    // Save to local file
+
+    let obj={
+      ticketId:ticketId,
+      subject:req.body.subject,
+      author:req.user._json.email,
+      category:req.body.category,
+      subcategory:req.body.subcategory,
+      ticket:req.body.ticket,
+      ministries:req.body._cc,
+      date:formatDate(new Date())
+    }
+
+    jsonfile.writeFile(file, obj, { flag: 'a+' }, function (err) {
+      if (err) console.error(err)
+    });
+    // Save to local file
+
     const mailOptions = {
       from: `Public Ticket System <${process.env.SGMAIL_ID}>`,
       to: req.body._cc,
@@ -437,7 +478,7 @@ router.post('/save-ticket-new', (req, res) => {
           </tr>
           <tr>
               <td>Date and Time Created</td>
-              <td>${(new Date()).toLocaleDateString()} ${(new Date()).toLocaleTimeString()}</td>
+              <td>${formatDate(new Date())}</td>
           </tr>
       </table>
   </div>
@@ -810,10 +851,6 @@ router.get('/cancel-cab-pool', async(req, res) => {
   }
   res.redirect("/platform/")   
 });
-
-
-
-
 
 // router.get('/shuttle-service', async (req, res) => {
 //   var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=bids`, axiosConfig);
