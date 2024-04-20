@@ -5,6 +5,7 @@ const fs = require('fs');
 const publicTicketCategories = JSON.parse(fs.readFileSync('./data/public-tickets-all.json', 'utf8'));
 const jsonfile = require('jsonfile')
 const file = './data/tickets.jsonl'
+const helpers=require('./config/helperFunctions.js');
 
 const axios=require("axios");
 
@@ -18,38 +19,6 @@ const axiosConfig = {
 
 
 const apiUrl = process.env.STRAPI_API_URL;
-
-function createTicketId(prefix, length) {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let randomPart = '';
-  for (let i = 0; i < length; i++) {
-      randomPart += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return `${prefix}-${randomPart}`;
-}
-
-function formatDate(date) {
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-  // Get year, month, day, hours, minutes
-  const year = date.getFullYear();
-  const monthIndex = date.getMonth();
-  const day = date.getDate();
-  const hours = date.getHours();
-  const minutes = date.getMinutes().toString().padStart(2, '0'); // Add leading zero for single digits
-
-  // Get AM/PM indicator
-  const ampm = hours >= 12 ? 'pm' : 'am';
-
-  // Adjust for 12-hour format
-  let adjustedHours = hours % 12;
-  adjustedHours = adjustedHours === 0 ? 12 : adjustedHours;
-
-  return `${days[date.getDay()]}, ${day} ${months[monthIndex]} ${year} ${adjustedHours}:${minutes} ${ampm}`;
-}
-
-
 
 // Parse incoming request bodies as JSON
 // app.use(bodyParser.urlencoded({ extended: true }));
@@ -371,7 +340,7 @@ router.get('/create-ticket', (req, res) => {
 });
 
 router.post('/save-ticket-new', (req, res) => {
-    const ticketId= createTicketId('SG', 8);
+    const ticketId= helpers.createTicketId('SG', 8);
     
     // Save to local file
 
@@ -383,7 +352,7 @@ router.post('/save-ticket-new', (req, res) => {
       subcategory:req.body.subcategory,
       ticket:req.body.ticket,
       ministries:req.body._cc,
-      date:formatDate(new Date())
+      date:helpers.formatDate(new Date())
     }
 
     jsonfile.writeFile(file, obj, { flag: 'a+' }, function (err) {
@@ -478,7 +447,7 @@ router.post('/save-ticket-new', (req, res) => {
           </tr>
           <tr>
               <td>Date and Time Created</td>
-              <td>${formatDate(new Date())}</td>
+              <td>${helpers.formatDate(new Date())}</td>
           </tr>
       </table>
   </div>
