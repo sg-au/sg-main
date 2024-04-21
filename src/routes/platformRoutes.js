@@ -5,7 +5,7 @@ const fs = require('fs');
 const publicTicketCategories = JSON.parse(fs.readFileSync('./data/public-tickets-all.json', 'utf8'));
 const jsonfile = require('jsonfile')
 const file = './data/tickets.jsonl'
-const helpers=require('./config/helperFunctions.js');
+const helpers=require('../config/helperFunctions.js');
 
 const axios=require("axios");
 
