@@ -24,6 +24,44 @@
         overflow-x: auto;
       }
     }
+ #example_filter label input {
+  display: block;
+  width: 70vw;
+  margin: 20px 10px;
+  padding: 7px 25px;
+  font-size: 1.3em;
+  border: 1 px solid black;
+  border-radius: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  outline: none;
+  transition: box-shadow 0.3s ease;
+}
+
+#example_filter label input:focus {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  animation: glow 1s infinite alternate;
+}
+
+#example_filter label input::placeholder {
+  color: #aaa;
+  font-size:0.9em
+}
+
+#example_filter label input:focus::placeholder {
+  color: #888;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px #9b59b6;
+  }
+  50% {
+    box-shadow: 0 0 20px #e74c3c;
+  }
+  100% {
+    box-shadow: 0 0 5px #9b59b6;
+  }
+}
   </style>
   <%-include("../partials/preloader-css")%>
   <%-include("../partials/preloader-js")%>
@@ -189,6 +227,7 @@
   <script src="/platform/assets/js/dataTables.js"></script>
   <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
   <script>
+
     const semEl = document.querySelector('#sem');
     const yearEl = document.querySelector('#year');
     
@@ -213,7 +252,12 @@
     });
     
     const table = new DataTable('#example');
+
     
+    // Set the placeholder for the search input
+    $('#example_filter label').innerHTML=`<input type="search" class="" placeholder="" aria-controls="example">`;
+    $('#example_filter label input').attr('placeholder', 'Search Course or Professor');
+
     // Changes to the inputs will trigger a redraw to update the table
     semEl.addEventListener('change', function () {
         table.draw();
