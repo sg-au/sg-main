@@ -795,6 +795,11 @@ router.get('/resources', async(req, res) => {
   res.render("platform/pages/resources",{cards:resources.data.data});  
 });
 
+router.get('/semester-planner', async(req, res) => {
+  courses = JSON.parse(fs.readFileSync('./data/timetable-planner.json', 'utf8'));
+  res.render("platform/pages/semester-planner",{courses:courses});  
+});
+
 router.get('/cancel-cab-pool', async(req, res) => {
   userEmail=req.user._json.email;
   // var pool = (await axios.get(`${apiUrl}/pools?[pooler][email]=${userEmail}&filters[status][$eqi]=available`, axiosConfig));

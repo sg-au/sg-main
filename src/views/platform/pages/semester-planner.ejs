@@ -1,0 +1,1115 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SG Platform</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="/platform/assets/css/dataTables.css" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+    
+    /* Define color variables for easier management */
+    :root {
+      --blue: #3498db;
+      --purple: #9b59b6;
+      --navy: #0c3862;
+      --green: #2ecc71;
+      --red: #e74c3c;
+      --orange: linear-gradient(to right, #F2994A, #F2C94C);
+      --light-gray: #eff0f1;
+      --white: #fff;
+      --black: #000;
+    }
+    
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+    }
+    
+    .table-container {
+      overflow-x: auto;
+      overflow-y: auto;
+      max-width: 100%;
+      margin: 20px auto;
+      display: grid; /* Apply grid layout to the element */
+  justify-items: center; /* Align items along the horizontal axis (main axis) */
+  align-self: center; /* Align the element itself along the vertical axis */
+
+
+    }
+    
+    .ams {
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+      text-align: center;
+    }
+    
+    .ams th, .ams td {
+      padding: 10px;
+      text-align: left;
+      width: calc(100% / 7);
+      height: 100px;
+      white-space: nowrap;
+      text-align: center;
+      white-space: normal; /* Allows the text to wrap to a new line */
+  word-wrap: break-word; /* Breaks long words onto a new line */
+  overflow-wrap: break-word; /* Ensures words break and wrap to the next line */
+    }
+    
+    
+    .ams tr.time {
+      width: 3em !important;
+    }
+    
+    .ams tr td {
+      background: #f8f8f8;
+      border-bottom: 1px solid var(--light-gray);
+      border:1px solid #dddddd;
+    }
+    .ams tr .lunch{
+        border:none;
+        background:#d3e2b0;
+        color:#252421;
+        overflow: hidden;
+    }
+    /* 
+    tr:nth-child(odd) td {
+      background: var(--light-gray);
+    } */
+    
+    /* Adjust tooltip styles */
+    /* [data-tooltip] {
+      position: relative;
+      cursor: pointer;
+    }
+    
+    [data-tooltip]:before,
+    [data-tooltip]:after {
+      opacity: 0;
+      transition: opacity 0.5s;
+      position: absolute;
+      z-index: 2;
+    }
+    
+    [data-tooltip]:before {
+      content: attr(data-tooltip);
+      background: var(--black);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      bottom: -78%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    [data-tooltip]:after {
+      content: "";
+      border-style: solid;
+      border-width: 5px 5px 0;
+      border-color: var(--black) transparent transparent transparent;
+      bottom: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    [data-tooltip]:hover:before,
+    [data-tooltip]:hover:after {
+      opacity: 1;
+    } */
+    .ams tr .bg{
+        background:#faf6e3;
+        color:#000;
+        max-width:100px;
+        font-size:0.8em;
+    }
+    
+    /* Change background color of cell on hover to simulate selection */
+    
+    /* Add this rule to adjust text color in alternating rows */
+    /* tr:nth-child(odd) td {
+      background: var(--light-gray);
+      color: var(--navy); 
+    } */
+    
+    /* Specify the text color for the header row */
+    .ams .days, .ams tr .time {
+      background: var(--navy);
+      color: white;
+      font-size: 0.95em;
+      text-align: center;
+      border:1px solid white;
+    }
+    .ams tr .time {
+        text-transform: uppercase;
+
+    }
+    .ams .days th{
+        border:1px solid white;
+        height:60px;
+    }
+
+    #pills-tab li .active{
+        background:#0c3862;
+        color:white;
+    }
+    .close {
+            top: 1%;
+            right: 0.5%;
+            position: absolute;
+            background:transparent;
+            border:none;
+            margin:5px;
+            font-size: 1.2em;
+        }
+    
+        </style>
+
+    <style>
+        @media screen {
+          .scroll {
+            overflow-x: auto;
+          }
+        }
+     #example_filter label input {
+      display: block;
+      width: 70vw;
+      margin: 20px 10px;
+      padding: 7px 25px;
+      font-size: 1.3em;
+      border: 1 px solid black;
+      border-radius: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      outline: none;
+      transition: box-shadow 0.3s ease;
+    }
+    
+    #example_filter label input:focus {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      animation: glow 1s infinite alternate;
+    }
+    
+    #example_filter label input::placeholder {
+      color: #aaa;
+      font-size:0.9em
+    }
+    
+    #example_filter label input:focus::placeholder {
+      color: #888;
+    }
+    
+    @keyframes glow {
+      0% {
+        box-shadow: 0 0 5px #9b59b6;
+      }
+      50% {
+        box-shadow: 0 0 20px #e74c3c;
+      }
+      100% {
+        box-shadow: 0 0 5px #9b59b6;
+      }
+    }
+    #example{
+        overflow: hidden; /* Prevent scrollbar appearance */
+
+    }
+    .add-course{
+        opacity:0.4;
+        cursor:default;
+    }
+
+    .add-course:hover{
+        opacity:1;
+        transition: transform 0.3s ease-in-out;
+        transform: scale(1.07);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        overflow-y: hidden; /* Hide vertical scrollbar */
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+        cursor:pointer;
+    }
+    .add-course:hover td{
+        opacity:1;
+        overflow-y: hidden; /* Hide vertical scrollbar */
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+    }
+
+    .centered-span {
+    display: none; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: black;
+}
+      </style>
+    <%-include("../partials/preloader-css")%>
+    <%-include("../partials/preloader-js")%>
+
+</head>
+<%-include("../partials/post-head")%>
+
+
+    <body>
+        <%-include("../partials/preloader")%>
+            <!--  Body Wrapper -->
+            <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+                <%-include("../partials/sidebar")%>
+                    <!--  Main wrapper -->
+                    <div class="body-wrapper">
+                        <%-include("../partials/header")%>
+                            <div class="container-fluid">
+                                <div class="container-fluid">
+                                    <div class="row justify-content-between">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div>
+                                                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                                             <li class="nav-item" role="presentation">
+                                                                <button onclick="changeTimetableTo('instructions')" class="nav-link" id="pills-instructions-tab" data-bs-toggle="pill" data-bs-target="#pills-instructions" type="button" role="tab" aria-controls="pills-instructions" aria-selected="true">Instructions</button>
+                                                            </li>
+                                                            <li class="nav-item" role="presentation">
+                                                              <button onclick="changeTimetableTo(1)" class="nav-link active" id="pills-1-tab" data-bs-toggle="pill" data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1" aria-selected="true">1</button>
+                                                            </li>
+                                                            <li class="nav-item" role="presentation">
+                                                              <button onclick="changeTimetableTo(2)" class="nav-link" id="pills-2-tab" data-bs-toggle="pill" data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-2" aria-selected="false">2</button>
+                                                            </li>
+                                                            <li class="nav-item" role="presentation">
+                                                              <button onclick="changeTimetableTo(3)" class="nav-link" id="pills-3-tab" data-bs-toggle="pill" data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-3" aria-selected="false">3</button>
+                                                            </li>
+                                                            <li class="nav-item" role="presentation">
+                                                              <button onclick="changeTimetableTo(4)" class="nav-link" id="pills-4-tab" data-bs-toggle="pill" data-bs-target="#pills-4" type="button" role="tab" aria-controls="pills-4" aria-selected="false">4</button>
+                                                            </li>
+                                                            <li class="nav-item" role="presentation">
+                                                              <button onclick="changeTimetableTo(5)" class="nav-link" id="pills-5-tab" data-bs-toggle="pill" data-bs-target="#pills-5" type="button" role="tab" aria-controls="pills-5" aria-selected="false">5</button>
+                                                            </li>
+                                                        </ul>
+                                                        <button class="btn btn-primary" style="float:right;background:#0c3862;border:none;" class="nav-link active" type="button" id="download-snapshot">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+                                                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+                                                          </svg>
+                                                           Snapshot</button>
+                                                        <br /><br />
+                                                          <div class="tab-content" id="pills-tabContent">
+                                                            <div style="text-align:center">
+                                                                <h2 style="margin:auto" id="heading-tab">Timetable 1</h5>
+
+                                                            </div>
+                                                            <div class="tab-pane fade" id="pills-instructions" role="tabpanel" aria-labelledby="pills-instructions-tab">
+
+                                                                <p>Welcome to the Timetable Planner! This tool is designed to help you efficiently plan and manage your course schedule. With this planner, you can search for courses, add them to your timetable, and view multiple timetables simultaneously to compare different scheduling options. Below are the detailed instructions to help you get started:</p>
+
+                                                                <h5>Searching for Courses</h5>
+                                                                <p>To begin, you can search for courses using the search bar located at the top of the page. Simply type in the course code or course title, and a list of matching courses will appear. This feature helps you quickly find the courses you need without having to scroll through the entire list.</p>
+
+                                                                <h5>Adding Courses to Your Timetable</h5>
+                                                                <p>Once you have found the course you want to add, click on the course to add it to the timetable. You will also be able see information such as the course title, faculty name, and the class schedule. The course will be added to the appropriate slot in your timetable based on its schedule.</p>
+
+                                                                <h5>Handling Schedule Clashes</h5>
+                                                                <p>If there is a scheduling conflict, meaning another course is already scheduled at the same time, you will be notified with a clash alert. The system will highlight the conflicting course and provide details about the clash. You can then decide whether to keep both courses or make adjustments to resolve the conflict. This feature ensures that you do not accidentally schedule overlapping classes.</p>
+
+                                                                <h5>Maintaining Multiple Timetables</h5>
+                                                                <p>The Timetable Planner allows you to maintain up to five different timetables simultaneously. This is useful if you want to compare different scheduling options or if you are considering enrolling in different sets of courses. To switch between timetables, use the tabs at the top of the timetable section. Each tab represents a different timetable, and you can easily switch between them to see how different schedules work for you.</p>
+
+                                                                <h5>Downloading a Snapshot of Your Timetable</h5>
+                                                                <p>Once you have finalized your timetable, you can download a snapshot of it for your reference. To do this, click the "Download Snapshot" button located below the timetable. This will generate a PNG file of your current timetable, which you can save or print. Having a physical copy of your timetable can be very handy for quick reference during the semester.</p>
+
+                                                                <h5>Example: Using the Timetable Planner</h5>
+                                                                <div class="highlight">
+                                                                    <p>Here is a step-by-step example to illustrate how you can use the Timetable Planner:</p>
+                                                                    <ol>
+                                                                        <li>Search for "imroze" in the search bar.</li>
+                                                                        <li>Click on "Exploring Life in the Neighborhood Lab" to add it to the timetable.</li>
+                                                                        <li>If a clash occurs, review the conflicting course and decide whether to keep both courses or make changes.</li>
+                                                                        <li>If needed, remove the course by clicking the cross icon from the list of courses at the bottom of the timetable (yellow alerts).</li>
+                                                                        <li>Switch to a different timetable tab to explore other scheduling options.</li>
+                                                                        <li>Once satisfied with your timetable, click the "Download Snapshot" button to save a PNG copy.</li>
+                                                                    </ol>
+                                                                </div>
+
+                                                                <h5>Conclusion</h5>
+                                                                <p>The Timetable Planner is a powerful tool that simplifies the process of creating and managing your course schedule. By following the instructions above, you can effectively use the planner to ensure a well-organized and clash-free timetable. We hope this tool helps you have a productive and well-planned semester!</p>
+
+                                                            </div>
+                                                            <div class="tab-pane fade show active" id="pills-1" role="tabpanel" aria-labelledby="pills-1-tab">
+                                                                <div id="table-container1" class='table-container'>
+                                                                    <table class="table-responsive ams" id="timetable1" border='0' cellpadding='0' cellspacing='0'>
+                                                                        <tr class='days'>
+                                                                            <th>Time</th>
+                                                                            <th>Monday</th>
+                                                                            <th>Tuesday</th>
+                                                                            <th>Wednesday</th>
+                                                                            <th>Thursday</th>
+                                                                            <th>Friday</th>
+                                                                            <th>Saturday</th>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>8:30 am-10:00 am</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>10:10 am-11:40 am</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>11:50 am-1:20 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>1:20 pm-3:00 pm</td>
+                                                                            <td class='lunch' >Lunch Time</td>
+                                                                            <td class='lunch'></td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'></td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>3:00 pm-4:30 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>4:40 pm-6:10 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>6:20 pm-7:50 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>8:00 pm-9:30 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                                <div style="width:100%;text-align:left"><br /><h5>Courses:</h5></div>
+
+                                                            </div>
+                                                            <div class="tab-pane fade" id="pills-2" role="tabpanel" aria-labelledby="pills-2-tab">
+                                                                <div id="table-container2" class='table-container'>
+                                                                    <table class="table-responsive ams" id="timetable2" border='0' cellpadding='0' cellspacing='0'>
+                                                                        <tr class='days'>
+                                                                            <th>Time</th>
+                                                                            <th>Monday</th>
+                                                                            <th>Tuesday</th>
+                                                                            <th>Wednesday</th>
+                                                                            <th>Thursday</th>
+                                                                            <th>Friday</th>
+                                                                            <th>Saturday</th>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>8:30 am-10:00 am</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>10:10 am-11:40 am</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>11:50 am-1:20 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>1:20 pm-3:00 pm</td>
+                                                                            <td class='lunch' >Lunch Time</td>
+                                                                            <td class='lunch'></td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'></td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>3:00 pm-4:30 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>4:40 pm-6:10 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>6:20 pm-7:50 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>8:00 pm-9:30 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                                <div style="width:100%;text-align:left"><br /><h5>Courses:</h5></div>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="pills-3" role="tabpanel" aria-labelledby="pills-3-tab">
+                                                                <div id="table-container3" class='table-container'>
+                                                                    <table class="table-responsive ams" id="timetable3" border='0' cellpadding='0' cellspacing='0'>
+                                                                        <tr class='days'>
+                                                                            <th>Time</th>
+                                                                            <th>Monday</th>
+                                                                            <th>Tuesday</th>
+                                                                            <th>Wednesday</th>
+                                                                            <th>Thursday</th>
+                                                                            <th>Friday</th>
+                                                                            <th>Saturday</th>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>8:30 am-10:00 am</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>10:10 am-11:40 am</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>11:50 am-1:20 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>1:20 pm-3:00 pm</td>
+                                                                            <td class='lunch' >Lunch Time</td>
+                                                                            <td class='lunch'></td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'></td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>3:00 pm-4:30 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>4:40 pm-6:10 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>6:20 pm-7:50 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>8:00 pm-9:30 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                                <div style="width:100%;text-align:left"><br /><h5>Courses:</h5></div>
+
+                                                            </div>
+                                                            <div class="tab-pane fade" id="pills-4" role="tabpanel" aria-labelledby="pills-4-tab">
+                                                                <div id="table-container4" class='table-container'>
+                                                                    <table class="table-responsive ams" id="timetable4" border='0' cellpadding='0' cellspacing='0'>
+                                                                        <tr class='days'>
+                                                                            <th>Time</th>
+                                                                            <th>Monday</th>
+                                                                            <th>Tuesday</th>
+                                                                            <th>Wednesday</th>
+                                                                            <th>Thursday</th>
+                                                                            <th>Friday</th>
+                                                                            <th>Saturday</th>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>8:30 am-10:00 am</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>10:10 am-11:40 am</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>11:50 am-1:20 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>1:20 pm-3:00 pm</td>
+                                                                            <td class='lunch' >Lunch Time</td>
+                                                                            <td class='lunch'></td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'></td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>3:00 pm-4:30 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>4:40 pm-6:10 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>6:20 pm-7:50 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>8:00 pm-9:30 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                                <div style="width:100%;text-align:left"><br /><h5>Courses:</h5></div>
+
+                                                            </div>
+                                                            <div class="tab-pane fade" id="pills-5" role="tabpanel" aria-labelledby="pills-5-tab">
+                                                                <div id="table-container5" class='table-container'>
+                                                                    <table class="table-responsive ams" id="timetable5" border='0' cellpadding='0' cellspacing='0'>
+                                                                        <tr class='days'>
+                                                                            <th>Time</th>
+                                                                            <th>Monday</th>
+                                                                            <th>Tuesday</th>
+                                                                            <th>Wednesday</th>
+                                                                            <th>Thursday</th>
+                                                                            <th>Friday</th>
+                                                                            <th>Saturday</th>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>8:30 am-10:00 am</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>10:10 am-11:40 am</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>11:50 am-1:20 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>1:20 pm-3:00 pm</td>
+                                                                            <td class='lunch' >Lunch Time</td>
+                                                                            <td class='lunch'></td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'></td>
+                                                                            <td class='lunch'>Lunch Time</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>3:00 pm-4:30 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>4:40 pm-6:10 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>6:20 pm-7:50 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class='time'>8:00 pm-9:30 pm</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                                <div style="width:100%;text-align:left"><br /><h5>Courses:</h5></div>
+
+                                                            </div>
+                                                          </div>
+
+                                                          
+                                                          
+                                                    </div>
+                                                    
+                                                    
+                                                    <!-- / College Timetable -->
+                                                    
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="course-block" class="row justify-content-between">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="flex-row mb-2">
+                                                          <span class="fs-6 fw-semibold">Search and Click on Courses to Add them to the Timetable</span><br /><br />
+                                                        </div>
+                                                        <br>
+                                                        
+                                                        <form style="display:none">
+                                                          <div class="row">
+                                                            <div class="col-lg-6">
+                                                              <select class="form-select" id="sem" name="sem">
+                                                                <option selected>Filter by Semester</option>
+                                                                <!-- <option value="Monsoon">Monsoon</option> -->
+                                                                <option value="Spring">Spring</option>
+                                                              </select>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                              <select class="form-select" id="year" name="year">
+                                                                <option selected>Filter by Year</option>
+                                                                <!-- <option value="2023">2023</option> -->
+                                                                <option value="2024">2024</option>
+                                                              </select>
+                                                            </div>
+                                                          </div>
+                                                        </form>
+                                                        <br />
+                                                        
+                                                        <table id="example" class="table table-striped scroll" style="width:100%">
+                                                          <thead>
+                                                              <tr>
+                                                                  <th></th>
+                                                                  <th>Course Code</th>
+                                                                  <th>Course Title</th>
+                                                                  <th>Faculty</th>
+                                                              </tr>
+                                                          </thead>
+                                                          <tbody style="width:100%">
+                                                            <!-- <%for(i=0;i<courses.length;i++){%>
+                                                              <tr style="width:100vw" class="add-course" onclick="checkAndUpdateTimetable('<%=courses[i].classCounts%>','<%=courses[i].classDetails[0]%>','<%=courses[i].courseTitle%>','<%=courses[i].courseCode%>')">
+                                                                <td style="display:hidden">-</td>
+                                                                  <td>
+                                                                    <%=courses[i].courseCode.substring(0,25)%></td>
+                                                                  <td><%=courses[i].courseTitle%> <br /><span style="font-size:10px"><%=courses[i].semester.charAt(0).toUpperCase()%><%=courses[i].semester.slice(1)%> <%=courses[i].year%></span></td>
+                                                                  <td>
+                                                                      <%= courses[i].faculty.substring(0, 8) %><%= courses[i].faculty.length > 8 ? '...' : '' %>
+                                                                  </td>
+                                                                </tr>
+                                                              <%}%> -->
+                                                            <%for(i=0;i<courses.length;i++){%>
+                                                              <tr class="add-course" onclick="checkAndUpdateTimetable('<%=courses[i].classCounts%>','<%=courses[i].classDetails[0]%>','<%=courses[i].courseTitle%>','<%=courses[i].courseCode%>')">
+                                                                <td style="display:hidden">-</td>
+                                                                  <td>
+                                                                    <%=courses[i].courseCode.substring(0,25)%></td>
+                                                                  <td style="margin-right:300px"><%=courses[i].courseTitle%> <br /><span style="font-size:10px"><%=courses[i].semester.charAt(0).toUpperCase()%><%=courses[i].semester.slice(1)%> <%=courses[i].year%></span></td>
+                                                                  <td>
+                                                                      <%= courses[i].faculty.substring(0, 8) %><%= courses[i].faculty.length > 8 ? '...' : '' %>
+                                                                  </td>
+                                                                </tr>
+                                                              <%}%>
+                                                          </tbody>
+                                                          <tfoot>
+                                                              <tr>
+                                                                <th></th>
+                                                                <th>Course Code</th>
+                                                                <th>Course Title</th>
+                                                                <th>Faculty</th>
+                                                              </tr>
+                                                          </tfoot>
+                                                      </table>
+
+                                                        </div>
+                                                      </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                     
+                            </div>
+                    </div>
+            </div>
+            <script>
+                var currentTimetable=1;
+                const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                    const timeSlots = [
+                        "08:30-10:00",
+                        "10:10-11:40",
+                        "11:50-13:20",
+                        "13:20-15:00",
+                        "15:00-16:30",
+                        "16:40-18:10",
+                        "18:20-19:50",
+                        "20:00-21:30"
+                    ];
+
+                function changeTimetableTo(number){
+                    if(number=="instructions"){
+                        document.getElementById('heading-tab').style.display = 'none';
+                        document.getElementById('download-snapshot').style.display = 'none';
+                        document.getElementById('heading-tab').style.display = 'none';
+                        document.getElementById('course-block').style.display = 'none';
+
+                    }else{
+                        currentTimetable=number;
+                        document.getElementById('heading-tab').innerText = 'Timetable '+number;
+                        document.getElementById('heading-tab').style.display = 'block';
+                        document.getElementById('download-snapshot').style.display = 'block';
+                        document.getElementById('heading-tab').style.display = 'block';
+                        document.getElementById('course-block').style.display = 'block';
+                    }
+                }
+
+                function checkClash(timetableNumber, day, timeSlot) {
+                    const dayIndex = days.indexOf(day);
+                    const timeSlotIndex = timeSlots.indexOf(timeSlot);
+                    const table = document.querySelector("#timetable" + timetableNumber);
+                    
+                    if (dayIndex === -1 || timeSlotIndex === -1) {
+                        console.error("Invalid day or time slot");
+                        return { clash: true, course: "Invalid input" }; // Invalid input considered as a clash
+                    }
+                    
+                    const row = table.rows[timeSlotIndex + 1]; // +1 to account for header row
+                    const cell = row.cells[dayIndex + 1]; // +1 to account for time column
+                    // Check if the cell is empty or has the 'bg' class
+                    if (cell.classList.contains("bg") || cell.innerText.trim() !== "") {
+                        return [true, cell.innerText.trim()]; // Clash detected, return the inner text
+                    }
+                    
+                    return [false, "" ]; // No clash
+                }
+                function checkAndUpdateTimetable(classCount,dayTimeString, classTitle,courseCode){
+                     // for now until I get data, choose random day and random timeSlot
+                     function getRandomInt(max) {
+                        return Math.floor(Math.random() * max);
+                     }
+                     timeSlot = timeSlots[getRandomInt(timeSlots.length)];
+                     day = days[getRandomInt(days.length)];
+                     // for now until I get data, choose random day and random timeSlot
+                     // parse DateTime string and make as many objects each of which is a class
+                     // This will make pairs of day and time.
+                     //console.log((courses[0].classDetails[0]).replaceAll(" ","")).split(")")
+                     classes=dayTimeString.replaceAll(" ","").split(")");
+                     let anyClashAtAll=false;
+                     let clashCourse="";
+                    //  console.log(classCount)
+                     for(var i=0;i<parseInt(classCount);i++){
+                        day = classes[i].split("-")[0];
+                        time = (classes[i].split("(")[0]).split("-")[1]+"-"+(classes[i].split("(")[0]).split("-")[2];
+                        venue=(classes[i].split("(")[1]);
+                        // console.log("day",day)
+                        // console.log("time",time)
+                        // console.log("venue",venue)
+                        if(checkClash(currentTimetable,day,time)[0]){
+                            anyClashAtAll=true;
+                            clashCourse=checkClash(currentTimetable,day,time)[1].split("\n")[0];
+                        }
+                     }
+                     if(anyClashAtAll){
+                        alert("There is a clash with "+clashCourse);
+                     } else{
+                        var inserted=[];
+                        for(var i=0;i<classCount;i++){
+                            day = classes[i].split("-")[0];
+                            time = (classes[i].split("(")[0]).split("-")[1]+"-"+(classes[i].split("(")[0]).split("-")[2];
+                            venue=(classes[i].split("(")[1]);
+                            let insertedIndices = insertClass(currentTimetable, day, time, classTitle, courseCode+"( "+venue+" )");
+                            inserted.push(insertedIndices);
+                        }
+                       
+                        //const insertedIndices = insertClass(currentTimetable, day, timeSlot, classTitle, courseCode);
+                        alertDiv=document.createElement("div");
+                        let string = "";
+                        for(var i=0;i<classCount;i++){
+                            string+=`removeClass(${currentTimetable}, ${inserted[i].rowIndex}, ${inserted[i].colIndex});`;
+                        }
+                        alertDiv.innerHTML=
+                        `<div style="text-align:left;width:100%" class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>${courseCode}</strong> ${classTitle}
+                            <button onClick="`+
+                            string
+                            +`" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>`;
+                        const table = document.getElementById("table-container"+currentTimetable);
+                        table.parentElement.appendChild(alertDiv.firstChild);
+                        alert(courseCode+ " "+ classTitle +" added to timetable");
+                     }
+                    }
+                    
+                    function insertClass(timetableNumber,day, timeSlot, className,codeAndProf) {
+                        // console.log(timetableNumber,day, timeSlot, className,codeAndProf);
+                        const dayIndex = days.indexOf(day);
+                        const timeSlotIndex = timeSlots.indexOf(timeSlot);
+                        const table = document.querySelector("#timetable" + timetableNumber);
+                        
+                        if (dayIndex === -1 || timeSlotIndex === -1) {
+                            console.error("Invalid day or time slot");
+                            return null;
+                        }
+                        const row = table.rows[timeSlotIndex + 1]; // +1 to account for header row
+                        const cell = row.cells[dayIndex + 1]; // +1 to account for time column
+                        const newCell = document.createElement("td");
+                        newCell.className = "bg";
+                        newCell.textContent = className;
+                        newCell.style.position = "relative"; // Make the td a relatively positioned element
+                        
+                        newCell.innerHTML += `
+                            <div style="color:#d24b5c;margin-top:5px;position: relative;">
+                                ${codeAndProf}
+                            </div>`;            
+                        row.replaceChild(newCell, cell);
+
+                        // Return the indices for future reference
+                        return { rowIndex: timeSlotIndex + 1, colIndex: dayIndex + 1 };
+                    }
+
+                    function removeClass(timetableNumber, rowIndex, colIndex) {
+                        const table = document.querySelector("#timetable" + timetableNumber);
+                        const row = table.rows[rowIndex];
+                        const cell = row.cells[colIndex];
+
+                        // Clear the cell content and remove the 'bg' class
+                        cell.innerHTML = "";
+                        cell.classList.remove("bg");
+                    }
+
+                    // Example usage:
+                    // insertClass("1","Monday", "8:30 am-10:00 am", "Introduction to Biology I: Genetics and Evolution","BIO-1200-1 (AC-02-LR-007)");
+                    // insertClass("1","Monday", "11:50 am-1:20 pm", "Political Economy of China","POL-1010/ CHI-1301-1 (AC-02-LR-013)");
+                    // insertClass("1","Monday", "3:00 pm-4:30 pm", "Econometrics","ECO-2400-3 (AC-04-LR-401)");
+                    // insertClass("1","Wednesday", "8:30 am-10:00 am", "Introduction to Biology I: Genetics and Evolution","BIO-1200-1 (AC-02-LR-007)");
+                    // insertClass("1","Wednesday", "11:50 am-1:20 pm", "Political Economy of China","POL-1010/ CHI-1301-1 (AC-02-LR-013)");
+                    // insertClass("1","Wednesday", "3:00 pm-4:30 pm", "Econometrics","ECO-2400-3 (AC-04-LR-401)");
+                    // insertClass("1","Wednesday", "4:40 pm-6:10 pm", "Linear Algebra","MAT-1001/ CS-2210-1 (AC-04-LR-401)");
+                    // insertClass("1","Thursday", "3:00 pm-4:30 pm", "Data and the Digital Economy","ENT-1013-1 (AC-03-LR-005)");
+                    // insertClass("1","Thursday", "4:40 pm-6:10 pm", "Data and the Digital Economy","ENT-1013-1 (AC-03-LR-005)");
+                    // insertClass("1","Friday", "4:40 pm-6:10 pm", "Linear Algebra","MAT-1001/ CS-2210-1 (AC-04-LR-401)");
+                    // insertClass("1","Friday", "6:20 pm-7:50 pm", "Deconstructing Social Sector Systems in India","ENT-2035-1 (AC-04-LR-301)");
+                    // insertClass("1","Friday", "8:00 pm-9:30 pm", "Deconstructing Social Sector Systems in India","ENT-2035-1 (AC-04-LR-301)");
+            </script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+            <script>
+                document.getElementById('download-snapshot').addEventListener('click', function() {
+                  html2canvas(document.querySelector("#timetable"+currentTimetable)).then(canvas => {
+                    let link = document.createElement('a');
+                    link.href = canvas.toDataURL();
+                    link.download = 'timetable.png';
+                    link.click();
+                  });
+                });
+              </script>
+            <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+            <script src="/platform/assets/js/dataTables.js"></script>
+           <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
+  <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
+  <script>
+
+    const semEl = document.querySelector('#sem');
+    const yearEl = document.querySelector('#year');
+    
+    // Custom range filtering function
+    DataTable.ext.search.push(function (settings, data, dataIndex) {
+        let sem = semEl.value;
+        let year = parseInt(yearEl.value, 10);
+        let semdata = (data[4]) || 0;
+        let yeardata = (data[5]) || 0;
+        // console.log(year);
+        if (
+            (sem == "Filter by Semester" && isNaN(year)) ||
+            (semdata.includes(sem) && isNaN(year)) ||
+            (sem == "Filter by Semester" && yeardata.includes(year)) ||
+            (semdata.includes(sem) && yeardata.includes(year))
+        ) {
+            // console.log(sem)
+            return true;
+        }
+    
+        return false;
+    });
+    
+    const table = new DataTable('#example');
+
+    
+    // Set the placeholder for the search input
+    $('#example_filter label').innerHTML=`<input type="search" class="" placeholder="" aria-controls="example">`;
+    $('#example_filter label input').attr('placeholder', 'Search Course or Professor');
+
+    // Changes to the inputs will trigger a redraw to update the table
+    semEl.addEventListener('change', function () {
+        table.draw();
+    });
+    yearEl.addEventListener('change', function () {
+        table.draw();
+    });
+  </script>
+            <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="/platform/assets/js/sidebarmenu.js"></script>
+            <script src="/platform/assets/js/app.min.js"></script>
+            <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+            <script src="/platform/assets/js/theme.js"></script>
+            <!-- <%-include("../partials/preloader-js")%> -->
+    </body>
+
+</html>

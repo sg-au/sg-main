@@ -1,0 +1,91 @@
+[{
+    "courseCode": "AST-3870/ AST-4870/ PHY-3870/ PHY-4870-1",
+    "courseTitle": "Cosmic Messengers 1 (Theory)",
+    "faculty": "kandaswamy.subramanian@ashoka.edu.in",
+    "classCounts": 2,
+    "classDetails": ["Monday-10:10-11:40 ( AC-04-LR-004 ) Wednesday-10:10-11:40 ( AC-04-LR-004 )"],
+    "semester": "spring",
+    "year": 2023,
+    "description": "",
+    "prerequisites": []
+}, {
+    "courseCode": "BIO-1002/ ES-2301-1",
+    "courseTitle": "Exploring Life in the Neighborhood Lab",
+    "faculty": "imroze.khan@ashoka.edu.in, shivani.krishna@ashoka.edu.in  , kritika.garg@ashoka.edu.in",
+    "classCounts": 2,
+    "classDetails": ["Tuesday-10:10-11:40 ( AC-03-Lab-103 ) Tuesday-11:50-13:20 ( AC-03-Lab-103 )"],
+    "semester": "spring",
+    "year": 2023,
+    "description": "",
+    "prerequisites": []
+}, {
+    "courseCode": "BIO-1002/ ES-2301-2",
+    "courseTitle": "Exploring Life in the Neighborhood Lab",
+    "faculty": "imroze.khan@ashoka.edu.in, shivani.krishna@ashoka.edu.in  , kritika.garg@ashoka.edu.in",
+    "classCounts": 2,
+    "classDetails": ["Tuesday-15:00-16:30 ( AC-03-Lab-103 ) Tuesday-16:40-18:10 ( AC-03-Lab-103 )"],
+    "semester": "spring",
+    "year": 2023,
+    "description": "",
+    "prerequisites": []
+}, {
+    "courseCode": "BIO-1200-1",
+    "courseTitle": "Introduction to Biology I: Genetics and Evolution",
+    "faculty": "laasya.samhita@ashoka.edu.in",
+    "classCounts": 2,
+    "classDetails": ["Monday-10:10-11:40 ( AC-01-LR 106 ) Wednesday-10:10-11:40 ( AC-01-LR 106 )"],
+    "semester": "spring",
+    "year": 2023,
+    "description": "",
+    "prerequisites": []
+}, {
+    "courseCode": "BIO-2202-1",
+    "courseTitle": "Cell Biology and Genetics Lab",
+    "faculty": "anup.padmanabhan@ashoka.edu.in, kavita.agarwal@ashoka.edu.in, sandeep.ameta@ashoka.edu.in",
+    "classCounts": 2,
+    "classDetails": ["Wednesday-10:10-11:40 ( AC-03-Lab-103 ) Wednesday-11:50-13:20 ( AC-03-Lab-103 )"],
+    "semester": "spring",
+    "year": 2023,
+    "description": "",
+    "prerequisites": []
+}, {
+    "courseCode": "BIO-2202-2",
+    "courseTitle": "Cell Biology and Genetics Lab",
+    "faculty": "anup.padmanabhan@ashoka.edu.in, kavita.agarwal@ashoka.edu.in, sandeep.ameta@ashoka.edu.in",
+    "classCounts": 2,
+    "classDetails": ["Wednesday-15:00-16:30 ( AC-03-Lab-103 ) Wednesday-16:40-18:10 ( AC-03-Lab-103 )"],
+    "semester": "spring",
+    "year": 2023,
+    "description": "",
+    "prerequisites": []
+}, {
+    "courseCode": "BIO-2222-1",
+    "courseTitle": "Lab Course 5",
+    "faculty": "balaji.chattopadhyay@ashoka.edu.in, sougata.roy@ashoka.edu.in",
+    "classCounts": 2,
+    "classDetails": ["Monday-15:00-16:30 ( AC-03-Lab-103 ) Monday-16:40-18:10 ( AC-03-Lab-103 )"],
+    "semester": "spring",
+    "year": 2023,
+    "description": "",
+    "prerequisites": []
+}, {
+    "courseCode": "BIO-3020/ BIO-6020/ ES-2101/ PHY-3020-1",
+    "courseTitle": "Ecology",
+    "faculty": "shivani.krishna@ashoka.edu.in",
+    "classCounts": 2,
+    "classDetails": ["Monday-08:30-10:00 ( AC-03-LR-003 ) Wednesday-08:30-10:00 ( AC-03-LR-003 )"],
+    "semester": "spring",
+    "year": 2023,
+    "description": "",
+    "prerequisites": []
+}, {
+    "courseCode": "BIO-3102/ BIO-6102-1",
+    "courseTitle": "Molecular Evolution",
+    "faculty": "laasya.samhita@ashoka.edu.in, sandeep.ameta@ashoka.edu.in",
+    "classCounts": 2,
+    "classDetails": ["Thursday-10:10-11:40 ( AC-04-LR-006 ) Tuesday-10:10-11:40 ( AC-04-LR-006 )"],
+    "semester": "spring",
+    "year": 2023,
+    "description": "",
+    "prerequisites": []
+}]
