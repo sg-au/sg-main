@@ -183,9 +183,10 @@
         .cmsDescp{
             margin:15px 0;
         }
-        .modal-dp div strong{
+        #modal-dp div strong{
             font-weight: 900;
         }
+
         </style>
 
     <style>
@@ -823,6 +824,26 @@
                                         </div>
                                     </div>
                                     </div>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade bd-example-modal-sm" id="exampleModalSm" tabindex="-1" role="dialog" aria-labelledby="exampleModalSmTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-sm" role="document">
+                                            <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div id="modal-dps" class="modal-body">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        </div>
+
+
                                     <div id="course-block" class="row justify-content-between">
                                         <div class="card">
                                             <div class="card-body">
@@ -933,7 +954,7 @@
                                                                     <%}else{%>
                                                                         <% let string = JSON.stringify(courses[i].prerequisites); %>
                                                                         <% string = Buffer.from(string).toString('base64');%>
-                                                                        <a href="#" onclick="showCoursePrerequisites('<%=string%>')" data-toggle="modal" data-target="#exampleModalLong">
+                                                                        <a href="#" onclick="showCoursePrerequisites('<%=string%>')" data-toggle="modal" data-target="#exampleModalSm">
                                                                             view
                                                                         </a>
                                                                     <% }%>
@@ -1117,7 +1138,7 @@
                         try {
                             var prereq = JSON.parse(atob(prerequisites));
 
-                            var htmlContent = "";
+                            var htmlContent = "<div>";
 
                             if (prereq.length > 0) {
                                 htmlContent += "<h5>Following are the prerequisites for this course.</h5>";
@@ -1143,9 +1164,9 @@
                             } else {
                                 htmlContent += "<p>No prerequisites</p>";
                             }
-
+                            htmlContent += "</div>"
                             // Update the modal content
-                            document.getElementById('modal-dp').innerHTML = htmlContent;
+                            document.getElementById('modal-dps').innerHTML = htmlContent;
 
                         } catch (e) {
                             console.error("Invalid JSON string: ", e);
