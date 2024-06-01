@@ -196,6 +196,24 @@
             overflow-x: auto;
           }
         }
+        @media only screen and (max-width: 600px) {
+            .small-pills{
+                font-size:9.5px;
+                margin-left:-3px;
+                position:relative;
+                right:4px;
+            }
+        }
+
+        @media only screen and (max-width: 400px) {
+            .small-pills{
+                font-size:9px;
+                margin-left:-3px;
+                position:relative;
+                right:4px;
+            }
+        }
+
      #example_filter label input {
       display: block;
       width: 70vw;
@@ -281,22 +299,24 @@
                                                     <div>
                                                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                                              <li class="nav-item" role="presentation">
-                                                                <button onclick="changeTimetableTo('instructions')" class="nav-link" id="pills-instructions-tab" data-bs-toggle="pill" data-bs-target="#pills-instructions" type="button" role="tab" aria-controls="pills-instructions" aria-selected="true">Instructions</button>
+                                                                <button onclick="changeTimetableTo('instructions')" class="nav-link small-pills" id="pills-instructions-tab" data-bs-toggle="pill" data-bs-target="#pills-instructions" type="button" role="tab" aria-controls="pills-instructions" aria-selected="true">
+                                                                    Instructions
+                                                                </button>
                                                             </li>
                                                             <li class="nav-item" role="presentation">
-                                                              <button onclick="changeTimetableTo(1)" class="nav-link active" id="pills-1-tab" data-bs-toggle="pill" data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1" aria-selected="true">1</button>
+                                                              <button onclick="changeTimetableTo(1)" class="nav-link small-pills active" id="pills-1-tab" data-bs-toggle="pill" data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1" aria-selected="true">1</button>
                                                             </li>
                                                             <li class="nav-item" role="presentation">
-                                                              <button onclick="changeTimetableTo(2)" class="nav-link" id="pills-2-tab" data-bs-toggle="pill" data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-2" aria-selected="false">2</button>
+                                                              <button onclick="changeTimetableTo(2)" class="nav-link small-pills" id="pills-2-tab" data-bs-toggle="pill" data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-2" aria-selected="false">2</button>
                                                             </li>
                                                             <li class="nav-item" role="presentation">
-                                                              <button onclick="changeTimetableTo(3)" class="nav-link" id="pills-3-tab" data-bs-toggle="pill" data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-3" aria-selected="false">3</button>
+                                                              <button onclick="changeTimetableTo(3)" class="nav-link small-pills" id="pills-3-tab" data-bs-toggle="pill" data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-3" aria-selected="false">3</button>
                                                             </li>
                                                             <li class="nav-item" role="presentation">
-                                                              <button onclick="changeTimetableTo(4)" class="nav-link" id="pills-4-tab" data-bs-toggle="pill" data-bs-target="#pills-4" type="button" role="tab" aria-controls="pills-4" aria-selected="false">4</button>
+                                                              <button onclick="changeTimetableTo(4)" class="nav-link small-pills" id="pills-4-tab" data-bs-toggle="pill" data-bs-target="#pills-4" type="button" role="tab" aria-controls="pills-4" aria-selected="false">4</button>
                                                             </li>
                                                             <li class="nav-item" role="presentation">
-                                                              <button onclick="changeTimetableTo(5)" class="nav-link" id="pills-5-tab" data-bs-toggle="pill" data-bs-target="#pills-5" type="button" role="tab" aria-controls="pills-5" aria-selected="false">5</button>
+                                                              <button onclick="changeTimetableTo(5)" class="nav-link small-pills" id="pills-5-tab" data-bs-toggle="pill" data-bs-target="#pills-5" type="button" role="tab" aria-controls="pills-5" aria-selected="false">5</button>
                                                             </li>
                                                         </ul>
                                                         <button class="btn btn-primary" style="float:right;background:#0c3862;border:none;" class="nav-link active" type="button" id="download-snapshot">
