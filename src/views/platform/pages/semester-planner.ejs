@@ -78,6 +78,8 @@
         background:#d3e2b0;
         color:#252421;
         overflow: hidden;
+        text-align:right;
+        font-size: 1.1em;
     }
     /* 
     tr:nth-child(odd) td {
@@ -159,7 +161,7 @@
         background:#0c3862;
         color:white;
     }
-    .close {
+    .closeAlert {
             top: 1%;
             right: 0.5%;
             position: absolute;
@@ -168,12 +170,28 @@
             margin:5px;
             font-size: 1.2em;
         }
-    
+        .close {
+            top: 0.5%;
+            right: 2%;
+            position: absolute;
+            background:transparent;
+            border:none;
+            margin:5px;
+            font-size: 1.2em;
+        }
+
+        .cmsDescp{
+            margin:15px 0;
+        }
+        .modal-dp div strong{
+            font-weight: 900;
+        }
         </style>
 
     <style>
         @media screen {
           .scroll {
+            display:block;
             overflow-x: auto;
           }
         }
@@ -216,38 +234,27 @@
       }
     }
     #example{
-        overflow: hidden; /* Prevent scrollbar appearance */
+        overflow: scroll;
+         /* Prevent scrollbar appearance */
 
     }
     .add-course{
-        opacity:0.4;
+        opacity:0.3;
         cursor:default;
+        background:transparent;
     }
 
     .add-course:hover{
-        opacity:1;
+        opacity:0.7;
         transition: transform 0.3s ease-in-out;
-        transform: scale(1.07);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        overflow-y: hidden; /* Hide vertical scrollbar */
-        overflow-x: hidden; /* Hide horizontal scrollbar */
+        transform: scale(1.3);
+        /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
         cursor:pointer;
     }
     .add-course:hover td{
         opacity:1;
-        overflow-y: hidden; /* Hide vertical scrollbar */
-        overflow-x: hidden; /* Hide horizontal scrollbar */
+        
     }
-
-    .centered-span {
-    display: none; 
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 24px;
-    color: black;
-}
       </style>
     <%-include("../partials/preloader-css")%>
     <%-include("../partials/preloader-js")%>
@@ -380,12 +387,12 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>1:20 pm-3:00 pm</td>
-                                                                            <td class='lunch' >Lunch Time</td>
-                                                                            <td class='lunch'></td>
-                                                                            <td class='lunch'>Lunch Time</td>
-                                                                            <td class='lunch'>Lunch Time</td>
-                                                                            <td class='lunch'></td>
-                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'>L</td>
+                                                                            <td class='lunch'>U</td>
+                                                                            <td class='lunch'>N</td>
+                                                                            <td class='lunch'>C</td>
+                                                                            <td class='lunch'>H</td>
+                                                                            <td class='lunch' ></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>3:00 pm-4:30 pm</td>
@@ -469,12 +476,12 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>1:20 pm-3:00 pm</td>
-                                                                            <td class='lunch' >Lunch Time</td>
-                                                                            <td class='lunch'></td>
-                                                                            <td class='lunch'>Lunch Time</td>
-                                                                            <td class='lunch'>Lunch Time</td>
-                                                                            <td class='lunch'></td>
-                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'>L</td>
+                                                                            <td class='lunch'>U</td>
+                                                                            <td class='lunch'>N</td>
+                                                                            <td class='lunch'>C</td>
+                                                                            <td class='lunch'>H</td>
+                                                                            <td class='lunch' ></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>3:00 pm-4:30 pm</td>
@@ -557,12 +564,12 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>1:20 pm-3:00 pm</td>
-                                                                            <td class='lunch' >Lunch Time</td>
-                                                                            <td class='lunch'></td>
-                                                                            <td class='lunch'>Lunch Time</td>
-                                                                            <td class='lunch'>Lunch Time</td>
-                                                                            <td class='lunch'></td>
-                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'>L</td>
+                                                                            <td class='lunch'>U</td>
+                                                                            <td class='lunch'>N</td>
+                                                                            <td class='lunch'>C</td>
+                                                                            <td class='lunch'>H</td>
+                                                                            <td class='lunch' ></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>3:00 pm-4:30 pm</td>
@@ -646,12 +653,12 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>1:20 pm-3:00 pm</td>
-                                                                            <td class='lunch' >Lunch Time</td>
-                                                                            <td class='lunch'></td>
-                                                                            <td class='lunch'>Lunch Time</td>
-                                                                            <td class='lunch'>Lunch Time</td>
-                                                                            <td class='lunch'></td>
-                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'>L</td>
+                                                                            <td class='lunch'>U</td>
+                                                                            <td class='lunch'>N</td>
+                                                                            <td class='lunch'>C</td>
+                                                                            <td class='lunch'>H</td>
+                                                                            <td class='lunch' ></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>3:00 pm-4:30 pm</td>
@@ -735,12 +742,12 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>1:20 pm-3:00 pm</td>
-                                                                            <td class='lunch' >Lunch Time</td>
-                                                                            <td class='lunch'></td>
-                                                                            <td class='lunch'>Lunch Time</td>
-                                                                            <td class='lunch'>Lunch Time</td>
-                                                                            <td class='lunch'></td>
-                                                                            <td class='lunch'>Lunch Time</td>
+                                                                            <td class='lunch'>L</td>
+                                                                            <td class='lunch'>U</td>
+                                                                            <td class='lunch'>N</td>
+                                                                            <td class='lunch'>C</td>
+                                                                            <td class='lunch'>H</td>
+                                                                            <td class='lunch' ></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>3:00 pm-4:30 pm</td>
@@ -797,6 +804,25 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                      
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div id="modal-dp" class="modal-body">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
                                     <div id="course-block" class="row justify-content-between">
                                         <div class="card">
                                             <div class="card-body">
@@ -807,36 +833,69 @@
                                                         </div>
                                                         <br>
                                                         
-                                                        <form style="display:none">
+                                                        <form>
                                                           <div class="row">
                                                             <div class="col-lg-6">
-                                                              <select class="form-select" id="sem" name="sem">
-                                                                <option selected>Filter by Semester</option>
-                                                                <!-- <option value="Monsoon">Monsoon</option> -->
-                                                                <option value="Spring">Spring</option>
+                                                              <select class="form-select" id="type" name="type">
+                                                                <option value="" selected>Filter by Type of Courses</option>
+                                                                <!-- <option value="2023">2023</option> -->
+                                                                <option value="FC-">Foundation Courses</option>
+                                                                <option value="CT-">Critical Thinking</option>
+                                                                <option value="CVA&CLA&CPA">Co-curricular Courses</option>
                                                               </select>
                                                             </div>
                                                             <div class="col-lg-6">
-                                                              <select class="form-select" id="year" name="year">
-                                                                <option selected>Filter by Year</option>
-                                                                <!-- <option value="2023">2023</option> -->
-                                                                <option value="2024">2024</option>
-                                                              </select>
+                                                                <select class="form-select" id="code" name="code">
+                                                                    <option value="" selected>Filter by Department/Major</option>
+                                                                    <option value="BIO-">Biology</option>
+                                                                    <option value="CHM-">Chemistry</option>
+                                                                    <option value="CS-">Computer Science</option>
+                                                                    <option value="CS&ENT">Computer Science and Entrepreneurial Leadership</option>
+                                                                    <option value="ECO-">Economics</option>
+                                                                    <option value="ECO&FIN">Economics and Finance</option>
+                                                                    <option value="ECO&HIS">Economics and History</option>
+                                                                    <option value="ENG-">English</option>
+                                                                    <option value="ENG&CW">English and Creative Writing</option>
+                                                                    <option value="ENG&MS">English and Media Studies</option>
+                                                                    <option value="ENG&PA">English and Performing Arts</option>
+                                                                    <option value="ENT-">Entrepreneurship</option>
+                                                                    <option value="FIN-">Finance</option>
+                                                                    <option value="HIS-">History</option>
+                                                                    <option value="HIS&IR">History &amp; International Relations</option>
+                                                                    <option value="IR-">International Relations</option>
+                                                                    <option value="MAT-">Mathematics</option>
+                                                                    <option value="CS&MAT">Mathematics and Computer Science</option>
+                                                                    <option value="PA-">Performing Arts</option>
+                                                                    <option value="PHIL-">Philosophy</option>
+                                                                    <option value="CS&PHIL">Philosophy and Computer Science</option>
+                                                                    <option value="PHY-">Physics</option>
+                                                                    <option value="POL-">Political Science</option>
+                                                                    <option value="POL&SOC">Politics &amp; Society</option>
+                                                                    <option value="POL&PHIL&ECO">Politics, Philosophy, Economics</option>
+                                                                    <option value="PSY-">Psychology</option>
+                                                                    <option value="PSY&PHIL">Psychology and Philosophy</option>
+                                                                    <option value="SOA">Sociology and Anthropology</option>
+                                                                    <option value="VA">Visual Arts</option>
+                                                                </select>
+                                                                
                                                             </div>
                                                           </div>
                                                         </form>
                                                         <br />
+                                                        <!-- Button trigger modal -->
                                                         
-                                                        <table id="example" class="table table-striped scroll" style="width:100%">
+                                                        <table id="example" class="table table-striped scroll">
                                                           <thead>
                                                               <tr>
                                                                   <th></th>
                                                                   <th>Course Code</th>
                                                                   <th>Course Title</th>
                                                                   <th>Faculty</th>
+                                                                  <th>Description</th>
+                                                                  <th>Prerequisites</th> 
                                                               </tr>
                                                           </thead>
-                                                          <tbody style="width:100%">
+                                                          <tbody>
                                                             <!-- <%for(i=0;i<courses.length;i++){%>
                                                               <tr style="width:100vw" class="add-course" onclick="checkAndUpdateTimetable('<%=courses[i].classCounts%>','<%=courses[i].classDetails[0]%>','<%=courses[i].courseTitle%>','<%=courses[i].courseCode%>')">
                                                                 <td style="display:hidden">-</td>
@@ -849,14 +908,36 @@
                                                                 </tr>
                                                               <%}%> -->
                                                             <%for(i=0;i<courses.length;i++){%>
-                                                              <tr class="add-course" onclick="checkAndUpdateTimetable('<%=courses[i].classCounts%>','<%=courses[i].classDetails[0]%>','<%=courses[i].courseTitle%>','<%=courses[i].courseCode%>')">
-                                                                <td style="display:hidden">-</td>
+                                                              <tr>
+                                                                <td>
+                                                                    <svg onclick="checkAndUpdateTimetable('<%=courses[i].classCounts%>','<%=courses[i].classDetails[0]%>','<%=courses[i].courseTitle%>','<%=courses[i].courseCode%>')" class="add-course" width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6 12H18M12 6V18" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                                                </td>
                                                                   <td>
-                                                                    <%=courses[i].courseCode.substring(0,25)%></td>
-                                                                  <td style="margin-right:300px"><%=courses[i].courseTitle%> <br /><span style="font-size:10px"><%=courses[i].semester.charAt(0).toUpperCase()%><%=courses[i].semester.slice(1)%> <%=courses[i].year%></span></td>
+                                                                    <%=courses[i].courseCode.substring(0,25)%>
+                                                                </td>
+                                                                  <td style="margin-right:300px"><%=courses[i].courseTitle%> <br /><span style="font-size:10px"><%=courses[i].semester.charAt(0).toUpperCase()%><%=courses[i].semester.slice(1)%> <%=courses[i].year%></span>
+                                                                </td>
                                                                   <td>
-                                                                      <%= courses[i].faculty.substring(0, 8) %><%= courses[i].faculty.length > 8 ? '...' : '' %>
+                                                                      <%= courses[i].faculty.substring(0, 20) %><%= courses[i].faculty.length > 20 ? '...' : '' %>
                                                                   </td>
+                                                                  <td>
+                                                                    <% let string = JSON.stringify(courses[i].description); %>
+                                                                    <% string = Buffer.from(string).toString('base64');%>
+                                                                    <a onclick="showDescription('<%=string%>')" href="#" data-toggle="modal" data-target="#exampleModalLong">
+                                                                       view
+                                                                    </a>
+                                                                  </td> 
+                                                                  <td>
+                                                                    <%if(courses[i].prerequisites.length==0){%>
+                                                                        NA
+                                                                    <%}else{%>
+                                                                        <% let string = JSON.stringify(courses[i].prerequisites); %>
+                                                                        <% string = Buffer.from(string).toString('base64');%>
+                                                                        <a href="#" onclick="showCoursePrerequisites('<%=string%>')" data-toggle="modal" data-target="#exampleModalLong">
+                                                                            view
+                                                                        </a>
+                                                                    <% }%>
+                                                                  </td> 
                                                                 </tr>
                                                               <%}%>
                                                           </tbody>
@@ -866,6 +947,8 @@
                                                                 <th>Course Code</th>
                                                                 <th>Course Title</th>
                                                                 <th>Faculty</th>
+                                                                <th>Description</th>
+                                                                <th>Prerequisites</th>
                                                               </tr>
                                                           </tfoot>
                                                       </table>
@@ -978,11 +1061,11 @@
                             string+=`removeClass(${currentTimetable}, ${inserted[i].rowIndex}, ${inserted[i].colIndex});`;
                         }
                         alertDiv.innerHTML=
-                        `<div style="text-align:left;width:100%" class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong>${courseCode}</strong> ${classTitle}
+                        `<div style="text-align:left;width:100%;background-color:#faf6e3;color:black" class="alert alert-warning alert-dismissible fade show" role="alert">
+                             ${classTitle} <strong style="color:#d24b5c">(${courseCode})</strong>
                             <button onClick="`+
                             string
-                            +`" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            +`" type="button" class="closeAlert" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>`;
@@ -1029,6 +1112,57 @@
                         cell.classList.remove("bg");
                     }
 
+
+                    function showCoursePrerequisites(prerequisites) {
+                        try {
+                            var prereq = JSON.parse(atob(prerequisites));
+
+                            var htmlContent = "";
+
+                            if (prereq.length > 0) {
+                                htmlContent += "<h5>Following are the prerequisites for this course.</h5>";
+
+                                var i = 1;
+
+                                prereq.forEach(function(value) {
+                                    if (i > 1) {
+                                        htmlContent += "<p style='font-weight:bold'>" + value.OperatorUsed + "</p>";
+                                    }
+
+                                    if (value.PrerequisiteType === "RequiredCourses") {
+                                        htmlContent += "</br><p style='font-weight:bold'>" + value.nOFm_Courses + " course(s) required from the following course(s).</p></br>";
+                                        htmlContent += "<p>" + value.RequiredCourses + "</p>";
+                                    } else if (value.PrerequisiteType === "LevelBased") {
+                                        htmlContent += "</br><p style='font-weight:bold'>" + value.ComplexityLevel + " Level " + value.NoOfCourses + " course(s) required" + "</p>";
+                                    } else if (value.PrerequisiteType === "MathRequired") {
+                                        htmlContent += "</br><p style='font-weight:bold'>Mathematics required in XI or XII</p>";
+                                    }
+
+                                    i++;
+                                });
+                            } else {
+                                htmlContent += "<p>No prerequisites</p>";
+                            }
+
+                            // Update the modal content
+                            document.getElementById('modal-dp').innerHTML = htmlContent;
+
+                        } catch (e) {
+                            console.error("Invalid JSON string: ", e);
+                        }
+                    }
+
+                    function showDescription(desc){
+                        let decodedString = atob(desc);    
+                        // Replace escaped newlines with actual newlines
+                        decodedString = decodedString.replace(/\\n/g, '\n');
+                        decodedString=decodedString.substring(1,decodedString.length-1)
+                        
+                        // Optionally handle other escaped characters
+                        decodedString = decodedString.replace(/\\t/g, '\t');
+                        document.querySelector('#modal-dp').innerHTML=decodedString;
+                    }
+
                     // Example usage:
                     // insertClass("1","Monday", "8:30 am-10:00 am", "Introduction to Biology I: Genetics and Evolution","BIO-1200-1 (AC-02-LR-007)");
                     // insertClass("1","Monday", "11:50 am-1:20 pm", "Political Economy of China","POL-1010/ CHI-1301-1 (AC-02-LR-013)");
@@ -1066,26 +1200,56 @@
   <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
   <script>
 
-    const semEl = document.querySelector('#sem');
-    const yearEl = document.querySelector('#year');
-    
+    const codeEl = document.querySelector('#code');
+    const typeEl = document.querySelector('#type');
+
     // Custom range filtering function
     DataTable.ext.search.push(function (settings, data, dataIndex) {
-        let sem = semEl.value;
-        let year = parseInt(yearEl.value, 10);
-        let semdata = (data[4]) || 0;
-        let yeardata = (data[5]) || 0;
-        // console.log(year);
+        let code = codeEl.value;
+        let type = typeEl.value;
+
+        let split;
+        if (code.includes("&")) {
+            split = code.split('&');
+            split = split.map(function (element) {
+                return element.trim() + "-";
+            });
+        } else {
+            split = [code];
+        }
+
+        let split2;
+        if (type.includes("&")) {
+            split2 = type.split('&');
+            split2 = split2.map(function (element) {
+                return element.trim() + "-";
+            });
+        } else {
+            split2 = [type];
+        }
+
+        let codedata = (data[1]) || "";
+        let typedata = (data[1]) || ""; // Assuming type data is in the third column
+
+        // Check if any element of split is in codedata
+        let codeMatch = split.some(function (element) {
+            return codedata.includes(element);
+        });
+
+        // Check if typedata matches the selected type
+        let typeMatch = split2.some(function (element) {
+            return typedata.includes(element);
+        });
+
         if (
-            (sem == "Filter by Semester" && isNaN(year)) ||
-            (semdata.includes(sem) && isNaN(year)) ||
-            (sem == "Filter by Semester" && yeardata.includes(year)) ||
-            (semdata.includes(sem) && yeardata.includes(year))
+            (code == "Filter by Major" && type == "Filter by Type") ||
+            (codeMatch && type == "Filter by Type") ||
+            (code == "Filter by Major" && typeMatch) ||
+            (codeMatch && typeMatch)
         ) {
-            // console.log(sem)
             return true;
         }
-    
+
         return false;
     });
     
@@ -1097,10 +1261,10 @@
     $('#example_filter label input').attr('placeholder', 'Search Course or Professor');
 
     // Changes to the inputs will trigger a redraw to update the table
-    semEl.addEventListener('change', function () {
+    codeEl.addEventListener('change', function () {
         table.draw();
     });
-    yearEl.addEventListener('change', function () {
+    typeEl.addEventListener('change', function () {
         table.draw();
     });
   </script>
