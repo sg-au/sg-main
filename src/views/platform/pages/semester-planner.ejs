@@ -1160,6 +1160,9 @@
                         
                         // Optionally handle other escaped characters
                         decodedString = decodedString.replace(/\\t/g, '\t');
+                        if(decodedString.replaceAll(" ","")==""){
+                            decodedString="No description available";
+                        }
                         document.querySelector('#modal-dp').innerHTML=decodedString;
                     }
 
