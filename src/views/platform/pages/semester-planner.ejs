@@ -1071,6 +1071,9 @@
                             day = classes[i].split("-")[0];
                             time = (classes[i].split("(")[0]).split("-")[1]+"-"+(classes[i].split("(")[0]).split("-")[2];
                             venue=(classes[i].split("(")[1]);
+                            // console.log("day",day)
+                            // console.log("time",time)
+                            // console.log("venue",venue)
                             let insertedIndices = insertClass(currentTimetable, day, time, classTitle, courseCode+"( "+venue+" )");
                             inserted.push(insertedIndices);
                         }
