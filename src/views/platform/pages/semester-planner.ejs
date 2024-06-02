@@ -174,11 +174,37 @@
             top: 0.5%;
             right: 2%;
             position: absolute;
+            /* background:rgb(113, 82, 82); */
             background:transparent;
             border:none;
             margin:5px;
+            /* width:10px;
+            height:10px; */
             font-size: 1.2em;
         }
+
+        /* Customizing the modal close button */
+.custom-close {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: black;
+    opacity: 1;
+    transition: color 0.3s, transform 0.3s;
+    border:none;
+    background:transparent;
+    float:right;
+    position: absolute;
+}
+.modal-header{
+    text-align:right;
+    justify-content: flex-end; /* Right align the items */
+    margin-top:10px;
+}
+
+.custom-close:hover, .custom-close:focus {
+    color: #5d86ff;
+    transform: rotate(90deg);
+}
 
         .cmsDescp{
             margin:15px 0;
@@ -280,17 +306,36 @@
         background:transparent;
     }
 
-    .add-course:hover{
-        opacity:0.7;
+    @keyframes dance {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(10px); }
+        50% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+        100% { transform: translateX(0); }
+    }
+
+    .dancing-row {
+        animation: dance 0.5s ease-in-out;
+    }
+
+    .add-course:hover {
+        opacity: 1;
         transition: transform 0.3s ease-in-out;
-        transform: scale(1.3);
-        /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
-        cursor:pointer;
+        transform: scale(1.3) rotate(90deg);
+        stroke: #5d86ff; /* Change stroke color on hover */
+        cursor: pointer;
+    }
+    .add-course path {
+        transition: stroke 0.3s ease-in-out;
+    }
+
+    .add-course:hover path {
+        stroke: #5d86ff; /* Change stroke color on hover */
     }
     .add-course:hover td{
-        opacity:1;
-        
+        opacity:1;   
     }
+
       </style>
     <%-include("../partials/preloader-css")%>
     <%-include("../partials/preloader-js")%>
@@ -849,9 +894,9 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                            </button>
+                                            <button type="button" class="custom-close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
                                         </div>
                                         <div id="modal-dp" class="modal-body">
                                         </div>
@@ -867,9 +912,9 @@
                                         <div class="modal-dialog modal-sm" role="document">
                                             <div class="modal-content">
                                             <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                                </button>
+                                                <button type="button" class="custom-close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
                                             </div>
                                             <div id="modal-dps" class="modal-body">
                                             </div>
@@ -887,7 +932,8 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="flex-row mb-2">
-                                                          <span class="fs-6 fw-semibold">Search and Click on the + Icon of the Course to Add Them to the Timetable</span><br /><br />
+                                                          <span class="fs-6 fw-semibold">Click on the '+' Icon of the Course to Add It to the Timetable</span><br /><br />
+                                                          <div><h6 style="color:rgb(201, 51, 51)">Data was last synced from the AMS on <%=obj.dateLastFetched%>, <%=obj.timeLastFetched%> </h6></div>
                                                         </div>
                                                         <br>
                                                         
@@ -968,7 +1014,7 @@
                                                             <%for(i=0;i<courses.length;i++){%>
                                                               <tr>
                                                                 <td>
-                                                                    <svg onclick="checkAndUpdateTimetable('<%=courses[i].classCounts%>','<%=courses[i].classDetails[0]%>','<%=courses[i].courseTitle%>','<%=courses[i].courseCode%>')" class="add-course" width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6 12H18M12 6V18" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                                                    <svg onclick="checkAndUpdateTimetable(this,'<%=courses[i].classCounts%>','<%=courses[i].classDetails[0]%>','<%=courses[i].courseTitle%>','<%=courses[i].courseCode%>');" class="add-course" width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6 12H18M12 6V18" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                                                                 </td>
                                                                   <td>
                                                                     <%=courses[i].courseCode.substring(0,25)%>
@@ -1073,7 +1119,16 @@
                     
                     return [false, "" ]; // No clash
                 }
-                function checkAndUpdateTimetable(classCount,dayTimeString, classTitle,courseCode){
+                function danceRow(svgElement){
+                    var row = svgElement.closest('tr');
+                    // Add the animation class
+                    row.classList.add("dancing-row");
+                    // Remove the animation class after the animation completes
+                    row.addEventListener('animationend', function() {
+                        row.classList.remove("dancing-row");
+                    });
+                }
+                function checkAndUpdateTimetable(svgElement,classCount,dayTimeString, classTitle,courseCode){
                      // for now until I get data, choose random day and random timeSlot
                      function getRandomInt(max) {
                         return Math.floor(Math.random() * max);
@@ -1117,21 +1172,22 @@
                        
                         //const insertedIndices = insertClass(currentTimetable, day, timeSlot, classTitle, courseCode);
                         alertDiv=document.createElement("div");
-                        let string = "";
+                        let functionString = "";
                         for(var i=0;i<classCount;i++){
-                            string+=`removeClass(${currentTimetable}, ${inserted[i].rowIndex}, ${inserted[i].colIndex});`;
+                            functionString+=`removeClass(${currentTimetable}, ${inserted[i].rowIndex}, ${inserted[i].colIndex});`;
                         }
                         alertDiv.innerHTML=
                         `<div style="text-align:left;width:100%;background-color:#faf6e3;color:black" class="alert alert-warning alert-dismissible fade show" role="alert">
                              ${classTitle} <strong style="color:#d24b5c">(${courseCode})</strong>
                             <button onClick="`+
-                            string
+                            functionString
                             +`" type="button" class="closeAlert" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>`;
                         const table = document.getElementById("table-container"+currentTimetable);
                         table.parentElement.appendChild(alertDiv.firstChild);
+                        danceRow(svgElement);
                         alert(courseCode+ " "+ classTitle +" added to timetable");
                      }
                     }
@@ -1226,6 +1282,9 @@
                         }
                         document.querySelector('#modal-dp').innerHTML=decodedString;
                     }
+
+                    
+
 
                     // Example usage:
                     // insertClass("1","Monday", "8:30 am-10:00 am", "Introduction to Biology I: Genetics and Evolution","BIO-1200-1 (AC-02-LR-007)");

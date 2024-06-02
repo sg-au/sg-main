@@ -796,8 +796,10 @@ router.get('/resources', async(req, res) => {
 });
 
 router.get('/semester-planner', async(req, res) => {
-  courses = JSON.parse(fs.readFileSync('./data/timetable-planner.json', 'utf8'));
-  res.render("platform/pages/semester-planner",{courses:courses});  
+  arr = JSON.parse(fs.readFileSync('./data/timetable-planner.json', 'utf8'));
+  let obj=arr[0]; // get date and time last data fetched
+  arr.shift(); // delete that from the array so as to keep only courses
+  res.render("platform/pages/semester-planner",{courses:arr,obj:obj});  
 });
 
 router.get('/cancel-cab-pool', async(req, res) => {
