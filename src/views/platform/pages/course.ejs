@@ -26,7 +26,7 @@
     .review-container {
         display: flex;
         margin-bottom: 20px;
-    }
+     }
 
     .comment-avatar {
         width: 50px;
@@ -54,6 +54,12 @@
 
     .review-text {
         margin-top: 5px;
+    }
+
+    .review-spl{
+      word-break: break-all; /* Break long words or URLs */
+  overflow-wrap: break-word; /* Ensure long words wrap to the next line */
+  white-space: normal; /* Allow text to wrap */
     }
     @media screen and (max-width: 768px) {
       .acc-div {
@@ -305,7 +311,7 @@
                             <i class="fa fa-star rating-color"></i>
                           <%}%>
                         </p>
-                        <p class="review-text"> <%-reviews[i].review.replaceAll(`\n`,`<br>`)%></p>
+                        <p class="review-text review-spl"> <%-reviews[i].review.replaceAll(`\n`,`<br>`)%></p>
                         <%if(reviews[i].tf!=``){%>
                           <p class="review-text">Influence of TA/TF: <%=reviews[i].tf%></p>
                         <%}%>
