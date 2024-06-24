@@ -301,7 +301,7 @@
 
     }
     .add-course{
-        opacity:0.3;
+        opacity:0.65;
         cursor:default;
         background:transparent;
     }
@@ -1014,7 +1014,7 @@
                                                             <%for(i=0;i<courses.length;i++){%>
                                                               <tr>
                                                                 <td>
-                                                                    <svg onclick="checkAndUpdateTimetable(this,'<%=courses[i].classCounts%>','<%=courses[i].classDetails[0]%>','<%=courses[i].courseTitle%>','<%=courses[i].courseCode%>');" class="add-course" width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6 12H18M12 6V18" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                                                    <svg onclick="checkAndUpdateTimetable(this,'<%=courses[i].classCounts%>','<%=courses[i].classDetails[0]%>','<%=courses[i].courseTitle%>','<%=courses[i].courseCode%>');" class="add-course" width="25px" height="25px" viewBox="0 0 24 24" fill="#5d86ff" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6 12H18M12 6V18" stroke="#5d86ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                                                                 </td>
                                                                   <td>
                                                                     <%=courses[i].courseCode.substring(0,25)%>
