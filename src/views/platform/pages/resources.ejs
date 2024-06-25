@@ -23,6 +23,9 @@
   </head>
   <%-include("../partials/post-head")%>
   <style>
+    .highlight {
+            background-color: gold;
+        }
     .container {
   padding: 10px;
 }
@@ -122,24 +125,46 @@ ul li {
   </body>
   <script>
 function myFunction() {
-    var input, filter, cards, cardContainer, cardContent, i;
-    input = document.getElementById("myFilter");
-    filter = input.value.toUpperCase();
-    cardContainer = document.getElementById("myItems");
-    cards = cardContainer.getElementsByClassName("card");
+  input = document.getElementById("myFilter");
+filter = input.value.toUpperCase();
+cardContainer = document.getElementById("myItems");
+cards = cardContainer.getElementsByClassName("card");
+
+for (let i = 0; i < cards.length; i++) {
+    let card = cards[i];
+    let textContent = card.innerText || card.textContent;
     
-    for (i = 0; i < cards.length; i++) {
-        cardContent = cards[i].querySelector(".card-body");
-        
-        // Concatenate all relevant text content within the card
-        var cardText = cardContent.textContent || cardContent.innerText;
-        
-        if (cardText.toUpperCase().indexOf(filter) > -1) {
-            cards[i].style.display = "";
-        } else {
-            cards[i].style.display = "none";
-        }
+    // Remove existing highlights
+    removeHighlight(card);
+
+    if (textContent.toUpperCase().indexOf(filter) > -1) {
+        card.style.display = "";
+        highlightText(card, filter);
+    } else {
+        card.style.display = "none";
     }
+}
+
+function removeHighlight(card) {
+    let spans = card.querySelectorAll("span.highlight");
+    spans.forEach(span => {
+        span.outerHTML = span.innerText; // Remove the span but keep its content
+    });
+}
+
+function highlightText(card, filter) {
+    let elements = card.querySelectorAll("*");
+    elements.forEach(element => {
+        if (element.children.length === 0) {
+            let text = element.textContent;
+            let regex = new RegExp(filter, "gi");
+            let newText = text.replace(regex, (match) => `<span class='highlight'>${match}</span>`);
+            element.innerHTML = newText;
+        }
+    });
+}
+
+
 }
 
   </script>
