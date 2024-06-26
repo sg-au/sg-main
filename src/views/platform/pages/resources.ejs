@@ -125,11 +125,11 @@ ul li {
     <%-include("../partials/preloader-js")%>
   </body>
   <script>
-   function myFunction() {
-  let input = document.getElementById("myFilter");
-  let filter = input.value.toUpperCase();
-  let cardContainer = document.getElementById("myItems");
-  let cards = cardContainer.getElementsByClassName("card");
+    function myFunction() {
+  input = document.getElementById("myFilter");
+  filter = input.value.toUpperCase();
+  cardContainer = document.getElementById("myItems");
+  cards = cardContainer.getElementsByClassName("card");
 
   for (let i = 0; i < cards.length; i++) {
     let card = cards[i];
@@ -140,9 +140,10 @@ ul li {
 
     let elements = card.querySelectorAll("*");
     elements.forEach(element => {
-      if (highlightMatchingText(element, filter)) {
-        textFound = true;
-      }
+        if (element.children.length === 0 && element.textContent.toUpperCase().includes(filter)) {
+            highlightText(element, filter);
+            textFound = true;
+        }
     });
 
     card.style.display = textFound ? "" : "none";
@@ -156,20 +157,13 @@ ul li {
     });
   }
 
-  function highlightMatchingText(element, filter) {
-    let text = element.innerText;
+  function highlightText(element, filter) {
+    let text = element.textContent;
     let regex = new RegExp(filter, "gi");
-    let matches = text.match(regex);
-
-    if (matches) {
-      let highlightedText = text.replace(regex, match => `<span class='highlight'>${match}</span>`);
-      element.innerHTML = highlightedText;
-      return true;
-    }
-    return false;
+    let newText = text.replace(regex, (match) => `<span class='highlight'>${match}</span>`);
+    element.innerHTML = newText;
   }
 }
-
 
     </script>
 </html>
