@@ -125,23 +125,54 @@ ul li {
     <%-include("../partials/preloader-js")%>
   </body>
   <script>
-function myFunction() {
+    function myFunction() {
   input = document.getElementById("myFilter");
-filter = input.value.toUpperCase();
-cardContainer = document.getElementById("myItems");
-cards = cardContainer.getElementsByClassName("card");
+  filter = input.value.toUpperCase();
+  cardContainer = document.getElementById("myItems");
+  cards = cardContainer.getElementsByClassName("card");
 
-for (let i = 0; i < cards.length; i++) {
+  for (let i = 0; i < cards.length; i++) {
     let card = cards[i];
-    let textContent = card.innerText || card.textContent;
+    let textFound = false;
 
-    if (textContent.toUpperCase().indexOf(filter) > -1) {
-        card.style.display = "";
-    } else {
-        card.style.display = "none";
-    }
-}
+    // Remove existing highlights
+    removeHighlight(card);
+
+    let elements = card.querySelectorAll("*");
+    elements.forEach(element => {
+        highlightMatchingText(element, filter);
+        if (element.textContent.toUpperCase().includes(filter)) {
+            textFound = true;
+        }
+    });
+
+    card.style.display = textFound ? "" : "none";
+  }
+
+  function removeHighlight(card) {
+    let spans = card.querySelectorAll("span.highlight");
+    spans.forEach(span => {
+      span.outerHTML = span.innerText; // Remove the span but keep its content
+    });
+  }
+
+  function highlightMatchingText(element, filter) {
+    element.childNodes.forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            let text = node.nodeValue;
+            let regex = new RegExp(filter, "gi");
+            let newText = text.replace(regex, (match) => `<span class='highlight'>${match}</span>`);
+            if (newText !== text) {
+                let span = document.createElement("span");
+                span.innerHTML = newText;
+                node.replaceWith(span);
+            }
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            highlightMatchingText(node, filter); // Recursive call for child elements
+        }
+    });
+  }
 }
 
-  </script>
+    </script>
 </html>
