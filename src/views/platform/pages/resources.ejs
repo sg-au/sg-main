@@ -125,11 +125,11 @@ ul li {
     <%-include("../partials/preloader-js")%>
   </body>
   <script>
-    function myFunction() {
-  input = document.getElementById("myFilter");
-  filter = input.value.toUpperCase();
-  cardContainer = document.getElementById("myItems");
-  cards = cardContainer.getElementsByClassName("card");
+   function myFunction() {
+  let input = document.getElementById("myFilter");
+  let filter = input.value.toUpperCase();
+  let cardContainer = document.getElementById("myItems");
+  let cards = cardContainer.getElementsByClassName("card");
 
   for (let i = 0; i < cards.length; i++) {
     let card = cards[i];
@@ -140,39 +140,36 @@ ul li {
 
     let elements = card.querySelectorAll("*");
     elements.forEach(element => {
-        highlightMatchingText(element, filter);
-        if (element.textContent.toUpperCase().includes(filter)) {
-            textFound = true;
-        }
+      if (highlightMatchingText(element, filter)) {
+        textFound = true;
+      }
     });
 
     card.style.display = textFound ? "" : "none";
   }
 
   function removeHighlight(card) {
-    let spans = card.querySelectorAll("span.highlight");
-    spans.forEach(span => {
-      span.outerHTML = span.innerText; // Remove the span but keep its content
+    let elements = card.querySelectorAll("*");
+    elements.forEach(element => {
+      let innerHTML = element.innerHTML;
+      element.innerHTML = innerHTML.replace(/<span class="highlight">(.*?)<\/span>/g, '$1');
     });
   }
 
   function highlightMatchingText(element, filter) {
-    element.childNodes.forEach(node => {
-        if (node.nodeType === Node.TEXT_NODE) {
-            let text = node.nodeValue;
-            let regex = new RegExp(filter, "gi");
-            let newText = text.replace(regex, (match) => `<span class='highlight'>${match}</span>`);
-            if (newText !== text) {
-                let span = document.createElement("span");
-                span.innerHTML = newText;
-                node.replaceWith(span);
-            }
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-            highlightMatchingText(node, filter); // Recursive call for child elements
-        }
-    });
+    let text = element.innerText;
+    let regex = new RegExp(filter, "gi");
+    let matches = text.match(regex);
+
+    if (matches) {
+      let highlightedText = text.replace(regex, match => `<span class='highlight'>${match}</span>`);
+      element.innerHTML = highlightedText;
+      return true;
+    }
+    return false;
   }
 }
+
 
     </script>
 </html>
