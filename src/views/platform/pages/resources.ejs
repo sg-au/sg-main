@@ -24,11 +24,12 @@
   <%-include("../partials/post-head")%>
   <style>
     .highlight {
-            background-color: gold;
-        }
+      background-color: gold;
+      font-size:18px;
+    }
     .container {
-  padding: 10px;
-}
+      padding: 10px;
+    }
 
 ul li {
   list-style: none;
@@ -89,7 +90,7 @@ ul li {
           <div class="container">
             <div class="row">
               <div class="col-sm-12 mb-3">
-                <input type="text" id="myFilter" class="form-control search-bar" onkeyup="myFunction()" placeholder="Search here..">
+                <input autofocus type="text" id="myFilter" class="form-control search-bar" onkeyup="myFunction()" placeholder="Search here..">
               </div>
             </div>
             <div class="row" id="myItems">
@@ -124,48 +125,45 @@ ul li {
     <%-include("../partials/preloader-js")%>
   </body>
   <script>
-function myFunction() {
-  input = document.getElementById("myFilter");
-filter = input.value.toUpperCase();
-cardContainer = document.getElementById("myItems");
-cards = cardContainer.getElementsByClassName("card");
-
-for (let i = 0; i < cards.length; i++) {
-    let card = cards[i];
-    let textContent = card.innerText || card.textContent;
+    function myFunction() {
+        input = document.getElementById("myFilter");
+        filter = input.value.toUpperCase();
+        cardContainer = document.getElementById("myItems");
+        cards = cardContainer.getElementsByClassName("card");
     
-    // Remove existing highlights
-    removeHighlight(card);
-
-    if (textContent.toUpperCase().indexOf(filter) > -1) {
-        card.style.display = "";
-        highlightText(card, filter);
-    } else {
-        card.style.display = "none";
-    }
-}
-
-function removeHighlight(card) {
-    let spans = card.querySelectorAll("span.highlight");
-    spans.forEach(span => {
-        span.outerHTML = span.innerText; // Remove the span but keep its content
-    });
-}
-
-function highlightText(card, filter) {
-    let elements = card.querySelectorAll("*");
-    elements.forEach(element => {
-        if (element.children.length === 0) {
-            let text = element.textContent;
-            let regex = new RegExp(filter, "gi");
-            let newText = text.replace(regex, (match) => `<span class='highlight'>${match}</span>`);
-            element.innerHTML = newText;
+        for (let i = 0; i < cards.length; i++) {
+            let card = cards[i];
+            let textContent = card.innerText || card.textContent;
+            
+            // Remove existing highlights
+            removeHighlight(card);
+    
+            if (textContent.toUpperCase().indexOf(filter) > -1) {
+                card.style.display = "";
+                highlightText(card, filter);
+            } else {
+                card.style.display = "none";
+            }
         }
-    });
-}
-
-
-}
-
-  </script>
+    
+        function removeHighlight(card) {
+            let spans = card.querySelectorAll("span.highlight");
+            spans.forEach(span => {
+                span.outerHTML = span.innerText; // Remove the span but keep its content
+            });
+        }
+    
+        function highlightText(card, filter) {
+            let elements = card.querySelectorAll("*");
+            elements.forEach(element => {
+                if (element.children.length === 0 && !element.classList.contains('highlight')) {
+                    let text = element.textContent;
+                    let regex = new RegExp(filter, "gi");
+                    let newText = text.replace(regex, (match) => `<span class='highlight'>${match}</span>`);
+                    element.innerHTML = newText;
+                }
+            });
+        }
+    }
+    </script>
 </html>
