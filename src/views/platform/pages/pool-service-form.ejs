@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SG Platform</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+    <%-include("../partials/preloader-css")%>
+</head>
+<%-include("../partials/post-head")%>
+
+<body>
+    <%-include("../partials/preloader")%>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <%-include("../partials/sidebar")%>
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <%-include("../partials/header")%>
+            <div class="container-fluid">
+                <div class="container-fluid">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title fw-semibold mb-4">Pool an Online Service With a Fellow Ashokan</h5>
+                            <div class="flex-row mb-3">
+                                <ul class="list-inline">
+                                  <span style="font-size: 10px;" class="fs-3 fw-semibold">
+                                    In order to pool a service with mates, fill out the form below with the details.                        
+                                  </span>                                         
+                                </ul>
+                              </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <form id="serviceForm" action="/platform/pool-service" method="POST">
+                                        <div class="mb-3">
+                                            <label for="select" class="form-label">Select Which Service to Pool <span style="color:rgb(177, 58, 58)">*</span></label>
+                                            <select required name="service" id="service" class="form-select">
+                                                <option value="" disabled selected>Select</option>
+                                                    <option value="netflix">Netflix</option>
+                                                    <option value="prime">Prime</option>
+                                                    <option value="chatgpt">ChatGPT</option>
+                                                    <option value="chegg">Chegg</option>
+                                                    <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="select" class="form-label">Number of People You wish to Share Subscription With<span style="color:rgb(177, 58, 58)">*</span></label>
+                                            <input
+                                            required
+                                            type="number"
+                                            min="2"
+                                            max="10"
+                                            name="numberPeople"
+                                            class="form-control"
+                                            id="numberPeople"
+                                            placeholder="Enter Number"
+                                            >
+                                            <div id="number-error" class="invalid-feedback"></div>
+            
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="select" class="form-label">When do you want the subscription to START <span style="color:rgb(177, 58, 58)">*</span></label>
+                                            <input required class="form-control" type="date" id="start" name="start" value="" min="<%=currentDate%>" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="select" class="form-label">When do you want the subscription to END <span style="color:rgb(177, 58, 58)">*</span></label>
+                                            <input required class="form-control" type="date" id="end" name="end" value="" min="<%=currentDate%>"  />
+                                        </div>
+                                        <!-- <div class="mb-3">
+                                            <label for="newTicketTitle" class="form-label">Enter Time When You Want to Pool At <span style="color:rgb(177, 58, 58)">*</span></label>
+                                            <p>Please check the appropriate 24 hour/12 hour time format before submitting</p>
+                                            <input required name="time" type="time" class="form-control" id="time">
+                                        </div> -->
+                                                                                
+                                        <div class="mb-3">
+                                            <label for="newTicketTitle" class="form-label">Enter Your Contact Number <span style="color:rgb(177, 58, 58)">*</span></label>
+                                            <input
+                                            required
+                                            minlength="10"
+                                            maxlength="14"
+                                            name="phone"
+                                            value="<%=phone%>"
+                                            type="tel"
+                                            class="form-control"
+                                            id="phoneNumber"
+                                            pattern="[0-9]{10}"
+                                            title="Please enter a valid 10-digit phone number without spaces or special characters."
+                                            >
+                                            <div id="phone-number-error" class="text-danger"></div>
+                                        </div>
+  
+                                        <button id="submit-button" type="submit" class="btn btn-primary">Find Subscription Poolers</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const phoneNumberError = document.getElementById('phone-number-error');
+        let timeoutId;
+
+        phoneNumberInput.addEventListener('keyup', function() {
+            clearTimeout(timeoutId); // Clear any existing timeout
+            timeoutId = setTimeout(validatePhoneNumber, 500); // Set a new timeout
+        });
+
+        function validatePhoneNumber() {
+            // Allow phone numbers with optional country code (1-2 digits) and varying separators
+            const regex = /^\+?(\d{1,2})[- ]?\d{3}[- ]?\d{3}[- ]?\d{4}$/;
+
+            if (!phoneNumberInput.value.match(regex) && phoneNumberInput.value.length !== 10) {
+                phoneNumberError.textContent = 'Please enter a valid phone number.';
+                disableButton();
+                phoneNumberInput.classList.add('is-invalid'); // Add Bootstrap class for visual feedback
+            } else {
+                phoneNumberError.textContent = '';
+                enableButton();
+                phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
+            }
+        }
+
+        // Remove the validation message quickly after the user starts typing again
+        phoneNumberInput.addEventListener('keydown', function() {
+            clearTimeout(timeoutId); // Clear the timeout to remove the message quickly
+            phoneNumberError.textContent = '';
+            phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
+            enableButton();
+        });
+
+        // BELOW code is for number of people
+        const numberInput = document.getElementById('numberPeople');
+        const numberError = document.getElementById('number-error');
+        let timeoutId2;
+
+        numberInput.addEventListener('keyup', function() {
+            clearTimeout(timeoutId2); // Clear any existing timeout
+            timeoutId2 = setTimeout(validateNumber, 500); // Set a new timeout
+        });
+
+        function validateNumber() {
+            const min = parseInt(numberInput.min, 10);
+            const max = parseInt(numberInput.max, 10);
+            const value = parseInt(numberInput.value, 10);
+
+            if (isNaN(value) || value < min || value > max) {
+                numberError.textContent = `Please enter a number between ${min} and ${max}.`;
+                disableButton();
+                numberInput.classList.add('is-invalid'); // Add Bootstrap class for visual feedback
+            } else {
+                enableButton();
+                numberError.textContent = '';
+                numberInput.classList.remove('is-invalid'); // Remove Bootstrap class
+            }
+        }
+
+        // Remove the validation message quickly after the user starts typing again
+        numberInput.addEventListener('keydown', function() {
+            enableButton();
+            clearTimeout(timeoutId2); // Clear the timeout to remove the message quickly
+            numberError.textContent = '';
+            numberInput.classList.remove('is-invalid'); // Remove Bootstrap class
+        });
+      </script>
+    <script>
+        document.getElementById("serviceForm").addEventListener("submit",function(event){
+            disableButton();
+        })
+        function disableButton(){
+            document.getElementById("submit-button").disabled=true;
+        }
+        function enableButton(){
+            document.getElementById("submit-button").disabled=false;
+        }
+    </script>
+    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/platform/assets/js/dashboard.js"></script>
+    <script src="/platform/assets/js/darkmode.js"></script>
+    <script src="/platform/assets/js/copytext.js"></script>
+    <%-include("../partials/preloader-js")%>
+</body>
+
+</html>

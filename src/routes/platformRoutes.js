@@ -718,8 +718,9 @@ router.get('/pool-cab', async (req, res) => {
         futureDate: formattedFutureDate
     };
 
-    var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=pools`, axiosConfig);
+    var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&fields[0]=phone&populate=pools`, axiosConfig);
     var user_detail = user_filled.data[0].pools;
+    var phone = user_filled.data[0].phone;
     var userAvailablePools=0;
     for(var i=0;i<user_detail.length;i++){
       var poolDate=new Date(user_detail[i].day);
@@ -728,7 +729,7 @@ router.get('/pool-cab', async (req, res) => {
       }
     }
     if (user_detail.length == 0 || userAvailablePools==0) {
-      res.render("platform/pages/pool-cab-form")
+      res.render("platform/pages/pool-cab-form",{phone:phone})
     }else if(user_detail.length == 1){
       var pool_data = await axios.get(`${apiUrl}/pools?populate=pooler&pagination[pageSize]=2000&_where[day_gte]=${dateRange.currentDate}&_where[day_lt]=${dateRange.futureDate}`, axiosConfig);
       var pools = pool_data.data.data;
@@ -827,6 +828,111 @@ router.get('/cancel-cab-pool', async(req, res) => {
   }
   res.redirect("/platform/")   
 });
+
+
+router.get('/pool-service', async (req, res) => {
+  try{
+    var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&fields[0]=phone&populate=services`, axiosConfig);
+    var user_services = user_filled.data[0].services;
+    var phone = user_filled.data[0].phone;
+    const currentDate = new Date().toISOString().split('T')[0];
+    var userActiveServices=0;
+    for(var i=0;i<user_services.length;i++){
+      var endDate=new Date(user_services[i].end);
+      if(user_services[i].status=="open" && new Date() < endDate.setDate(endDate.getDate() + 1)){
+        userActiveServices++;
+      }
+    }
+    if (user_services.length == 0 || userActiveServices==0) {
+        res.render("platform/pages/pool-service-form",{phone:phone,currentDate:currentDate})
+    }
+    else if(user_services.length == 1 || userActiveServices==1){
+      var services_data = await axios.get(`${apiUrl}/services?populate=user&pagination[pageSize]=2000&_where[end_lte]=${new Date()}`, axiosConfig);
+      services_data = services_data.data.data;
+      res.render("platform/pages/pool-service", {services:services_data, user_services:user_services[0]});
+    }else{
+      var services_data = await axios.get(`${apiUrl}/services?populate=user&pagination[pageSize]=2000&_where[end_lte]=${new Date()}`, axiosConfig);
+      services_data = services_data.data.data;    
+      var i=0;
+      while(i<user_services.length && user_services[i]!="open"){
+        i++;
+      }
+      res.render("platform/pages/pool-service", {services:services_data, user_services:user_services[i-1]});
+    }
+  }catch(error){
+    console.error('An error occurred:', error);
+  }
+});
+
+
+router.get('/cancel-pool-service', async(req, res) => {
+  userEmail=req.user._json.email;
+  // var pool = (await axios.get(`${apiUrl}/pools?[pooler][email]=${userEmail}&filters[status][$eqi]=available`, axiosConfig));
+  // console.log(pool.data.data);
+  var userservices = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=services`, axiosConfig);
+  // console.log(userpools.data[0].pools);
+  obj=[];
+  for(var i=0;i<userservices.data[0].services.length;i++){
+    if(userservices.data[0].services[i].status=="open"){
+      obj.push(userservices.data[0].services[i]);
+    }
+  };
+
+  if(obj.length!=0){
+    canceled=obj[0];
+    id=(obj[0].id);
+    canceled.status="canceled";
+    delete canceled.id;
+    delete canceled.createdAt;
+    delete canceled.updatedAt;
+    await axios.put(`${apiUrl}/services/${id}`, {data:canceled}, axiosConfig);
+  }
+  res.redirect("/platform/")   
+});
+
+router.post('/pool-service', async(req, res) => {
+  var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
+  updateduser=user.data[0];
+  updateduser.phone=req.body.phone;
+  await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);      
+  delete req.body.phone;
+  req.body.numberPeople=parseInt(req.body.numberPeople);
+  req.body.status="open";
+  req.body.user=updateduser;
+  axios.post(`${process.env.STRAPI_API_URL}/services`,{data:req.body}, axiosConfig)
+        .then((response) => {
+          res.redirect("/platform/pool-service")
+        })
+        .catch((error) => {
+            console.log(error)
+            res.send("An error occurred");
+        });
+});
+
+router.post('/update-pool-service', async(req, res) => {
+  userEmail=req.user._json.email;
+  // var pool = (await axios.get(`${apiUrl}/pools?[pooler][email]=${userEmail}&filters[status][$eqi]=available`, axiosConfig));
+  // console.log(pool.data.data);
+  var userservices = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=services`, axiosConfig);
+  // console.log(userpools.data[0].pools);
+  obj=[];
+  for(var i=0;i<userservices.data[0].services.length;i++){
+    if(userservices.data[0].services[i].status=="open"){
+      obj.push(userservices.data[0].services[i]);
+    }
+  };
+  if(obj.length!=0){
+    updatedService=obj[0];
+    id=(obj[0].id);
+    updatedService.status="full";
+    delete updatedService.id;
+    delete updatedService.createdAt;
+    delete updatedService.updatedAt;
+    await axios.put(`${apiUrl}/services/${id}`, {data:updatedService}, axiosConfig);
+  }
+  res.redirect("/platform/");    
+});
+
 
 // router.get('/shuttle-service', async (req, res) => {
 //   var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=bids`, axiosConfig);

@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SG Platform</title>
+  <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.gstatic.com" rel="preconnect" />
+  <link rel="stylesheet" href="/platform/assets/css/dataTables.css" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+  <style>
+    @media screen and (max-width: 768px) {
+      .scroll {
+        display: block;
+        overflow-x: auto;
+      }
+      .upper {
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+  <%-include("../partials/preloader-css")%>
+  <%-include("../partials/preloader-js")%>
+
+</head>
+<%-include("../partials/post-head")%>
+
+<script>
+    function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+</script>
+
+<body>
+  <!--  Body Wrapper -->
+  <%-include("../partials/preloader")%>
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <%-include("../partials/sidebar")%>
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <%-include("../partials/header")%>
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="row justify-content-between">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="flex-row mb-2">
+                      <span class="fs-6 fw-semibold">Pool a Subscription Together</span>
+                    </div>
+                    <div class="flex-row mb-3">
+                      <ul class="list-inline">
+                        <span style="font-size: 10px;" class="fs-3 fw-semibold">
+                          Click on the WhatsApp icon to message the person. <br /><br />Below is the list of all people using the service. Please find a person who qualifies, and reach out to them using their contact details. Please make sure that they're avaiable for pooling under the status bar before contacting them.
+                        </span>                                         
+                      </ul>
+                    </div>
+                    <br>
+                    <!-- <table class="inputs">
+                      <tbody>
+                        <tr>
+                          <td>Filter by Semester:</td>
+                          <td><input type="text" id="sem" name="sem"></td>
+                        </tr>
+                        <tr>
+                          <td>Filter by Year:</td>
+                          <td><input type="text" id="max" name="max"></td>
+                        </tr>
+                      </tbody>
+                    </table> -->
+                    <form>
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <select class="form-select" id="day" name="service">
+                            <option selected>Filter by Service</option>
+                              <option value="Netflix">Netflix</option>
+                              <option value="Prime">Prime</option>
+                              <option value="Chatgpt">ChatGPT</option>
+                              <option value="Chegg">Chegg</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-6">
+                          <select class="form-select" id="route" name="status">
+                            <option selected>Filter by Status</option>
+                            <option value="Open">Open</option>
+                            <option value="Full">Full</option>
+
+                        </select>
+                          
+                        </div>
+                      </div>
+                    </form>
+                    <br />
+                    <table id="services" class="table table-striped scroll" style="width:100%">
+                      <thead>
+                          <tr>
+                              <th></th>
+                              <th>Name</th>
+                              <th>Service</th>
+                              <th>Number of People Required</th>
+                              <th>Start</th>
+                              <th>End</th>
+                              <th>Status</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <%for(i=0;i<services.length;i++){%>
+                          <%if(services[i].attributes.status == 'open'){%>
+                            <tr>
+                              <td>
+                                <a href="https://wa.me/<%-services[i].attributes.user.data.attributes.phone%>?text=<%=encodeURIComponent('Hi ' + services[i].attributes.user.data.attributes.username.substring(0, services[i].attributes.user.data.attributes.username.indexOf(' ')) + ', I\'m looking to pool services[i].attributes.service with services[i].attributes.numberPeople people. ' +  ' until '+services[i].attributes.end+'. Are you interested?')%>">
+                                  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48">
+                                    <path fill="#fff" d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z"></path><path fill="#fff" d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z"></path><path fill="#cfd8dc" d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z"></path><path fill="#40c351" d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z"></path><path fill="#fff" fill-rule="evenodd" d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.237-0.277,0.316-0.475,0.474-0.791c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z" clip-rule="evenodd"></path>
+                                  </svg>
+                                </a>  
+                                <%=services[i].attributes.user.data.attributes.phone%>
+
+                              </td>
+                              <td>
+                                
+                                <%=services[i].attributes.user.data.attributes.username%></td>
+                              
+                              <td>
+                                <%=services[i].attributes.service.charAt(0).toUpperCase() + services[i].attributes.service.slice(1)%>
+                              </td>
+                              <td><%=services[i].attributes.numberPeople%></td>
+                              <td>
+                                <%let start = new Date(services[i].attributes.start);%>
+                                <%start = start.toString();%>
+                                <%start = start.slice(3,15);%>
+                                <%=start%>
+                              </td>
+                              <td>
+                                <%let date = new Date(services[i].attributes.end);%>
+                                <%date = date.toString();%>
+                                <%date = date.slice(3,15);%>
+                                <%=date%>
+                              </td>
+                              <td><%=services[i].attributes.status.charAt(0).toUpperCase() + services[i].attributes.status.slice(1)%></td>
+                            </tr>
+                          <%} else if(services[i].attributes.status == 'full'){%>
+                            <tr style="opacity:0.3;">
+                                <td>
+                                      <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48">
+                                        <path fill="#fff" d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z"></path><path fill="#fff" d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z"></path><path fill="#cfd8dc" d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z"></path><path fill="#40c351" d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z"></path><path fill="#fff" fill-rule="evenodd" d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.237-0.277,0.316-0.475,0.474-0.791c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z" clip-rule="evenodd"></path>
+                                      </svg>
+                                    <%=services[i].attributes.user.data.attributes.phone%>
+    
+                                  </td>
+                                  <td>
+                                    
+                                    <%=services[i].attributes.user.data.attributes.username%></td>
+                                  
+                                  <td>
+                                    <%=services[i].attributes.service.charAt(0).toUpperCase() + services[i].attributes.service.slice(1)%>
+                                  </td>
+                                  <td><%=services[i].attributes.numberPeople%></td>
+                                  <td>
+                                    <%let start = new Date(services[i].attributes.start);%>
+                                    <%start = start.toString();%>
+                                    <%start = start.slice(3,15);%>
+                                    <%=start%>
+                                  </td>
+                                  <td>
+                                    <%let date = new Date(services[i].attributes.end);%>
+                                    <%date = date.toString();%>
+                                    <%date = date.slice(3,15);%>
+                                    <%=date%>
+                                  </td>
+                                  <td><%=services[i].attributes.status.charAt(0).toUpperCase() + services[i].attributes.status.slice(1)%></td>
+                                </tr>
+                          <%}%>
+                        <%}%>                      
+                      </tbody>
+                      <tfoot>
+                          <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Service</th>
+                            <th>Number of People Required</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Status</th>
+                          </tr>
+                      </tfoot>
+                  </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="flex-row mb-2">
+                        <span class="fs-6 fw-semibold">Trip Details:</span>
+                      </div>
+                      <div class="flex-row mb-3">
+                        <ul class="list-inline">
+                          <span style="font-size: 10px;" class="fs-3 fw-semibold">
+                            If you found a person to pool a cab with, or wish to change your estimated time of arrival then please use the below section to update your details so that others can contact you for the right trips                           
+                          </span>                                         
+                        </ul>
+                      </div>
+                      <br>
+                      <form action="/platform/update-pool-service" method="POST">
+                        <div class="row" style="float: right;">
+                          <div style="text-align: center;" class="col-md-12">
+                            <button type="submit" class="btn btn-success upper">Found People to Pool With</button>
+                            <a href="/platform/cancel-pool-service" class="btn btn-danger">Cancel My Request</a>
+                          </div>
+                        </div>
+                      </form>
+                      <br />
+                      
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/platform/assets/js/sidebarmenu.js"></script>
+  <script src="/platform/assets/js/app.min.js"></script>
+  <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/platform/assets/js/dashboard.js"></script>
+  <script src="/platform/assets/js/theme.js"></script>
+  <script src="/platform/assets/js/main.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> -->
+  <script src="/platform/assets/js/dataTables.js"></script>
+  <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
+  <script>
+    const dayEl = document.querySelector('#day');
+    const routeEl = document.querySelector('#route');
+    
+    // Custom range filtering function
+    DataTable.ext.search.push(function (settings, data, dataIndex) {
+        let day = dayEl.value;
+        let route = routeEl.value;
+        let daydata = (data[2]) || 0;
+        let routedata = (data[6]) || 0;
+        console.log(routedata);
+        console.log(route);
+        if (
+            (day == "Filter by Service" && route == "Filter by Status") ||
+            (daydata.includes(day) && route == "Filter by Status") ||
+            (day == "Filter by Service" && routedata.includes(route)) ||
+            (daydata.includes(day) && routedata.includes(route))
+        ) {
+            // console.log(sem)
+            return true;
+        }
+    
+        return false;
+    });
+    
+    const table = new DataTable('#services');
+    
+    // Changes to the inputs will trigger a redraw to update the table
+    dayEl.addEventListener('change', function () {
+        table.draw();
+    });
+    routeEl.addEventListener('change', function () {
+        table.draw();
+    });
+  </script>
+  <script>
+    function changeStatusAndClickUpdateButton(){
+      document.getElementById("status").value="pooled";
+      document.getElementById("update").click();
+    }
+  </script>
+  <!-- <%-include("../partials/preloader-js")%> -->
+</body>
+
+</html>
