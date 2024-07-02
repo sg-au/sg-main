@@ -168,7 +168,6 @@ function ensureIsStudent(req, res, next) {
   }
 }
 
-
 // Set the view engine to EJS (Embedded JavaScript)
 app.set("view engine", "ejs");
 
@@ -208,11 +207,17 @@ app.get(
 
 
       // Check if a user with the same email exists
-      const response = await axios.get(`${apiUrl}${endpoint}?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
+      const response1 = await axios.get(`${apiUrl}${endpoint}?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
+      const response2 = await axios.get(`${apiUrl}${endpoint}?filters[username][$eqi]=${username}`, axiosConfig);
       // console.log(req.user._json.email, response)
-      if (!response.data || response.data.length === 0) {
+      if (!response1.data || response1.data.length === 0) {
         // Create a new user if no matching user found
-        await createUserInStrapi(userData);
+        if(!response2.data || response2.data.length === 0){
+          await createUserInStrapi(userData);
+        }else{
+          userData.username=userData.username+" "+Math.floor(Math.random() * 100) + 1;
+          await createUserInStrapi(userData);
+        }
       } else {
         console.log("Updating user...");
       }

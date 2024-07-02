@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SG Platform</title>
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="/platform/assets/images/logos/favicon.png"
+    />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+    <%-include("../partials/preloader-css")%>
+  </head>
+  <%-include("../partials/post-head")%>
+  <style>
+    .highlight {
+      background-color: gold;
+      font-size:18px;
+    }
+    .container {
+      padding: 10px;
+    }
+
+ul li {
+  list-style: none;
+  
+}
+.badge{
+  margin:8px 0;
+}
+.card-title{
+  color : #5d87ff
+}
+
+.search-bar {
+  width: 100%;
+  padding: 14px;
+  border-radius: 30px;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.search-bar:focus {
+  outline: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-color: #5d87ff; /* Change the border color on focus */
+
+}
+
+/* Style the placeholder text */
+.search-bar::placeholder {
+  color: #888; /* Adjust the color to your preference */
+  transition: font-size 0.3s ease-out;
+}
+
+/* Move the placeholder text on focus */
+.search-bar:focus::placeholder {
+  font-size: 12px; /* Adjust the font size when moved to the top */
+}
+
+
+        /* Customizing the modal close button */
+        .custom-close {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: black;
+    opacity: 1;
+    transition: color 0.3s, transform 0.3s;
+    border:none;
+    background:transparent;
+    float:right;
+    position: absolute;
+}
+.modal-header{
+    text-align:right;
+    justify-content: flex-end; /* Right align the items */
+    margin-top:10px;
+}
+
+
+#modal-dp div strong{
+            font-weight: 900;
+        }
+        .closeAlert {
+            top: 1%;
+            right: 0.5%;
+            position: absolute;
+            background:transparent;
+            border:none;
+            margin:5px;
+            font-size: 1.2em;
+        }
+        .close {
+            top: 0.5%;
+            right: 2%;
+            position: absolute;
+            /* background:rgb(113, 82, 82); */
+            background:transparent;
+            border:none;
+            margin:5px;
+            /* width:10px;
+            height:10px; */
+            font-size: 1.2em;
+        }
+  </style>
+  <body>
+    <%-include("../partials/preloader")%>
+    <!--  Body Wrapper -->
+    <div
+      class="page-wrapper"
+      id="main-wrapper"
+      data-layout="vertical"
+      data-navbarbg="skin6"
+      data-sidebartype="full"
+      data-sidebar-position="fixed"
+      data-header-position="fixed"
+    >
+      <%-include("../partials/sidebar")%>
+      <!--  Main wrapper -->
+      <div class="body-wrapper">
+        <%-include("../partials/header")%>
+        <div class="container-fluid">
+          <div class="container-fluid">
+            <div class="row justify-content-between">
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="custom-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                        </div>
+                        <div id="modal-dp" class="modal-body">
+                            <form id="assetsForm" action="/platform/assets" method="POST">                                    
+                                <div id="datereason" class="mb-3">
+                                    <label for="newTicketTitle" class="form-label">Until when would you like to borrow the device? <span style="color:rgb(177, 58, 58)">*</span></label>
+                                    <p>NOTE: You can borrow for a maximum period of two weeks.</p>
+                                    <input onchange="document.getElementById('end').innerText=new Date(document.getElementById('enddate').value).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })" required name="date" type="date" class="form-control" id="enddate" 
+                                    min="<%= new Date().toISOString().split('T')[0] %>" 
+                                    max="<%= (() => { 
+                                        let maxDate = new Date(); 
+                                        maxDate.setDate(maxDate.getDate() + 14); 
+                                        return maxDate.toISOString().split('T')[0]; 
+                                    })() %>"> 
+                                    <br/>
+                                    <label for="newTicketTitle" class="form-label">Reason why you would like to borrow the device? <span style="color:rgb(177, 58, 58)">*</span></label>
+                                    <p>In case that your reason fits our policy, we shall issue you the device if available for the period mentioned.</p>
+                                    <textarea required minlength="20" style="width:100%;padding:5px;" name="reason" id="" rows="10"></textarea>                               
+                                    <!-- <a onclick="document.querySelector('#datereason').style.display='none';document.querySelector('#undertaking').style.display='block';" id="next-button" class="btn btn-primary">Next</a> -->
+                                    <div class="mb-3">
+                                        <br />
+                                        <label for="newTicketTitle" class="form-label">Enter Your Phone Number <span style="color:rgb(177, 58, 58)">*</span></label>
+                                        <input
+                                        required
+                                        minlength="10"
+                                        maxlength="14"
+                                        name="phone"
+                                        type="tel"
+                                        class="form-control"
+                                        id="phoneNumber"
+                                        pattern="[0-9]{10}"
+                                        onchange="document.getElementById('undphone').innerText=document.getElementById('phoneNumber').value"
+                                        value="<%=user.phone%>"
+                                        title="Please enter a valid 10-digit phone number without spaces or special characters."
+                                        >
+                                        <div id="phone-number-error" class="text-danger"></div>
+                                    </div>
+
+                                </div>
+                                <input id="devidform" name="deviceId" type="hidden" value="">
+                                <div id="undertaking">
+                                <h6 style="color:rgb(185, 80, 80)">Undertaking for Borrowing Devices</h6>
+                                <br />
+                        
+                                <p>I, <strong><%=user.username%></strong>, a student of Ashoka University, hereby agree to the following terms and conditions for borrowing devices from the Ministry of Technology:</p>
+                        
+                                <h6>Purpose and Use:</h6>
+                                <p>I understand that the device borrowed is intended solely for my personal use in emergency situations or when I do not have access to my own device.</p>
+                                <p>I will use the device responsibly and in accordance with all applicable university policies.</p>
+                        
+                                <h6>Borrowing Period:</h6>
+                                <p>I am borrowing the device from <strong><%-new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })%></strong> to <strong id="end"></strong>, not exceeding the maximum borrowing period of two weeks.</p>
+                                <p>I understand that I must return the device by the specified end date unless an extension is granted by the Ministry of Technology.</p>
+                        
+                                <h6>Condition of the Device:</h6>
+                                <p>I acknowledge that the device is in good working condition at the time of borrowing.</p>
+                                <p>I will return the device in the same condition as it was provided to me, excluding normal wear and tear.</p>
+                        
+                                <h6>Liability for Damage or Loss:</h6>
+                                <p>I am responsible for any damage to the device while it is in my possession.</p>
+                                <p>In case of damage, I agree to cover the full cost of repair.</p>
+                                <p>In case of loss, I agree to reimburse the full replacement value of the device to the Student Life Office, Ashoka University.</p>
+                        
+                                <h6>Safety and Security:</h6>
+                                <p>I will take all necessary precautions to protect the device from theft, damage, or loss.</p>
+                                <p>I will not lend the device to any other individual.</p>
+                        
+                                <h6>Return of Device:</h6>
+                                <p>I will return the device to the Ministry of Technology office by the specified end date.</p>
+                                <p>I will ensure that all personal data is removed from the device before returning it.</p>
+                        
+                                <h6>Acknowledgment of Responsibility:</h6>
+                                <p>I understand that failure to return the device on time, or returning it in a damaged condition, may result in penalties, including the suspension of borrowing privileges and additional disciplinary actions as deemed appropriate by the university.</p>
+                        
+                                <h6>Borrower’s Details:</h6>
+                                <p><strong>Full Name:</strong> <%=user.username%></p>
+                                <p><strong>Contact Number:</strong> <span id="undphone"><%=user.phone%></span></p>
+                                <p><strong>Email Address:</strong> <%=user.email%></p>
+                        
+                                <h6>Device Details:</h6>
+                                <p><strong>Device Name:</strong> <span id="deviceName"></span></p>
+                                <p><strong>Device Type:</strong><span id="deviceType"></span></p>
+                                <p><strong>Device ID:</strong><span id="deviceId"></span></p>
+
+                                <p>By signing this undertaking hereby submitting the form, I acknowledge that I have read, understood, and agree to abide by the terms and conditions stated above.</p>
+                                <p><strong>Contact Information:</strong> Ministry of Technology, Ashoka University Email: <a href="mailto:technology.ministry@ashoka.edu.in">technology.ministry@ashoka.edu.in</a></p>
+                                <!-- <a onclick="document.querySelector('#undertaking').style.display='none';document.querySelector('#datereason').style.display='block';" id="back-button" class="btn btn-primary">Back</a> -->
+
+                                <button onclick="document.querySelector('#datereason').style.display='block';document.querySelector('#next-button').style.display='none';document.querySelector('#back-button').style.display='none';" id="submit-button" type="submit" class="btn btn-primary">Submit Request</button>
+
+                            </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+
+            <%for(var i=0;i<assets.length;i++){%>
+            <%if(assets[i].attributes.status=="available"){%>
+            <div class="card sg-ticket">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="flex-row mb-2">
+                      <span class="fs-6 fw-semibold"><%=assets[i].attributes.name%></span>
+                      <span class="badge badge-pill rounded-5 bg-success"><%=assets[i].attributes.status%></span>
+                    </div>
+                    <div class="card" style="background-color: #eaeff4;">
+                      <div class="card-body">
+                       <p><%=assets[i].attributes.description%></p>
+                      </div>
+                    </div>
+                    <div style="margin:-10px;" class="flex-row mb-3">
+                        <span class="badge bg-primary rounded-3 fw-semibold">
+                            <%=assets[i].attributes.type%>
+                        </span>
+                        <button onclick="updateDeviceDetails('<%=assets[i].attributes.name%>','<%=assets[i].attributes.type%>','<%=assets[i].id%>')" data-toggle="modal" data-target="#exampleModalLong" style="float:right;" class="btn btn-success">
+                            Request
+                         </button>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <%}else{%>
+                <div class="card sg-ticket">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="flex-row mb-2">
+                            <span class="fs-6 fw-semibold"><%=assets[i].attributes.name%></span>
+                            
+                            <span class="badge badge-pill rounded-5 bg-warning"><%=assets[i].attributes.status%></span>
+                            
+                          </div>
+                          <div class="card" style="background-color: #eaeff4;">
+                            <div class="card-body">
+                             <p><%=assets[i].attributes.description%></p>
+                            </div>
+                          </div>
+                          <div style="margin:-10px;" class="flex-row mb-3">
+                            <span style="float: right;" class="fs-3 text-dark fw-semibold">
+                              Booked Until:  12 Jun 2024  
+                            </span>
+                            <span class="badge bg-primary rounded-3 fw-semibold">
+                                <%=assets[i].attributes.type%>
+                            </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+               <%}%>
+              <%}%>
+            </div>
+        </div>
+      </div>
+    </div>
+        <!-- Bootstrap JS, Popper.js, and jQuery -->
+        <script>
+            const phoneNumberInput = document.getElementById('phoneNumber');
+        const phoneNumberError = document.getElementById('phone-number-error');
+        let timeoutId;
+        
+        phoneNumberInput.addEventListener('keyup', function() {
+            clearTimeout(timeoutId); // Clear any existing timeout
+            timeoutId = setTimeout(validatePhoneNumber, 500); // Set a new timeout
+        });
+        
+        function validatePhoneNumber() {
+            // Allow phone numbers with optional country code (1-2 digits) and varying separators
+            const regex = /^\+?(\d{1,2})[- ]?\d{3}[- ]?\d{3}[- ]?\d{4}$/;
+        
+            if (!phoneNumberInput.value.match(regex) && phoneNumberInput.value.length !== 10) {
+                phoneNumberError.textContent = 'Please enter a valid phone number.';
+                phoneNumberInput.classList.add('is-invalid'); // Add Bootstrap class for visual feedback
+            } else {
+                phoneNumberError.textContent = '';
+                phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
+            }
+        }
+        
+        // Remove the validation message quickly after the user starts typing again
+        phoneNumberInput.addEventListener('keydown', function() {
+            clearTimeout(timeoutId); // Clear the timeout to remove the message quickly
+            phoneNumberError.textContent = '';
+            phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
+        });
+
+        function updateDeviceDetails(name, type, id){
+            document.getElementById('deviceName').innerText=name;
+            document.getElementById('deviceType').innerText=type;
+            document.getElementById('deviceId').innerText=Math.floor(Math.random()*90000) + 10000 +'-'+ id;
+            document.getElementById('devidform').value=id;
+        }
+        </script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/platform/assets/js/dashboard.js"></script>
+    <script src="/platform/assets/js/theme.js"></script>
+    <%-include("../partials/preloader-js")%>
+  </body>
+  <script>
+function myFunction() {
+  input = document.getElementById("myFilter");
+filter = input.value.toUpperCase();
+cardContainer = document.getElementById("myItems");
+cards = cardContainer.getElementsByClassName("card");
+
+for (let i = 0; i < cards.length; i++) {
+    let card = cards[i];
+    let textContent = card.innerText || card.textContent;
+
+    if (textContent.toUpperCase().indexOf(filter) > -1) {
+        card.style.display = "";
+    } else {
+        card.style.display = "none";
+    }
+}
+}
+
+  </script>
+</html>

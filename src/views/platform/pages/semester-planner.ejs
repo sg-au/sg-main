@@ -1120,12 +1120,16 @@
                     return [false, "" ]; // No clash
                 }
                 function danceRow(svgElement){
+                    document.getElementById("example").style.overflowX="hidden";
+                    document.getElementById("example").style.overflowY="hidden";
                     var row = svgElement.closest('tr');
                     // Add the animation class
                     row.classList.add("dancing-row");
                     // Remove the animation class after the animation completes
                     row.addEventListener('animationend', function() {
                         row.classList.remove("dancing-row");
+                        document.getElementById("example").style.overflowX="scroll";
+                        document.getElementById("example").style.overflowY="scroll";
                     });
                 }
                 function checkAndUpdateTimetable(svgElement,classCount,dayTimeString, classTitle,courseCode){
@@ -1155,7 +1159,10 @@
                             clashCourse=checkClash(currentTimetable,day,time)[1].split("\n")[0];
                         }
                      }
-                     if(anyClashAtAll){
+                     if(classCount==0){
+                        alert("Class has no published timings on the AMS.");
+                     }
+                     else if(anyClashAtAll){
                         alert("There is a clash with "+clashCourse);
                      } else{
                         var inserted=[];
@@ -1285,20 +1292,6 @@
 
                     
 
-
-                    // Example usage:
-                    // insertClass("1","Monday", "8:30 am-10:00 am", "Introduction to Biology I: Genetics and Evolution","BIO-1200-1 (AC-02-LR-007)");
-                    // insertClass("1","Monday", "11:50 am-1:20 pm", "Political Economy of China","POL-1010/ CHI-1301-1 (AC-02-LR-013)");
-                    // insertClass("1","Monday", "3:00 pm-4:30 pm", "Econometrics","ECO-2400-3 (AC-04-LR-401)");
-                    // insertClass("1","Wednesday", "8:30 am-10:00 am", "Introduction to Biology I: Genetics and Evolution","BIO-1200-1 (AC-02-LR-007)");
-                    // insertClass("1","Wednesday", "11:50 am-1:20 pm", "Political Economy of China","POL-1010/ CHI-1301-1 (AC-02-LR-013)");
-                    // insertClass("1","Wednesday", "3:00 pm-4:30 pm", "Econometrics","ECO-2400-3 (AC-04-LR-401)");
-                    // insertClass("1","Wednesday", "4:40 pm-6:10 pm", "Linear Algebra","MAT-1001/ CS-2210-1 (AC-04-LR-401)");
-                    // insertClass("1","Thursday", "3:00 pm-4:30 pm", "Data and the Digital Economy","ENT-1013-1 (AC-03-LR-005)");
-                    // insertClass("1","Thursday", "4:40 pm-6:10 pm", "Data and the Digital Economy","ENT-1013-1 (AC-03-LR-005)");
-                    // insertClass("1","Friday", "4:40 pm-6:10 pm", "Linear Algebra","MAT-1001/ CS-2210-1 (AC-04-LR-401)");
-                    // insertClass("1","Friday", "6:20 pm-7:50 pm", "Deconstructing Social Sector Systems in India","ENT-2035-1 (AC-04-LR-301)");
-                    // insertClass("1","Friday", "8:00 pm-9:30 pm", "Deconstructing Social Sector Systems in India","ENT-2035-1 (AC-04-LR-301)");
             </script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

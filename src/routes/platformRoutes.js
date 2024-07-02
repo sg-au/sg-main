@@ -685,9 +685,6 @@ router.get('/event', (req, res) => {
     res.render("platform/pages/events")
 });
 
-router.get('/prof-wise', (req, res) => {
-  res.render("platform/pages/prof-wise")
-});
 
 router.get('/pool-cab', async (req, res) => {
   try{
@@ -797,7 +794,7 @@ router.get('/resources', async(req, res) => {
 });
 
 router.get('/semester-planner', async(req, res) => {
-  arr = JSON.parse(fs.readFileSync('./data/timetable-planner.json', 'utf8'));
+  arr = JSON.parse(fs.readFileSync('./data/timetable-planner2.json', 'utf8'));
   let obj=arr[0]; // get date and time last data fetched
   arr.shift(); // delete that from the array so as to keep only courses
   res.render("platform/pages/semester-planner",{courses:arr,obj:obj});  
@@ -932,6 +929,38 @@ router.post('/update-pool-service', async(req, res) => {
   }
   res.redirect("/platform/");    
 });
+
+router.get('/assets', async(req, res) => {
+  var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
+  var user = user_filled.data[0];
+  var assets = await axios.get(`${apiUrl}/assets`, axiosConfig);
+  assets = assets.data.data;
+  res.render("platform/pages/assets",{assets:assets,user:user})
+});
+
+router.post('/assets', async(req, res) => {
+  var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
+  updateduser=user.data[0];
+  updateduser.phone=req.body.phone;
+  await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);      
+  delete req.body.phone;
+  req.body.deviceId=parseInt(req.body.deviceId);
+  req.body.status="booked";
+  req.body.user=updateduser;
+  // from here is left in assets: 
+  console.log(req.body);
+  // axios.post(`${process.env.STRAPI_API_URL}/borrow`,{data:req.body}, axiosConfig)
+  //       .then((response) => {
+  //         res.redirect("/platform/assets")
+  //       })
+  //       .catch((error) => {
+  //           console.log(error)
+  //           res.send("An error occurred");
+  //       });
+  // also email the student with the undertaking and a ministry member attached
+
+});
+
 
 
 // router.get('/shuttle-service', async (req, res) => {
