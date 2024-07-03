@@ -147,7 +147,7 @@ ul li {
                                 <div id="datereason" class="mb-3">
                                     <label for="newTicketTitle" class="form-label">Until when would you like to borrow the device? <span style="color:rgb(177, 58, 58)">*</span></label>
                                     <p>NOTE: You can borrow for a maximum period of two weeks.</p>
-                                    <input onchange="document.getElementById('end').innerText=new Date(document.getElementById('enddate').value).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })" required name="date" type="date" class="form-control" id="enddate" 
+                                    <input onchange="document.getElementById('end').innerText=new Date(document.getElementById('enddate').value).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })" required name="to" type="date" class="form-control" id="enddate" 
                                     min="<%= new Date().toISOString().split('T')[0] %>" 
                                     max="<%= (() => { 
                                         let maxDate = new Date(); 
@@ -179,7 +179,7 @@ ul li {
                                     </div>
 
                                 </div>
-                                <input id="devidform" name="deviceId" type="hidden" value="">
+                                <input id="devidform" name="asset" type="hidden" value="">
                                 <div id="undertaking">
                                 <h6 style="color:rgb(185, 80, 80)">Undertaking for Borrowing Devices</h6>
                                 <br />
@@ -228,10 +228,16 @@ ul li {
                                 <p><strong>Contact Information:</strong> Ministry of Technology, Ashoka University Email: <a href="mailto:technology.ministry@ashoka.edu.in">technology.ministry@ashoka.edu.in</a></p>
                                 <!-- <a onclick="document.querySelector('#undertaking').style.display='none';document.querySelector('#datereason').style.display='block';" id="back-button" class="btn btn-primary">Back</a> -->
 
-                                <button onclick="document.querySelector('#datereason').style.display='block';document.querySelector('#next-button').style.display='none';document.querySelector('#back-button').style.display='none';" id="submit-button" type="submit" class="btn btn-primary">Submit Request</button>
-
+                                <button onclick="submitBorrowRequest()" id="submit-button" type="submit" class="btn btn-primary">Submit Request</button>
+                                
                             </div>
                             </form>
+                        </div>
+                        <div id="please" style="text-align: center;margin:auto;display:none">
+                          Please do not refresh or quit the page
+                        </div>
+                        <div id="spinner" style="text-align: center;margin:auto;display:none" class="spinner-border text-primary" role="status">
+                          <span class="sr-only">Loading...</span>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -241,14 +247,40 @@ ul li {
                     </div>
 
             <%for(var i=0;i<assets.length;i++){%>
-            <%if(assets[i].attributes.status=="available"){%>
+            <%if(assets[i].attributes.last_borrow_request.data==null){%>
+              <div class="card sg-ticket">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="flex-row mb-2">
+                        <span class="fs-6 fw-semibold"><%=assets[i].attributes.name%></span>
+                        <span class="badge badge-pill rounded-5 bg-success">available</span>
+                      </div>
+                      <div class="card" style="background-color: #eaeff4;">
+                        <div class="card-body">
+                         <p><%=assets[i].attributes.description%></p>
+                        </div>
+                      </div>
+                      <div style="margin:-10px;" class="flex-row mb-3">
+                          <span class="badge bg-primary rounded-3 fw-semibold">
+                              <%=assets[i].attributes.type%>
+                          </span>
+                          <button onclick="updateDeviceDetails('<%=assets[i].attributes.name%>','<%=assets[i].attributes.type%>','<%=assets[i].id%>')" data-toggle="modal" data-target="#exampleModalLong" style="float:right;" class="btn btn-success">
+                              Request
+                           </button>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <%}else if(hasDatePassed(assets[i].attributes.last_borrow_request.data.attributes.to) &&  assets[i].attributes.last_borrow_request.data.attributes.returned==0){%>
             <div class="card sg-ticket">
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-12">
                     <div class="flex-row mb-2">
                       <span class="fs-6 fw-semibold"><%=assets[i].attributes.name%></span>
-                      <span class="badge badge-pill rounded-5 bg-success"><%=assets[i].attributes.status%></span>
+                      <span class="badge badge-pill rounded-5 bg-danger">overdue</span>
                     </div>
                     <div class="card" style="background-color: #eaeff4;">
                       <div class="card-body">
@@ -259,15 +291,70 @@ ul li {
                         <span class="badge bg-primary rounded-3 fw-semibold">
                             <%=assets[i].attributes.type%>
                         </span>
-                        <button onclick="updateDeviceDetails('<%=assets[i].attributes.name%>','<%=assets[i].attributes.type%>','<%=assets[i].id%>')" data-toggle="modal" data-target="#exampleModalLong" style="float:right;" class="btn btn-success">
-                            Request
-                         </button>
+                        <span style="float: right;" class="fs-3 text-dark fw-semibold">
+                          Overdue Since:  <%-new Date(assets[i].attributes.last_borrow_request.data.attributes.to).toString().substring(0,15)-%>
+                        </span>
+                       
                     </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <%}else{%>
+              <%} else if(hasDatePassed(assets[i].attributes.last_borrow_request.data.attributes.to) ||  assets[i].attributes.last_borrow_request.data.attributes.returned==1){%>
+                <div class="card sg-ticket">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="flex-row mb-2">
+                        <span class="fs-6 fw-semibold"><%=assets[i].attributes.name%></span>
+                        <span class="badge badge-pill rounded-5 bg-success">available</span>
+                      </div>
+                      <div class="card" style="background-color: #eaeff4;">
+                        <div class="card-body">
+                         <p><%=assets[i].attributes.description%></p>
+                        </div>
+                      </div>
+                      <div style="margin:-10px;" class="flex-row mb-3">
+                          <span class="badge bg-primary rounded-3 fw-semibold">
+                              <%=assets[i].attributes.type%>
+                          </span>
+                          <button onclick="updateDeviceDetails('<%=assets[i].attributes.name%>','<%=assets[i].attributes.type%>','<%=assets[i].id%>')" data-toggle="modal" data-target="#exampleModalLong" style="float:right;" class="btn btn-success">
+                              Request
+                           </button>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <%}else if(!hasDatePassed(assets[i].attributes.last_borrow_request.data.attributes.to) &&  assets[i].attributes.last_borrow_request.data.attributes.issued==0){%>
+                <div class="card sg-ticket">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="flex-row mb-2">
+                          <span class="fs-6 fw-semibold"><%=assets[i].attributes.name%></span>
+                          
+                          <span class="badge badge-pill rounded-5 bg-warning">pending</span>
+                          
+                        </div>
+                        <div class="card" style="background-color: #eaeff4;">
+                          <div class="card-body">
+                           <p><%=assets[i].attributes.description%></p>
+                          </div>
+                        </div>
+                        <div style="margin:-10px;" class="flex-row mb-3">
+                          <span style="float: right;" class="fs-3 text-dark fw-semibold">
+                            Booked Until:  <%-new Date(assets[i].attributes.last_borrow_request.data.attributes.to).toString().substring(0,15)-%>
+                          </span>
+                          <span class="badge bg-primary rounded-3 fw-semibold">
+                              <%=assets[i].attributes.type%>
+                          </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              <%} else{%>
                 <div class="card sg-ticket">
                     <div class="card-body">
                       <div class="row">
@@ -275,7 +362,7 @@ ul li {
                           <div class="flex-row mb-2">
                             <span class="fs-6 fw-semibold"><%=assets[i].attributes.name%></span>
                             
-                            <span class="badge badge-pill rounded-5 bg-warning"><%=assets[i].attributes.status%></span>
+                            <span class="badge badge-pill rounded-5 bg-warning">booked</span>
                             
                           </div>
                           <div class="card" style="background-color: #eaeff4;">
@@ -285,7 +372,7 @@ ul li {
                           </div>
                           <div style="margin:-10px;" class="flex-row mb-3">
                             <span style="float: right;" class="fs-3 text-dark fw-semibold">
-                              Booked Until:  12 Jun 2024  
+                              Booked Until:  <%-new Date(assets[i].attributes.last_borrow_request.data.attributes.to).toString().substring(0,15)-%>
                             </span>
                             <span class="badge bg-primary rounded-3 fw-semibold">
                                 <%=assets[i].attributes.type%>
@@ -338,6 +425,8 @@ ul li {
             document.getElementById('deviceId').innerText=Math.floor(Math.random()*90000) + 10000 +'-'+ id;
             document.getElementById('devidform').value=id;
         }
+
+        
         </script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -353,6 +442,13 @@ ul li {
     <%-include("../partials/preloader-js")%>
   </body>
   <script>
+    function submitBorrowRequest(){
+      document.getElementById("assetsForm").submit();
+      document.getElementById("submit-button").innerText="Submitting";
+      document.getElementById("submit-button").disabled=true;
+      document.getElementById("spinner").style.display="block";
+      document.getElementById("please").style.display="block";
+    }
 function myFunction() {
   input = document.getElementById("myFilter");
 filter = input.value.toUpperCase();

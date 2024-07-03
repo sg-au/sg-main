@@ -4,7 +4,7 @@ dotenv.config({ path: ".././.env" }); // Load environment variables from a .env 
 const nodemailer = require('nodemailer');
 
 // Create a SMTP transporter object
-const transporter = nodemailer.createTransport({
+const transporterSG = nodemailer.createTransport({
     service: 'gmail',
     
       auth: {
@@ -13,7 +13,17 @@ const transporter = nodemailer.createTransport({
       },
     });
   
-module.exports = transporter;
+// Create a SMTP transporter object
+const transporterTECH = nodemailer.createTransport({
+    service: 'gmail',
+    
+      auth: {
+        user: process.env.TECHMAIL_ID,
+        pass: process.env.TECHMAIL_PWD,
+      },
+    });
+  
+module.exports = {transporterSG,transporterTECH};
 
   
   

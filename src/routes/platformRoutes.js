@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const transporter = require("../config/nodemailer-config"); // Import the Nodemailer configuration module
+const {transporterSG,transporterTECH} = require("../config/nodemailer-config"); // Import the Nodemailer configuration module
 const fs = require('fs');
 const publicTicketCategories = JSON.parse(fs.readFileSync('./data/public-tickets-all.json', 'utf8'));
 const jsonfile = require('jsonfile')
 const file = './data/tickets.jsonl'
 const helpers=require('../config/helperFunctions.js');
-
 const axios=require("axios");
 
 const axiosConfig = {
@@ -45,7 +44,6 @@ router.get('/announcements', (req, res) => {
         res.send("An error occurred");
     });
 });
-
 
 router.get('/course-reviews', (req, res) => {
   const maxCoursesToLoad = 2500;
@@ -459,7 +457,7 @@ router.post('/save-ticket-new', (req, res) => {
     };
 
     // Send the email
-    transporter.sendMail(mailOptions, (error, info) => {
+    transporterSG.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error('Error occurred:', error.message);
         res.sendStatus(400);
@@ -930,12 +928,20 @@ router.post('/update-pool-service', async(req, res) => {
   res.redirect("/platform/");    
 });
 
+const hasDatePassed = (date) => {
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  const inputDate = new Date(date);
+  inputDate.setHours(0, 0, 0, 0);
+  return inputDate < currentDate;
+};
+
 router.get('/assets', async(req, res) => {
   var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
   var user = user_filled.data[0];
-  var assets = await axios.get(`${apiUrl}/assets`, axiosConfig);
+  var assets = await axios.get(`${apiUrl}/assets?populate=last_borrow_request`, axiosConfig);
   assets = assets.data.data;
-  res.render("platform/pages/assets",{assets:assets,user:user})
+  res.render("platform/pages/assets",{assets:assets,user:user,hasDatePassed:hasDatePassed})
 });
 
 router.post('/assets', async(req, res) => {
@@ -943,20 +949,144 @@ router.post('/assets', async(req, res) => {
   updateduser=user.data[0];
   updateduser.phone=req.body.phone;
   await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);      
-  delete req.body.phone;
-  req.body.deviceId=parseInt(req.body.deviceId);
-  req.body.status="booked";
+  req.body.asset=parseInt(req.body.asset);
   req.body.user=updateduser;
-  // from here is left in assets: 
-  console.log(req.body);
-  // axios.post(`${process.env.STRAPI_API_URL}/borrow`,{data:req.body}, axiosConfig)
-  //       .then((response) => {
-  //         res.redirect("/platform/assets")
-  //       })
-  //       .catch((error) => {
-  //           console.log(error)
-  //           res.send("An error occurred");
-  //       });
+  req.body.from=new Date().toISOString().split('T')[0];
+  req.body.issued=0;
+  req.body.returned=0;
+  req.body.is_the_latest_booking_of=parseInt(req.body.asset);
+  var assetData = await axios.get(`${apiUrl}/assets/${req.body.asset}?populate=last_borrow_request`, axiosConfig);
+  if(assetData.data.data.attributes.last_borrow_request.data==null || (assetData && hasDatePassed(assetData.data.data.attributes.last_borrow_request.data.attributes.to))){
+    axios.post(`${process.env.STRAPI_API_URL}/borrow-requests`,{data:req.body}, axiosConfig)
+        .then((response) => {
+            // from here is left in assets: mail the ministry member and the user
+            // of the request
+
+            const mailOptions = {
+              from: `Borrow Assets <${process.env.TECHMAIL_ID}>`,
+              to: (process.env.MINISTRY_MEMBERS ? process.env.MINISTRY_MEMBERS.split(",") : [])[Math.floor(Math.random() * (process.env.MINISTRY_MEMBERS.split(",").length || 1))],
+              cc:req.user._json.email,
+              subject: "Request to borrow asset "+assetData.data.data.attributes.name+" from "+helpers.borrowDate(new Date(req.body.from))+" to "+helpers.borrowDate(new Date(req.body.to)),
+              html: `
+              <!DOCTYPE html>
+              <html lang="en">
+              <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>Email Template</title>
+                  <style>
+                      body {
+                          font-family: Arial, sans-serif;
+                          line-height: 1.6;
+                          background-color: #f4f4f4;
+                          margin: 0;
+                          padding: 0;
+                      }
+                      .container {
+                          max-width: 600px;
+                          margin: 0 auto;
+                          padding: 20px;
+                          border-radius: 10px;
+                          background-color: #ffffff;
+                          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                      }
+                      h1 {
+                          text-align: center;
+                          color: #0078be;
+                          margin-bottom: 20px;
+                      }
+                      table {
+                          width: 100%;
+                          border-collapse: collapse;
+                          margin-bottom: 20px;
+                      }
+                      table, th, td {
+                          border: 1px solid #ddd;
+                      }
+                      th, td {
+                          padding: 8px;
+                          text-align: left;
+                      }
+                      th {
+                          background-color: #f2f2f2;
+                      }
+                      .greeting {
+                          color: #0078be;
+                          font-size: 1.2em;
+                          text-align: center;
+                          margin-bottom: 20px;
+                      }
+                  </style>
+              </head>
+              <body>
+              <div class="container">
+              <h1>Confirmation of Request Receipt</h1>
+              <p class="greeting">Dear Ministry member,<hr/><br> This message is to inform you of a receipt of request to borrow a device. <br/>Should you believe as per the ministry's policy the student qualifies to get the borrowed device for the period, we request your support in extending to them the service of the device. <br/><br/>Thank you for your trust and cooperation.</p>
+              <table>
+                  <tr>
+                      <th>Field</th>
+                      <th>Value</th>
+                  </tr>
+                  <tr>
+                      <td>Name</td>
+                      <td>${req.user._json.name}</td>
+                  </tr>
+                  <tr>
+                      <td>Email</td>
+                      <td>${req.user._json.email}</td>
+                  </tr>
+                  <tr>
+                      <td>From</td>
+                      <td">${helpers.borrowDate(new Date(req.body.from))}</td>
+                  </tr>
+                  <tr>
+                      <td>To</td>
+                      <td">${helpers.borrowDate(new Date(req.body.to))}</td>
+                  </tr>
+                  <tr>
+                      <td>Phone</td>
+                      <td>${req.body.phone}</td>
+                  </tr>
+                  <tr>
+                      <td>Reason</td>
+                      <td>${req.body.reason}</td>
+                  </tr>
+                  <tr>
+                      <td>Status</td>
+                      <td>Pending</td>
+                  </tr>
+                  <tr>
+                      <td>Date and Time of Request</td>
+                      <td>${helpers.formatDate(new Date())}</td>
+                  </tr>
+              </table>
+          </div>
+              </body>
+              </html>
+              
+              `,
+              replyTo:req.user._json.email
+            };
+        
+            // Send the email
+            transporterTECH.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                console.error('Error occurred:', error.message);
+                res.sendStatus(400);
+                return;
+              }
+              console.log('Email sent successfully!', info.messageId);
+              res.redirect("/platform/assets");
+            });
+        })
+        .catch((error) => {
+            console.log(error)
+            res.send("An error occurred");
+        });
+    await axios.put(`${apiUrl}/assets/${req.body.asset}`, {"data":{booked_until:req.body.to}}, axiosConfig);      
+  }else{
+    res.send("Booked already");
+  }
   // also email the student with the undertaking and a ministry member attached
 
 });

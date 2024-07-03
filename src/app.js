@@ -112,6 +112,8 @@ function putImage(req, res, next) {
     // Fetch the user's picture
     const userPicture = req.user._json.picture;
     res.locals.imageUrl = encodeURI(userPicture);
+
+    
     next();
     // Make the GET request to fetch data
   }
