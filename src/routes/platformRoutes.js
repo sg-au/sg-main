@@ -46,8 +46,8 @@ router.get('/announcements', (req, res) => {
 });
 
 router.get('/course-reviews', (req, res) => {
-  const maxCoursesToLoad = 2500;
-  axios.get(`${process.env.STRAPI_API_URL}/courses?fields[0]=courseCode&fields[1]=courseTitle&fields[2]=semester&fields[3]=year&populate[0]=faculties&populate[1]=course_reviews&populate[2]=reviews&pagination[pageSize]=${maxCoursesToLoad}&filters[$or][0][year][$eq]=2024&filters[$or][1][year][$eq]=2024&sort[0]=year:desc`, axiosConfig)
+  const maxCoursesToLoad = 3000;
+  axios.get(`${process.env.STRAPI_API_URL}/courses?fields[0]=courseCode&fields[1]=courseTitle&fields[2]=semester&fields[3]=year&populate[0]=faculties&populate[1]=course_reviews&populate[2]=reviews&pagination[pageSize]=${maxCoursesToLoad}&filters[$or][0][year][$eq]=2024&filters[$or][1][year][$eq]=2023&filters[$or][2][year][$eq]=2022&sort[0]=year:desc`, axiosConfig)
     .then((response) => {
       res.render("platform/pages/course-reviews", { data: response.data.data });
     })
