@@ -1132,31 +1132,41 @@
                         document.getElementById("example").style.overflowY="scroll";
                     });
                 }
+
+                function checkLunchTime(timeSlot) {
+                    // Define lunch time range
+                    const lunchStart = "13:20";
+                    const lunchEnd = "15:00";
+                    
+                    // Split the given time slot
+                    const [startTime, endTime] = timeSlot.split("-");
+                    var lunch=false;
+                    // Check for overlap
+                    if ((startTime < lunchEnd) && (endTime > lunchStart)) {
+                        lunch=true;
+                    }
+                    return lunch;
+                }
+
                 function checkAndUpdateTimetable(svgElement,classCount,dayTimeString, classTitle,courseCode){
-                     // for now until I get data, choose random day and random timeSlot
-                     function getRandomInt(max) {
-                        return Math.floor(Math.random() * max);
-                     }
-                     timeSlot = timeSlots[getRandomInt(timeSlots.length)];
-                     day = days[getRandomInt(days.length)];
-                     // for now until I get data, choose random day and random timeSlot
                      // parse DateTime string and make as many objects each of which is a class
                      // This will make pairs of day and time.
                      //console.log((courses[0].classDetails[0]).replaceAll(" ","")).split(")")
                      classes=dayTimeString.replaceAll(" ","").split(")");
                      let anyClashAtAll=false;
+                     let clashLunch=false;
                      let clashCourse="";
                     //  console.log(classCount)
                      for(var i=0;i<parseInt(classCount);i++){
                         day = classes[i].split("-")[0];
                         time = (classes[i].split("(")[0]).split("-")[1]+"-"+(classes[i].split("(")[0]).split("-")[2];
                         venue=(classes[i].split("(")[1]);
-                        // console.log("day",day)
-                        // console.log("time",time)
-                        // console.log("venue",venue)
                         if(checkClash(currentTimetable,day,time)[0]){
                             anyClashAtAll=true;
                             clashCourse=checkClash(currentTimetable,day,time)[1].split("\n")[0];
+                        }
+                        if(checkLunchTime(time)){
+                            clashLunch=true;
                         }
                      }
                      if(classCount==0){
@@ -1164,7 +1174,11 @@
                      }
                      else if(anyClashAtAll){
                         alert("There is a clash with "+clashCourse);
-                     } else{
+                     } 
+                     else if(clashLunch){
+                        alert("There is a clash with lunch time.");
+                     }  
+                     else{
                         var inserted=[];
                         for(var i=0;i<classCount;i++){
                             day = classes[i].split("-")[0];
