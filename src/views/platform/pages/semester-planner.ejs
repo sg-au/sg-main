@@ -1114,6 +1114,9 @@
                     const cell = row.cells[dayIndex + 1]; // +1 to account for time column
                     // Check if the cell is empty or has the 'bg' class
                     if (cell.classList.contains("bg") || cell.innerText.trim() !== "") {
+                        if(["L","U","N","C","H"].includes(cell.innerText.trim())){
+                            return [false, "" ]; // No clash
+                        }
                         return [true, cell.innerText.trim()]; // Clash detected, return the inner text
                     }
                     
@@ -1145,7 +1148,7 @@
                     if ((startTime < lunchEnd) && (endTime > lunchStart)) {
                         lunch=true;
                     }
-                    return lunch;
+                    return false;
                 }
 
                 function checkAndUpdateTimetable(svgElement,classCount,dayTimeString, classTitle,courseCode){
@@ -1175,9 +1178,9 @@
                      else if(anyClashAtAll){
                         alert("There is a clash with "+clashCourse);
                      } 
-                     else if(clashLunch){
-                        alert("There is a clash with lunch time.");
-                     }  
+                    //  else if(clashLunch){
+                    //     alert("There is a clash with lunch time.");
+                    //  }  
                      else{
                         var inserted=[];
                         for(var i=0;i<classCount;i++){
@@ -1244,10 +1247,15 @@
                         const table = document.querySelector("#timetable" + timetableNumber);
                         const row = table.rows[rowIndex];
                         const cell = row.cells[colIndex];
-
                         // Clear the cell content and remove the 'bg' class
                         cell.innerHTML = "";
                         cell.classList.remove("bg");
+                        if(rowIndex==4){
+                            cell.classList.add("lunch");
+                            replace = ["L","U","N","C","H"];
+                            cell.innerText=replace[colIndex-1]
+                        }
+
                     }
 
 
