@@ -7,7 +7,10 @@ const jsonfile = require('jsonfile')
 const file = './data/tickets.jsonl'
 const helpers=require('../config/helperFunctions.js');
 const axios=require("axios");
-
+var pdf = require("pdf-creator-node");
+// Read HTML Template
+var undertakingTemplate = fs.readFileSync("./data/undertaking-template.html", "utf8");
+    
 const axiosConfig = {
     headers: {
       'Content-Type': 'application/json',
@@ -1065,19 +1068,66 @@ router.post('/assets', async(req, res) => {
               </html>
               
               `,
-              replyTo:req.user._json.email
-            };
-        
-            // Send the email
-            transporterTECH.sendMail(mailOptions, (error, info) => {
-              if (error) {
-                console.error('Error occurred:', error.message);
-                res.sendStatus(400);
-                return;
+              replyTo:req.user._json.email,
+              attachments:[
+              {
+                path:"./temp/undertaking.pdf",
+                contentType: 'application/pdf'
               }
-              console.log('Email sent successfully!', info.messageId);
-              res.redirect("/platform/assets");
+              ]
+            };
+
+      // generate PDF Undertaking
+          var options = {
+            format: "A4",
+            orientation: "portrait",
+            border: "10mm",
+            footer:{
+              height: "28mm",
+              contents:`<footer style="font-family: Arial, sans-serif; color: #333; font-size: 10pt; text-align: center; margin-top: 40px; border-top: 1px solid #ccc; padding-top: 10px;">
+              <p style="margin: 0; font-size: 5pt;">Ministry of Technology, Ashoka University</p>
+              <p style="margin: 0; font-size: 5pt;">Email: <a href="mailto:technology.ministry@ashoka.edu.in" style="color: #b55050;">technology.ministry@ashoka.edu.in</a></p>
+              <p style="margin: 0; font-size: 5pt;">Phone: +91-9820891974 (Ibrahim Khalil, Minister of Technology, 2024-2025)</p>
+              <p style="margin: 0; font-size: 5pt;">Website: <a href="https://www.sg.ashoka.edu.in" target="_blank" style="color: #b55050;">www.sg.ashoka.edu.in</a></p>
+              <p style="margin: 0; font-size: 5pt;">&copy; 2024 Ashoka University. All rights reserved.</p>
+          </footer>`
+            }
+          };
+
+          var document = {
+            html: undertakingTemplate,
+            data: {
+              name:req.body.name,
+              email:req.user._json.email,
+              phone:req.body.phone,
+              from:helpers.borrowDate(new Date(req.body.from)),
+              to:helpers.borrowDate(new Date(req.body.to)),
+              deviceId:req.body.deviceId,
+              deviceName:req.body.deviceName,
+              deviceType:req.body.deviceType,
+            },
+            path: "./temp/undertaking.pdf",
+            type: "",
+          };
+
+          pdf
+            .create(document, options)
+            .then((stream) => {
+              console.log(stream);
+              // Send the email
+              transporterTECH.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error('Error occurred:', error.message);
+                    return res.sendStatus(400);
+                }
+                console.log('Email sent successfully!', info.messageId);
+                res.redirect("/platform/assets");
             });
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+            // generate PDF Undertaking
         })
         .catch((error) => {
             console.log(error)
