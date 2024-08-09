@@ -1020,7 +1020,7 @@
                                                                   <td>
                                                                     <%=courses[i].courseCode.substring(0,25)%>
                                                                 </td>
-                                                                  <td style="margin-right:300px"><%=courses[i].courseTitle%> <br /><span style="font-size:10px"><%=courses[i].semester.charAt(0).toUpperCase()%><%=courses[i].semester.slice(1)%> <%=courses[i].year%></span>
+                                                                  <td style="margin-right:300px"><%=courses[i].courseTitle.replaceAll(/&#39;/g, "'").replaceAll(/&#34;/g, '"')%> <br /><span style="font-size:10px"><%=courses[i].semester.charAt(0).toUpperCase()%><%=courses[i].semester.slice(1)%> <%=courses[i].year%></span>
                                                                 </td>
                                                                   <td>
                                                                       <%= courses[i].faculty.substring(0, 20) %><%= courses[i].faculty.length > 20 ? '...' : '' %>
@@ -1203,7 +1203,7 @@
                         }
                         alertDiv.innerHTML=
                         `<div style="text-align:left;width:100%;background-color:#faf6e3;color:black" class="alert alert-warning alert-dismissible fade show" role="alert">
-                             ${classTitle} <strong style="color:#d24b5c">(${courseCode})</strong>
+                             ${classTitle.replaceAll(/&#39;/g, "'").replaceAll(/&#34;/g, '"')} <strong style="color:#d24b5c">(${courseCode})</strong>
                             <button onClick="`+
                             functionString
                             +`" type="button" class="closeAlert" data-dismiss="alert" aria-label="Close">
@@ -1213,7 +1213,7 @@
                         const table = document.getElementById("table-container"+currentTimetable);
                         table.parentElement.appendChild(alertDiv.firstChild);
                         danceRow(svgElement);
-                        alert(courseCode+ " "+ classTitle +" added to timetable");
+                        alert(courseCode+ " "+ classTitle.replaceAll(/&#39;/g, "'").replaceAll(/&#34;/g, '"') +" added to timetable");
                      }
                     }
                     
@@ -1231,7 +1231,7 @@
                         const cell = row.cells[dayIndex + 1]; // +1 to account for time column
                         const newCell = document.createElement("td");
                         newCell.className = "bg";
-                        newCell.textContent = className;
+                        newCell.textContent = className.replaceAll(/&#39;/g, "'").replaceAll(/&#34;/g, '"');
                         newCell.style.position = "relative"; // Make the td a relatively positioned element
                         
                         newCell.innerHTML += `
