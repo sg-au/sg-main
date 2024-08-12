@@ -661,6 +661,115 @@ router.get('/notice', (req, res) => {
     res.render("platform/pages/notice");
 }) ;
 
+router.post('/feedback', (req, res) => {
+    // console.log(req.body);
+    const mailOptions = {
+      from: `Feedback Report <${process.env.TECHMAIL_ID}>`,
+      to: "ibrahim.khalil_ug25@ashoka.edu.in",
+      cc:req.user._json.email,
+      subject: "Feedback for page "+req.body.feedbackPage,
+      html: `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Email Template</title>
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+                  line-height: 1.6;
+                  background-color: #f4f4f4;
+                  margin: 0;
+                  padding: 0;
+              }
+              .container {
+                  max-width: 600px;
+                  margin: 0 auto;
+                  padding: 20px;
+                  border-radius: 10px;
+                  background-color: #ffffff;
+                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+              }
+              h1 {
+                  text-align: center;
+                  color: #0078be;
+                  margin-bottom: 20px;
+              }
+              table {
+                  width: 100%;
+                  border-collapse: collapse;
+                  margin-bottom: 20px;
+              }
+              table, th, td {
+                  border: 1px solid #ddd;
+              }
+              th, td {
+                  padding: 8px;
+                  text-align: left;
+              }
+              th {
+                  background-color: #f2f2f2;
+              }
+              .greeting {
+                  color: #0078be;
+                  font-size: 1.2em;
+                  text-align: center;
+                  margin-bottom: 20px;
+              }
+          </style>
+      </head>
+      <body>
+      <div class="container">
+      <h1>Confirmation of Feedback Receipt</h1>
+      <p class="greeting">Dear member,<hr/><br> This mail is to inform you of a receipt of feedback from ${req.user._json.name}. Please provide necessary support to the member or mark the bug to be solved. <br/><br/>Thank you for the cooperation.</p>
+      <table>
+          <tr>
+              <th>Field</th>
+              <th>Value</th>
+          </tr>
+          <tr>
+              <td>Name</td>
+              <td>${req.user._json.name}</td>
+          </tr>
+          <tr>
+              <td>Email</td>
+              <td>${req.user._json.email}</td>
+          </tr>
+          <tr>
+              <td>Date Reported</td>
+              <td">${helpers.borrowDate(new Date())}</td>
+          </tr>
+          <tr>
+              <td>Feedback Page</td>
+              <td">${req.body.feedbackPage}</td>
+          </tr>
+          <tr>
+              <td>Feedback/Bug</td>
+              <td>${req.body.feedbackMessage}</td>
+          </tr>
+      </table>
+  </div>
+      </body>
+      </html>
+      
+      `,
+      replyTo:req.user._json.email,
+    };
+    // Send the email
+    transporterTECH.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          console.error('Error occurred:', error.message);
+          return res.sendStatus(400);
+      }
+      console.log('Email sent successfully!', info.messageId);
+      res.sendStatus(202);
+  });
+}) ;
+
+
+
+
 router.get('/profile', (req, res) => {
     userEmail = req.user._json.email;
     axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`,axiosConfig)
@@ -940,11 +1049,32 @@ const hasDatePassed = (date) => {
 };
 
 router.get('/assets', async(req, res) => {
-  var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
-  var user = user_filled.data[0];
+  var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
+  var user = user_data.data[0];
   var assets = await axios.get(`${apiUrl}/assets?populate=last_borrow_request`, axiosConfig);
   assets = assets.data.data;
   res.render("platform/pages/assets",{assets:assets,user:user,hasDatePassed:hasDatePassed})
+});
+
+router.get('/treasure-hunt', async(req, res) => {
+  var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=hunt_team`, axiosConfig);
+  var user = user_data.data[0];
+  if(user.hunt_team==null){
+    res.render("platform/pages/hunt-error",{message:"You are not registered for the hunt. Please contact the body conducting your event."});
+  }else{
+    res.redirect("/platform/treasure-hunt/"+user.hunt_team.id)
+  }
+});
+
+router.get('/treasure-hunt/:team', async(req, res) => {
+  var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=hunt_team`, axiosConfig);
+  var user = user_data.data[0];
+  if(user.hunt_team!=null && req.params.team==user.hunt_team.id){
+    console.log(user)
+    res.render("platform/pages/hunt-team");
+  }else{
+    res.redirect("/platform/treasure-hunt");
+  }
 });
 
 router.post('/assets', async(req, res) => {

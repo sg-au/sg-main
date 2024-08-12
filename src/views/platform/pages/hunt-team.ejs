@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SG Platform</title>
+  <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+  <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+  <%-include("../partials/preloader-css")%>
+</head>
+<%-include("../partials/post-head")%>
+
+<style>
+    @media (max-width: 768px) {
+        .comment-btn {
+            margin: 10px 0 10px 0;
+        }
+    }
+
+    .petition-details {
+
+        text-align: center;
+    }
+
+    .victory-box {
+        background-color: #eaeff4;
+        /* Blue color similar to toofantalks.com */
+        color: #000000;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .supporters-count {
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    .comments-section {
+        margin-top: 30px;
+    }
+
+    /* Custom CSS for comment boxes */
+    .comment-container {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    .comment-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+        object-fit: cover;
+    }
+
+    .comment-content {
+        flex-grow: 1;
+        background-color: #fff;
+        /* Gray background */
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .comment-name {
+        font-weight: bold;
+    }
+
+    .comment-email {
+        font-style: italic;
+        color: #888;
+    }
+
+    .comment-text {
+        margin-top: 5px;
+    }
+
+    .btn-sign {
+        width: 160px;
+        height: 40px;
+        font-size: 15px;
+        background-color: transparent;
+        color: black;
+    }
+</style>
+<script>
+    function isMobile() {
+        return window.innerWidth <= 768; // Adjust the threshold as needed
+    }
+</script>
+
+<body>
+  <%-include("../partials/preloader")%>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <%-include("../partials/sidebar")%>
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <%-include("../partials/header")%>
+        <div class="container-fluid">
+          <div class="container-fluid" style="padding-top: 25px;">
+            <div class="col-lg-12">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="petition-details">
+                                        <div class="victory-box">
+                                            <!-- <h2 class="supporters-count"> petition.attributes.signatures.data.length %></h2>
+                                            <p style="font-size: 25px;">Supporters</p> -->
+                                            <h2 class="supporters-count">Cohort 1</h2>
+                                            <p style="font-size: 12px;"><b>Team Members:</b> Ibrahim Khalil, Saransh Goel, Sarthak Rathi, John Doe, Jane Doe, Amrit Singh, Ananya Karel, Vansh Bothra, Pranjal Shevadekar, Hazim Bin Fayaz, Soubhagya Dassapatnayak</p>
+                                        </div>
+                                    </div><br />
+                                    
+                                    <div style="text-align:center" id="content" class="card-text">
+                                        <a href="#" class="card-link" style="margin-right: -20px;">
+                                            <span class="badge bg-primary rounded-3 fw-semibold">Track 1</span>
+                                        </a><br /><br />
+                                        <table style="border-collapse: collapse;width:100%">
+                                            <tr>
+                                                <td><b>Rank</b>: 3</td>
+                                                <td><b>Start Time</b>: 23:45:12</td>
+                                                <td><b>End Time</b>: 24:00:00</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Team Started Hunt</b>: 23:56:14</td>
+                                                <td><b>Team Ended Hunt</b>: 24:00:00</td>
+                                                <td><b>Hints Claimed</b>: 2</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Hints Claimed By</b>: Ibrahim Khalil, Saransh Goel</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row justify-content-center mt-1">
+                <div class="col-lg-12">
+                    <div class="card">
+                          <div style="margin:10px;" class="d-flex align-items-center">
+                            <div style="margin-left:18px;margin-top: 3px;">
+                                <h5 class="card-title">announcements[i].attributes.department.data.attributes.profile.data.attributes.username%></h5>
+                            </div>
+                        </div>
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">announcements[i].attributes.title%></h5>
+                        </div>
+                        <div class="card-body">
+                           announcements[i].attributes.announcement-%>
+                            </p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <div class="d-flex justify-content-between">
+                                <span>Created new Date(announcements[i].attributes.createdAt).toLocaleString()%></span>
+                                <span>Updated  new Date(announcements[i].attributes.updatedAt).toLocaleString()%></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+      </div>
+      
+
+    
+    </div>
+  </div>
+  <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/platform/assets/js/sidebarmenu.js"></script>
+  <script src="/platform/assets/js/app.min.js"></script>
+  <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/platform/assets/js/theme.js"></script>
+  <%-include("../partials/preloader-js")%>
+</body>
+
+</html>
