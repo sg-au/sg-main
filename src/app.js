@@ -111,9 +111,7 @@ function putImage(req, res, next) {
   if (req.user) {
     // Fetch the user's picture
     const userPicture = req.user._json.picture;
-    res.locals.imageUrl = encodeURI(userPicture);
-
-    
+    res.locals.imageUrl = encodeURI(userPicture);  
     next();
     // Make the GET request to fetch data
   }
@@ -221,7 +219,19 @@ app.get(
           await createUserInStrapi(userData);
         }
       } else {
-        console.log("Updating user...");
+        //console.log("Updating user...");
+
+
+          try {
+              const response = await axios.get(`${apiUrl}${endpoint}?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
+              if(response && response.data && response.data.length!=0){
+                const update = response.data[0];
+                update.profile_url = req.user._json.picture // Update the profile_picture field with the Google OAuth picture
+                await axios.put(`${apiUrl}${endpoint}/${response.data[0].id}`, update, axiosConfig);  
+              }
+            } catch (error) {
+              console.error("Error updating user:", error);
+          }
       }
 
       res.redirect(returnTo);
