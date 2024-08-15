@@ -661,6 +661,11 @@ router.get('/notice', (req, res) => {
     res.render("platform/pages/notice");
 }) ;
 
+router.get('/sopaan-register', async (req, res) => {
+    var users = (await axios.get(`${apiUrl}/users?filters[batch][$eqi]=UG2024&fields[0]=username&fields[1]=email&fields[2]=profile_url`, axiosConfig)).data;
+    res.render("platform/pages/sopaan-register",{users:users});
+}) ;
+
 router.post('/feedback', (req, res) => {
     // console.log(req.body);
     const mailOptions = {
