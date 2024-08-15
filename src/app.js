@@ -43,6 +43,7 @@ const threeDays = 3 * 1000 * 60 * 60 * 24; // Define a three-day duration in mil
 // Import route handlers for different parts of the application
 const websiteRoutes = require("./routes/websiteRoutes.js");
 const platformRoutes = require("./routes/platformRoutes.js");
+const tempRoutes = require("./routes/tempRoutes.js");
 
 // Configure application settings and middleware
 
@@ -95,6 +96,7 @@ var returnTo="/platform";
 // Use route handlers for website and platform routes
 app.use("/", websiteRoutes);
 app.use("/platform", ensureAuthenticated, putImage, ensureIsStudent, ensureIsNotBlocked, platformRoutes);
+app.use("/temp", ensureAuthenticated, putImage, ensureIsStudent, ensureIsNotBlocked, tempRoutes);
 
 // Middleware to ensure the user is authenticated before accessing platform routes
 function ensureAuthenticated(req, res, next) {
