@@ -113,8 +113,8 @@
                                         <div class="victory-box">
                                             <!-- <h2 class="supporters-count"><%= petition.attributes.signatures.data.length %></h2>
                                             <p style="font-size: 25px;">Supporters</p> -->
-                                            <h2 class="supporters-count"><%= petition.attributes.comments.data.length %></h2>
-                                            <p style="font-size: 25px;">Contributors</p>
+                                            <h2 class="supporters-count"><%= petition.attributes.signatures.data.length %></h2>
+                                            <p style="font-size: 25px;">Signatories</p>
                                         </div>
                                     </div>
                                     <h3 class="mb-4 card-title" style="margin-top:20px; font-size: 25px;"><%= petition.attributes.headline %></h3>
@@ -123,24 +123,24 @@
                                     <%if(petition.attributes.content){%>
                                     <div id="content" class="card-text">
                                         <%- petition.attributes.content.replace(/\n/g, '<br>') %>
-                                        <a id="expand-rules" href="javascript:expand()">Read Competition Rules</a>
                                     </div>
                                     <%}%>
-                                    <%if(petition.attributes.content2){%>
+                                    
+                                    <!-- <%if(petition.attributes.content2){%>
                                     <div style="display:none" id="content2" class="card-text">
                                         <%- petition.attributes.content2.replace(/\n/g, '<br>') %>
                                         <a id="collapse-rules" href="javascript:collapse()">Collapse Competition Rules</a>
                                     </div>
-                                    <%}%>
+                                    <%}%> -->
 
-                                    <!-- <% if (!signed) { %>
+                                    <% if (!signed) { %>
                                         <div style="text-align: center;">
                                             <button id="signButton" type="button" class="btn btn-primary m-1 btn-sign">Sign This Petition</button>
                                         </div>
-                                    <% } %> -->
+                                    <% } %>
                                 </div>
                             </div>
-                            <!-- <div class="signature-list" style="margin-top: 15px;">
+                            <div class="signature-list" style="margin-top: 15px;">
                                 <h3 class="mb-4 card-title" style="margin-top:20px; font-size: 25px;">
                                     <%=petition.attributes.signatures.data.length%> Signature(s)
                                 </h3>
@@ -149,7 +149,7 @@
                                         <li><%= signature.attributes.email %></li>
                                     <% }); %>
                                 </ul>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
                     <h3>Comments</h3>
@@ -177,9 +177,9 @@
                     <% if(comments != 0) { %>
                         <% (comments).forEach((comment, index) => { %> 
                             <div class="comment-container">
-                                <!-- <img class="comment-avatar" src="<%= comment.attributes.author.data.attributes.profile_url %>" alt="User 1"> -->
+                                <img class="comment-avatar" src="<%= comment.attributes.author.data.attributes.profile_url %>" alt="User 1">
                                 <div class="comment-content">
-                                    <!-- <p class="comment-name"><%- comment.attributes.author.data.attributes.username.substring(0,33) -%>
+                                    <p class="comment-name"><%- comment.attributes.author.data.attributes.username.substring(0,33) -%>
                                     <%if(comment.attributes.author.data.attributes.username.length>33){%>
                                     ...
                                     <%}%>
@@ -188,7 +188,7 @@
                                         <%if(comment.attributes.author.data.attributes.email.length>33){%>
                                             ...
                                         <%}%>
-                                    </p> -->
+                                    </p>
                                     <p class="comment-text"><%- comment.attributes.comment -%></p>
                                 </div>
                             </div>
