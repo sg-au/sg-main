@@ -133,15 +133,17 @@ phoneNumberInput.addEventListener('keyup', function() {
 });
 
 function validatePhoneNumber() {
-    // Allow phone numbers with optional country code (1-2 digits) and varying separators
-    const regex = /^\+?(\d{1,2})[- ]?\d{3}[- ]?\d{3}[- ]?\d{4}$/;
+    // Allow only 10-digit phone numbers
+    const regex = /^\d{10}$/;
 
-    if (!phoneNumberInput.value.match(regex) && phoneNumberInput.value.length !== 10) {
-        phoneNumberError.textContent = 'Please enter a valid phone number.';
+    if (!phoneNumberInput.value.match(regex)) {
+        phoneNumberError.textContent = 'Please enter a valid 10-digit phone number.';
         phoneNumberInput.classList.add('is-invalid'); // Add Bootstrap class for visual feedback
+        return 0;
     } else {
         phoneNumberError.textContent = '';
         phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
+        return 1;
     }
 }
 
