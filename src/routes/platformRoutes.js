@@ -665,7 +665,7 @@ router.post('/feedback', (req, res) => {
     // console.log(req.body);
     const mailOptions = {
       from: `Feedback Report <${process.env.TECHMAIL_ID}>`,
-      to: "ibrahim.khalil_ug25@ashoka.edu.in",
+      to: "amrit.singh_ug25@ashoka.edu.in,soubhagya.daspattanayak_ug25@ashoka.edu.in,technology.ministry@ashoka.edu.in",
       cc:req.user._json.email,
       subject: "Feedback for page "+req.body.feedbackPage,
       html: `
