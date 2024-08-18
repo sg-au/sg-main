@@ -1137,6 +1137,16 @@
                             </div>
                     </div>
             </div>
+            <!-- JavaScript to stop video when modal is closed -->
+<script>
+    const videoModal = document.getElementById('videoModal');
+    const videoIframe = document.getElementById('videoIframe');
+  
+    videoModal.addEventListener('hide.bs.modal', function () {
+      // Pause the video by resetting the src attribute
+      videoIframe.src = videoIframe.src;
+    });
+  </script>
             <script>
                 var currentTimetable=1;
                 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
