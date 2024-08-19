@@ -1197,7 +1197,7 @@ router.get('/location/:hunt/:number', async(req, res) => {
     res.redirect("/platform/location/"+user.hunt_team.treasure_hunt.id+"/"+req.params.number);
   }else{
       if(req.params.number<=user.hunt_team.clues_solved){
-        res.send("You've already solved this clue.")
+        res.render("platform/pages/hunt-error",{message:"You've already solved this clue."});
       }else if(req.params.number==user.hunt_team.clues_solved+1){
         var clues_data = await axios.get(`${apiUrl}/hunt-clues?filters[treasure_hunt][id][$eqi]=${req.params.hunt}&filters[clue_number][$eqi]=${req.params.number}`, axiosConfig);
         // console.log(clues_data.data.data)
@@ -1216,11 +1216,11 @@ router.get('/location/:hunt/:number', async(req, res) => {
             // console.log(lol);
             res.redirect("/platform/treasure-hunt");
           }else{
-            res.send("Nope. Only scanning the QR code will allow you pass.")
+            res.render("platform/pages/hunt-error",{message:"The QR Code is not rightly scanned. The clue code is missing/incorrect. Only scanning the QR code will allow you to pass."});
           }
         }
       }else{
-        res.send("You'll need to solve the previous clues first.")
+        res.render("platform/pages/hunt-error",{message:"You'll need to solve the previous clues first."});
       }
   }
 });
