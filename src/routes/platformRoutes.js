@@ -1070,12 +1070,162 @@ router.get('/treasure-hunt/:team', async(req, res) => {
   var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=hunt_team`, axiosConfig);
   var user = user_data.data[0];
   if(user.hunt_team!=null && req.params.team==user.hunt_team.id){
-    console.log(user)
-    res.render("platform/pages/hunt-team");
+    // console.log(user);
+    var team_data = await axios.get(`${apiUrl}/hunt-teams/${req.params.team}?populate[0]=members&populate[1]=treasure_hunt&populate[2]=hints_claimed_by&populate[3]=hints_claimed_for`, axiosConfig);
+    var rank_data = await axios.get(`${apiUrl}/hunt-teams?filters[treasure_hunt][id][$eqi]=${team_data.data.data.attributes.treasure_hunt.data.id}&populate[0]=members&populate[1]=treasure_hunt&populate[2]=hints_claimed_by&populate[3]=hints_claimed_for`, axiosConfig);
+    var memberString="";
+    var hintsClaimedByString="";
+    
+    teamsArray=rank_data.data.data;
+
+        // Assuming teamsArray is the array containing the team objects
+    const rankedTeams = teamsArray.sort((a, b) => {
+      // First, compare by clues solved (descending)
+      if (b.attributes.clues_solved !== a.attributes.clues_solved) {
+        return b.attributes.clues_solved - a.attributes.clues_solved;
+      }
+      // If clues solved are the same, compare by updatedAt (ascending)
+      return new Date(a.attributes.updatedAt) - new Date(b.attributes.updatedAt);
+    });
+    
+    var team_id=team_data.data.data.id;
+    var team_users=team_data.data.data.attributes.members.data;
+    var hint_takers=team_data.data.data.attributes.hints_claimed_by.data;
+    // prepare the list of members in a string
+    for(var i=0;i<team_users.length;i++){
+      if(i==team_users.length-1){
+        memberString+=team_users[i].attributes.username;
+      }else{
+        memberString+=team_users[i].attributes.username+", ";
+      }
+    }
+    
+    for(var i=0;i<hint_takers.length;i++){
+      if(i==hint_takers.length-1){
+        hintsClaimedByString+=hint_takers[i].attributes.username;
+      }else{
+        hintsClaimedByString+=hint_takers[i].attributes.username+", ";
+      }
+    }
+    // prepare the list of members in a string
+    teamName = team_data.data.data.attributes.name;
+    clues_solved = team_data.data.data.attributes.clues_solved;
+    // console.log(team_data.data.data.attributes.treasure_hunt.data.attributes.name);
+    hunt_name=team_data.data.data.attributes.treasure_hunt.data.attributes.name;
+    hunt_id=team_data.data.data.attributes.treasure_hunt.data.id;
+    hunt_start_time=new Date(team_data.data.data.attributes.treasure_hunt.data.attributes.start_time);
+    hunt_start_time=hunt_start_time.toLocaleDateString()+" | "+hunt_start_time.toLocaleTimeString();
+    hunt_end_time=new Date(team_data.data.data.attributes.treasure_hunt.data.attributes.end_time);
+    hunt_end_time=hunt_end_time.toLocaleDateString()+" | "+hunt_end_time.toLocaleTimeString();
+    hints_claimed=team_data.data.data.attributes.hints_claimed;
+
+    var hintsTakenFor=[];
+    team_data.data.data.attributes.hints_claimed_for.data.forEach(function(hint){
+      hintsTakenFor.push(hint.id)
+    })
+
+    var hunt = {
+      hunt_id,
+      hunt_name,
+      hunt_start_time,
+      hunt_end_time,
+      rankedTeams
+    }
+    var rank=1;
+    for(var i=0;i<rankedTeams.length;i++){
+      if(rankedTeams[i].id==team_id){
+        break;
+      }
+      rank++;
+    }
+    var team = {
+      rank:rank,
+      teamName,
+      memberString,
+      hints_claimed,
+      hintsClaimedByString,
+      hintsTakenFor,
+      clues_solved
+    }
+    var clues_data = await axios.get(`${apiUrl}/hunt-clues?filters[treasure_hunt][id][$eqi]=${team_data.data.data.attributes.treasure_hunt.data.id}`, axiosConfig);
+    clues_data = clues_data.data.data;
+    var totalClues=clues_data.length;
+    clues_data = clues_data.filter(function(obj){
+       return obj.attributes.clue_number  <= clues_solved+1;
+    });
+    // get clues, where treasure_hunt = id, 
+    // & filter out first clues_solved+1 clues using clue_number. 
+    var completed=false;
+    if(clues_solved==totalClues){
+      completed=true;
+    } 
+    res.render("platform/pages/hunt-team",{team:team,hunt:hunt,clues:clues_data,completed:completed});
   }else{
     res.redirect("/platform/treasure-hunt");
   }
 });
+
+router.get('/claim-hints/:hunt/:clue', async(req, res) => {
+  var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate[hunt_team][populate][hints_claimed_by]=*&populate[hunt_team][populate][hints_claimed_for]=*`, axiosConfig);
+  user_data=user_data.data[0];
+  // console.log(user_data.hunt_team.hints_claimed_for);
+  var hintsTakenFor=[];
+  user_data.hunt_team.hints_claimed_for.forEach(function(clue){
+    hintsTakenFor.push(clue.id)
+  })
+
+  if(user_data.hunt_team.hints_claimed<2 && !hintsTakenFor.includes(req.params.clue)){
+    // update it to +1
+    var obj=user_data.hunt_team;
+    obj.hints_claimed=obj.hints_claimed+1;
+    obj.hints_claimed_for.push(parseInt(req.params.clue));
+    obj.hints_claimed_by.push(parseInt(user_data.id));
+    // console.log(obj)
+    await axios.put(`${apiUrl}/hunt-teams/${user_data.hunt_team.id}`, {data:obj}, axiosConfig);  
+    res.redirect("/platform/treasure-hunt");
+  }else{
+    res.redirect("/platform/treasure-hunt");
+  }
+});
+
+router.get('/location/:hunt/:number', async(req, res) => {
+  // console.log(req.params.number,req.query.code);
+  var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate[hunt_team][populate][treasure_hunt]=*`, axiosConfig);
+  var user = user_data.data[0];
+  // console.log(user);
+  if(user.hunt_team.treasure_hunt.id!=parseInt(req.params.hunt)){
+    res.redirect("/platform/location/"+user.hunt_team.treasure_hunt.id+"/"+req.params.number);
+  }else{
+      if(req.params.number<=user.hunt_team.clues_solved){
+        res.send("You've already solved this clue.")
+      }else if(req.params.number==user.hunt_team.clues_solved+1){
+        var clues_data = await axios.get(`${apiUrl}/hunt-clues?filters[treasure_hunt][id][$eqi]=${req.params.hunt}&filters[clue_number][$eqi]=${req.params.number}`, axiosConfig);
+        // console.log(clues_data.data.data)
+
+        if(clues_data.data.data.length==1){
+          var clue=clues_data.data.data[0];
+          // console.log(clues_data.data.data)
+          if(req.query.code==clue.attributes.clue_code){
+            var obj=await axios.get(`${apiUrl}/hunt-teams/${user.hunt_team.id}`, axiosConfig);  
+            obj = obj.data.data;
+            obj.attributes.clues_solved=obj.attributes.clues_solved+1;
+            obj.attributes.id =obj.id;
+            obj=obj.attributes;
+            // obj.clues_solved=obj.clues_solved+1;
+            lol =await axios.put(`${apiUrl}/hunt-teams/${user.hunt_team.id}`, {data:obj}, axiosConfig);  
+            // console.log(lol);
+            res.redirect("/platform/treasure-hunt");
+          }else{
+            res.send("Nope. Only scanning the QR code will allow you pass.")
+          }
+        }
+      }else{
+        res.send("You'll need to solve the previous clues first.")
+      }
+  }
+});
+
+
 
 router.post('/assets', async(req, res) => {
   var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));

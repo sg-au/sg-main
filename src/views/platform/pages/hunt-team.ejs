@@ -111,30 +111,32 @@
                                         <div class="victory-box">
                                             <!-- <h2 class="supporters-count"> petition.attributes.signatures.data.length %></h2>
                                             <p style="font-size: 25px;">Supporters</p> -->
-                                            <h2 class="supporters-count">Cohort 1</h2>
-                                            <p style="font-size: 12px;"><b>Team Members:</b> Ibrahim Khalil, Saransh Goel, Sarthak Rathi, John Doe, Jane Doe, Amrit Singh, Ananya Karel, Vansh Bothra, Pranjal Shevadekar, Hazim Bin Fayaz, Soubhagya Dassapatnayak</p>
+                                            <h2 class="supporters-count"><%=team.teamName%></h2>
+                                            <p style="font-size: 12px;"><b>Team Members:</b> <%=team.memberString%></p>
+                                            <%if(completed){%>
+                                            <div class="card-footer text-muted">
+                                                <div class="">
+                                                    <span style="float:right;color:red">Treasure Hunt Completed! Report back to the start venue.</span>
+                                                </div>
+                                            </div>
+                                            <%}%>
                                         </div>
                                     </div><br />
                                     
                                     <div style="text-align:center" id="content" class="card-text">
                                         <a href="#" class="card-link" style="margin-right: -20px;">
-                                            <span class="badge bg-primary rounded-3 fw-semibold">Track 1</span>
+                                            <span class="badge bg-primary rounded-3 fw-semibold"><%=hunt.hunt_name%></span>
                                         </a><br /><br />
                                         <table style="border-collapse: collapse;width:100%">
                                             <tr>
-                                                <td><b>Rank</b>: 3</td>
-                                                <td><b>Start Time</b>: 23:45:12</td>
-                                                <td><b>End Time</b>: 24:00:00</td>
+                                                <td><b>Current Rank</b>: <%=team.rank%></td>
+                                                <td><b>Start Time</b>: <%=hunt.hunt_start_time%></td>
+                                                <td><b>End Time</b>: <%=hunt.hunt_end_time%></td>
                                             </tr>
                                             <tr>
-                                                <td><b>Team Started Hunt</b>: 23:56:14</td>
-                                                <td><b>Team Ended Hunt</b>: 24:00:00</td>
-                                                <td><b>Hints Claimed</b>: 2</td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Hints Claimed By</b>: Ibrahim Khalil, Saransh Goel</td>
-                                                <td></td>
-                                                <td></td>
+                                                <td><b>Clues Solved:</b><%=team.clues_solved%></td>
+                                                <td><b>Hints Claimed</b>: <%=team.hints_claimed%></td>
+                                                <td><b>Hints Claimed By</b>: <%=team.hintsClaimedByString%></td>
                                             </tr>
                                         </table>
                                     </div>
@@ -149,6 +151,7 @@
 
             <div class="row justify-content-center mt-1">
                 <div class="col-lg-12">
+                    <%for(var i=clues.length-1;i>=0;i--){%>
                     <div class="card">
                           <div style="margin:10px;" class="d-flex align-items-center">
                             <div style="margin-left:18px;margin-top: 3px;">
@@ -156,18 +159,32 @@
                             </div>
                         </div>
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Clue 1</h5>
+                            <h5 class="card-title mb-0">Clue <%=i+1%></h5>
                         </div>
                         <div class="card-body">
-                            She blocked me on Whatsapp, Instagram, Snapchat, Twitter, LinkedIn, and every other possible texting platform. How to contact her now? 
-                            </p>
+                            <%-clues[i].attributes.clue-%>
                         </div>
-                        <div class="card-footer text-muted">
-                            <div class="">
-                                <span style="float:right"><button style="float:right" class="btn btn-primary">Claim Hint</button></span>
+
+                        <%if(team.hintsTakenFor.includes(clues[i].id)){%>
+                            <div style="background: #a5eadf;" class="card-header">
+                                <h5 class="card-title mb-0">⭐ Hint for Clue <%=i+1%></h5>
                             </div>
-                        </div>
+                            <div class="card-body">
+                                <%-clues[i].attributes.hint-%>
+                            </div>
+                        <%}%>
+
+                        <%if(i==clues.length-1 && team.hints_claimed<2 && !team.hintsTakenFor.includes(clues[i].id)){%>
+                            <%if(!completed){%>
+                                <div class="card-footer text-muted">
+                                    <div class="">
+                                        <span style="float:right"><a href="/platform/claim-hints/<%=hunt.hunt_id%>/<%=clues[i].id%>" style="float:right" class="btn btn-primary">Claim Hint</a></span>
+                                    </div>
+                                </div>
+                            <%}%>
+                        <%}%>
                     </div>
+                    <%}%>
                 </div>
             </div>
 
