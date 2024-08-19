@@ -111,12 +111,17 @@
                                         <div class="victory-box">
                                             <!-- <h2 class="supporters-count"> petition.attributes.signatures.data.length %></h2>
                                             <p style="font-size: 25px;">Supporters</p> -->
+                                            <%if(!completed){%>
                                             <h2 class="supporters-count"><%=team.teamName%></h2>
+                                            <%}else{%>
+                                            <h2 class="supporters-count">Hunt Completed!</h2>
+                                            <%}%>
+
                                             <p style="font-size: 12px;"><b>Team Members:</b> <%=team.memberString%></p>
                                             <%if(completed){%>
                                             <div class="card-footer text-muted">
                                                 <div class="">
-                                                    <span style="float:right;color:red">Treasure Hunt Completed! Report back to the start venue.</span>
+                                                    <span style="font-size:16px;float:right;color:red">You finished in rank <%=team.rank%>! Report back to the start venue.</span>
                                                 </div>
                                             </div>
                                             <%}%>
