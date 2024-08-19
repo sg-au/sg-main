@@ -16,7 +16,7 @@ const axiosConfig = {
 const apiUrl = process.env.STRAPI_API_URL;
 
 router.get('/sopaan-register', async (req, res) => {
-    var users = (await axios.get(`${apiUrl}/users?filters[$or][0][batch][$eqi]=UG2024&filters[$or][1][batch][$eqi]=UG2024T&fields[0]=username&fields[1]=email&fields[2]=profile_url`, axiosConfig)).data;
+    var users = (await axios.get(`${apiUrl}/users?filters[$or][0][batch][$eqi]=UG2024&filters[$or][1][batch][$eqi]=UGT2024&fields[0]=username&fields[1]=email&fields[2]=profile_url`, axiosConfig)).data;
     res.render("platform/pages/sopaan-register",{users:users});
 }) ;
 
