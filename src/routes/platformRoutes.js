@@ -1153,12 +1153,20 @@ router.get('/treasure-hunt/:team', async(req, res) => {
     clues_data = clues_data.filter(function(obj){
        return obj.attributes.clue_number  <= clues_solved+1;
     });
+
     // get clues, where treasure_hunt = id, 
     // & filter out first clues_solved+1 clues using clue_number. 
     var completed=false;
     if(clues_solved==totalClues){
       completed=true;
     } 
+    console.log("hints taken for",hintsTakenFor);
+    console.log("clues",clues_data);
+    for(var i=clues_data.length-1;i>=0;i--){
+      if(hintsTakenFor.includes(clues_data[i].id)){
+        console.log(i,clues_data[i].id)
+      }
+    }
     res.render("platform/pages/hunt-team",{team:team,hunt:hunt,clues:clues_data,completed:completed});
   }else{
     res.redirect("/platform/treasure-hunt");
