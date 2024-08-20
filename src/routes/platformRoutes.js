@@ -1138,6 +1138,7 @@ router.get('/treasure-hunt/:team', async(req, res) => {
       }
       rank++;
     }
+    // console.log(rankedTeams)
     var team = {
       rank:rank,
       teamName,
@@ -1160,13 +1161,13 @@ router.get('/treasure-hunt/:team', async(req, res) => {
     if(clues_solved==totalClues){
       completed=true;
     } 
-    console.log("hints taken for",hintsTakenFor);
-    console.log("clues",clues_data);
-    for(var i=clues_data.length-1;i>=0;i--){
-      if(hintsTakenFor.includes(clues_data[i].id)){
-        console.log("i",i,"clue id",clues_data[i].id)
-      }
-    }
+    // console.log("hints taken for",hintsTakenFor);
+    // console.log("clues",clues_data);
+    // for(var i=clues_data.length-1;i>=0;i--){
+    //   if(hintsTakenFor.includes(clues_data[i].id)){
+    //     console.log("i",i,"clue id",clues_data[i].id)
+    //   }
+    // }
     res.render("platform/pages/hunt-team",{team:team,hunt:hunt,clues:clues_data,completed:completed});
   }else{
     res.redirect("/platform/treasure-hunt");

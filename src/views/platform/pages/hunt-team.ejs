@@ -84,6 +84,45 @@
         color: black;
     }
 </style>
+<style>
+    .leaderboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 18px;
+        text-align: left;
+    }
+
+    .leaderboard-table thead tr {
+        background-color: #4CAF50;
+        color: white;
+        text-align: center;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+    }
+
+    .leaderboard-table tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .leaderboard-table tbody tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+    .leaderboard-table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .leaderboard-table tbody tr {
+        transition: background-color 0.3s ease;
+    }
+</style>
 <script>
     function isMobile() {
         return window.innerWidth <= 768; // Adjust the threshold as needed
@@ -144,6 +183,35 @@
                                                 <td><b>Hints Claimed By</b>: <%=team.hintsClaimedByString%></td>
                                             </tr>
                                         </table>
+                                    </div>
+                                    <br />
+                                    <button style="float:right" class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">See Leaderboard</button>
+
+                                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                                    <div class="offcanvas-header">
+                                        <h5 id="offcanvasRightLabel">Leaderboard</h5>
+                                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                    </div>
+                                    <div class="offcanvas-body">
+                                        <table class="leaderboard-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Team Name</th>
+                                                    <th>Rank</th>
+                                                    <th>Clues Solved</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% for (var i = 0; i < hunt.rankedTeams.length; i++) { %>
+                                                    <tr>
+                                                        <td><%= hunt.rankedTeams[i].attributes.name %></td>
+                                                        <td><%- i + 1 %></td>
+                                                        <td><%= hunt.rankedTeams[i].attributes.clues_solved %></td>
+                                                    </tr>
+                                                <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
