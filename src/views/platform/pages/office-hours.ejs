@@ -37,8 +37,20 @@
             <%-include("../partials/header")%>
             <div class="container-fluid">
                     <div class="no-scroll">
-                        <iframe class="no-scroll" src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1SIQZzdua-6OLS2HJvo9IFFj4j-6n_el2zuYOyz76q6P93ITlSNhck2GVwiKMIB2pcFx1B2Mnd?gv=true" style="border: 0" width="100%" height="600" frameborder="0"></iframe>
+                        <div style="text-align:center" id="para">
+                            <h4>Loading Appointments</h4>
+                            <div style="display:inline-block" class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <iframe onload="onMyFrameLoad(this)" class="no-scroll" src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1SIQZzdua-6OLS2HJvo9IFFj4j-6n_el2zuYOyz76q6P93ITlSNhck2GVwiKMIB2pcFx1B2Mnd?gv=true" style="border: 0" width="100%" height="600" frameborder="0"></iframe>
                     </div>
+                    <script>
+                        function onMyFrameLoad() {
+                            console.log("hello");
+                          document.getElementById("para").style.display="none";
+                        };
+                        </script>
                             <!-- <link href="https://calendar.google.com/calendar/scheduling-button-script.css" rel="stylesheet"> -->
 <!-- end Google Calendar Appointment Scheduling -->
                             <!-- <script src="https://calendar.google.com/calendar/scheduling-button-script.js" async></script> -->
