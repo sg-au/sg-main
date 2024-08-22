@@ -937,6 +937,11 @@ router.get('/cancel-cab-pool', async(req, res) => {
 });
 
 
+router.get('/office-hours', async(req, res) => {
+  res.render("platform/pages/office-hours")
+});
+
+
 router.get('/pool-service', async (req, res) => {
   try{
     var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&fields[0]=phone&populate=services`, axiosConfig);
