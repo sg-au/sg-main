@@ -14,15 +14,21 @@
         rel="stylesheet">
         <style>
             /* Hide scrollbar for Chrome, Safari and Opera */
-.no-scroll::-webkit-scrollbar {
+#no-scroll::-webkit-scrollbar {
   display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
-.no-scroll {
+#no-scroll {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+/* For mobile and tablet devices, set the iframe height to 600px */
+@media only screen and (max-width: 1024px) {
+    #no-scroll {
+      height: 600px; /* Fixed height for mobile and tablet */
+    }
+  }
         </style>
 </head>
 <%-include("../partials/post-head")%>
