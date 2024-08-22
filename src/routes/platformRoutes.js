@@ -940,6 +940,9 @@ router.get('/cancel-cab-pool', async(req, res) => {
 router.get('/office-hours', async(req, res) => {
   res.render("platform/pages/office-hours")
 });
+router.get('/cgpa-calculator', async(req, res) => {
+  res.render("platform/pages/cgpa-calculator")
+});
 
 
 router.get('/pool-service', async (req, res) => {
