@@ -940,8 +940,11 @@ router.get('/cancel-cab-pool', async(req, res) => {
 router.get('/office-hours', async(req, res) => {
   res.render("platform/pages/office-hours")
 });
+
 router.get('/cgpa-calculator', async(req, res) => {
-  res.render("platform/pages/cgpa-calculator")
+  var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
+  var cgpa_data=user.data[0].cgpa_data;
+  res.render("platform/pages/cgpa-calculator",{cgpa_data:cgpa_data})
 });
 
 
