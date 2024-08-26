@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SG Platform</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <%-include("../partials/preloader-css")%>
+        <%-include("../partials/preloader-js")%>
+
+</head>
+<%-include("../partials/post-head")%>
+
+    <script>
+        function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+    </script>
+
+    <style>
+        .semester {
+            margin-bottom: 40px;
+        }
+
+        .semester h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-size: 14px;
+        }
+
+        td input {
+            width: 100%;
+            padding: 6px;
+            box-sizing: border-box;
+        }
+    </style>
+
+    <body>
+        <!--  Body Wrapper -->
+        <%-include("../partials/preloader")%>
+            <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+                <%-include("../partials/sidebar")%>
+                    <!--  Main wrapper -->
+                    <div class="body-wrapper">
+                        <%-include("../partials/header")%>
+                            <div class="container-fluid">
+                                <div class="container-fluid">
+                                    <div class="row justify-content-between">
+                                        <div class="card">
+                                            <div style="overflow-x:scroll" class="card-body">
+                                                <div class="flex-row mb-2">
+                                                    <span class="fs-6 fw-semibold">CGPA Planner</span>
+                                                </div>
+                                                <div class="flex-row mb-3">
+                                                    <ul class="list-inline">
+                                                      <span style="font-size: 10px;" class="fs-3 fw-semibold">
+                                                        With this set of predictive tools specifically designed for Ashokans, you can simulate future CGPA scenarios based on expected grades. Enter Retakes, Pass/Fail(s), Audits, Transfer Credits and more to calculate your Semester GPA, CGPA, Dean's List for Semester, Latin Honors, and more. Enter target CGPA and know what will be your minimum required grades.
+                                                    </span>                                         
+                                                    </ul>
+                                                  </div>
+                                                <br />
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div style="overflow-x:scroll" class="table-scrollable">
+                                                            <table id="tblListViewCR1" class="table">
+                                                                <thead style="background: #0d3862; color: #fff">
+                                                                    <tr>
+                                                                        <th> <strong style="float:left;"><%=name%> ( <%=email%> )</strong> <strong style="float:right;"></strong></th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th> <strong style="float:left;width:33%">Degree/Diploma CGPA: <%=cgpa_data.degreeCGPA%> </strong> <strong style="float:Left;;width:33%;text-align: center;">CGPA for Major: <%=cgpa_data.majorCGPA%></strong><strong style="float:right;width:33%;text-align: right;">Total counted credits: <%=cgpa_data.totalCredits%></strong></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody></tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div style="overflow-x:scroll">
+                                                            <table id="tblListViewCR2" class="table table-bordered">
+                                                                <thead>
+                                                                    <tr style="font-weight:bold;background:#c4122f;color:#fff">
+                                                                        <th class="table-checkbox" width="5px" data-filter="false" data-sorter="false">#</th>
+                                                                        <th>Code</th>
+                                                                        <th>Title</th>
+                                                                        <th style="width:1%">Credits Registered</th>
+                                                                        <th style="width:1%">Grade</th>
+                                                                        <th style="width:1%">Credits Earned</th>
+                                                                        <th style="width:1%">Grade Points</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <% cgpa_data.semesters.forEach((semester, semesterIndex) => { %>
+                                                                        <!-- Semester Header Row -->
+                                                                        <tr style="font-weight:bold;background:#0d3862;color:#fff">
+                                                                            <td colspan="7"><%= semester.semester %></td>
+                                                                        </tr>
+                                                
+                                                                        <!-- Loop through courses in the semester -->
+                                                                        <% semester.courses.forEach((course, courseIndex) => { %>
+                                                                            <tr>
+                                                                                <td><%= courseIndex + 1 %></td>
+                                                                                <td style="white-space:nowrap"><%= course.code %></td>
+                                                                                <td><%= course.title %></td>
+                                                                                <td><%= course.creditsRegistered %></td>
+                                                                                <td style="white-space:nowrap"><%= course.grade ? course.grade : 'N/A' %></td>
+                                                                                <td style="white-space:nowrap;"><%= course.creditsEarned ? course.creditsEarned : 'N/A' %></td>
+                                                                                <td style="white-space:nowrap;"><%= course.gradePoints ? course.gradePoints : 'N/A' %></td>
+                                                                            </tr>
+                                                                        <% }); %>
+                                                
+                                                                        <!-- Semester GPA, Credits Earned, CGPA Row -->
+                                                                        <tr style="font-weight:bold;background:#ddd;">
+                                                                            <td colspan="3" style="text-align:right"></td>
+                                                                            <td style="white-space:nowrap;text-align:right">GPA: <%= semester.gpa %></td>
+                                                                            <td colspan="2" style="white-space:nowrap">Semester Credits Earned: <%= semester.semesterCreditsEarned %></td>
+                                                                            <td style="white-space:nowrap">CGPA: <%= semester.cgpa %></td>
+                                                                        </tr>
+                                                                    <% }); %>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+                    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+                    <script src="/platform/assets/js/sidebarmenu.js"></script>
+                    <script src="/platform/assets/js/app.min.js"></script>
+                    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+                    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+                    <script src="/platform/assets/js/dashboard.js"></script>
+                    <script src="/platform/assets/js/theme.js"></script>
+                    <script src="/platform/assets/js/main.js"></script>
+                    <!-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> -->
+                    <script src="/platform/assets/js/dataTables.js"></script>
+                    <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
+                    <!-- <%-include("../partials/preloader-js")%> -->
+    </body>
+
+</html>

@@ -112,8 +112,11 @@ function putImage(req, res, next) {
   // Assuming you have a user object or user data available after authentication
   if (req.user) {
     // Fetch the user's picture
+    console.log(req.user._json)
     const userPicture = req.user._json.picture;
     res.locals.imageUrl = encodeURI(userPicture);  
+    res.locals.name = req.user._json.name;  
+    res.locals.email = req.user._json.email;  
     next();
     // Make the GET request to fetch data
   }

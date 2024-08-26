@@ -941,10 +941,25 @@ router.get('/office-hours', async(req, res) => {
   res.render("platform/pages/office-hours")
 });
 
-router.get('/cgpa-calculator', async(req, res) => {
+router.get('/cgpa-planner', async(req, res) => {
   var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
   var cgpa_data=user.data[0].cgpa_data;
-  res.render("platform/pages/cgpa-calculator",{cgpa_data:cgpa_data})
+  if(cgpa_data==null){
+    res.render("platform/pages/cgpa-planner-form");
+  }else{
+    console.log(JSON.stringify(cgpa_data));
+    res.render("platform/pages/cgpa-planner",{cgpa_data:cgpa_data})
+  }
+});
+
+router.post('/cgpa-planner', async(req, res) => {
+  // console.log(req.body);
+  var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
+  updateduser=user.data[0];
+  updateduser.cgpa_data=req.body.cgpa_data;
+  await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);
+  // res.redirect("/platform/cgpa-planner");
+  res.sendStatus(202)
 });
 
 
