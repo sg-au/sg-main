@@ -59,6 +59,10 @@
             padding: 6px;
             box-sizing: border-box;
         }
+        #pills-tab li .active{
+        background:#0c3862;
+        color:white;
+    }
     </style>
 
     <body>
@@ -85,68 +89,157 @@
                                                     </ul>
                                                   </div>
                                                 <br />
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div style="overflow-x:scroll" class="table-scrollable">
-                                                            <table id="tblListViewCR1" class="table">
-                                                                <thead style="background: #0d3862; color: #fff">
-                                                                    <tr>
-                                                                        <th> <strong style="float:left;"><%=name%> ( <%=email%> )</strong> <strong style="float:right;"></strong></th>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th> <strong style="float:left;width:33%">Degree/Diploma CGPA: <%=cgpa_data.degreeCGPA%> </strong> <strong style="float:Left;;width:33%;text-align: center;">CGPA for Major: <%=cgpa_data.majorCGPA%></strong><strong style="float:right;width:33%;text-align: right;">Total counted credits: <%=cgpa_data.totalCredits%></strong></th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody></tbody>
-                                                            </table>
+                                                
+                                                <div class="container mt-3">
+                                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                                        <li class="nav-item" role="presentation">
+                                                           <button class="nav-link small-pills active" id="pills-instructions-tab" data-bs-toggle="pill" data-bs-target="#evaluations" type="button" role="tab" aria-controls="#evaluations" aria-selected="true">
+                                                              Upcoming Semester
+                                                           </button>
+                                                        </li>
+                                                        <li class="nav-item" role="presentation">
+                                                            <button class="nav-link small-pills" id="pills-1-tab" data-bs-toggle="pill" data-bs-target="#updateGrades" type="button" role="tab" aria-controls="#updateGrades" aria-selected="true">Past Semesters</button>
+                                                        </li>
+                                                   </ul>
+                                                    <br /><br />
+                                                    <!-- Move your existing grade table here -->
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div style="overflow-x:scroll" class="table-scrollable">
+                                                                <table id="tblListViewCR1" class="table">
+                                                                    <thead style="background: #0d3862; color: #fff; border-radius: 20px;">
+                                                                        <tr>
+                                                                            <th> <strong style="float:left;width:33%">Degree/Diploma CGPA: <%=cgpa_data.degreeCGPA%> </strong> <strong style="float:Left;;width:33%;text-align: center;">CGPA for Major: <%=cgpa_data.majorCGPA%></strong><strong style="float:right;width:33%;text-align: right;">Total counted credits: <%=cgpa_data.totalCredits%></strong></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody></tbody>
+                                                                </table>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div style="overflow-x:scroll">
-                                                            <table id="tblListViewCR2" class="table table-bordered">
-                                                                <thead>
-                                                                    <tr style="font-weight:bold;background:#c4122f;color:#fff">
-                                                                        <th class="table-checkbox" width="5px" data-filter="false" data-sorter="false">#</th>
-                                                                        <th>Code</th>
-                                                                        <th>Title</th>
-                                                                        <th style="width:1%">Credits Registered</th>
-                                                                        <th style="width:1%">Grade</th>
-                                                                        <th style="width:1%">Credits Earned</th>
-                                                                        <th style="width:1%">Grade Points</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <% cgpa_data.semesters.forEach((semester, semesterIndex) => { %>
-                                                                        <!-- Semester Header Row -->
-                                                                        <tr style="font-weight:bold;background:#0d3862;color:#fff">
-                                                                            <td colspan="7"><%= semester.semester %></td>
-                                                                        </tr>
-                                                
-                                                                        <!-- Loop through courses in the semester -->
-                                                                        <% semester.courses.forEach((course, courseIndex) => { %>
-                                                                            <tr>
-                                                                                <td><%= courseIndex + 1 %></td>
-                                                                                <td style="white-space:nowrap"><%= course.code %></td>
-                                                                                <td><%= course.title %></td>
-                                                                                <td><%= course.creditsRegistered %></td>
-                                                                                <td style="white-space:nowrap"><%= course.grade ? course.grade : 'N/A' %></td>
-                                                                                <td style="white-space:nowrap;"><%= course.creditsEarned ? course.creditsEarned : 'N/A' %></td>
-                                                                                <td style="white-space:nowrap;"><%= course.gradePoints ? course.gradePoints : 'N/A' %></td>
-                                                                            </tr>
-                                                                        <% }); %>
-                                                
-                                                                        <!-- Semester GPA, Credits Earned, CGPA Row -->
-                                                                        <tr style="font-weight:bold;background:#ddd;">
-                                                                            <td colspan="3" style="text-align:right"></td>
-                                                                            <td style="white-space:nowrap;text-align:right">GPA: <%= semester.gpa %></td>
-                                                                            <td colspan="2" style="white-space:nowrap">Semester Credits Earned: <%= semester.semesterCreditsEarned %></td>
-                                                                            <td style="white-space:nowrap">CGPA: <%= semester.cgpa %></td>
-                                                                        </tr>
-                                                                    <% }); %>
-                                                                </tbody>
-                                                            </table>
+                                            
+                                                    <div class="tab-content">
+                                                        <!-- Evaluations Tab Content -->
+                                                        <div id="evaluations" class="tab-pane fade show active" aria-labelledby="evaluationTab">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div style="overflow-x:scroll">
+                                                                        <table id="tblListViewCR2" class="table table-bordered">
+                                                                            <thead>
+                                                                                <tr style="font-weight:bold;background:#c4122f;color:#fff">
+                                                                                    <th class="table-checkbox" width="5px" data-filter="false" data-sorter="false">#</th>
+                                                                                    <th>Code</th>
+                                                                                    <th>Title</th>
+                                                                                    <th style="width:1%">Credits Registered</th>
+                                                                                    <th style="width:1%">Grade</th>
+                                                                                    <th style="width:1%">Credits Earned</th>
+                                                                                    <th style="width:1%">Grade Points</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <% 
+                                                                                    var reversedSemesters = cgpa_data.semesters.slice().reverse(); // Reverse the array
+                                                                                %>
+                                                                                <% reversedSemesters.forEach((semester, semesterIndex) => { %>
+                                                                                    <%if(semester.semesterCreditsEarned==0 && semester.gpa==0){%>
+                                                                                    <!-- Semester Header Row -->
+                                                                                    <tr style="font-weight:bold;background:#0d3862;color:#fff">
+                                                                                        <td colspan="7"><%= semester.semester %></td>
+                                                                                    </tr>
+
+                                                                                    <!-- Loop through courses in the semester -->
+                                                                                    <% semester.courses.forEach((course, courseIndex) => { %>
+                                                                                        <tr>
+                                                                                            <td><%= courseIndex + 1 %></td>
+                                                                                            <td style="white-space:nowrap"><%= course.code %></td>
+                                                                                            <td><%= course.title %></td>
+                                                                                            <td><%= course.creditsRegistered %></td>
+                                                                                            <td style="white-space:nowrap"><%= course.grade ? course.grade : 'N/A' %></td>
+                                                                                            <td style="white-space:nowrap;"><%= course.creditsEarned ? course.creditsEarned : 'N/A' %></td>
+                                                                                            <td style="white-space:nowrap;"><%= course.gradePoints ? course.gradePoints : 'N/A' %></td>
+                                                                                        </tr>
+                                                                                    <% }); %>
+
+                                                                                    <!-- Semester GPA, Credits Earned, CGPA Row -->
+                                                                                    <tr style="font-weight:bold;background:#ddd;">
+                                                                                        <td colspan="3" style="text-align:right"></td>
+                                                                                        <td style="white-space:nowrap;text-align:right">GPA: <%= semester.gpa %></td>
+                                                                                        <td colspan="2" style="white-space:nowrap">Semester Credits Earned: <%= semester.semesterCreditsEarned %></td>
+                                                                                        <td style="white-space:nowrap">CGPA: <%= semester.cgpa %></td>
+                                                                                    </tr>
+                                                                                    <%}%>
+                                                                                <% }); %>
+
+                                                                                
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Add content for evaluations here -->
+                                                        </div>
+                                            
+                                                        <!-- Update Grades Tab Content -->
+                                                        <div id="updateGrades" role="tabpanel" class="tab-pane fade" aria-labelledby="updateTab">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div style="overflow-x:scroll">
+                                                                        <table id="tblListViewCR2" class="table table-bordered">
+                                                                            <thead>
+                                                                                <tr style="font-weight:bold;background:#c4122f;color:#fff">
+                                                                                    <th class="table-checkbox" width="5px" data-filter="false" data-sorter="false">#</th>
+                                                                                    <th>Code</th>
+                                                                                    <th>Title</th>
+                                                                                    <th style="width:1%">Credits Registered</th>
+                                                                                    <th style="width:1%">Grade</th>
+                                                                                    <th style="width:1%">Credits Earned</th>
+                                                                                    <th style="width:1%">Grade Points</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <% 
+                                                                                    var reversedSemesters = cgpa_data.semesters.slice().reverse(); // Reverse the array
+                                                                                %>
+                                                                                <% reversedSemesters.forEach((semester, semesterIndex) => { %>
+                                                                                    <%if(semester.semesterCreditsEarned!=0 && semester.gpa!=0){%>
+                                                                                    <!-- Semester Header Row -->
+                                                                                    <tr style="font-weight:bold;background:#0d3862;color:#fff">
+                                                                                        <td colspan="7"><%= semester.semester %></td>
+                                                                                    </tr>
+
+                                                                                    <!-- Loop through courses in the semester -->
+                                                                                    <% semester.courses.forEach((course, courseIndex) => { %>
+                                                                                        <tr>
+                                                                                            <td><%= courseIndex + 1 %></td>
+                                                                                            <td style="white-space:nowrap"><%= course.code %></td>
+                                                                                            <td><%= course.title %></td>
+                                                                                            <td><%= course.creditsRegistered %></td>
+                                                                                            <td>
+                                                                                                <select style="border:none" name="grade" id="grade">
+                                                                                                    <option value="<%= course.grade %>"><%= course.grade %></option>
+                                                                                                  </select>
+                                                                                            </td>
+                                                                                            <td style="white-space:nowrap;"><%= course.creditsEarned ? course.creditsEarned : 'N/A' %></td>
+                                                                                            <td style="white-space:nowrap;"><%= course.gradePoints ? course.gradePoints : 'N/A' %></td>
+                                                                                        </tr>
+                                                                                    <% }); %>
+
+                                                                                    <!-- Semester GPA, Credits Earned, CGPA Row -->
+                                                                                    <tr style="font-weight:bold;background:#ddd;">
+                                                                                        <td colspan="3" style="text-align:right"></td>
+                                                                                        <td style="white-space:nowrap;text-align:right">GPA: <%= semester.gpa %></td>
+                                                                                        <td colspan="2" style="white-space:nowrap">Semester Credits Earned: <%= semester.semesterCreditsEarned %></td>
+                                                                                        <td style="white-space:nowrap">CGPA: <%= semester.cgpa %></td>
+                                                                                    </tr>
+                                                                                    <%}%>
+                                                                                <% }); %>
+
+                                                                                
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

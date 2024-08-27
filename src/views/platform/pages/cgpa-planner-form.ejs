@@ -124,7 +124,7 @@
                                     data.majorCGPA = parseFloat(parts[2]);
                                     data.totalCredits = parseInt(parts[3], 10);
                                 }
-                                } else if (line.startsWith('Monsoon') || line.startsWith('Spring')) {
+                                } else if (line.startsWith('Monsoon') || line.startsWith('Spring') || line.startsWith('Summer')) {
                                 if (currentSemester) {
                                     data.semesters.push(currentSemester);
                                 }
