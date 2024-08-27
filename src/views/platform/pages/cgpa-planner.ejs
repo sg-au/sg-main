@@ -190,7 +190,7 @@
                                                                                     <th class="table-checkbox" width="5px" data-filter="false" data-sorter="false">#</th>
                                                                                     <th>Code</th>
                                                                                     <th>Title</th>
-                                                                                    <th style="width:1%">Credits Registered</th>
+                                                                                    <!-- <th style="width:1%">Credits Registered</th> -->
                                                                                     <th style="width:1%">Grade</th>
                                                                                     <th style="width:1%">Credits Earned</th>
                                                                                     <th style="width:1%">Grade Points</th>
@@ -204,7 +204,7 @@
                                                                                     <%if(semester.semesterCreditsEarned!=0 && semester.gpa!=0){%>
                                                                                     <!-- Semester Header Row -->
                                                                                     <tr style="font-weight:bold;background:#0d3862;color:#fff">
-                                                                                        <td colspan="7"><%= semester.semester %></td>
+                                                                                        <td colspan="6"><%= semester.semester %></td>
                                                                                     </tr>
 
                                                                                     <!-- Loop through courses in the semester -->
@@ -213,11 +213,11 @@
                                                                                             <td><%= courseIndex + 1 %></td>
                                                                                             <td style="white-space:nowrap"><%= course.code %></td>
                                                                                             <td><%= course.title %></td>
-                                                                                            <td><%= course.creditsRegistered %></td>
+                                                                                            <!-- <td><%= course.creditsRegistered %></td> -->
                                                                                             <td>
-                                                                                                <select style="border:none" name="grade" id="grade">
-                                                                                                    <option value="<%= course.grade %>"><%= course.grade %></option>
-                                                                                                  </select>
+                                                                                                <select style="border:none; width: 100%;" name="grade" id="grade">
+                                                                                                    <option style="text-align: center;" value="<%= course.grade %>"><%= course.grade %></option>
+                                                                                                </select>
                                                                                             </td>
                                                                                             <td style="white-space:nowrap;"><%= course.creditsEarned ? course.creditsEarned : 'N/A' %></td>
                                                                                             <td style="white-space:nowrap;"><%= course.gradePoints ? course.gradePoints : 'N/A' %></td>
@@ -226,7 +226,7 @@
 
                                                                                     <!-- Semester GPA, Credits Earned, CGPA Row -->
                                                                                     <tr style="font-weight:bold;background:#ddd;">
-                                                                                        <td colspan="3" style="text-align:right"></td>
+                                                                                        <td colspan="2" style="text-align:right"></td>
                                                                                         <td style="white-space:nowrap;text-align:right">GPA: <%= semester.gpa %></td>
                                                                                         <td colspan="2" style="white-space:nowrap">Semester Credits Earned: <%= semester.semesterCreditsEarned %></td>
                                                                                         <td style="white-space:nowrap">CGPA: <%= semester.cgpa %></td>
