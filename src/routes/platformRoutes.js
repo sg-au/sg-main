@@ -944,10 +944,11 @@ router.get('/office-hours', async(req, res) => {
 router.get('/cgpa-planner', async(req, res) => {
   var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
   var cgpa_data=user.data[0].cgpa_data;
+  var pf_credits=user.data[0].pf_credits || 0;
   if(cgpa_data==null){
     res.render("platform/pages/cgpa-planner-form");
   }else{
-    res.render("platform/pages/cgpa-planner",{cgpa_data:cgpa_data})
+    res.render("platform/pages/cgpa-planner",{cgpa_data:cgpa_data,pf_credits:pf_credits})
   }
 });
 
@@ -956,6 +957,7 @@ router.post('/cgpa-planner', async(req, res) => {
   var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
   updateduser=user.data[0];
   updateduser.cgpa_data=req.body.cgpa_data;
+  updateduser.pf_credits=req.body.pf_credits || 0;
   await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);
   // res.redirect("/platform/cgpa-planner");
   res.sendStatus(202)
@@ -966,6 +968,7 @@ router.get('/cgpa-planner-reset', async(req, res) => {
   var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
   updateduser=user.data[0];
   updateduser.cgpa_data=null;
+  updateduser.pf_credits=null;
   await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);
   res.redirect("/platform/cgpa-planner");
 });

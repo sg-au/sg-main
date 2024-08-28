@@ -87,7 +87,9 @@
                                                 <br />
                                                     <div class="row" id="grade-input">
                                                         <div class="col-md-12">
-                                                            <textarea name="cgpa_data" required id="gradeInput" class="form-control" rows="10" cols="50" placeholder="Go to the Grades & Evaluations' page on your AMS -> then ctrl A -> ctrl C and ctrl V in here to sync. On Macs, use cmd A, cmd C and cmd V instead."></textarea>
+                                                            <textarea name="cgpa_data" required id="gradeInput" class="form-control" rows="10" cols="50" placeholder="Go to the Grades & Evaluations' page on your AMS -> then ctrl A -> ctrl C and ctrl V in here to sync. On Macs, use cmd A, cmd C and cmd V instead."></textarea><br />
+                                                            <label for="pfCredits" class="form-label">Until now, for how many <span style="color:red">CREDITS (not courses)</span> have you chosen P/F</label><br />
+                                                            <input type="number" placeholder="Enter number of credits" class="form-control" name="pf_credits" id="pf_credits" style="width:100%" />
                                                         </div>
                                                     </div>
                                                     <br />
@@ -233,10 +235,12 @@
 
                         document.getElementById('parseButton').addEventListener('click', async () => {
                             const text = document.getElementById('gradeInput').value;
+                            const pf_credits= document.getElementById('pf_credits').value;
                             const data = parseGradeData(text); // Assume this parses the input
                             // createInputBoxes(data); // Create input boxes based on parsed data
                             var cgpa_data={
-                                cgpa_data:data
+                                cgpa_data:data,
+                                pf_credits:pf_credits
                             }
 
                             try {
