@@ -947,7 +947,6 @@ router.get('/cgpa-planner', async(req, res) => {
   if(cgpa_data==null){
     res.render("platform/pages/cgpa-planner-form");
   }else{
-    console.log(JSON.stringify(cgpa_data));
     res.render("platform/pages/cgpa-planner",{cgpa_data:cgpa_data})
   }
 });
