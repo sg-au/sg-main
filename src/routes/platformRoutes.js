@@ -961,6 +961,15 @@ router.post('/cgpa-planner', async(req, res) => {
   res.sendStatus(202)
 });
 
+router.get('/cgpa-planner-reset', async(req, res) => {
+  // console.log(req.body);
+  var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
+  updateduser=user.data[0];
+  updateduser.cgpa_data=null;
+  await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);
+  res.redirect("/platform/cgpa-planner");
+});
+
 
 router.get('/pool-service', async (req, res) => {
   try{
