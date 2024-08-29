@@ -27,6 +27,12 @@
     </script>
 
     <style>
+        @media (max-width: 600px) {
+            .reduce-padding {
+                padding-left: 10px; 
+                padding-right: 10px;
+            }
+        } 
         .semester {
             margin-bottom: 40px;
         }
@@ -63,6 +69,25 @@
         background:#0c3862;
         color:white;
     }
+    .nav-pills {
+        display: flex;
+        justify-content: space-evenly; /* Adjusts the spacing between tabs */
+        flex-wrap: nowrap; /* Prevents wrapping to the next line */
+        overflow-x: auto; /* Adds a horizontal scroll on smaller screens if needed */
+    }
+
+    /* Adjust font size and padding for smaller screens */
+    @media (max-width: 600px) {
+        .nav-link.small-pills {
+            font-size: 12px; /* Smaller font size */
+            padding: 8px 10px; /* Adjust padding */
+        }
+
+        .nav-pills {
+            justify-content: flex-start; /* Aligns tabs to the left */
+            gap: 10px; /* Adds spacing between the tabs */
+        }
+    }
     </style>
     <body>
         <!--  Body Wrapper -->
@@ -76,7 +101,7 @@
                                 <div class="container-fluid">
                                     <div class="row justify-content-between">
                                         <div class="card">
-                                            <div style="overflow-x:scroll" class="card-body">
+                                            <div style="overflow-x:scroll;" class="card-body reduce-padding">
                                                 <div class="flex-row mb-2">
                                                     <span class="fs-6 fw-semibold">CGPA Planner</span>
                                                 </div>
@@ -117,7 +142,7 @@
                                                                     <tbody></tbody>
                                                                 </table>
                                                             </div>
-                                                            <div class="mb-3 text-end">
+                                                            <div class="mb-3 text-end text-center text-md-end">
                                                                 <label for="pfCredits" class="form-label">Until now, for how many <span style="color:red">CREDITS (not courses)</span> have you chosen P/F</label><br />
                                                                 <input oninput="updateCalc(1,1)" type="number" class="form-control float-end" id="pfCredits" value="<%=pf_credits%>" style="width: auto;" />
                                                             </div>
@@ -131,8 +156,12 @@
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <div style="overflow-x:scroll">
-                                                                        <button onclick="location.reload()" class="btn btn-light" style="border:1px solid black;float:right;margin-left: 10px;margin-right: 10px;">Refresh Calculations</button>
-                                                                        <a href="/platform/cgpa-planner-reset" class="btn btn-light" style="float:right;margin-left: 10px;margin-right: 10px;">Reset All Data</a><br />
+                                                                        <div class="d-flex">
+                                                                            <button onclick="location.reload()" class="btn btn-light mr-2" style="border:1px solid black;">Refresh Calculations</button>
+                                                                            <a href="/platform/cgpa-planner-reset" class="btn btn-light">Reset All Data</a>
+                                                                        </div>
+                                                                        <br />
+                                                                        <span>Please note that, if you are retaking a course the calculation will be slightly off. Retake feature will be availaible in a few hours!</span>
                                                                         <br /><br />
                                                                         <table id="tblListViewCR2" class="table table-bordered">
                                                                             <thead>
@@ -348,10 +377,21 @@
                             // Make sure to properly parse and handle the inputs
                             const raiseAmount = parseFloat(document.getElementById("raise").value); // How much you want to raise your GPA
                             const targetGPA = currentGPA + raiseAmount; // Calculate the target GPA
-                        
+
+                            if(targetGPA>4.0){
+                                alert("The target GPA is greater than 4.0. Please enter a lower GPA raise amount.");
+                            }
+
+                            if(targetGPA || raiseAmount < 0.0){
+                                alert("You have entered a negative value!");
+                            }
+                            
                             const totalCredits = degreeCreditsUntilNow - pfCredits; // Adjust total credits by subtracting P/F credits
                             const averageGPA = parseFloat(document.getElementById("average").value); // Average GPA you aim to maintain
                             
+                            if(averageGPA < targetGPA){
+                                alert("Your average GPA input: " + averageGPA + " is lesser than the target GPA: " + targetGPA + ". Please select a higher average GPA or a lower GPA raise.")
+                            }
                             // Check if inputs are valid
                             if (isNaN(raiseAmount) || isNaN(totalCredits) || isNaN(averageGPA)) {
                                 alert("Please enter valid numbers.");
@@ -392,11 +432,19 @@
                             
                             const totalCredits = degreeCreditsUntilNow - pfCredits; // Adjust total credits by subtracting P/F credits
 
+                            if(semesterCredits || raiseAmount < 0.0){
+                                alert("You have entered a negative value!");
+                            }
+
                             // Calculate the required semester GPA using the fixed function
                             var needGPA = calculateRequiredSemesterGPA(currentGPA, totalCredits, raiseAmount, semesterCredits);
                             
                             // Output the result to the "needGPA" field
-                            document.getElementById("needGPA").value = needGPA;
+                            if(needGPA>4.0){
+                                alert("The required GPA is greater than 4.0. Please enter a lower GPA raise amount or higher semester credits.");
+                            } else{
+                                document.getElementById("needGPA").value = needGPA;
+                            }
                         }
 
                         function calculateNewCGPA(currentGPA, totalCredits, averageGPA, newCredits) {
@@ -421,6 +469,10 @@
                             let newCredits = parseFloat(document.getElementById("newCredits").value) || 0; // Parse GPA raise amount (fixed this part)
                             
                             const totalCredits = degreeCreditsUntilNow - pfCredits; // Adjust total credits by subtracting P/F credits
+
+                            if(averageGPA || newCredits < 0.0){
+                                alert("You have entered a negative value!");
+                            }
 
                             // Calculate the required semester GPA using the fixed function
                             var newCGPA = calculateNewCGPA(currentGPA, totalCredits, averageGPA, newCredits) 
