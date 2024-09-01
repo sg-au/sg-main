@@ -129,6 +129,7 @@
                                                         </li>
                                                    </ul>
                                                     <br /><br />
+
                                                     <!-- Move your existing grade table here -->
                                                     <div class="row">
                                                         <div class="col-md-12">
@@ -157,11 +158,50 @@
                                                                 <div class="col-md-12">
                                                                     <div style="overflow-x:scroll">
                                                                         <div class="d-flex">
-                                                                            <button onclick="location.reload()" class="btn btn-light mr-2" style="border:1px solid black;">Refresh Calculations</button>
-                                                                            <a href="/platform/cgpa-planner-reset" class="btn btn-light">Reset All Data</a>
+                                                                            <button onclick="location.reload()" class="btn btn-light mr-2" style="border:1px solid black;">Reset Data</button>
+                                                                            <a href="/platform/cgpa-planner-reset" class="btn btn-light">Re-sync From AMS</a>
                                                                         </div>
                                                                         <br />
-                                                                        <span>Please note that, if you are retaking a course the calculation will be slightly off. Retake feature will be availaible in a few hours!</span>
+                                                                        <span>Click <a href="#" data-bs-toggle="modal" data-bs-target="#retakeModal">here</a> if you are retaking any course(s).</span>
+                                                                        <div class="modal fade" id="retakeModal" tabindex="-1" aria-labelledby="retakeModalLabel" aria-hidden="true">
+                                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <h5 class="modal-title" id="retakeModalLabel">Declare Retakes</h5>
+                                                                                        <button onclick="closeUpdate()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                                    </div>
+                                                                                    <% var reversedSemesters = cgpa_data.semesters.slice().reverse(); var tempCGPA = cgpa_data.degreeCGPA %>
+                                                                                    <div class="modal-body">
+                                                                                        I am retaking                                                                                            
+                                                                                        <% reversedSemesters.forEach((semester, semesterIndex) => { %>
+                                                                                            <%if(semester.semesterCreditsEarned==0 && semester.gpa==0){%>
+                                                                                                <select class="" style="border: none; max-width: 80%;" name="currentCourse" id="currentCourse">
+                                                                                                    <option value="">Select</option>
+                                                                                                    <% semester.courses.forEach((course, courseIndex) => { %>
+                                                                                                        <option value="<%= courseIndex %>"><%= course.title %>-<%= semester.semester %></option>
+                                                                                                    <% }); %>
+                                                                                                </select>
+                                                                                            
+                                                                                                <% } %>
+                                                                                        <% }) %>
+                                                                                        to replace
+                                                                                        <select class="" style="border: none; max-width: 80%;" name="retakeCourse" id="retakeCourse">
+                                                                                            <option value="">Select</option>
+                                                                                            <% reversedSemesters.forEach((semester, semesterIndex) => { %>
+                                                                                                <%if(semester.semesterCreditsEarned!=0 && semester.gpa!=0){%>
+                                                                                                    <% semester.courses.forEach((course, courseIndex) => { %>
+                                                                                                        <option value="<%= course.gradePoints %>"><%= course.title %>-<%= semester.semester %></option>
+                                                                                                    <% }) %>
+                                                                                                <% } %>
+                                                                                            <%})%>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <div class="modal-footer">
+                                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Save</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                         <br /><br />
                                                                         <table id="tblListViewCR2" class="table table-bordered">
                                                                             <thead>
@@ -342,6 +382,13 @@
                                 </div>
                             </div>
                     </div>
+
+                    <script>
+                        function closeUpdate() {
+                            document.getElementById("currentCourse").value="";
+                            document.getElementById("retakeCourse").value="";
+                        }
+                    </script>
                     <script>
                         // Function to reset all input fields by their specific ids
                         function resetForm() {
@@ -561,10 +608,14 @@
                                 let gpaRounded=Math.round(gpa*100)/100;
                                 document.getElementById("gpa-upcoming "+semesterIndex).innerText="Predicted GPA: "+ gpaRounded;
                                 document.getElementById("creditsEarned-upcoming "+semesterIndex).innerText="Predicted Semester Credits Earned: "+semesterCreditsEarned;
-                                let degreeCgpa=parseFloat('<%=cgpa_data.degreeCGPA%>');
+                                let degreeCgpa=parseFloat('<%=tempCGPA%>');
                                 let degreeCreditsUntilNow=parseInt('<%=cgpa_data.totalCredits%>');
+                                
                                 let pfCredits=document.getElementById("pfCredits").value;
                                 let gp=degreeCgpa*(degreeCreditsUntilNow-pfCredits);
+                                if(courseIndex == parseInt(document.getElementById("currentCourse").value)) {
+                                    gp = gp - parseFloat(document.getElementById("retakeCourse").value)
+                                }
                                 let pcgpa=(gp+semesterGradePointsForGPACalculation)/(semesterCreditsForGPACalculation+(degreeCreditsUntilNow-pfCredits))
                                 let pcgpaRounded=Math.round(pcgpa*100)/100;
                                 document.getElementById("cgpa-upcoming "+semesterIndex).innerText="PCGPA: "+pcgpaRounded;
