@@ -1142,6 +1142,7 @@ router.get('/assets/returned/:id', async(req, res) => {
     temp.returned=1;
     temp.returned_to=[id];
     temp.returned_on=new Date();
+    temp.is_the_latest_booking_of=[];
     await axios.put(`${apiUrl}/borrow-requests/${req.params.id}`, {data:temp}, axiosConfig);      
     res.redirect("/platform/assets/dashboard");
   }
