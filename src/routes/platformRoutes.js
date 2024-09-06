@@ -1404,26 +1404,26 @@ router.post('/assets', async(req, res) => {
                           .undertaking {
                               font-family: Arial, sans-serif;
                               color: #333;
-                              font-size: 6pt;
+                              font-size: 12px;
                               line-height: 1.6;
                           }
                           .undertaking h2 {
                               color: #b55050;
                               text-align: center;
                               margin-bottom: 18px;
-                              font-size: 10pt;
+                              font-size: 14px;
                           }
                           .undertaking h3 {
                               color: #b55050;
                               margin-bottom: 6px;
-                              font-size: 6.5pt;
+                              font-size: 13px;
                           }
                           .undertaking ul {
-                              font-size: 6pt;
+                              font-size: 12px;
                               margin-bottom: 12px;
                           }
                           .undertaking p {
-                              font-size: 6pt;
+                              font-size: 12px;
                               margin-bottom: 12px;
                           }
                       </style>
@@ -1486,7 +1486,9 @@ router.post('/assets', async(req, res) => {
                                   <td>${helpers.formatDate(new Date())}</td>
                               </tr>
                           </table>
-
+                          <br />
+                          <hr/>
+                          <br />
                           <!-- Undertaking Section -->
                           <div class="undertaking">
                               <h2>Undertaking for Borrowing Devices</h2>
@@ -1552,7 +1554,7 @@ router.post('/assets', async(req, res) => {
               `,
               replyTo:req.user._json.email,
             };
-            
+
           transporterTECH.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.error('Error occurred:', error.message);
