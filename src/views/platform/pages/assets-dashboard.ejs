@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SG Platform</title>
+  <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap JS (for modals) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.gstatic.com" rel="preconnect" />
+  <link rel="stylesheet" href="/platform/assets/css/dataTables.css" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+    
+  <style>
+    @media screen and (max-width: 768px) {
+      .scroll {
+        display: block;
+        overflow-x: auto;
+      }
+      .upper {
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+  <%-include("../partials/preloader-css")%>
+  <%-include("../partials/preloader-js")%>
+
+</head>
+<%-include("../partials/post-head")%>
+
+<script>
+    function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+</script>
+
+<body>
+  <!--  Body Wrapper -->
+  <%-include("../partials/preloader")%>
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <%-include("../partials/sidebar")%>
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <%-include("../partials/header")%>
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="row justify-content-between">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="flex-row mb-2">
+                      <span class="fs-6 fw-semibold">All Borrow Requests</span>
+                    </div>
+                    <div class="flex-row mb-3">
+                      <ul class="list-inline">
+                        <span style="font-size: 10px;" class="fs-3 fw-semibold">
+                          Click on the WhatsApp icon to message the person or the mail icon to mail the person. <br />
+                        </span>                                         
+                      </ul>
+                    </div>
+                    <br>
+                    <!-- Button to trigger modal -->
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="borrowRequestModal" tabindex="-1" aria-labelledby="borrowRequestModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="borrowRequestModalLabel">Borrow Request Form</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <div id="borrowReason"></div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <a id="acceptLink" href="" class="btn btn-primary">Accept</a>
+                            <a id="rejectLink" href="" class="btn btn-danger">Reject</a>
+                            <a id="returnLink" href="" class="btn btn-success">Return</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- <table class="inputs">
+                      <tbody>
+                        <tr>
+                          <td>Filter by Semester:</td>
+                          <td><input type="text" id="sem" name="sem"></td>
+                        </tr>
+                        <tr>
+                          <td>Filter by Year:</td>
+                          <td><input type="text" id="max" name="max"></td>
+                        </tr>
+                      </tbody>
+                    </table> -->
+                    <form>
+                        <div class="row">
+                          <div class="col-lg-6">
+                            <select class="form-select" id="day" name="day">
+                              <option selected>Filter by Day</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-6">
+                            <select class="form-select" id="route" name="route">
+                              <option>Filter by Route</option>
+                                                  <option value="Campus to Airport">Campus to Airport</option>
+                                                  <option value="Campus to Jahangirpuri">Campus to Jahangirpuri</option>
+                                                  <option value="Campus to Gurgaon">Campus to Gurgaon</option>
+                                                  <option value="Campus to New Delhi">Campus to New Delhi (Metro/Railway Station)</option>
+                                                  <option value="Campus to Nizamuddin">Campus to H. Nizamuddin</option>                                                
+                                                  <option value="Campus to Jaipur">Campus to Jaipur</option>
+                                                  <option value="Campus to Chandigarh">Campus to Chandigarh</option>
+                                                  <option value="Campus to Ludhiana">Campus to Ludhiana</option>
+                                                  <option value="Campus to Agra">Campus to Agra</option>
+                                                  <option value="Campus to Noida">Campus to Noida</option>
+                                                  <option value="Campus to Ghaziabad">Campus to Ghaziabad</option>
+  
+                                                  <!-- <option value="Airport to Campus">Airport to Campus</option>
+                                                  <option value="Jahangirpuri to Campus">Jahangirpuri to Campus</option>
+                                                  <option value="Gurgaon to Campus">Gurgaon to Campus</option>
+                                                  <option value="New Delhi to Campus">New Delhi (Metro/Railway Station) to Campus</option>
+                                                  <option value="Nizamuddin to Campus">H. Nizamuddin to Campus</option>
+                                                  <option value="Jaipur to Campus">Jaipur to Campus</option>
+                                                  <option value="Chandigarh to Campus">Chandigarh to Campus</option>
+                                                  <option value="Ludhiana to Campus">Ludhiana to Campus</option>
+                                                  <option value="Agra to Campus">Agra to Campus</option>
+                                                  <option value="Noida to Campus">Noida to Campus</option>
+                                                  <option value="Ghaziabad to Campus">Ghaziabad to Campus</option>           -->
+                            </select>
+                          </div>
+                        </div>
+                      </form>
+                      <br />
+                    <table id="borrowRequests" class="table table-striped scroll" style="width:100%">
+                      <thead>
+                          <tr>
+                            <th></th>
+                            <th>R.ID</th>
+                            <th>Name</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Status</th>
+                            <th>Issued On</th>
+                            <th>Returned On</th>
+                            <th>Asset</th>
+                            <th>Actions</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <%for(i=0;i<requests.length;i++){%>
+                            <tr>
+                              <td>
+                                <a href="https://wa.me/91<%=requests[i].attributes.user.data.attributes.phone%>">
+                                  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48">
+                                    <path fill="#fff" d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z"></path><path fill="#fff" d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z"></path><path fill="#cfd8dc" d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z"></path><path fill="#40c351" d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z"></path><path fill="#fff" fill-rule="evenodd" d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.237-0.277,0.316-0.475,0.474-0.791c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>  
+                                <a href="mailto:<%=requests[i].attributes.user.data.attributes.email%>">
+                                    <svg width="23" height="23" viewBox="7.086 -169.483 1277.149 1277.149" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M1138.734 931.095h.283M1139.017 931.095h-.283"/><path d="M1179.439 7.087c57.543 0 104.627 47.083 104.627 104.626v30.331l-145.36 103.833-494.873 340.894L148.96 242.419v688.676h-37.247c-57.543 0-104.627-47.082-104.627-104.625V111.742C7.086 54.198 54.17 7.115 111.713 7.115l532.12 394.525L1179.41 7.115l.029-.028z" fill="#e75a4d"/><linearGradient id="a" gradientUnits="userSpaceOnUse" x1="1959.712" y1="737.107" x2="26066.213" y2="737.107" gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)"><stop offset="0" stop-color="#f8f6ef"/><stop offset="1" stop-color="#e7e4d6"/></linearGradient><path fill="url(#a)" d="M111.713 7.087l532.12 394.525L1179.439 7.087z"/><path fill="#e7e4d7" d="M148.96 242.419v688.676h989.774V245.877L643.833 586.771z"/><path fill="#b8b7ae" d="M148.96 931.095l494.873-344.324-2.24-1.586L148.96 923.527z"/><path fill="#b7b6ad" d="M1138.734 245.877l.283 685.218-495.184-344.324z"/><path d="M1284.066 142.044l.17 684.51c-2.494 76.082-35.461 103.238-145.219 104.514l-.283-685.219 145.36-103.833-.028.028z" fill="#b2392f"/><linearGradient id="b" gradientUnits="userSpaceOnUse" x1="1959.712" y1="737.107" x2="26066.213" y2="737.107" gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)"><stop offset="0" stop-color="#f8f6ef"/><stop offset="1" stop-color="#e7e4d6"/></linearGradient><path fill="url(#b)" d="M111.713 7.087l532.12 394.525L1179.439 7.087z"/><linearGradient id="c" gradientUnits="userSpaceOnUse" x1="1959.712" y1="737.107" x2="26066.213" y2="737.107" gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)"><stop offset="0" stop-color="#f8f6ef"/><stop offset="1" stop-color="#e7e4d6"/></linearGradient><path fill="url(#c)" d="M111.713 7.087l532.12 394.525L1179.439 7.087z"/><linearGradient id="d" gradientUnits="userSpaceOnUse" x1="1959.712" y1="737.107" x2="26066.213" y2="737.107" gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)"><stop offset="0" stop-color="#f8f6ef"/><stop offset="1" stop-color="#e7e4d6"/></linearGradient><path fill="url(#d)" d="M111.713 7.087l532.12 394.525L1179.439 7.087z"/><linearGradient id="e" gradientUnits="userSpaceOnUse" x1="1959.712" y1="737.107" x2="26066.213" y2="737.107" gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)"><stop offset="0" stop-color="#f8f6ef"/><stop offset="1" stop-color="#e7e4d6"/></linearGradient><path fill="url(#e)" d="M111.713 7.087l532.12 394.525L1179.439 7.087z"/><linearGradient id="f" gradientUnits="userSpaceOnUse" x1="1959.712" y1="737.107" x2="26066.213" y2="737.107" gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)"><stop offset="0" stop-color="#f8f6ef"/><stop offset="1" stop-color="#e7e4d6"/></linearGradient><path fill="url(#f)" d="M111.713 7.087l532.12 394.525L1179.439 7.087z"/><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="1959.712" y1="737.107" x2="26066.213" y2="737.107" gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)"><stop offset="0" stop-color="#f8f6ef"/><stop offset="1" stop-color="#e7e4d6"/></linearGradient><path fill="url(#g)" d="M111.713 7.087l532.12 394.525L1179.439 7.087z"/><linearGradient id="h" gradientUnits="userSpaceOnUse" x1="1959.712" y1="737.107" x2="26066.213" y2="737.107" gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)"><stop offset="0" stop-color="#f8f6ef"/><stop offset="1" stop-color="#e7e4d6"/></linearGradient><path fill="url(#h)" d="M111.713 7.087l532.12 394.525L1179.439 7.087z"/><path fill="#f7f5ed" d="M111.713 7.087l532.12 394.525L1179.439 7.087z"/></svg>
+                                </a>
+                              </td>
+                              <td>
+                                <%=requests[i].id%>
+                              </td>
+                              <td>
+                                <%=requests[i].attributes.user.data.attributes.username%>
+                              </td>
+                              <td>
+                                <%-new Date(requests[i].attributes.from).toLocaleDateString('en', { month: 'short' })-%> <%-new Date(requests[i].attributes.from).getDate()-%>, <%-new Date(requests[i].attributes.from).getFullYear()-%>
+                              </td>
+                              <td>
+                                <%if(new Date(requests[i].attributes.to)<new Date() && requests[i].attributes.returned!=1){%>
+                                    <span class="bg-danger text-white">Overdue: <%-new Date(requests[i].attributes.to).toLocaleDateString('en', { month: 'short' })-%> <%-new Date(requests[i].attributes.to).getDate()-%>, <%-new Date(requests[i].attributes.to).getFullYear()-%></span>
+                                <%}else{%>
+                                    <%-new Date(requests[i].attributes.to).toLocaleDateString('en', { month: 'short' })-%> <%-new Date(requests[i].attributes.to).getDate()-%>, <%-new Date(requests[i].attributes.to).getFullYear()-%>
+                                <%}%>
+                            </td>
+                              <td><%-requests[i].attributes.returned==1?requests[i].attributes.issued==1?`<span style="padding:2px" class="bg-success text-white">Returned</span>`:`<span style="padding:2px" class="bg-danger text-white">Rejected</span>`:requests[i].attributes.issued==1?`<span style="padding:2px" class="bg-info text-white">Issued</span>`:`<span style="display:none">.</span><span style="padding:2px" class="bg-warning text-white">Pending</span>`;-%></td>
+                              <td>
+                                <%-requests[i].attributes.issued_on==null?"N.A":new Date(requests[i].attributes.issued_on).toLocaleDateString('en-GB');-%>
+                              </td>
+                              <td>
+                                <%-requests[i].attributes.returned_on==null?"N.A":new Date(requests[i].attributes.returned_on).toLocaleDateString('en-GB');-%>
+                              </td>
+                              <td><%=requests[i].attributes.asset.data.attributes.name%></td>
+                              <td>
+                                <%if(requests[i].attributes.issued==0 && requests[i].attributes.returned==0){%>
+                                  <button onclick="acceptRequest('<%=requests[i].id%>');" style="padding:3px;margin:2px" class="btn btn-primary">Accept</button>
+                                  <button onclick="rejectRequest('<%=requests[i].id%>');" style="padding:3px;margin:2px" class="btn btn-danger">Reject</button>
+                                <%}else if(requests[i].attributes.issued==0 && requests[i].attributes.returned!=0){%>
+                                    None avaiable
+                                <%}else if(requests[i].attributes.returned!=0){%>
+                                  None avaiable
+                                <%}else{%>
+                                  <button onclick="markReturned('<%=requests[i].id%>');" style="padding:3px;margin:2px" class="btn btn-success">Returned</button>
+                                <%}%>
+                              </td>
+                              
+                            </tr>
+                        <%}%>                      
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                            <th></th>
+                            <th>R.ID</th>
+                            <th>Name</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Status</th>
+                            <th>Issued On</th>
+                            <th>Returned On</th>
+                            <th>Asset</th>
+                            <th>Actions</th>
+                        </tr>
+                      </tfoot>
+                  </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/platform/assets/js/sidebarmenu.js"></script>
+  <script src="/platform/assets/js/app.min.js"></script>
+  <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/platform/assets/js/dashboard.js"></script>
+  <script src="/platform/assets/js/theme.js"></script>
+  <script src="/platform/assets/js/main.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> -->
+  <script src="/platform/assets/js/dataTables.js"></script>
+  <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
+  <script>
+    function acceptRequest(id){
+            // Prompt the user with Yes/No confirmation
+        var userConfirmed = window.confirm("Confirm that you want to ACCEPT this request");
+        // If the user clicks "OK", execute the remaining function
+        if (userConfirmed) {
+            // Remaining function logic
+            console.log("User confirmed! Proceeding with the function...");
+            window.location.href="/platform/assets/accept/"+id;
+            // Add your remaining function code here
+        } else {
+            // If the user clicks "Cancel", do not execute the remaining function
+            console.log("User canceled. Stopping execution.");
+        }
+    }
+    function markReturned(id){
+            // Prompt the user with Yes/No confirmation
+        var userConfirmed = window.confirm("Confirm RETURN of item borrowed");
+
+        // If the user clicks "OK", execute the remaining function
+        if (userConfirmed) {
+            // Remaining function logic
+            console.log("User confirmed! Proceeding with the function...");
+            window.location.href="/platform/assets/returned/"+id;
+            // Add your remaining function code here
+        } else {
+            // If the user clicks "Cancel", do not execute the remaining function
+            console.log("User canceled. Stopping execution.");
+        }
+    }
+    function rejectRequest(id){
+            // Prompt the user with Yes/No confirmation
+        var userConfirmed = window.confirm("Confirm that you want to REJECT this request");
+
+        // If the user clicks "OK", execute the remaining function
+        if (userConfirmed) {
+            // Remaining function logic
+            console.log("User confirmed! Proceeding with the function...");
+            window.location.href="/platform/assets/reject/"+id;
+            // Add your remaining function code here
+        } else {
+            // If the user clicks "Cancel", do not execute the remaining function
+            console.log("User canceled. Stopping execution.");
+        }
+    }
+
+    function updateTheBorrowModal(id, borrowed, returned, reason) {
+       console.log("ID:", id);
+       var decodedReason = decodeURIComponent(reason); // Decode the reason string
+       console.log("ID:", id);
+       console.log("Borrowed:", borrowed);
+       console.log("Returned:", returned);
+       console.log("Reason:", decodedReason); // Now it contains the original string with special characters
+       // Update modal fields or perform further actions
+     }
+     function handleBorrowModal(button) {
+         // Extract data from the data attributes
+         var id = button.getAttribute('data-id');
+         var borrowed = button.getAttribute('data-borrowed');
+         var returned = button.getAttribute('data-returned');
+         var reason = decodeURIComponent(button.getAttribute('data-reason')); // Decode the reason string
+         // Now you can safely use these values
+         updateTheBorrowModal(id, borrowed, returned, reason);
+     }
+   </script>
+  <script>
+    const dayEl = document.querySelector('#day');
+    const routeEl = document.querySelector('#route');
+    
+    // Custom range filtering function
+    DataTable.ext.search.push(function (settings, data, dataIndex) {
+        let day = dayEl.value;
+        let route = routeEl.value;
+        let daydata = (data[5]) || 0;
+        let routedata = (data[4]) || 0;
+        // console.log(year);
+        if (
+            (day == "Filter by Day" && route == "Filter by Route") ||
+            (daydata.includes(day) && route == "Filter by Route") ||
+            (day == "Filter by Day" && routedata.includes(route)) ||
+            (daydata.includes(day) && routedata.includes(route))
+        ) {
+            // console.log(sem)
+            return true;
+        }
+    
+        return false;
+    });
+    
+    const table = new DataTable('#borrowRequests');
+    
+    // Changes to the inputs will trigger a redraw to update the table
+    dayEl.addEventListener('change', function () {
+        table.draw();
+    });
+    routeEl.addEventListener('change', function () {
+        table.draw();
+    });
+  </script>
+  <script>
+    
+  </script>
+  <!-- <%-include("../partials/preloader-js")%> -->
+</body>
+
+</html>

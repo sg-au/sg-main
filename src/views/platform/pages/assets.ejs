@@ -180,6 +180,9 @@ ul li {
 
                                 </div>
                                 <input id="devidform" name="asset" type="hidden" value="">
+                                <input id="devnameform" name="deviceName" type="hidden" value="">
+                                <input id="devtypeform" name="deviceType" type="hidden" value="">
+                                <input id="devdescriptionform" name="deviceDescription" type="hidden" value="">
                                 <div id="undertaking">
                                 <h6 style="color:rgb(185, 80, 80)">Undertaking for Borrowing Devices</h6>
                                 <br />
@@ -220,9 +223,10 @@ ul li {
                                 <p><strong>Email Address:</strong> <%=user.email%></p>
                         
                                 <h6>Device Details:</h6>
-                                <p><strong>Device Name:</strong> <span id="deviceName"></span></p>
-                                <p><strong>Device Type:</strong><span id="deviceType"></span></p>
-                                <p><strong>Device ID:</strong><span id="deviceId"></span></p>
+                                <p><strong>Device Name:</strong> <span id="deviceNameText"></span></p>
+                                <p><strong>Device Type:</strong><span id="deviceTypeText"></span></p>
+                                <p><strong>Device ID:</strong><span id="deviceIdText"></span></p>
+                                <p><strong>Device Description:</strong><span id="deviceDescriptionText"></span></p>
 
                                 <p>By signing this undertaking hereby submitting the form, I acknowledge that I have read, understood, and agree to abide by the terms and conditions stated above.</p>
                                 <p><strong>Contact Information:</strong> Ministry of Technology, Ashoka University Email: <a href="mailto:technology.ministry@ashoka.edu.in">technology.ministry@ashoka.edu.in</a></p>
@@ -265,7 +269,7 @@ ul li {
                           <span class="badge bg-primary rounded-3 fw-semibold">
                               <%=assets[i].attributes.type%>
                           </span>
-                          <button onclick="updateDeviceDetails('<%=assets[i].attributes.name%>','<%=assets[i].attributes.type%>','<%=assets[i].id%>')" data-toggle="modal" data-target="#exampleModalLong" style="float:right;" class="btn btn-success">
+                          <button onclick="updateDeviceDetails(`<%=assets[i].attributes.name%>`,`<%=assets[i].attributes.type%>`,`<%=assets[i].id%>`,`<%=assets[i].attributes.description%>`)" data-toggle="modal" data-target="#exampleModalLong" style="float:right;" class="btn btn-success">
                               Request
                            </button>
                       </div>
@@ -318,7 +322,7 @@ ul li {
                           <span class="badge bg-primary rounded-3 fw-semibold">
                               <%=assets[i].attributes.type%>
                           </span>
-                          <button onclick="updateDeviceDetails('<%=assets[i].attributes.name%>','<%=assets[i].attributes.type%>','<%=assets[i].id%>')" data-toggle="modal" data-target="#exampleModalLong" style="float:right;" class="btn btn-success">
+                          <button onclick="updateDeviceDetails(`<%=assets[i].attributes.name%>`,`<%=assets[i].attributes.type%>`,`<%=assets[i].id%>`,`<%=assets[i].attributes.description%>`)" data-toggle="modal" data-target="#exampleModalLong" style="float:right;" class="btn btn-success">
                               Request
                            </button>
                       </div>
@@ -419,11 +423,16 @@ ul li {
             phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
         });
 
-        function updateDeviceDetails(name, type, id){
-            document.getElementById('deviceName').innerText=name;
-            document.getElementById('deviceType').innerText=type;
-            document.getElementById('deviceId').innerText=Math.floor(Math.random()*90000) + 10000 +'-'+ id;
+        function updateDeviceDetails(name, type, id,description){
+          console.log(name, type, id,description);
+            document.getElementById('deviceNameText').innerText=name;
+            document.getElementById('deviceTypeText').innerText=type;
+            document.getElementById('deviceIdText').innerText=Math.floor(Math.random()*90000) + 10000 +'-'+ id;
+            document.getElementById('deviceDescriptionText').innerText=description;
             document.getElementById('devidform').value=id;
+            document.getElementById('devnameform').value=name;
+            document.getElementById('devtypeform').value=type;
+            document.getElementById('devdescriptionform').value=description;
         }
 
         

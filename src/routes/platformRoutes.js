@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {transporterSG,transporterTECH} = require("../config/nodemailer-config"); // Import the Nodemailer configuration module
 const fs = require('fs');
-const publicTicketCategories = JSON.parse(fs.readFileSync('./data/public-tickets-all.json', 'utf8'));
+const publicTicketCategories = JSON.parse(fs.readFileSync('./data/category-subcategory-map.json', 'utf8'));
 const jsonfile = require('jsonfile')
 const file = './data/tickets.jsonl'
 const helpers=require('../config/helperFunctions.js');
@@ -1093,6 +1093,58 @@ router.get('/assets', async(req, res) => {
   res.render("platform/pages/assets",{assets:assets,user:user,hasDatePassed:hasDatePassed})
 });
 
+router.get('/assets/dashboard', async(req, res) => {
+  if(req.user._json.email==process.env.BORROW_POC || req.user._json.email=='ibrahim.khalil_ug25@ashoka.edu.in'){
+    var borrow_data = await axios.get(`${apiUrl}/borrow-requests?populate=user&populate=asset`, axiosConfig);
+    // console.log(borrow_data.data.data);
+    res.render("platform/pages/assets-dashboard",{requests:borrow_data.data.data});
+  }
+});
+
+router.get('/assets/accept/:id', async(req, res) => {
+  if(req.user._json.email==process.env.BORROW_POC || req.user._json.email=='ibrahim.khalil_ug25@ashoka.edu.in'){
+    var borrow_data = await axios.get(`${apiUrl}/borrow-requests/${req.params.id}`, axiosConfig);
+    temp = borrow_data.data.data.attributes;
+    var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
+    user=user.data[0];
+    id=user.id;
+    temp.issued=1;
+    temp.issued_by=[id];
+    temp.issued_on=new Date();
+    await axios.put(`${apiUrl}/borrow-requests/${req.params.id}`, {data:temp}, axiosConfig);      
+    res.redirect("/platform/assets/dashboard");
+  }
+});
+
+router.get('/assets/reject/:id', async(req, res) => {
+  if(req.user._json.email==process.env.BORROW_POC || req.user._json.email=='ibrahim.khalil_ug25@ashoka.edu.in'){
+    var borrow_data = await axios.get(`${apiUrl}/borrow-requests/${req.params.id}`, axiosConfig);
+    temp = borrow_data.data.data.attributes;
+    var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
+    user=user.data[0];
+    temp.returned=1;
+    temp.to=null;
+    temp.from=null;
+    temp.issued=0;
+    await axios.put(`${apiUrl}/borrow-requests/${req.params.id}`, {data:temp}, axiosConfig);      
+    res.redirect("/platform/assets/dashboard");
+  }
+});
+router.get('/assets/returned/:id', async(req, res) => {
+  if(req.user._json.email==process.env.BORROW_POC || req.user._json.email=='ibrahim.khalil_ug25@ashoka.edu.in'){
+    var borrow_data = await axios.get(`${apiUrl}/borrow-requests/${req.params.id}`, axiosConfig);
+    temp = borrow_data.data.data.attributes;
+    var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
+    user=user.data[0];
+    id=user.id;
+    temp.returned=1;
+    temp.returned_to=[id];
+    temp.returned_on=new Date();
+    await axios.put(`${apiUrl}/borrow-requests/${req.params.id}`, {data:temp}, axiosConfig);      
+    res.redirect("/platform/assets/dashboard");
+  }
+});
+
 // router.get('/treasure-hunt', async(req, res) => {
 //   var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=hunt_team`, axiosConfig);
 //   var user = user_data.data[0];
@@ -1278,6 +1330,8 @@ router.post('/assets', async(req, res) => {
   updateduser=user.data[0];
   updateduser.phone=req.body.phone;
   await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);      
+  console.log(req.body);
+
   req.body.asset=parseInt(req.body.asset);
   req.body.user=updateduser;
   req.body.from=new Date().toISOString().split('T')[0];
@@ -1293,7 +1347,7 @@ router.post('/assets', async(req, res) => {
 
             const mailOptions = {
               from: `Borrow Assets <${process.env.TECHMAIL_ID}>`,
-              to: (process.env.MINISTRY_MEMBERS ? process.env.MINISTRY_MEMBERS.split(",") : [])[Math.floor(Math.random() * (process.env.MINISTRY_MEMBERS.split(",").length || 1))],
+              to: process.env.BORROW_POC,
               cc:req.user._json.email,
               subject: "Request to borrow asset "+assetData.data.data.attributes.name+" from "+helpers.borrowDate(new Date(req.body.from))+" to "+helpers.borrowDate(new Date(req.body.to)),
               html: `
@@ -1381,6 +1435,22 @@ router.post('/assets', async(req, res) => {
                       <td>${req.body.reason}</td>
                   </tr>
                   <tr>
+                      <td>Device ID</td>
+                      <td>${req.body.asset}</td>
+                  </tr>
+                  <tr>
+                      <td>Device Name</td>
+                      <td>${req.body.deviceName}</td>
+                  </tr>
+                   <tr>
+                      <td>Device Type</td>
+                      <td>${req.body.deviceType}</td>
+                  </tr>
+                   <tr>
+                      <td>Device Description</td>
+                      <td>${req.body.deviceDescription}</td>
+                  </tr>
+                  <tr>
                       <td>Status</td>
                       <td>Pending</td>
                   </tr>
@@ -1423,16 +1493,17 @@ router.post('/assets', async(req, res) => {
           var document = {
             html: undertakingTemplate,
             data: {
-              name:req.body.name,
+              name:req.body.user.username,
               email:req.user._json.email,
               phone:req.body.phone,
               from:helpers.borrowDate(new Date(req.body.from)),
               to:helpers.borrowDate(new Date(req.body.to)),
-              deviceId:req.body.deviceId,
+              deviceId:req.body.asset,
               deviceName:req.body.deviceName,
               deviceType:req.body.deviceType,
+              deviceDescription:req.body.deviceDescription,
             },
-            path: "./temp/undertaking.pdf",
+            path: "./temp/undertaking_"+req.body.user.username+".pdf",
             type: "",
           };
 
@@ -1447,8 +1518,8 @@ router.post('/assets', async(req, res) => {
                     return res.sendStatus(400);
                 }
                 console.log('Email sent successfully!', info.messageId);
-                res.redirect("/platform/assets");
             });
+            res.redirect("/platform/assets");
             })
             .catch((error) => {
               console.error(error);
