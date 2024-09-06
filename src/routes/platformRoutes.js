@@ -1098,6 +1098,8 @@ router.get('/assets/dashboard', async(req, res) => {
     var borrow_data = await axios.get(`${apiUrl}/borrow-requests?populate=user&populate=asset`, axiosConfig);
     // console.log(borrow_data.data.data);
     res.render("platform/pages/assets-dashboard",{requests:borrow_data.data.data});
+  }else{
+    res.send("error 404")
   }
 });
 
@@ -1351,180 +1353,214 @@ router.post('/assets', async(req, res) => {
               cc:req.user._json.email,
               subject: "Request to borrow asset "+assetData.data.data.attributes.name+" from "+helpers.borrowDate(new Date(req.body.from))+" to "+helpers.borrowDate(new Date(req.body.to)),
               html: `
-              <!DOCTYPE html>
-              <html lang="en">
-              <head>
-                  <meta charset="UTF-8">
-                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                  <title>Email Template</title>
-                  <style>
-                      body {
-                          font-family: Arial, sans-serif;
-                          line-height: 1.6;
-                          background-color: #f4f4f4;
-                          margin: 0;
-                          padding: 0;
-                      }
-                      .container {
-                          max-width: 600px;
-                          margin: 0 auto;
-                          padding: 20px;
-                          border-radius: 10px;
-                          background-color: #ffffff;
-                          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                      }
-                      h1 {
-                          text-align: center;
-                          color: #0078be;
-                          margin-bottom: 20px;
-                      }
-                      table {
-                          width: 100%;
-                          border-collapse: collapse;
-                          margin-bottom: 20px;
-                      }
-                      table, th, td {
-                          border: 1px solid #ddd;
-                      }
-                      th, td {
-                          padding: 8px;
-                          text-align: left;
-                      }
-                      th {
-                          background-color: #f2f2f2;
-                      }
-                      .greeting {
-                          color: #0078be;
-                          font-size: 1.2em;
-                          text-align: center;
-                          margin-bottom: 20px;
-                      }
-                  </style>
-              </head>
-              <body>
-              <div class="container">
-              <h1>Confirmation of Request Receipt</h1>
-              <p class="greeting">Dear Ministry member,<hr/><br> This message is to inform you of a receipt of request to borrow a device. <br/>Should you believe as per the ministry's policy the student qualifies to get the borrowed device for the period, we request your support in extending to them the service of the device. <br/><br/>Thank you for your trust and cooperation.</p>
-              <table>
-                  <tr>
-                      <th>Field</th>
-                      <th>Value</th>
-                  </tr>
-                  <tr>
-                      <td>Name</td>
-                      <td>${req.user._json.name}</td>
-                  </tr>
-                  <tr>
-                      <td>Email</td>
-                      <td>${req.user._json.email}</td>
-                  </tr>
-                  <tr>
-                      <td>From</td>
-                      <td">${helpers.borrowDate(new Date(req.body.from))}</td>
-                  </tr>
-                  <tr>
-                      <td>To</td>
-                      <td">${helpers.borrowDate(new Date(req.body.to))}</td>
-                  </tr>
-                  <tr>
-                      <td>Phone</td>
-                      <td>${req.body.phone}</td>
-                  </tr>
-                  <tr>
-                      <td>Reason</td>
-                      <td>${req.body.reason}</td>
-                  </tr>
-                  <tr>
-                      <td>Device ID</td>
-                      <td>${req.body.asset}</td>
-                  </tr>
-                  <tr>
-                      <td>Device Name</td>
-                      <td>${req.body.deviceName}</td>
-                  </tr>
-                   <tr>
-                      <td>Device Type</td>
-                      <td>${req.body.deviceType}</td>
-                  </tr>
-                   <tr>
-                      <td>Device Description</td>
-                      <td>${req.body.deviceDescription}</td>
-                  </tr>
-                  <tr>
-                      <td>Status</td>
-                      <td>Pending</td>
-                  </tr>
-                  <tr>
-                      <td>Date and Time of Request</td>
-                      <td>${helpers.formatDate(new Date())}</td>
-                  </tr>
-              </table>
-          </div>
-              </body>
-              </html>
-              
+                <!DOCTYPE html>
+                  <html lang="en">
+                  <head>
+                      <meta charset="UTF-8">
+                      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                      <title>Email Template</title>
+                      <style>
+                          body {
+                              font-family: Arial, sans-serif;
+                              line-height: 1.6;
+                              background-color: #f4f4f4;
+                              margin: 0;
+                              padding: 0;
+                          }
+                          .container {
+                              max-width: 600px;
+                              margin: 0 auto;
+                              padding: 20px;
+                              border-radius: 10px;
+                              background-color: #ffffff;
+                              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                          }
+                          h1 {
+                              text-align: center;
+                              color: #0078be;
+                              margin-bottom: 20px;
+                          }
+                          table {
+                              width: 100%;
+                              border-collapse: collapse;
+                              margin-bottom: 20px;
+                          }
+                          table, th, td {
+                              border: 1px solid #ddd;
+                          }
+                          th, td {
+                              padding: 8px;
+                              text-align: left;
+                          }
+                          th {
+                              background-color: #f2f2f2;
+                          }
+                          .greeting {
+                              color: #0078be;
+                              font-size: 1.2em;
+                              text-align: center;
+                              margin-bottom: 20px;
+                          }
+                          .undertaking {
+                              font-family: Arial, sans-serif;
+                              color: #333;
+                              font-size: 6pt;
+                              line-height: 1.6;
+                          }
+                          .undertaking h2 {
+                              color: #b55050;
+                              text-align: center;
+                              margin-bottom: 18px;
+                              font-size: 10pt;
+                          }
+                          .undertaking h3 {
+                              color: #b55050;
+                              margin-bottom: 6px;
+                              font-size: 6.5pt;
+                          }
+                          .undertaking ul {
+                              font-size: 6pt;
+                              margin-bottom: 12px;
+                          }
+                          .undertaking p {
+                              font-size: 6pt;
+                              margin-bottom: 12px;
+                          }
+                      </style>
+                  </head>
+                  <body>
+                      <div class="container">
+                          <h1>Confirmation of Request Receipt</h1>
+                          <p class="greeting">Dear Ministry member,<hr/><br> This message is to inform you of a receipt of request to borrow a device. <br/>Should you believe as per the ministry's policy the student qualifies to get the borrowed device for the period, we request your support in extending to them the service of the device. <br/><br/>Thank you for your trust and cooperation.</p>
+                          <table>
+                              <tr>
+                                  <th>Field</th>
+                                  <th>Value</th>
+                              </tr>
+                              <tr>
+                                  <td>Name</td>
+                                  <td>${req.user._json.name}</td>
+                              </tr>
+                              <tr>
+                                  <td>Email</td>
+                                  <td>${req.user._json.email}</td>
+                              </tr>
+                              <tr>
+                                  <td>From</td>
+                                  <td>${helpers.borrowDate(new Date(req.body.from))}</td>
+                              </tr>
+                              <tr>
+                                  <td>To</td>
+                                  <td>${helpers.borrowDate(new Date(req.body.to))}</td>
+                              </tr>
+                              <tr>
+                                  <td>Phone</td>
+                                  <td>${req.body.phone}</td>
+                              </tr>
+                              <tr>
+                                  <td>Reason</td>
+                                  <td>${req.body.reason}</td>
+                              </tr>
+                              <tr>
+                                  <td>Device ID</td>
+                                  <td>${req.body.asset}</td>
+                              </tr>
+                              <tr>
+                                  <td>Device Name</td>
+                                  <td>${req.body.deviceName}</td>
+                              </tr>
+                              <tr>
+                                  <td>Device Type</td>
+                                  <td>${req.body.deviceType}</td>
+                              </tr>
+                              <tr>
+                                  <td>Device Description</td>
+                                  <td>${req.body.deviceDescription}</td>
+                              </tr>
+                              <tr>
+                                  <td>Status</td>
+                                  <td>Pending</td>
+                              </tr>
+                              <tr>
+                                  <td>Date and Time of Request</td>
+                                  <td>${helpers.formatDate(new Date())}</td>
+                              </tr>
+                          </table>
+
+                          <!-- Undertaking Section -->
+                          <div class="undertaking">
+                              <h2>Undertaking for Borrowing Devices</h2>
+                              <p>I, <strong>${req.user._json.name}</strong>, a student of Ashoka University, hereby agree to the following terms and conditions for borrowing devices from the Ministry of Technology:</p>
+                              
+                              <h3>Purpose and Use:</h3>
+                              <ul>
+                                  <li>I understand that the device borrowed is intended solely for my personal use in emergency situations or when I do not have access to my own device.</li>
+                                  <li>I will use the device responsibly and in accordance with all applicable university policies.</li>
+                              </ul>
+
+                              <h3>Borrowing Period:</h3>
+                              <ul>
+                                  <li>I am borrowing the device from <strong>${helpers.borrowDate(new Date(req.body.from))}</strong> to <strong>${helpers.borrowDate(new Date(req.body.to))}</strong>, not exceeding the maximum borrowing period of two weeks.</li>
+                                  <li>I understand that I must return the device by the specified end date unless an extension is granted by the Ministry of Technology.</li>
+                              </ul>
+
+                              <h3>Condition of the Device:</h3>
+                              <ul>
+                                  <li>I acknowledge that the device is in good working condition at the time of borrowing.</li>
+                                  <li>I will return the device in the same condition as it was provided to me, excluding normal wear and tear.</li>
+                              </ul>
+
+                              <h3>Liability for Damage or Loss:</h3>
+                              <ul>
+                                  <li>I am responsible for any damage to the device while it is in my possession.</li>
+                                  <li>In case of damage, I agree to cover the full cost of repair.</li>
+                                  <li>In case of loss, I agree to reimburse the full replacement value of the device to the Student Life Office, Ashoka University.</li>
+                              </ul>
+
+                              <h3>Safety and Security:</h3>
+                              <ul>
+                                  <li>I will take all necessary precautions to protect the device from theft, damage, or loss.</li>
+                                  <li>I will not lend the device to any other individual.</li>
+                              </ul>
+
+                              <h3>Return of Device:</h3>
+                              <ul>
+                                  <li>I will return the device to the Ministry of Technology office by the specified end date.</li>
+                                  <li>I will ensure that all personal data is removed from the device before returning it.</li>
+                              </ul>
+
+                              <h3>Acknowledgment of Responsibility:</h3>
+                              <p>I understand that failure to return the device on time, or returning it in a damaged condition, may result in penalties, including the suspension of borrowing privileges and additional disciplinary actions as deemed appropriate by the university.</p>
+
+                              <h3>Borrower’s Details:</h3>
+                              <p><strong>Full Name:</strong> ${req.user._json.name}</p>
+                              <p><strong>Contact Number:</strong> ${req.body.phone}</p>
+                              <p><strong>Email Address:</strong> ${req.user._json.email}</p>
+
+                              <h3>Device Details:</h3>
+                              <p><strong>Device Name:</strong> ${req.body.deviceName}</p>
+                              <p><strong>Device Type:</strong> ${req.body.deviceType}</p>
+                              <p><strong>Device ID:</strong> ${req.body.asset}</p>
+                              <p><strong>Device Description:</strong> ${req.body.deviceDescription}</p>
+
+                              <p>By signing this undertaking hereby submitting the form, I acknowledge that I have read, understood, and agree to abide by the terms and conditions stated above.</p>
+                          </div>
+                      </div>
+                  </body>
+                  </html>
+
               `,
               replyTo:req.user._json.email,
-              attachments:[
-              {
-                path:"./temp/undertaking.pdf",
-                contentType: 'application/pdf'
-              }
-              ]
             };
-
-      // generate PDF Undertaking
-          var options = {
-            format: "A4",
-            orientation: "portrait",
-            border: "10mm",
-            footer:{
-              height: "28mm",
-              contents:`<footer style="font-family: Arial, sans-serif; color: #333; font-size: 10pt; text-align: center; margin-top: 40px; border-top: 1px solid #ccc; padding-top: 10px;">
-              <p style="margin: 0; font-size: 5pt;">Ministry of Technology, Ashoka University</p>
-              <p style="margin: 0; font-size: 5pt;">Email: <a href="mailto:technology.ministry@ashoka.edu.in" style="color: #b55050;">technology.ministry@ashoka.edu.in</a></p>
-              <p style="margin: 0; font-size: 5pt;">Phone: +91-9820891974 (Ibrahim Khalil, Minister of Technology, 2024-2025)</p>
-              <p style="margin: 0; font-size: 5pt;">Website: <a href="https://www.sg.ashoka.edu.in" target="_blank" style="color: #b55050;">www.sg.ashoka.edu.in</a></p>
-              <p style="margin: 0; font-size: 5pt;">&copy; 2024 Ashoka University. All rights reserved.</p>
-          </footer>`
+            
+          transporterTECH.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error occurred:', error.message);
+                return res.sendStatus(400);
             }
-          };
-
-          var document = {
-            html: undertakingTemplate,
-            data: {
-              name:req.body.user.username,
-              email:req.user._json.email,
-              phone:req.body.phone,
-              from:helpers.borrowDate(new Date(req.body.from)),
-              to:helpers.borrowDate(new Date(req.body.to)),
-              deviceId:req.body.asset,
-              deviceName:req.body.deviceName,
-              deviceType:req.body.deviceType,
-              deviceDescription:req.body.deviceDescription,
-            },
-            path: "./temp/undertaking_"+req.body.user.username+".pdf",
-            type: "",
-          };
-
-          pdf
-            .create(document, options)
-            .then((stream) => {
-              console.log(stream);
-              // Send the email
-              transporterTECH.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.error('Error occurred:', error.message);
-                    return res.sendStatus(400);
-                }
-                console.log('Email sent successfully!', info.messageId);
-            });
-            res.redirect("/platform/assets");
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-            // generate PDF Undertaking
+            console.log('Email sent successfully!', info.messageId);
+         });
+        res.redirect("/platform/assets");
         })
         .catch((error) => {
             console.log(error)
