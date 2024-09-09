@@ -167,7 +167,7 @@ ul li {
                                     <br/>
                                     <label for="newTicketTitle" class="form-label">Reason why you would like to borrow the device? <span style="color:rgb(177, 58, 58)">*</span></label>
                                     <p>In case that your reason fits our policy, we shall issue you the device if available for the period mentioned.</p>
-                                    <textarea required minlength="20" style="width:100%;padding:5px;" name="reason" id="" rows="10"></textarea>                               
+                                    <textarea required minlength="20" style="width:100%;padding:5px;" name="reason" id="reasonToBorrow" rows="10"></textarea>                               
                                     <!-- <a onclick="document.querySelector('#datereason').style.display='none';document.querySelector('#undertaking').style.display='block';" id="next-button" class="btn btn-primary">Next</a> -->
                                     <div class="mb-3">
                                         <br />
@@ -462,11 +462,18 @@ ul li {
   </body>
   <script>
     function submitBorrowRequest(){
-      document.getElementById("assetsForm").submit();
-      document.getElementById("submit-button").innerText="Submitting";
-      document.getElementById("submit-button").disabled=true;
-      document.getElementById("spinner").style.display="block";
-      document.getElementById("please").style.display="block";
+      date = document.getElementById("enddate").value;
+      reason = document.getElementById("reasonToBorrow").value;
+      phone = document.getElementById("phoneNumber").value;
+      if(date && reason && phone){
+        document.getElementById("assetsForm").submit();
+        document.getElementById("submit-button").innerText="Submitting";
+        document.getElementById("submit-button").disabled=true;
+        document.getElementById("spinner").style.display="block";
+        document.getElementById("please").style.display="block";
+      }else{
+        //alert("Fill all form fields appropriately")
+      }
     }
 function myFunction() {
   input = document.getElementById("myFilter");

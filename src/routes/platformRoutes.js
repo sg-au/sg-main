@@ -1333,7 +1333,7 @@ router.post('/assets', async(req, res) => {
   updateduser=user.data[0];
   updateduser.phone=req.body.phone;
   await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);      
-  console.log(req.body);
+  // console.log(req.body);
 
   req.body.asset=parseInt(req.body.asset);
   req.body.user=updateduser;
