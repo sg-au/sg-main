@@ -135,7 +135,7 @@ ul li {
             <div class="row">
               <div class="mb-4">
                 <h4 class="my-1 mb-2">Welcome to the Assets Lending Program!</h4>
-                <div class="timeline-desc fs-3 text-dark mt-n1 mb-2">This page allows you to borrow essential devices like mobile phones, charging cables, and adapters during emergencies or when you don't have access to your own. Browse the available items, submit a request, and get quick access to what you need, ensuring you stay connected and safe. All requests are handled promptly, with transparent tracking of device availability.
+                <div class="timeline-desc fs-3 text-dark mt-n1 mb-2">This page allows you to borrow essential devices like mobile phones, charging cables, and adapters during emergencies or when you don't have access to your own. Browse the available items, submit a request, and get quick access to what you need, ensuring you stay connected and safe. All requests are handled promptly, with transparent tracking of device availability. Please read our <a href="https://docs.google.com/document/d/1Ayp06JiGjOuVuTJlHYcA54wSG8_m3j-YJuu8F5LF360/edit" target"_blank">Borrow Assets Policy</a> before you raise a request. By raising a request, you automatically sign the same.
 
                 </div>
                 <!-- <a href="./index.html" class="d-block">Link to Site Tour</a> -->
@@ -154,6 +154,7 @@ ul li {
                         <div id="modal-dp" class="modal-body">
                             <form id="assetsForm" action="/platform/assets" method="POST">                                    
                                 <div id="datereason" class="mb-3">
+                                    <p>As soon as you submit the form, you will get an automated email confirming the receipt of your request. Approvals and scheduling pickup will happen on the same email thread. Kindly wait for our ministry member to reply to the email.</p>
                                     <label for="newTicketTitle" class="form-label">Until when would you like to borrow the device? <span style="color:rgb(177, 58, 58)">*</span></label>
                                     <p>NOTE: You can borrow for a maximum period of two weeks.</p>
                                     <input onchange="document.getElementById('end').innerText=new Date(document.getElementById('enddate').value).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })" required name="to" type="date" class="form-control" id="enddate" 
@@ -237,7 +238,7 @@ ul li {
                                 <p><strong>Device ID:</strong><span id="deviceIdText"></span></p>
                                 <p><strong>Device Description:</strong><span id="deviceDescriptionText"></span></p>
 
-                                <p>By signing this undertaking hereby submitting the form, I acknowledge that I have read, understood, and agree to abide by the terms and conditions stated above.</p>
+                                <p>By signing this undertaking hereby submitting the form, I acknowledge that I have read, understood, and agree to abide by the terms and conditions stated in the <a href="https://docs.google.com/document/d/1Ayp06JiGjOuVuTJlHYcA54wSG8_m3j-YJuu8F5LF360/edit" target"_blank">Borrow Assets Policy</a>.</p>
                                 <p><strong>Contact Information:</strong> Ministry of Technology, Ashoka University Email: <a href="mailto:technology.ministry@ashoka.edu.in">technology.ministry@ashoka.edu.in</a></p>
                                 <!-- <a onclick="document.querySelector('#undertaking').style.display='none';document.querySelector('#datereason').style.display='block';" id="back-button" class="btn btn-primary">Back</a> -->
 
