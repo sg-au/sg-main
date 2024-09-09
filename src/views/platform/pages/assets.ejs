@@ -154,7 +154,7 @@ ul li {
                         <div id="modal-dp" class="modal-body">
                             <form id="assetsForm" action="/platform/assets" method="POST">                                    
                                 <div id="datereason" class="mb-3">
-                                    <p>*As soon as you submit the form, you will get an automated email confirming the receipt of your request. Approvals and scheduling pickup will happen on the same email thread. Kindly wait for our ministry member to reply to the email.*</p>
+                                    <p style="color:rgb(185, 80, 80)">*As soon as you submit the form, you will get an automated email confirming the receipt of your request. Approvals and scheduling pickup will happen on the same email thread. Kindly wait for our ministry member to reply to the email.*</p>
                                     <label for="newTicketTitle" class="form-label">Until when would you like to borrow the device? <span style="color:rgb(177, 58, 58)">*</span></label>
                                     <p>NOTE: You can borrow for a maximum period of two weeks.</p>
                                     <input onchange="document.getElementById('end').innerText=new Date(document.getElementById('enddate').value).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })" required name="to" type="date" class="form-control" id="enddate" 
