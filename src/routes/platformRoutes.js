@@ -27,8 +27,13 @@ const apiUrl = process.env.STRAPI_API_URL;
 // app.use(bodyParser.json());
 
 // Define routes here
-router.get('/', (req, res) => {
-    res.render("platform/pages/index")
+router.get('/', async(req, res) => {
+  var usersCount = (await axios.get(`${apiUrl}/users/count`, axiosConfig)).data;
+  var poolCount = (await axios.get(`${apiUrl}/pools`, axiosConfig)).data.meta.pagination.total;
+  var servicesCount = (await axios.get(`${apiUrl}/services`, axiosConfig)).data.meta.pagination.total;
+  var reviewsCount = (await axios.get(`${apiUrl}/reviews`, axiosConfig)).data.meta.pagination.total;
+  res.render("platform/pages/index",{usersCount:usersCount,poolCount:poolCount,servicesCount:servicesCount,reviewsCount:reviewsCount});
+
 });
 
 
