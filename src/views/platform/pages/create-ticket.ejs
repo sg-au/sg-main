@@ -81,6 +81,13 @@
                                             <div id="detailsHelp" class="form-text">The reviewer does not by default know your details. Do you wish to disclose them?</div>
                                         </div> -->
                                         <button id="create-button" type="submit" class="btn btn-primary">Create Ticket</button>
+                                        <br />
+                                        <div>
+                                            Upon filling the form, you will get an automated email confirming your ticket.
+                                        </div>
+                                        <div id="form-spinner" style="display:hidden;" class="spinner-border text-primary" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -93,6 +100,7 @@
     <script>
     document.getElementById("ticketForm").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent the default form submission
+    document.getElementById("form-spinner").style.display="block";
     var form = event.target;
     var formData = new FormData(form);
     var body = {};
@@ -118,7 +126,7 @@
     })
     .then(data => {
         // Display success message to the user
-        alert("Form submitted successfully!");
+        //alert("Form submitted successfully!");
         location.reload();
         document.getElementById("create-button").disabled = false;
     })
