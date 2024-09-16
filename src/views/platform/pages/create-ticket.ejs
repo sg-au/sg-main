@@ -132,11 +132,16 @@
         //alert("Form submitted successfully!");
         // location.reload();
         console.log(data);
-        //document.getElementById("successTicket").style.display="block";
-        document.getElementById("successTicket").style.display="block";
-        setTimeout(function() {
-            document.getElementById("successTicket").style.display = "none";
-        }, 5000);  // 5000 milliseconds = 5 seconds
+        if(data.status==202){
+            //document.getElementById("successTicket").style.display="block";
+            document.getElementById("successTicket").style.display="block";
+            setTimeout(function() {
+                document.getElementById("successTicket").style.display = "none";
+            }, 5000);  // 5000 milliseconds = 5 seconds
+        }else{
+            alert("An errror occurred, please try again later.")
+        }
+        document.getElementById("form-spinner").style.display="none";
         document.getElementById("create-button").disabled = false;
     })
     .catch(error => {
