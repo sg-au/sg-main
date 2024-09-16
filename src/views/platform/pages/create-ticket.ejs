@@ -89,6 +89,9 @@
                                     <div id="form-spinner" style="display:none;" class="spinner-border text-primary" role="status">
                                         <span class="sr-only">Loading...</span>
                                     </div>
+                                    <div id="successTicket" style="display:none;" class="alert alert-success" role="alert">
+                                        Your form has been successfully submitted! Watch out your inbox.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -127,7 +130,13 @@
     .then(data => {
         // Display success message to the user
         //alert("Form submitted successfully!");
-        location.reload();
+        // location.reload();
+        console.log(data);
+        //document.getElementById("successTicket").style.display="block";
+        document.getElementById("successTicket").style.display="block";
+        setTimeout(function() {
+            document.getElementById("successTicket").style.display = "none";
+        }, 5000);  // 5000 milliseconds = 5 seconds
         document.getElementById("create-button").disabled = false;
     })
     .catch(error => {
