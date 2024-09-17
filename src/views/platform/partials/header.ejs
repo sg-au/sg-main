@@ -92,7 +92,7 @@
         <span id="feedback-page" style="display: inline-block; padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; color: #6c757d; background-color: #e9ecef; border: 1px solid #ced4da; border-radius: 0.25rem; cursor: not-allowed;">
       </span>
       </h5>
-      <button id="close-feedback" type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <button id="close-feedback" type="button" class="btn-close" data-bs-dismiss="offcanvas" onclick="tt();" aria-label="Close"></button>
   </div>
 
   <div class="offcanvas-body">
@@ -129,6 +129,9 @@
     // tooltipTrigger.addEventListener('mouseleave', function() {
     //   tooltip.hide();
     // });
+    function tt(){
+      tooltip.hide();
+    }
   </script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
