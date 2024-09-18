@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SG Platform</title>
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="/platform/assets/images/logos/favicon.png"
+    />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/balloon-classic/ckeditor.js"></script>
+
+    <%-include("../partials/preloader-css")%>
+  </head>
+  <%-include("../partials/post-head")%>
+  <style>
+     body {
+            font-family: Arial, sans-serif;
+            margin-bottom: 20px;
+        }
+  </style>
+  <body>
+    <%-include("../partials/preloader")%>
+    <!--  Body Wrapper -->
+    <div
+      class="page-wrapper"
+      id="main-wrapper"
+      data-layout="vertical"
+      data-navbarbg="skin6"
+      data-sidebartype="full"
+      data-sidebar-position="fixed"
+      data-header-position="fixed"
+    >
+      <%-include("../partials/sidebar")%>
+      <!--  Main wrapper -->
+      <div class="body-wrapper">
+        <%-include("../partials/header")%>
+        <div class="container-fluid">
+          <div class="container">
+            <div class="row" id="myItems">
+              <div class="col-sm-12 mb-3">
+                <h3>Moving Forward; Not Just Forwards</h3>
+                <p>
+                    SG Compose is a streamlined email management platform designed for Student Government, allowing students to submit requests that can be quickly approved and automatically sent to targeted groups. The system includes rich text editing, alias-based organization, and options for directing emails to specific audiences within Ashoka University.
+                </p>
+                <!-- HTML Form -->
+                <form id="myForm" action="/platform/sg-compose" method="POST">
+                    <label for="select" class="form-label">Select Your Category of Mail<span style="color:rgb(177, 58, 58)">*</span></label>
+                    <select required name="alias" id="alias" class="form-select">
+                        <option disabled selected value="">Select</option>
+                        <option value="inductions">Inductions</option>
+                        <option value="lost&found">Lost and Found</option>
+                        <option value="jobs">Jobs</option>
+                        <option value="fundraisers">Fundraisers</option>
+                    </select>
+                    <br />
+                    <label for="editor" class="form-label">Mail Draft <span style="color:rgb(177, 58, 58)">*</span></label>
+                    <!-- Textarea that will be replaced by CKEditor -->
+                    <textarea style="margin-top:60px;" id="editor" name="editorContent"></textarea>
+                    <br />
+                    <button class="btn btn-primary" type="submit">Request Mail</button>
+                    <button class="btn btn-danger" type="button"  onclick="clearEditor();">Cancel Mail</button>
+                </form>
+            
+                <script>
+                     // Replace the <textarea> with a CKEditor instance and add plugins
+                        let editorInstance;
+
+                        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                toolbar: [
+                    'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', '|',
+                    'link', 'bulletedList', 'numberedList', '|', 'blockQuote', 'insertTable', 
+                    'codeBlock', 'undo', 'redo'
+                ],
+                heading: {
+                    options: [
+                        { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                        { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                        { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                        { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+                    ]
+                },
+                table: {
+                    contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+                },
+                codeBlock: {
+                    languages: [
+                        { language: 'plaintext', label: 'Plain text' }, // Default
+                        { language: 'javascript', label: 'JavaScript' },
+                        { language: 'css', label: 'CSS' },
+                        { language: 'html', label: 'HTML' }
+                    ]
+                }
+            })
+            .then(editor => {
+            editorInstance = editor; // Store the editor instance globally
+        })
+            .catch(error => {
+                console.error(error);
+            });
+
+            function clearEditor() {
+                document.getElementById('myForm').reset();
+        if (editorInstance) {
+            editorInstance.setData('');  // Clear the editor content
+        } else {
+            console.error("Editor instance not available");
+        }
+
+        // Reset other form fields if necessary
+        document.getElementById('myForm').reset();
+    }
+
+                </script>
+              </div>    
+            </div>
+          </div>
+        </div>
+      </div>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/platform/assets/js/dashboard.js"></script>
+    <script src="/platform/assets/js/theme.js"></script>
+    <%-include("../partials/preloader-js")%>
+  </body>
+</html>

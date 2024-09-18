@@ -792,6 +792,14 @@ router.get('/profile', (req, res) => {
 });
 
 
+router.get('/sg-compose', async(req, res) => {
+    res.render("platform/pages/sg-compose");
+});
+
+router.post('/sg-compose', async(req, res) => {
+    console.log(req.body);
+});
+
 router.get('/events', (req, res) => {
     res.render("platform/pages/events-2")
 });
