@@ -68,7 +68,7 @@
                     <br />
                     <label for="editor" class="form-label">Mail Draft <span style="color:rgb(177, 58, 58)">*</span></label>
                     <!-- Textarea that will be replaced by CKEditor -->
-                    <textarea style="margin-top:60px;" id="editor" name="editorContent"></textarea>
+                    <textarea style="margin-top:60px;padding:30px;" id="editor" name="editorContent"></textarea>
                     <br />
                     <button class="btn btn-primary" type="submit">Request Mail</button>
                     <button class="btn btn-danger" type="button"  onclick="clearEditor();">Cancel Mail</button>
@@ -103,7 +103,13 @@
                         { language: 'css', label: 'CSS' },
                         { language: 'html', label: 'HTML' }
                     ]
-                }
+                },
+                        // Disable sticky toolbar
+                ui: {
+                    viewportOffset: {
+                        top: 70,  // Disable sticky effect
+                    }
+                },
             })
             .then(editor => {
             editorInstance = editor; // Store the editor instance globally
