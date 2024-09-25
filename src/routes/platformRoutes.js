@@ -36,9 +36,16 @@ router.get('/', async(req, res) => {
 
 });
 
-router.get('/intercollegiate', (req, res) => {
-  res.render("platform/pages/intercollegiate",{events:[1,2,3,4,5,6]});
-})
+router.get('/intercollegiate', async (req, res) => {
+    try {
+        var endpoint = '/intercollegiate-events';
+        var response = await axios.get(`${apiUrl}${endpoint}`, axiosConfig);
+        events = response.data.data
+        res.render("platform/pages/intercollegiate",{events:events});
+      } catch (error) {
+        console.error('An error occurred:', error);
+    }
+});
 
 router.get('/announcements', (req, res) => {
     announcements=[];
