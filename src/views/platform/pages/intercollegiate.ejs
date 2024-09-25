@@ -10,6 +10,64 @@
       href="/platform/assets/images/logos/favicon.png"
     />
     <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <style>
+      #smolimg{
+        width: 175px;
+        height: 175px;
+      }
+      @media screen and (min-width: 500px) {
+        #togglediv {
+          display: none;
+        }
+        #smallscreendiv {
+          display: block;
+        }
+      }
+      @media screen and (max-width: 760px) {
+          #smolimg{
+          width: 250px;
+          height: 250px;
+        }
+      }
+      @media screen and (min-width: 1024px) {
+        #togglediv {
+          display: block;
+        }
+        #smallscreendiv {
+          display: none;
+        }
+      }
+    </style>
+    <style>
+
+  .search-bar {
+    width: 100%;
+    padding: 14px;
+    border-radius: 30px;
+    font-size: 14px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
+  .search-bar:focus {
+    outline: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-color: #5d87ff; /* Change the border color on focus */
+  
+  }
+  
+  /* Style the placeholder text */
+  .search-bar::placeholder {
+    color: #888; /* Adjust the color to your preference */
+    transition: font-size 0.3s ease-out;
+  }
+  
+  /* Move the placeholder text on focus */
+  .search-bar:focus::placeholder {
+    font-size: 12px; /* Adjust the font size when moved to the top */
+  }
+  
+    </style>
     <%-include("../partials/preloader-css")%>
   </head>
   <%-include("../partials/post-head")%>
@@ -31,67 +89,168 @@
       <div class="body-wrapper">
         <%-include("../partials/header")%>
         <div class="container-fluid">
-          <div class="container-fluid" style="padding-top: 40px">
-            <div
-              class="card col-md-12"
-              data-bs-toggle="modal"
-              data-bs-target="#eventModal"
-            >
-              <div class="card-body" id="divLink" onclick="" style="cursor: pointer;">
-                <div class="row">
-                  <div class="col-md-4 img-div">
-                    <img
-                      width="100%"
-                      height="100%"
-                      src="https://fastly.picsum.photos/id/20/3670/2462.jpg?hmac=CmQ0ln-k5ZqkdtLvVO23LjVAEabZQx2wOaT4pyeG10I"
-                      alt=""
-                      srcset=""
-                    />
+          <div class="container-fluid" style="padding-top: 20px">
+            <div class="py-6 px-6">
+              <div class="flex-row mb-2">
+                <span class="fs-8 fw-semibold">Intercollegiate Events Portal</span>
+                <br/><br/><span class="fs-4">Maintained by Jazbaa</span>
+            </div>
+              <div class="row" style="padding-bottom:20px;padding-top:20px">
+                <div class="col-sm-12 mb-3">
+                  <input autofocus type="text" id="myFilter" class="form-control search-bar" onkeyup="myFunction()" placeholder="Search here..">
+                </div>
+              </div>
+            <div class="row" id="togglediv">
+            <%for(var i=0;i<events.length;i++){%>
+                <div
+                  class="card col-md-12"
+                  data-bs-toggle="modal"
+                  data-bs-target="#eventModal"
+                >
+                  <div class="card-body" id="divLink" onclick="" style="cursor: pointer;">
+                    <div class="row" style="display: flex;">
+                      <% if(i%2==1){%>
+                        <div class="col-md-4 img-div" style="text-align:center;">
+                          <img
+                            width="250"
+                            height="250"
+                            max-width="250px"
+                            max-height="250px"
+                            src="https://d1igbv7ujk9jkv.cloudfront.net/company/images/Logo%206_1593076427.jpg"
+                            alt=""
+                            srcset=""
+                          />
+                        </div>
+                        <%}%>
+                      <div class="col-md-8 cont-div">
+                        <div
+                          class="card"
+                          style="background-color: #eaeff4; height: 100%;"
+                        >
+                          <div class="card-body" style="height: fit-content">
+                            <div></div>
+                            <h5 class="card-title">Event Title</h5>
+                            <!-- <h6 class="card-subtitle mb-2 text-muted">Created By X</h6> -->
+                            <h6 class="card-subtitle mb-2 text-muted">
+                              From: 
+                              <b>12/12/12</b> &nbsp &nbsp
+                              Till:
+                              <b>13/13/13</b>
+                            </h6>
+                            <!-- <h6 class="card-subtitle mb-2 text-muted">
+                              College Name:
+                            </h6> -->
+                            <p
+                              class="card-text"
+                              style="padding-top: 15px; padding-bottom: 15px"
+                            >
+                              Short Event Description Given by Jazzba 
+                            </p>
+
+                            <a href="" class="card-link" style="margin-right: -20px"
+                              ><span class="badge bg-primary rounded-3 fw-semibold"
+                                >College Name
+                              </span></a
+                            >
+
+                            <a href="" class="card-link" style="margin-right: -20px"
+                              ><span class="badge bg-primary rounded-3 fw-semibold"
+                                >Event Type (Single or Fest)
+                              </span></a
+                            >
+
+                            <!-- <div style="width: 100%; text-align: left; margin-top: 15px; "><a href="./individual-petition.html" class="btn btn-primary m-1">View Petition</a></div> -->
+                          </div>
+                        </div>
+                      </div>
+                      <% if(i%2==0){%>
+                      <div class="col-md-4 img-div" style="text-align: center;">
+                        <img
+                          width="250"
+                          height="250"
+                          max-width="250px"
+                          margin-bottom="10px"
+                          max-height="250px"
+                          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTTo20oIqN1F0SehZMIXX0_gKr-IKmovopPw&s"
+                          alt=""
+                          srcset=""
+                        />
+                      </div>
+                      <%}%>
+
+                    </div>
                   </div>
-                  <div class="col-md-8 cont-div">
-                    <div
-                      class="card"
-                      style="background-color: #eaeff4; height: 100%"
-                    >
-                      <div class="card-body" style="height: fit-content">
-                        <div></div>
-                        <h5 class="card-title">Event Title</h5>
-                        <!-- <h6 class="card-subtitle mb-2 text-muted">Created By X</h6> -->
-                        <h6 class="card-subtitle mb-2 text-muted">
-                          From: 
-                          <b>12/12/12</b> &nbsp &nbsp
-                          Till:
-                          <b>13/13/13</b>
-                        </h6>
-                        <!-- <h6 class="card-subtitle mb-2 text-muted">
-                          College Name:
-                        </h6> -->
-                        <p
-                          class="card-text"
-                          style="padding-top: 15px; padding-bottom: 15px"
+                </div>
+            <%}%>
+          </div>
+          
+          <div class="row" id="smallscreendiv">
+            <%for(var i=0;i<events.length;i++){%>
+                <div
+                  class="card col-md-12"
+                  data-bs-toggle="modal"
+                  data-bs-target="#eventModal"
+                >
+                  <div class="card-body" id="divLink" onclick="" style="cursor: pointer;">
+                    <div class="row" style="display: flex;">
+                        <div class="col-md-3 img-div" style="text-align:center; margin: 15px;">
+                          <img
+                            id="smolimg"
+                            max-width="250px"
+                            max-height="250px"
+                            margin-bottom="10px"
+                            src="https://d1igbv7ujk9jkv.cloudfront.net/company/images/Logo%206_1593076427.jpg"
+                            alt=""
+                            srcset=""
+                          />
+                        </div>
+                      <div class="col-md-8 cont-div">
+                        <div
+                          class="card"
+                          style="background-color: #eaeff4; height: 100%"
                         >
-                          Short Event Description Given by Jazzba 
-                        </p>
+                          <div class="card-body" style="height: fit-content">
+                            <div></div>
+                            <h5 class="card-title">Event Title</h5>
+                            <!-- <h6 class="card-subtitle mb-2 text-muted">Created By X</h6> -->
+                            <h6 class="card-subtitle mb-2 text-muted">
+                              From: 
+                              <b>12/12/12</b> &nbsp &nbsp
+                              Till:
+                              <b>13/13/13</b>
+                            </h6>
+                            <!-- <h6 class="card-subtitle mb-2 text-muted">
+                              College Name:
+                            </h6> -->
+                            <p
+                              class="card-text"
+                              style="padding-top: 15px; padding-bottom: 15px"
+                            >
+                              Short Event Description Given by Jazzba 
+                            </p>
 
-                        <a href="" class="card-link" style="margin-right: -20px"
-                          ><span class="badge bg-primary rounded-3 fw-semibold"
-                            >College Name
-                          </span></a
-                        >
+                            <a href="" class="card-link" style="margin-right: -20px"
+                              ><span class="badge bg-primary rounded-3 fw-semibold"
+                                >College Name
+                              </span></a
+                            >
 
-                        <a href="" class="card-link" style="margin-right: -20px"
-                          ><span class="badge bg-primary rounded-3 fw-semibold"
-                            >Event Type (Single or Fest)
-                          </span></a
-                        >
+                            <a href="" class="card-link" style="margin-right: -20px"
+                              ><span class="badge bg-primary rounded-3 fw-semibold"
+                                >Event Type (Single or Fest)
+                              </span></a
+                            >
 
-                        <!-- <div style="width: 100%; text-align: left; margin-top: 15px; "><a href="./individual-petition.html" class="btn btn-primary m-1">View Petition</a></div> -->
+                            <!-- <div style="width: 100%; text-align: left; margin-top: 15px; "><a href="./individual-petition.html" class="btn btn-primary m-1">View Petition</a></div> -->
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+            <%}%>
+          </div>
+
           </div>
           <div
             class="modal fade"
@@ -152,6 +311,37 @@
         </div>
       </div>
     </div>
+    <script>
+      function myFunction() {
+        input = document.getElementById("myFilter");
+      filter = input.value.toUpperCase();
+      cardContainer = document.getElementById("togglediv");
+      cardContainer2 = document.getElementById("smallscreendiv");
+      cards = cardContainer.getElementsByClassName("card");
+      cards2 = cardContainer2.getElementsByClassName("card");
+      for (let i = 0; i < cards.length; i++) {
+          let card = cards[i];
+          let textContent = card.innerText || card.textContent;
+      
+          if (textContent.toUpperCase().indexOf(filter) > -1) {
+              card.style.display = "";
+          } else {
+              card.style.display = "none";
+          }
+      }
+      for (let i = 0; i < cards2.length; i++) {
+          let card = cards2[i];
+          let textContent = card.innerText || card.textContent;
+      
+          if (textContent.toUpperCase().indexOf(filter) > -1) {
+              card.style.display = "";
+          } else {
+              card.style.display = "none";
+          }
+      }
+      }
+      
+        </script>
     <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/platform/assets/js/sidebarmenu.js"></script>

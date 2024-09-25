@@ -37,7 +37,7 @@ router.get('/', async(req, res) => {
 });
 
 router.get('/intercollegiate', (req, res) => {
-  res.render("platform/pages/intercollegiate");
+  res.render("platform/pages/intercollegiate",{events:[1,2,3,4,5,6]});
 })
 
 router.get('/announcements', (req, res) => {
@@ -796,12 +796,53 @@ router.get('/profile', (req, res) => {
 
 
 router.get('/sg-compose', async(req, res) => {
-    res.render("platform/pages/sg-compose");
+  userEmail = req.user._json.email;
+    axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`,axiosConfig)
+    .then((response) => {
+      // Assuming you get a single user with the specified email
+      user = response.data[0];
+      res.render("platform/pages/sg-compose",{phone:user.phone});
+    })
+    .catch((error) => {
+      console.error('Error fetching user:', error);
+      // Handle error
+    });
 });
 
 router.post('/sg-compose', async(req, res) => {
     console.log(req.body);
+    var dict={
+      "inductions":"Inductions",
+      "lost&found":"Lost and Found",
+      "jobs":"Jobs",
+      "surveys":"Surveys",
+      "campaigns":"Campaigns",
+      "fundraisers":"Fundraisers"
+    }
+    mailhtml=req.body.mailbody;
+    mailhtml+=`<br/><p style="color:rgb(177, 58, 58);font-size:12px;">Sent by ${req.user._json.name} using the <a href="https://sg.ashoka.edu.in/platform/sg-compose">SG Compose</a> feature by the Ministry of Technology</p>`
+    var alias = dict[req.body.alias] || "Forwards";
+    const mailOptions = {
+      from: alias+ ` <${process.env.SGMAIL_ID}>`,
+      to: "ibrahim.khalil_ug25@ashoka.edu.in",
+      cc:req.user._json.email,
+      subject: req.body.subject,
+      html: mailhtml,
+      replyTo:req.user._json.email
+    };
+
+    // Send the email
+    transporterSG.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error occurred:', error.message);
+        res.sendStatus(400);
+        return;
+      }
+      console.log('Email sent successfully!', info.messageId);
+      res.sendStatus(202);
+    });
 });
+
 
 router.get('/events', (req, res) => {
     res.render("platform/pages/events-2")
