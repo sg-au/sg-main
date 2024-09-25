@@ -36,6 +36,9 @@ router.get('/', async(req, res) => {
 
 });
 
+router.get('/intercollegiate', (req, res) => {
+  res.render("platform/pages/intercollegiate");
+})
 
 router.get('/announcements', (req, res) => {
     announcements=[];
