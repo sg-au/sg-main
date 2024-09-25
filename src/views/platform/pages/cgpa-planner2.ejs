@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SG Platform</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <%-include("../partials/preloader-css")%>
+        <%-include("../partials/preloader-js")%>
+
+</head>
+<%-include("../partials/post-head")%>
+
+    <script>
+        function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+    </script>
+
+    <style>
+        @media (max-width: 600px) {
+            .reduce-padding {
+                padding-left: 10px; 
+                padding-right: 10px;
+            }
+        } 
+        .semester {
+            margin-bottom: 40px;
+        }
+
+        .semester h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-size: 14px;
+        }
+
+        td input {
+            width: 100%;
+            padding: 6px;
+            box-sizing: border-box;
+        }
+        #pills-tab li .active{
+        background:#0c3862;
+        color:white;
+    }
+    .nav-pills {
+        display: flex;
+        justify-content: space-evenly; /* Adjusts the spacing between tabs */
+        flex-wrap: nowrap; /* Prevents wrapping to the next line */
+        overflow-x: auto; /* Adds a horizontal scroll on smaller screens if needed */
+    }
+
+    /* Adjust font size and padding for smaller screens */
+    @media (max-width: 600px) {
+        .nav-link.small-pills {
+            font-size: 12px; /* Smaller font size */
+            padding: 8px 10px; /* Adjust padding */
+        }
+
+        .nav-pills {
+            justify-content: flex-start; /* Aligns tabs to the left */
+            gap: 10px; /* Adds spacing between the tabs */
+        }
+    }
+    </style>
+    <body>
+        <!--  Body Wrapper -->
+        <%-include("../partials/preloader")%>
+            <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+                <%-include("../partials/sidebar")%>
+                    <!--  Main wrapper -->
+                    <div class="body-wrapper">
+                        <%-include("../partials/header")%>
+                            <div class="container-fluid">
+                                <div class="container-fluid">
+                                    <div class="row justify-content-between">
+                                        <div class="card">
+                                            <div style="overflow-x:scroll;" class="card-body reduce-padding">
+                                                <div class="flex-row mb-2">
+                                                    <span class="fs-6 fw-semibold">CGPA Planner</span>
+                                                </div>
+                                                <!-- <div class="flex-row mb-3">
+                                                    <ul class="list-inline">
+                                                        <span style="font-size: 10px;" class="fs-3 fw-semibold">
+                                                            With this set of predictive tools specifically designed for Ashokans, you can simulate future CGPA scenarios based on expected grades. Enter Retakes, Pass/Fail(s), Audits, Transfer Credits and more to calculate your Semester GPA, CGPA, Dean's List for Semester, Latin Honors, and more. Enter target CGPA and know what will be your minimum required grades.
+                                                        </span>                                         
+                                                    </ul>
+                                                </div> -->
+                                                <br />
+                                                
+                                                <div class="container mt-3">
+                                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                                        <li class="nav-item" role="presentation">
+                                                           <button class="nav-link small-pills active" id="pills-instructions-tab" data-bs-toggle="pill" data-bs-target="#evaluations" type="button" role="tab" aria-controls="#evaluations" aria-selected="true">
+                                                              Upcoming Semester
+                                                           </button>
+                                                        </li>
+                                                        <li class="nav-item" role="presentation">
+                                                            <button class="nav-link small-pills" id="pills-1-tab" data-bs-toggle="pill" data-bs-target="#updateGrades" type="button" role="tab" aria-controls="#updateGrades" aria-selected="true">Past Semesters</button>
+                                                        </li>
+                                                        <li class="nav-item" role="presentation">
+                                                            <button class="nav-link small-pills" id="pills-12-tab" data-bs-toggle="pill" data-bs-target="#raiseGPASection" type="button" role="tab" aria-controls="#raiseGPASection" aria-selected="true">Raise GPA Calculator</button>
+                                                        </li>
+                                                    </ul>
+                                                    <br />
+
+                                                    <!-- Move your existing grade table here -->
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div style="overflow-x:scroll" class="table-scrollable">
+                                                                <table id="tblListViewCR1" class="table">
+                                                                    <thead style="background: #0d3862; color: #fff; border-radius: 20px;">
+                                                                        <tr>
+                                                                            <th> <strong id="blue-cgpa" style="float:left;width:33%">Degree/Diploma CGPA: <%=cgpa_data.degreeCGPA%> </strong> <strong id="blue-totalCredits" style="float:right;width:33%;text-align: right;">Total counted credits: <%=cgpa_data.totalCredits%></strong></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody></tbody>
+                                                                </table>
+                                                            </div>
+                                                            <!-- <div class="mb-3 text-end text-center text-md-end">
+                                                                <label for="pfCredits" class="form-label">Until now, for how many <span style="color:red">CREDITS (not courses)</span> have you chosen P/F</label><br />
+                                                                <input oninput="updateCalc(1,1)" type="number" class="form-control float-end" id="pfCredits" value="<%=pf_credits%>" style="width: auto;" />
+                                                            </div>
+                                                            <br /><br /> -->
+                                                        </div>
+                                                    </div>
+                                            
+                                                    <div class="tab-content">
+                                                        <!-- Evaluations Tab Content -->
+                                                        <div id="evaluations" class="tab-pane fade show active" aria-labelledby="evaluationTab">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div style="overflow-x:scroll">
+                                                                        <div class="d-flex">
+                                                                            <button onclick="location.reload()" class="btn btn-light mr-2" style="border:1px solid black;">Reset Data</button>
+                                                                            <a href="/platform/cgpa-planner-reset" class="btn btn-light">Re-sync From AMS</a>
+                                                                        </div>
+                                                                        <!-- <br />
+                                                                        <span>Click <a href="#" data-bs-toggle="modal" data-bs-target="#retakeModal">here</a> if you are retaking any course(s).</span> -->
+                                                                        <div class="modal fade" id="retakeModal" tabindex="-1" aria-labelledby="retakeModalLabel" aria-hidden="true">
+                                                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <h5 class="modal-title" id="retakeModalLabel">Declare Retakes</h5>
+                                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                                    </div>
+                                                                                    <% var reversedSemesters = cgpa_data.semesters.slice().reverse(); %>
+                                                                                    <div id="retakeModalBody" class="modal-body">
+                                                                                        I am retaking                                                                                            
+                                                                                        <% reversedSemesters.forEach((semester, semesterIndex) => { %>
+                                                                                            <%if(semester.semesterCreditsEarned==0 && semester.gpa==0){%>
+                                                                                                <select class="" style="border: none; max-width: 80%;" name="currentCourse" id="currentCourse">
+                                                                                                    <option value="">Select</option>
+                                                                                                    <% semester.courses.forEach((course, courseIndex) => { %>
+                                                                                                        <option value="<%= courseIndex %>"><%= course.title %>-<%= semester.semester %></option>
+                                                                                                    <% }); %>
+                                                                                                </select>
+                                                                                            <% } %>
+                                                                                        <% }) %>
+                                                                                        to replace
+                                                                                        <select class="" style="border: none; max-width: 80%;" name="retakeCourse" id="retakeCourse">
+                                                                                            <option value="">Select</option>
+                                                                                            <% reversedSemesters.forEach((semester, semesterIndex) => { %>
+                                                                                                <%if(semester.semesterCreditsEarned!=0 && semester.gpa!=0){%>
+                                                                                                    <% semester.courses.forEach((course, courseIndex) => { %>
+                                                                                                        <option value="<%= course.gradePoints %>,<%= course.creditsEarned %>"><%= course.title %>-<%= semester.semester %></option>
+                                                                                                    <% }) %>
+                                                                                                <% } %>
+                                                                                            <%})%>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <div class="modal-footer">
+                                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Save</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <br /><br />
+                                                                        <table id="tblListViewCR2" class="table table-bordered">
+                                                                            <thead>
+                                                                                <tr style="font-weight:bold;background:#c4122f;color:#fff">
+                                                                                    <th class="table-checkbox" data-filter="false" data-sorter="false">#</th>
+                                                                                    <th>Code</th>
+                                                                                    <th>Title</th>
+                                                                                    <th>Credits Registered</th>
+                                                                                    <th >Grade</th>
+                                                                                    <!-- <th>Grade Points</th> -->
+                                                                                    <th>Retake</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <% 
+                                                                                    var reversedSemesters = cgpa_data.semesters.slice().reverse(); // Reverse the array
+                                                                                %>
+                                                                                <% reversedSemesters.forEach((semester, semesterIndex) => { %>
+                                                                                    <%if(semester.semesterCreditsEarned==0 && semester.gpa==0){%>
+                                                                                    <!-- Semester Header Row -->
+                                                                                    <tr style="font-weight:bold;background:#0d3862;color:#fff">
+                                                                                        <td colspan="7"><%= semester.semester %></td>
+                                                                                    </tr>
+                                                                                    <!-- Loop through courses in the semester -->
+                                                                                    <% semester.courses.forEach((course, courseIndex) => { %>
+                                                                                        <tr class="tr <%= semesterIndex + 1%>">
+                                                                                            <td><%= courseIndex + 1 %></td>
+                                                                                            <td ><%= course.code %></td>
+                                                                                            <td><%= course.title %></td>
+                                                                                            <td id="creditsRegistered <%= courseIndex + 1 %> <%= semesterIndex + 1%>"><%= course.creditsRegistered %></td>
+                                                                                            <td >
+                                                                                                <select style="border:none" name="letter-grade" id="select <%= courseIndex + 1 %> <%= semesterIndex + 1%>">
+                                                                                                    <option value="Select">Select</option>
+                                                                                                    <option value="A">A</option>
+                                                                                                    <option value="A-">A-</option>
+                                                                                                    <option value="B+">B+</option>
+                                                                                                    <option value="B">B</option>
+                                                                                                    <option value="B-">B-</option>
+                                                                                                    <option value="C+">C+</option>
+                                                                                                    <option value="C">C</option>
+                                                                                                    <option value="C-">C-</option>
+                                                                                                    <option value="D+">D+</option>
+                                                                                                    <option value="D">D</option>
+                                                                                                    <option value="D-">D-</option>
+                                                                                                    <option value="P">P</option>
+                                                                                                    <option value="F (w P/F)">F (w P/F)</option>
+                                                                                                    <option value="F (w/o P/F)">F (w/o P/F)</option>
+                                                                                                    <option value="AU">AU</option>
+                                                                                                    <option value="TP">TP</option>
+                                                                                                  </select>
+                                                                                            </td>
+                                                                                            <!-- <td id="creditsEarned <%= courseIndex + 1 %> <%= semesterIndex + 1%>"><%= course.creditsEarned ? course.creditsEarned : 'N/A' %></td> -->
+                                                                                            <!-- <td id="gradePoints <%= courseIndex + 1 %> <%= semesterIndex + 1%>"><%= course.gradePoints ? course.gradePoints : 'N/A' %></td> -->
+                                                                                            <td class="text-center"><input type="checkbox" name="retake" onchange="handleRetakeCheck(`<%= courseIndex + 1 %> <%= semesterIndex + 1%>`, `<%= JSON.stringify(course) %>`)" id="retake <%= courseIndex + 1 %> <%= semesterIndex + 1%>"></td>
+                                                                                        </tr>
+                                                                                    <% }); %>
+
+                                                                                    <!-- Semester GPA, Credits Earned, CGPA Row -->
+                                                                                    <tr style="font-weight:bold;background:#ddd;">
+                                                                                        <td colspan="2" style="text-align:right"></td>
+                                                                                        <td id="gpa-upcoming <%=semesterIndex+1%>" style="white-space:nowrap;text-align:right">GPA: <%= semester.gpa %></td>
+                                                                                        <td id="creditsEarned-upcoming <%=semesterIndex+1%>" colspan="2" >Semester Credits Earned: <%= semester.semesterCreditsEarned %></td>
+                                                                                        <td id="cgpa-upcoming <%=semesterIndex+1%>" >CGPA: <%= semester.cgpa %></td>
+                                                                                    </tr>
+                                                                                    <%}%>
+                                                                                <% }); %> 
+                                                                            </tbody>
+                                                                        </table>
+                                                                        <br />
+                                                                        <button onclick="updateCalculation()" class="mx-auto d-block btn btn-primary" style="border: none; background-color: #0c3862; width: 60%; height: 40px;">Calculate</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Add content for evaluations here -->
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+
+                    <script>
+
+                        let retakeArray = [];
+
+                        function handleRetakeCheck(details, course) {
+                            courseIndex = details.split(" ")[0];
+                            semesterIndex = details.split(" ")[1];
+                            courseData = JSON.parse(course.replace(/&quot;/g, '"'));
+                            var checkbox = document.getElementById("retake " + courseIndex + " " + semesterIndex);
+                            if (checkbox.checked) {
+                                // openModal(courseIndex, semesterIndex);
+                                retakeArray.push({course: courseData, retakeAgainst: null});
+                            } else {
+                                retakeArray = retakeArray.filter(item => item.course.title !== courseData.title);
+                            }
+                            updateRetakeModal();
+                        }
+
+                        function updateRetakeModal() {
+                            const modalBody = document.getElementById('retakeModalBody');
+                            modalBody.innerHTML = '';
+
+                            retakeArray.forEach((retakeItem, index) => {
+                            const selectOptions = `<select onchange="updateRetakeAgainst(${index}, this.value)">
+                                                    <option value="">Select course to retake against</option>
+                                                    <% reversedSemesters.forEach((semester) => { %>
+                                                        <% semester.courses.forEach((prevCourse) => { %>
+                                                            <option value="<%= prevCourse.gradePoints %>">
+                                                            <%= prevCourse.title %> - <%= semester.semester %>
+                                                            </option>
+                                                        <% }); %>
+                                                    <% }); %>
+                                                    </select>`;
+
+                            modalBody.innerHTML += `
+                                <div>
+                                Retaking: ${retakeItem.course.title}
+                                Retake against: ${selectOptions}
+                                </div>`;
+                            });
+
+                            if (retakeArray.length > 0) {
+                                $('#retakeModal').modal('show');
+                            }
+                        }
+
+                        function openModal(courseIndex, semesterIndex) {
+                            var modal = new bootstrap.Modal(document.getElementById('retakeModal'), {
+                                keyboard: false
+                            });
+                            modal.show();
+                        }
+
+                        function updateRetakeAgainst(index, retakeAgainst) {
+                            retakeArray[index].retakeAgainst = retakeAgainst;
+                        }
+                    
+                        const gradePointsMap = {
+                            'A': 4.0,
+                            'A-': 3.7,
+                            'B+': 3.3,
+                            'B': 3.0,
+                            'B-': 2.7,
+                            'C+': 2.3,
+                            'C': 2.0,
+                            'C-': 1.7,
+                            'D+': 1.3,
+                            'D': 1.0,
+                            'D-': 0.7,
+                            'F (w P/F)': 0.0,
+                            'TP': 0.0,
+                            'P': 0.0,
+                            'AU': 0.0,
+                            'F (w/o P/F)': 0.0
+                        };
+                        // var tempCGPA = parseFloat("<%= cgpa_data.degreeCGPA %>");
+                        // var temptotalCredits = parseInt("<%= cgpa_data.totalCredits %>")
+                        var cgpa_data = JSON.parse('<%- JSON.stringify(cgpa_data) %>')
+                        var reversedSemesters = cgpa_data.semesters.slice().reverse();
+                        
+                        function updateCalculation() {
+                            
+                            reversedSemesters.forEach((semester, semesterIndex) => {
+                                if (semester.semesterCreditsEarned == 0 && semester.gpa == 0) {
+                                    semester.courses.forEach((course, courseIndex) => {
+                                        courseGrade = document.getElementById("select " + (courseIndex+1) + " " + (semesterIndex+1)).value;
+                                        courseCreditsEarned = document.getElementById("creditsRegistered " + (courseIndex+1) + " " + (semesterIndex+1)).innerText;
+                                    })
+                                }
+                            });
+                        }
+
+                    </script>
+                        
+                    <!-- <script>
+                        const gradePointsMap = {
+                            'A': 4.0,
+                            'A-': 3.7,
+                            'B+': 3.3,
+                            'B': 3.0,
+                            'B-': 2.7,
+                            'C+': 2.3,
+                            'C': 2.0,
+                            'C-': 1.7,
+                            'D+': 1.3,
+                            'D': 1.0,
+                            'D-': 0.7,
+                            'F (w P/F)': 0.0,
+                            'TP': 0.0,
+                            'P': 0.0,
+                            'AU': 0.0,
+                            'F (w/o P/F)': 0.0
+                        };
+                        var tempCGPA = parseFloat("<%= cgpa_data.degreeCGPA %>");
+                        var tempDegreeCreditsUntilNow = parseInt("<%= cgpa_data.totalCredits %>")
+                        function updateCalc()
+                        {   
+                            idSuffix=courseIndex+" "+semesterIndex;
+                            correspondingSelectElement=document.getElementById("select "+idSuffix);
+                            correspondingCreditsRegistered=document.getElementById("creditsRegistered "+idSuffix);
+                            correspondingCreditsEarned=document.getElementById("creditsEarned "+idSuffix);
+                            correspondingGradePoints=document.getElementById("gradePoints "+idSuffix);
+                            
+                            if(correspondingSelectElement.value=="Select"){
+                                correspondingCreditsEarned.innerText="N/A";
+                                correspondingGradePoints.innerText="N/A";
+                            }else{
+                                if(correspondingSelectElement.value=='F (w P/F)' || correspondingSelectElement.value=='F (w/o P/F)'){
+                                    correspondingCreditsEarned.innerText="0";
+                                }else{
+                                    correspondingCreditsEarned.innerText=correspondingCreditsRegistered.innerText;
+                                }
+                                const creditsEarned=parseInt(correspondingCreditsEarned.innerText)?parseInt(correspondingCreditsEarned.innerText):0;
+                                correspondingGradePoints.innerText=creditsEarned * gradePointsMap[correspondingSelectElement.value];
+                            }
+                                // Ensure DOM updates (innerText) are complete before proceeding
+                            setTimeout(() => {
+                                // let creditElements = document.getElementsByClassName("creditsEarned " + semesterIndex);
+                                // let gradePointsElements = document.getElementsByClassName("gradePoints " + semesterIndex);
+                                let trElements=document.getElementsByClassName("tr " + semesterIndex);
+                                // console.log(trElements);
+                                var semesterCreditsForGPACalculation = 0;
+                                var semesterGradePointsForGPACalculation = 0;
+                                var semesterCreditsEarned=0;
+
+                                for (let tr of trElements) {
+                                    // Get the 5th, 6th, and 7th td elements (index starts at 0)
+                                    let td5 = tr.children[4]; // 5th td (index 4)
+                                    let td6 = tr.children[3]; // 4rd td (index 3)
+                                    let td7 = tr.children[6]; // 7th td (index 6)
+                                    let tdEarned= tr.children[5]; // 6th td (index 5)
+                                    // Get the innerText values of these td elements
+                                    let grade = td5 ? td5.children[0].value : null;
+                                    let creditsForGPA = td6 ? td6.innerText : null;
+                                    
+                                    if((tdEarned.innerText!="N/A" ||  tdEarned.innerText!="") && !isNaN(parseInt(tdEarned.innerText))){
+                                        semesterCreditsEarned+=parseInt(tdEarned.innerText);
+                                    }
+
+                                    let gradePoints = td7 ? td7.innerText : null;
+                                    let allowedGrades= [
+                                        'A', 'A-', 'B+', 'B', 'B-', 
+                                        'C+', 'C', 'C-', 'D+', 'D', 'D-','F (w/o P/F)'
+                                    ];
+
+                                    // console.log(correspondingSelectElement.value,creditValue)
+                                    if(allowedGrades.includes(grade) && !isNaN(parseInt(creditsForGPA)) && !isNaN(parseFloat(gradePoints))){
+                                        semesterCreditsForGPACalculation += parseInt(creditsForGPA);
+                                        semesterGradePointsForGPACalculation += parseFloat(gradePoints);
+                                    }
+                                }
+                                let gpa=!isNaN(semesterGradePointsForGPACalculation/semesterCreditsForGPACalculation)?semesterGradePointsForGPACalculation/semesterCreditsForGPACalculation:0;
+                                let gpaRounded=Math.round(gpa*100)/100;
+                                document.getElementById("gpa-upcoming "+semesterIndex).innerText="Predicted GPA: "+ gpaRounded;
+                                document.getElementById("creditsEarned-upcoming "+semesterIndex).innerText="Predicted Semester Credits Earned: "+semesterCreditsEarned;
+                                let degreeCgpa=parseFloat('<%= cgpa_data.degreeCGPA %>');
+                                let degreeCreditsUntilNow=parseInt('<%= cgpa_data.totalCredits %>');
+                                let pfCredits=document.getElementById("pfCredits").value;
+                                let gp=degreeCgpa*(degreeCreditsUntilNow-pfCredits);
+                                console.log("gp before: ",gp);
+                                if(parseInt(courseIndex)-1 == parseInt(document.getElementById("currentCourse").value)) {
+                                    [retakeGradePoints, retakeCreditsEarned] = document.getElementById("retakeCourse").value.split(",");
+                                    console.log("retakeGradePoints: ",retakeGradePoints, "currentGradePoints: ",correspondingGradePoints.innerText);
+                                    if(!isNaN(parseFloat(correspondingGradePoints.innerText)) && parseFloat(correspondingGradePoints.innerText) >= parseFloat(retakeGradePoints)){
+                                        gp -= parseFloat(retakeGradePoints);
+                                    }else{
+                                        gp -= parseFloat(correspondingGradePoints.innerText);
+                                    }
+                                    
+                                    degreeCreditsUntilNow -= parseInt(retakeCreditsEarned);
+                                }
+                                console.log("gp after: ",gp+semesterGradePointsForGPACalculation);
+                                let pcgpa=(gp+semesterGradePointsForGPACalculation)/(semesterCreditsForGPACalculation+(degreeCreditsUntilNow-pfCredits))
+                                tempCGPA=pcgpa-semesterGradePointsForGPACalculation;
+                                tempDegreeCreditsUntilNow=semesterCreditsForGPACalculation+(degreeCreditsUntilNow-pfCredits);
+                                
+                                let pcgpaRounded=Math.round(pcgpa*100)/100;
+                                document.getElementById("cgpa-upcoming "+semesterIndex).innerText="PCGPA: "+pcgpaRounded;
+                                document.getElementById("blue-cgpa").innerText="Predicted Degree/Diploma CGPA: "+pcgpaRounded;
+                                document.getElementById("blue-totalCredits").innerText="Predicted Total counted credits: "+(degreeCreditsUntilNow+semesterCreditsEarned);
+                            }, 0);  
+
+                        }
+                    </script> -->
+                    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+                    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+                    <script src="/platform/assets/js/sidebarmenu.js"></script>
+                    <script src="/platform/assets/js/app.min.js"></script>
+                    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+                    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+                    <script src="/platform/assets/js/dashboard.js"></script>
+                    <script src="/platform/assets/js/theme.js"></script>
+                    <script src="/platform/assets/js/main.js"></script>
+                    <!-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> -->
+                    <script src="/platform/assets/js/dataTables.js"></script>
+                    <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
+                    <!-- <%-include("../partials/preloader-js")%> -->
+    </body>
+
+</html>

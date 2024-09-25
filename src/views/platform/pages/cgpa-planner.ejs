@@ -170,7 +170,7 @@
                                                                                         <h5 class="modal-title" id="retakeModalLabel">Declare Retakes</h5>
                                                                                         <button onclick="closeUpdate()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                                     </div>
-                                                                                    <% var reversedSemesters = cgpa_data.semesters.slice().reverse(); var tempCGPA = cgpa_data.degreeCGPA %>
+                                                                                    <% var reversedSemesters = cgpa_data.semesters.slice().reverse(); %>
                                                                                     <div class="modal-body">
                                                                                         I am retaking                                                                                            
                                                                                         <% reversedSemesters.forEach((semester, semesterIndex) => { %>
@@ -190,7 +190,7 @@
                                                                                             <% reversedSemesters.forEach((semester, semesterIndex) => { %>
                                                                                                 <%if(semester.semesterCreditsEarned!=0 && semester.gpa!=0){%>
                                                                                                     <% semester.courses.forEach((course, courseIndex) => { %>
-                                                                                                        <option value="<%= course.gradePoints %>"><%= course.title %>-<%= semester.semester %></option>
+                                                                                                        <option value="<%= course.gradePoints %>,<%= course.creditsEarned %>"><%= course.title %>-<%= semester.semester %></option>
                                                                                                     <% }) %>
                                                                                                 <% } %>
                                                                                             <%})%>
@@ -269,6 +269,7 @@
                                                                                 <% }); %> 
                                                                             </tbody>
                                                                         </table>
+                                                                        <br /><br />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -530,101 +531,116 @@
 
                         </script>
                         
-                    <script>
-                        const gradePointsMap = {
-                            'A': 4.0,
-                            'A-': 3.7,
-                            'B+': 3.3,
-                            'B': 3.0,
-                            'B-': 2.7,
-                            'C+': 2.3,
-                            'C': 2.0,
-                            'C-': 1.7,
-                            'D+': 1.3,
-                            'D-': 0.7,
-                            'F (w P/F)': 0.0,
-                            'TP': 0.0,
-                            'P': 0.0,
-                            'AU': 0.0,
-                            'F (w/o P/F)': 0.0
-                        };
-                        function updateCalc(courseIndex,semesterIndex)
-                        {   
-                            idSuffix=courseIndex+" "+semesterIndex;
-                            correspondingSelectElement=document.getElementById("select "+idSuffix);
-                            correspondingCreditsRegistered=document.getElementById("creditsRegistered "+idSuffix);
-                            correspondingCreditsEarned=document.getElementById("creditsEarned "+idSuffix);
-                            correspondingGradePoints=document.getElementById("gradePoints "+idSuffix);
-                            
-                            if(correspondingSelectElement.value=="Select"){
-                                correspondingCreditsEarned.innerText="N/A";
-                                correspondingGradePoints.innerText="N/A";
-                            }else{
-                                if(correspondingSelectElement.value=='F (w P/F)' || correspondingSelectElement.value=='F (w/o P/F)'){
-                                    correspondingCreditsEarned.innerText="0";
-                                }else{
-                                    correspondingCreditsEarned.innerText=correspondingCreditsRegistered.innerText;
-                                }
-                                const creditsEarned=parseInt(correspondingCreditsEarned.innerText)?parseInt(correspondingCreditsEarned.innerText):0;
-                                correspondingGradePoints.innerText=creditsEarned * gradePointsMap[correspondingSelectElement.value];
-                            }
-                             // Ensure DOM updates (innerText) are complete before proceeding
-                            setTimeout(() => {
-                                // let creditElements = document.getElementsByClassName("creditsEarned " + semesterIndex);
-                                // let gradePointsElements = document.getElementsByClassName("gradePoints " + semesterIndex);
-                                let trElements=document.getElementsByClassName("tr " + semesterIndex);
-                                // console.log(trElements);
-                                var semesterCreditsForGPACalculation = 0;
-                                var semesterGradePointsForGPACalculation = 0;
-                                var semesterCreditsEarned=0;
-
-                                for (let tr of trElements) {
-                                    // Get the 5th, 6th, and 7th td elements (index starts at 0)
-                                    let td5 = tr.children[4]; // 5th td (index 4)
-                                    let td6 = tr.children[3]; // 4rd td (index 3)
-                                    let td7 = tr.children[6]; // 7th td (index 6)
-                                    let tdEarned= tr.children[5]; // 6th td (index 5)
-                                    // Get the innerText values of these td elements
-                                    let grade = td5 ? td5.children[0].value : null;
-                                    let creditsForGPA = td6 ? td6.innerText : null;
-                                    
-                                    if((tdEarned.innerText!="N/A" ||  tdEarned.innerText!="") && !isNaN(parseInt(tdEarned.innerText))){
-                                        semesterCreditsEarned+=parseInt(tdEarned.innerText);
-                                    }
-
-                                    let gradePoints = td7 ? td7.innerText : null;
-                                    let allowedGrades= [
-                                        'A', 'A-', 'B+', 'B', 'B-', 
-                                        'C+', 'C', 'C-', 'D+', 'D-','F (w/o P/F)'
-                                    ];
-
-                                    // console.log(correspondingSelectElement.value,creditValue)
-                                    if(allowedGrades.includes(grade) && !isNaN(parseInt(creditsForGPA)) && !isNaN(parseFloat(gradePoints))){
-                                        semesterCreditsForGPACalculation += parseInt(creditsForGPA);
-                                        semesterGradePointsForGPACalculation += parseFloat(gradePoints);
-                                    }
-                                }
-                                let gpa=!isNaN(semesterGradePointsForGPACalculation/semesterCreditsForGPACalculation)?semesterGradePointsForGPACalculation/semesterCreditsForGPACalculation:0;
-                                let gpaRounded=Math.round(gpa*100)/100;
-                                document.getElementById("gpa-upcoming "+semesterIndex).innerText="Predicted GPA: "+ gpaRounded;
-                                document.getElementById("creditsEarned-upcoming "+semesterIndex).innerText="Predicted Semester Credits Earned: "+semesterCreditsEarned;
-                                let degreeCgpa=parseFloat('<%=tempCGPA%>');
-                                let degreeCreditsUntilNow=parseInt('<%=cgpa_data.totalCredits%>');
+                        <script>
+                            const gradePointsMap = {
+                                'A': 4.0,
+                                'A-': 3.7,
+                                'B+': 3.3,
+                                'B': 3.0,
+                                'B-': 2.7,
+                                'C+': 2.3,
+                                'C': 2.0,
+                                'C-': 1.7,
+                                'D+': 1.3,
+                                'D': 1.0,
+                                'D-': 0.7,
+                                'F (w P/F)': 0.0,
+                                'TP': 0.0,
+                                'P': 0.0,
+                                'AU': 0.0,
+                                'F (w/o P/F)': 0.0
+                            };
+                            var tempCGPA = parseFloat("<%= cgpa_data.degreeCGPA %>");
+                            var tempDegreeCreditsUntilNow = parseInt("<%= cgpa_data.totalCredits %>")
+                            function updateCalc(courseIndex, semesterIndex)
+                            {   
+                                idSuffix=courseIndex+" "+semesterIndex;
+                                correspondingSelectElement=document.getElementById("select "+idSuffix);
+                                correspondingCreditsRegistered=document.getElementById("creditsRegistered "+idSuffix);
+                                correspondingCreditsEarned=document.getElementById("creditsEarned "+idSuffix);
+                                correspondingGradePoints=document.getElementById("gradePoints "+idSuffix);
                                 
-                                let pfCredits=document.getElementById("pfCredits").value;
-                                let gp=degreeCgpa*(degreeCreditsUntilNow-pfCredits);
-                                if(courseIndex == parseInt(document.getElementById("currentCourse").value)) {
-                                    gp = gp - parseFloat(document.getElementById("retakeCourse").value)
+                                if(correspondingSelectElement.value=="Select"){
+                                    correspondingCreditsEarned.innerText="N/A";
+                                    correspondingGradePoints.innerText="N/A";
+                                }else{
+                                    if(correspondingSelectElement.value=='F (w P/F)' || correspondingSelectElement.value=='F (w/o P/F)'){
+                                        correspondingCreditsEarned.innerText="0";
+                                    }else{
+                                        correspondingCreditsEarned.innerText=correspondingCreditsRegistered.innerText;
+                                    }
+                                    const creditsEarned=parseInt(correspondingCreditsEarned.innerText)?parseInt(correspondingCreditsEarned.innerText):0;
+                                    correspondingGradePoints.innerText=creditsEarned * gradePointsMap[correspondingSelectElement.value];
                                 }
-                                let pcgpa=(gp+semesterGradePointsForGPACalculation)/(semesterCreditsForGPACalculation+(degreeCreditsUntilNow-pfCredits))
-                                let pcgpaRounded=Math.round(pcgpa*100)/100;
-                                document.getElementById("cgpa-upcoming "+semesterIndex).innerText="PCGPA: "+pcgpaRounded;
-                                document.getElementById("blue-cgpa").innerText="Predicted Degree/Diploma CGPA: "+pcgpaRounded;
-                                document.getElementById("blue-totalCredits").innerText="Predicted Total counted credits: "+(degreeCreditsUntilNow+semesterCreditsEarned);
-                            }, 0);  
-
-                        }
-                    </script>
+                                 // Ensure DOM updates (innerText) are complete before proceeding
+                                setTimeout(() => {
+                                    // let creditElements = document.getElementsByClassName("creditsEarned " + semesterIndex);
+                                    // let gradePointsElements = document.getElementsByClassName("gradePoints " + semesterIndex);
+                                    let trElements=document.getElementsByClassName("tr " + semesterIndex);
+                                    // console.log(trElements);
+                                    var semesterCreditsForGPACalculation = 0;
+                                    var semesterGradePointsForGPACalculation = 0;
+                                    var semesterCreditsEarned=0;
+    
+                                    for (let tr of trElements) {
+                                        // Get the 5th, 6th, and 7th td elements (index starts at 0)
+                                        let td5 = tr.children[4]; // 5th td (index 4)
+                                        let td6 = tr.children[3]; // 4rd td (index 3)
+                                        let td7 = tr.children[6]; // 7th td (index 6)
+                                        let tdEarned= tr.children[5]; // 6th td (index 5)
+                                        // Get the innerText values of these td elements
+                                        let grade = td5 ? td5.children[0].value : null;
+                                        let creditsForGPA = td6 ? td6.innerText : null;
+                                        
+                                        if((tdEarned.innerText!="N/A" ||  tdEarned.innerText!="") && !isNaN(parseInt(tdEarned.innerText))){
+                                            semesterCreditsEarned+=parseInt(tdEarned.innerText);
+                                        }
+    
+                                        let gradePoints = td7 ? td7.innerText : null;
+                                        let allowedGrades= [
+                                            'A', 'A-', 'B+', 'B', 'B-', 
+                                            'C+', 'C', 'C-', 'D+', 'D', 'D-','F (w/o P/F)'
+                                        ];
+    
+                                        // console.log(correspondingSelectElement.value,creditValue)
+                                        if(allowedGrades.includes(grade) && !isNaN(parseInt(creditsForGPA)) && !isNaN(parseFloat(gradePoints))){
+                                            semesterCreditsForGPACalculation += parseInt(creditsForGPA);
+                                            semesterGradePointsForGPACalculation += parseFloat(gradePoints);
+                                        }
+                                    }
+                                    let gpa=!isNaN(semesterGradePointsForGPACalculation/semesterCreditsForGPACalculation)?semesterGradePointsForGPACalculation/semesterCreditsForGPACalculation:0;
+                                    let gpaRounded=Math.round(gpa*100)/100;
+                                    document.getElementById("gpa-upcoming "+semesterIndex).innerText="Predicted GPA: "+ gpaRounded;
+                                    document.getElementById("creditsEarned-upcoming "+semesterIndex).innerText="Predicted Semester Credits Earned: "+semesterCreditsEarned;
+                                    let degreeCgpa=parseFloat('<%= cgpa_data.degreeCGPA %>');
+                                    let degreeCreditsUntilNow=parseInt('<%= cgpa_data.totalCredits %>');
+                                    let pfCredits=document.getElementById("pfCredits").value;
+                                    let gp=degreeCgpa*(degreeCreditsUntilNow-pfCredits);
+                                    console.log("gp before: ",gp);
+                                    if(parseInt(courseIndex)-1 == parseInt(document.getElementById("currentCourse").value)) {
+                                        [retakeGradePoints, retakeCreditsEarned] = document.getElementById("retakeCourse").value.split(",");
+                                        console.log("retakeGradePoints: ",retakeGradePoints, "currentGradePoints: ",correspondingGradePoints.innerText);
+                                        if(!isNaN(parseFloat(correspondingGradePoints.innerText)) && parseFloat(correspondingGradePoints.innerText) >= parseFloat(retakeGradePoints)){
+                                            gp -= parseFloat(retakeGradePoints);
+                                        }else{
+                                            gp -= parseFloat(correspondingGradePoints.innerText);
+                                        }
+                                        
+                                        degreeCreditsUntilNow -= parseInt(retakeCreditsEarned);
+                                    }
+                                    console.log("gp after: ",gp+semesterGradePointsForGPACalculation);
+                                    let pcgpa=(gp+semesterGradePointsForGPACalculation)/(semesterCreditsForGPACalculation+(degreeCreditsUntilNow-pfCredits))
+                                    tempCGPA=pcgpa-semesterGradePointsForGPACalculation;
+                                    tempDegreeCreditsUntilNow=semesterCreditsForGPACalculation+(degreeCreditsUntilNow-pfCredits);
+                                    
+                                    let pcgpaRounded=Math.round(pcgpa*100)/100;
+                                    document.getElementById("cgpa-upcoming "+semesterIndex).innerText="PCGPA: "+pcgpaRounded;
+                                    document.getElementById("blue-cgpa").innerText="Predicted Degree/Diploma CGPA: "+pcgpaRounded;
+                                    document.getElementById("blue-totalCredits").innerText="Predicted Total counted credits: "+(degreeCreditsUntilNow+semesterCreditsEarned);
+                                }, 0);  
+    
+                            }
+                        </script>
                     <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
                     <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
                     <script src="/platform/assets/js/sidebarmenu.js"></script>
