@@ -326,8 +326,24 @@
       function showDescription(title,description,form_link,website_link){
         document.getElementById("modalContent").innerHTML = description;
         document.getElementById("eventModalLabel").innerText = title;
-        document.getElementById("reg_link").href = form_link;
-        document.getElementById("event_website").href = website_link;
+        if(form_link==""){
+          document.getElementById("reg_link").href = "javascript:void(0)";
+          document.getElementById("reg_link").onclick = function() {
+              // Your code here
+              alert("No Link provided!");
+          };        
+        }else{
+          document.getElementById("reg_link").href = form_link;
+        }
+        if(website_link==""){
+          document.getElementById("event_website").href = "javascript:void(0)";
+          document.getElementById("event_website").onclick = function() {
+              // Your code here
+              alert("No Link provided!");
+          };        
+        }else{
+          document.getElementById("event_website").href = website_link;
+        }
       }
       function myFunction() {
     input = document.getElementById("myFilter");
