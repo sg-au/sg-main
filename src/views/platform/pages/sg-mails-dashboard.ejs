@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SG Platform</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JS (for modals) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.gstatic.com" rel="preconnect" />
+    <link rel="stylesheet" href="/platform/assets/css/dataTables.css" />
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.1.0/ckeditor5.css">
+
+        <!-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> -->
+        <script type="importmap">
+            {
+                "imports": {
+                    "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.1.0/ckeditor5.js",
+                    "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.1.0/"
+                }
+            }
+        </script>
+
+    <style>
+        @media screen and (max-width: 768px) {
+            .scroll {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .upper {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+    <style>
+           .ck-editor__editable_inline {
+       padding: 20px;                /* Add padding inside the editor */
+       min-height: 200px;            /* Optional: Set minimum height */
+       box-sizing: border-box;       /* Ensure padding doesn't affect width */
+   }
+   
+    /* Adjust padding or margin for unordered and ordered lists */
+    .ck-content ul, .ck-content ol {
+           padding-left: 30px; /* Increase this value as needed */
+           margin-left: 0px;   /* Ensure margin doesn't push the bullets too far */
+       }
+   
+       /* You can also adjust list item styling */
+       .ck-content li {
+           margin-left: 0px;
+           padding-left: 5px;  /* Fine-tune spacing for the list items */
+       }
+     </style>
+    
+    <%-include("../partials/preloader-css")%>
+        <%-include("../partials/preloader-js")%>
+
+</head>
+<%-include("../partials/post-head")%>
+
+    <script>
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+    </script>
+
+    <body>
+        <!--  Body Wrapper -->
+        <%-include("../partials/preloader")%>
+            <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6"
+                data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+                <%-include("../partials/sidebar")%>
+                    <!--  Main wrapper -->
+                    <div class="body-wrapper">
+                        <%-include("../partials/header")%>
+                            <div class="container-fluid">
+                                <div class="container-fluid">
+                                    <div class="row justify-content-between">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="flex-row mb-2">
+                                                            <span class="fs-6 fw-semibold">All SG Mail Requests</span>
+                                                        </div>
+                                                        <div class="flex-row mb-3">
+                                                            <ul class="list-inline">
+                                                                <span style="font-size: 10px;" class="fs-3 fw-semibold">
+                                                                    Click on the WhatsApp icon to message the person or
+                                                                    the mail icon to mail the person. <br />
+                                                                </span>
+                                                            </ul>
+                                                        </div>
+                                                        <br>
+                                                        <!-- Button to trigger modal -->
+
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="approveRequestModal" tabindex="-1"
+                                                            aria-labelledby="mailRequestModalLabel"
+                                                            aria-hidden="true">
+                                                            <div style="width:95%;margin:auto;padding-top:3%;padding-bottom:3%" class="modal-dialog modal-fullscreen my-auto">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="approveRequestModalLabel">
+                                                                            Approve Mail From
+                                                                        </h5>
+                                                                        <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <label for="notes" class="form-label">Additional Notes Sent by the Sender (if any)</label>
+                                                                        <div class="alert alert-success" role="alert">
+                                                                            Use this space for any additional notes as requests to the approver
+                                                                        </div>
+                                                                        <form id="myForm" action="/platform/sg-compose" method="POST">
+                                                                            <div class="mb-3">
+                                                                                <label for="newTicketTitle" class="form-label">Enter Contact Number <span style="color:rgb(177, 58, 58)">*</span></label>
+                                                                                <input
+                                                                                disabled
+                                                                                required
+                                                                                minlength="10"
+                                                                                maxlength="14"
+                                                                                name="phone"
+                                                                                type="tel"
+                                                                                class="form-control"
+                                                                                id="phoneNumber"
+                                                                                pattern="[0-9]{10}"
+                                                                                value=""
+                                                                                title="Please enter a valid 10-digit phone number without spaces or special characters."
+                                                                                >
+                                                                                <div id="phone-number-error" class="text-danger"></div>
+                                                                            </div>
+                                                                            <label for="select" class="form-label">Select Your Category of Mail<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                                            <select required name="alias" id="alias" class="form-select">
+                                                                                <option disabled selected value="">Select</option>
+                                                                                <option value="Inductions">Inductions</option>
+                                                                                <option value="Lost and Found">Lost and Found</option>
+                                                                                <option value="Jobs and Internships">Jobs and Internships</option>
+                                                                                <option value="Surveys">Surveys</option>
+                                                                                <option value="Campaigns">Campaigns</option>
+                                                                                <option value="Fundraisers">Fundraisers</option>
+                                                                                <option value="Events and Invitations">Events and Invitations</option>
+                                                                                <option value="Promotions">Promotions</option>
+                                                                            </select>
+                                                                            <br />
+                                                                            <label for="select" class="form-label">Select Recipients<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                                            <select required name="recipients" id="select-recipients" class="form-select" multiple size="8">
+                                                                                <option disabled>Select</option>
+                                                                                <option value="students">All Students</option>
+                                                                                <option value="asp25">ASP25</option>
+                                                                                <option value="ug25">UG26</option>
+                                                                                <option value="ug2023">UG2023</option>
+                                                                                <option value="ug2024">UG2024</option>
+                                                                                <option value="alumni">Alumni</option>
+                                                                                <option value="ug2024">UG2024</option>
+                                                                            </select>
+                                                                            <p style="font-size:14px;color:rgb(192, 58, 58);">hold the ctrl/cmd key to select multiple options</p>
+                                                                            <label for="subject" class="form-label">Subject (of mail)<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                                            <input required name="subject" type="title" class="form-control" id="subject">
+                                                                            <br />
+                                                                            <label for="editor" class="form-label">Mail Draft <span style="color:rgb(177, 58, 58)">*</span></label>
+                                                                            <!-- Textarea that will be replaced by CKEditor -->
+                                                                            <textarea style="margin-top:60px;padding:30px;" id="editor" name="mail_body"></textarea>
+                                                                            <p style="font-size:14px;">PLEASE NOTE: The mail that you send out will have you in CC and your signature at the bottom.</p>
+                                                                            <br />
+                                                                            <label for="files" class="form-label">File Attachments (if any)</span></label>
+                                                                            <input style="background:white" multiple name="files" type="file" class="form-control" id="file">
+                                                                            <br />
+                                                                        </form>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">Close</button>
+                                                                        <a id="returnLink" href=""
+                                                                            class="btn btn-success">Send Email</a>
+                                                                        
+                                                                        <a id="rejectLink" href=""
+                                                                            class="btn btn-danger">Reject Request</a>
+                                                                      
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <form>
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <select class="form-select" id="status" name="status">
+                                                                        <option>Filter by Status</option>
+                                                                        <option selected value="pending">pending</option>
+                                                                        <option value="approved">approved</option>
+                                                                        <option value="rejected">rejected</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <select class="form-select" id="aliasEl" name="alias">
+                                                                        <option>Filter by Alias</option>
+                                                                        <option value="Inductions">Inductions</option>
+                                                                        <option value="Lost and Found">Lost and Found</option>
+                                                                        <option value="Jobs and Internships">Jobs and Internships</option>
+                                                                        <option value="Surveys">Surveys</option>
+                                                                        <option value="Campaigns">Campaigns</option>
+                                                                        <option value="Fundraisers">Fundraisers</option>
+                                                                        <option value="Events and Invitations">Events and Invitations</option>
+                                                                        <option value="Promotions">Promotions</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                        <br />
+                                                        <table id="sgMails" class="table table-striped scroll"
+                                                            style="width:100%">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>R.ID</th>
+                                                                    <th>Name</th>
+                                                                    <th>Requested At</th>
+                                                                    <th>Status</th>
+                                                                    <th>Alias</th>
+                                                                    <th>Recipients</th>
+                                                                    <th>Actions</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <%for(i=0;i<requests.length;i++){%>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <a
+                                                                                href="https://wa.me/91<%=requests[i].attributes.sender.data.attributes.phone%>">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                    x="0px" y="0px" width="25"
+                                                                                    height="25" viewBox="0 0 48 48">
+                                                                                    <path fill="#fff"
+                                                                                        d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z">
+                                                                                    </path>
+                                                                                    <path fill="#fff"
+                                                                                        d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z">
+                                                                                    </path>
+                                                                                    <path fill="#cfd8dc"
+                                                                                        d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z">
+                                                                                    </path>
+                                                                                    <path fill="#40c351"
+                                                                                        d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z">
+                                                                                    </path>
+                                                                                    <path fill="#fff"
+                                                                                        fill-rule="evenodd"
+                                                                                        d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.237-0.277,0.316-0.475,0.474-0.791c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z"
+                                                                                        clip-rule="evenodd"></path>
+                                                                                </svg>
+                                                                            </a>
+                                                                            <a
+                                                                                href="mailto:<%=requests[i].attributes.sender.data.attributes.email%>">
+                                                                                <svg width="23" height="23"
+                                                                                    viewBox="7.086 -169.483 1277.149 1277.149"
+                                                                                    shape-rendering="geometricPrecision"
+                                                                                    text-rendering="geometricPrecision"
+                                                                                    image-rendering="optimizeQuality"
+                                                                                    xmlns="http://www.w3.org/2000/svg">
+                                                                                    <path fill="none"
+                                                                                        d="M1138.734 931.095h.283M1139.017 931.095h-.283" />
+                                                                                    <path
+                                                                                        d="M1179.439 7.087c57.543 0 104.627 47.083 104.627 104.626v30.331l-145.36 103.833-494.873 340.894L148.96 242.419v688.676h-37.247c-57.543 0-104.627-47.082-104.627-104.625V111.742C7.086 54.198 54.17 7.115 111.713 7.115l532.12 394.525L1179.41 7.115l.029-.028z"
+                                                                                        fill="#e75a4d" />
+                                                                                    <linearGradient id="a"
+                                                                                        gradientUnits="userSpaceOnUse"
+                                                                                        x1="1959.712" y1="737.107"
+                                                                                        x2="26066.213" y2="737.107"
+                                                                                        gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)">
+                                                                                        <stop offset="0"
+                                                                                            stop-color="#f8f6ef" />
+                                                                                        <stop offset="1"
+                                                                                            stop-color="#e7e4d6" />
+                                                                                    </linearGradient>
+                                                                                    <path fill="url(#a)"
+                                                                                        d="M111.713 7.087l532.12 394.525L1179.439 7.087z" />
+                                                                                    <path fill="#e7e4d7"
+                                                                                        d="M148.96 242.419v688.676h989.774V245.877L643.833 586.771z" />
+                                                                                    <path fill="#b8b7ae"
+                                                                                        d="M148.96 931.095l494.873-344.324-2.24-1.586L148.96 923.527z" />
+                                                                                    <path fill="#b7b6ad"
+                                                                                        d="M1138.734 245.877l.283 685.218-495.184-344.324z" />
+                                                                                    <path
+                                                                                        d="M1284.066 142.044l.17 684.51c-2.494 76.082-35.461 103.238-145.219 104.514l-.283-685.219 145.36-103.833-.028.028z"
+                                                                                        fill="#b2392f" />
+                                                                                    <linearGradient id="b"
+                                                                                        gradientUnits="userSpaceOnUse"
+                                                                                        x1="1959.712" y1="737.107"
+                                                                                        x2="26066.213" y2="737.107"
+                                                                                        gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)">
+                                                                                        <stop offset="0"
+                                                                                            stop-color="#f8f6ef" />
+                                                                                        <stop offset="1"
+                                                                                            stop-color="#e7e4d6" />
+                                                                                    </linearGradient>
+                                                                                    <path fill="url(#b)"
+                                                                                        d="M111.713 7.087l532.12 394.525L1179.439 7.087z" />
+                                                                                    <linearGradient id="c"
+                                                                                        gradientUnits="userSpaceOnUse"
+                                                                                        x1="1959.712" y1="737.107"
+                                                                                        x2="26066.213" y2="737.107"
+                                                                                        gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)">
+                                                                                        <stop offset="0"
+                                                                                            stop-color="#f8f6ef" />
+                                                                                        <stop offset="1"
+                                                                                            stop-color="#e7e4d6" />
+                                                                                    </linearGradient>
+                                                                                    <path fill="url(#c)"
+                                                                                        d="M111.713 7.087l532.12 394.525L1179.439 7.087z" />
+                                                                                    <linearGradient id="d"
+                                                                                        gradientUnits="userSpaceOnUse"
+                                                                                        x1="1959.712" y1="737.107"
+                                                                                        x2="26066.213" y2="737.107"
+                                                                                        gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)">
+                                                                                        <stop offset="0"
+                                                                                            stop-color="#f8f6ef" />
+                                                                                        <stop offset="1"
+                                                                                            stop-color="#e7e4d6" />
+                                                                                    </linearGradient>
+                                                                                    <path fill="url(#d)"
+                                                                                        d="M111.713 7.087l532.12 394.525L1179.439 7.087z" />
+                                                                                    <linearGradient id="e"
+                                                                                        gradientUnits="userSpaceOnUse"
+                                                                                        x1="1959.712" y1="737.107"
+                                                                                        x2="26066.213" y2="737.107"
+                                                                                        gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)">
+                                                                                        <stop offset="0"
+                                                                                            stop-color="#f8f6ef" />
+                                                                                        <stop offset="1"
+                                                                                            stop-color="#e7e4d6" />
+                                                                                    </linearGradient>
+                                                                                    <path fill="url(#e)"
+                                                                                        d="M111.713 7.087l532.12 394.525L1179.439 7.087z" />
+                                                                                    <linearGradient id="f"
+                                                                                        gradientUnits="userSpaceOnUse"
+                                                                                        x1="1959.712" y1="737.107"
+                                                                                        x2="26066.213" y2="737.107"
+                                                                                        gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)">
+                                                                                        <stop offset="0"
+                                                                                            stop-color="#f8f6ef" />
+                                                                                        <stop offset="1"
+                                                                                            stop-color="#e7e4d6" />
+                                                                                    </linearGradient>
+                                                                                    <path fill="url(#f)"
+                                                                                        d="M111.713 7.087l532.12 394.525L1179.439 7.087z" />
+                                                                                    <linearGradient id="g"
+                                                                                        gradientUnits="userSpaceOnUse"
+                                                                                        x1="1959.712" y1="737.107"
+                                                                                        x2="26066.213" y2="737.107"
+                                                                                        gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)">
+                                                                                        <stop offset="0"
+                                                                                            stop-color="#f8f6ef" />
+                                                                                        <stop offset="1"
+                                                                                            stop-color="#e7e4d6" />
+                                                                                    </linearGradient>
+                                                                                    <path fill="url(#g)"
+                                                                                        d="M111.713 7.087l532.12 394.525L1179.439 7.087z" />
+                                                                                    <linearGradient id="h"
+                                                                                        gradientUnits="userSpaceOnUse"
+                                                                                        x1="1959.712" y1="737.107"
+                                                                                        x2="26066.213" y2="737.107"
+                                                                                        gradientTransform="matrix(.0283 0 0 -.0283 248.36 225.244)">
+                                                                                        <stop offset="0"
+                                                                                            stop-color="#f8f6ef" />
+                                                                                        <stop offset="1"
+                                                                                            stop-color="#e7e4d6" />
+                                                                                    </linearGradient>
+                                                                                    <path fill="url(#h)"
+                                                                                        d="M111.713 7.087l532.12 394.525L1179.439 7.087z" />
+                                                                                    <path fill="#f7f5ed"
+                                                                                        d="M111.713 7.087l532.12 394.525L1179.439 7.087z" />
+                                                                                </svg>
+                                                                            </a>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%=requests[i].id%>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%=requests[i].attributes.sender.data.attributes.username%>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%-new
+                                                                                Date(requests[i].attributes.createdAt).toLocaleDateString('en',
+                                                                                { month: 'short' })-%>
+                                                                                <%-new
+                                                                                    Date(requests[i].attributes.createdAt).getDate()-%>
+                                                                                    , <%-new
+                                                                                        Date(requests[i].attributes.createdAt).getFullYear()-%>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%if(requests[i].attributes.status=="pending"){%>
+                                                                                <span style="padding:2px" class="bg-warning text-white">pending</span>
+                                                                            <%}else if(requests[i].attributes.status=="approved"){%>
+                                                                                <span style="padding:2px" class="bg-info text-white">approved</span>
+                                                                            <%}else{%>
+                                                                                <span style="padding:2px" class="bg-danger text-white">rejected</span>
+                                                                            <%}%>
+                                                                            
+                                                                        </td>
+                                                                        <td>
+                                                                            <%=requests[i].attributes.alias%>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%=requests[i].attributes.recipients.substring(0,25)%>...
+                                                                        </td>
+                                                                        <td>
+                                                                            <button data-bs-toggle="modal" data-bs-target="#approveRequestModal" type="button" class="btn btn-primary">View</button>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <%}%>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>R.ID</th>
+                                                                    <th>Name</th>
+                                                                    <th>Requested At</th>
+                                                                    <th>Status</th>
+                                                                    <th>Alias</th>
+                                                                    <th>Recipients</th>
+                                                                    <th>Actions</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+            <script>
+                const phoneNumberInput = document.getElementById('phoneNumber');
+            const phoneNumberError = document.getElementById('phone-number-error');
+            let timeoutId;
+            
+            phoneNumberInput.addEventListener('keyup', function() {
+                clearTimeout(timeoutId); // Clear any existing timeout
+                timeoutId = setTimeout(validatePhoneNumber, 500); // Set a new timeout
+            });
+            
+            function validatePhoneNumber() {
+                // Allow only 10-digit phone numbers
+                const regex = /^\d{10}$/;
+            
+                if (!phoneNumberInput.value.match(regex)) {
+                    phoneNumberError.textContent = 'Please enter a valid 10-digit phone number.';
+                    phoneNumberInput.classList.add('is-invalid'); // Add Bootstrap class for visual feedback
+                    return 0;
+                } else {
+                    phoneNumberError.textContent = '';
+                    phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
+                    return 1;
+                }
+            }
+            
+            // Remove the validation message quickly after the user starts typing again
+            phoneNumberInput.addEventListener('keydown', function() {
+                clearTimeout(timeoutId); // Clear the timeout to remove the message quickly
+                phoneNumberError.textContent = '';
+                phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
+            });
+                  </script>
+            <script>
+                 // Replace the <textarea> with a CKEditor instance and add plugins
+                    let editorInstance;
+                    function clearEditor() {
+                        document.getElementById('myForm').reset();
+                        if (editorInstance) {
+                            editorInstance.setData('');  // Clear the editor content
+                        } else {
+                            console.error("Editor instance not available");
+                        }
+
+                        // Reset other form fields if necessary
+                        document.getElementById('myForm').reset();
+                    }
+            </script>
+            <script type="module">
+                import {
+                    ClassicEditor,
+                    Essentials,
+                    Paragraph,
+                    Bold,
+                    Italic,
+                    Font,
+                    Heading,
+                    Alignment,
+                    List,
+                    Indent,
+                    Link,
+                    Table,
+                    CodeBlock,
+                    BlockQuote,
+                    FindAndReplace,
+                    FontBackgroundColor,
+                    FontColor,
+                    PageBreak,
+                    SpecialCharacters,
+                    Undo,
+                } from 'ckeditor5';
+            
+                ClassicEditor
+                    .create(document.querySelector('#editor'), {
+                        plugins: [
+                            Essentials, Paragraph, Bold, Italic, Font, Heading, Alignment, List, Indent, 
+                            Link, Table, CodeBlock, BlockQuote, FindAndReplace, 
+                             FontBackgroundColor, FontColor, PageBreak, 
+                            SpecialCharacters, Undo
+                        ],
+                        toolbar: {
+                            shouldNotGroupWhenFull: true,
+                            items: [
+                                // Document-wide tools
+                                'undo', 'redo', '|', 'importWord', '|', 'findAndReplace', 'selectAll', '|',
+                                'insertTemplate', 'tableOfContents', '|',
+            
+                                // Insertables
+                                'link', 'insertTable', 'blockQuote', 
+                                'horizontalLine', '|',
+            
+                                // Block-level formatting
+                                'heading', 'style', '|',
+            
+                                // Basic styles, font and inline formatting
+                                'bold', 'italic', 'underline', 'strikethrough', '|',
+                                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 
+                                'highlight', 'superscript', 'subscript', 'code', '|',
+                                'removeFormat', '|',
+            
+                                // Text alignment
+                                'alignment', '|',
+            
+                                // Lists and indentation
+                                'bulletedList', 'numberedList', 'multilevelList', 'todoList', '|'
+                            ]
+                        },
+                        fontFamily: {
+                            supportAllValues: true,
+                        },
+                        fontSize: {
+                            options: [10, 12, 14, 'default', 18, 20, 22],
+                            supportAllValues: true,
+                        },
+                        fontColor: {
+                            columns: 12,
+                            colors: [
+                                { color: 'hsl(0, 0%, 0%)', label: 'Black' },
+                                { color: 'hsl(0, 75%, 60%)', label: 'Red' },
+                                // Add more colors as needed
+                            ],
+                        },
+                        fontBackgroundColor: {
+                            columns: 12,
+                            colors: [
+                                { color: 'hsl(0, 0%, 100%)', label: 'White' },
+                                { color: 'hsl(0, 75%, 60%)', label: 'Red' },
+                                // Add more background colors as needed
+                            ],
+                        },
+                        list: {
+                            properties: {
+                                styles: true,
+                                startIndex: true,
+                                reversed: true,
+                            },
+                        },
+                        link: {
+                            decorators: {
+                                toggleDownloadable: {
+                                    mode: 'manual',
+                                    label: 'Downloadable',
+                                    attributes: {
+                                        download: 'file',
+                                    },
+                                },
+                            },
+                            addTargetToExternalLinks: true,
+                            defaultProtocol: 'https://',
+                        },
+                        heading: {
+                            options: [
+                                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                                { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+                                { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
+                                { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
+                                { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' },
+                            ],
+                        },
+                        alignment: {
+                            options: ['left', 'center', 'right', 'justify']
+                        },
+                        table: {
+                            contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+                        },
+                        // Disable sticky toolbar
+                        ui: {
+                            viewportOffset: {
+                                top: 70,  // Adjust this value as needed
+                            }
+                        },
+                        language: 'en',
+                    })
+                    .then(editor => {
+                        
+                        // Add custom padding to the editable content area
+                        editor.ui.view.editable.element.style.padding = '20px'; // Adjust padding as needed
+                        // window.editor = editor; // Store the editor instance globally
+                        editorInstance = editor; // Store the editor instance globally
+
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            </script>
+            <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+            <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="/platform/assets/js/sidebarmenu.js"></script>
+            <script src="/platform/assets/js/app.min.js"></script>
+            <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+            <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+            <script src="/platform/assets/js/dashboard.js"></script>
+            <script src="/platform/assets/js/theme.js"></script>
+            <script src="/platform/assets/js/main.js"></script>
+            <!-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> -->
+            <script src="/platform/assets/js/dataTables.js"></script>
+            <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
+            <script>
+                const dayEl = document.getElementById('status');
+                const routeEl = document.getElementById('aliasEl');
+
+                // Custom range filtering function
+                DataTable.ext.search.push(function (settings, data, dataIndex) {
+                    let day = dayEl.value;
+                    let route = routeEl.value;
+                    let daydata = (data[4]) || 0;
+                    let routedata = (data[5]) || 0;
+                    if (
+                        (day == "Filter by Status" && route == "Filter by Alias") ||
+                        (daydata.includes(day) && route == "Filter by Alias") ||
+                        (day == "Filter by Status" && routedata.includes(route)) ||
+                        (daydata.includes(day) && routedata.includes(route))
+                    ) {
+                        // console.log(sem)
+                        return true;
+                    }
+
+                    return false;
+                });
+
+                const table = new DataTable('#sgMails');
+
+                // Changes to the inputs will trigger a redraw to update the table
+                dayEl.addEventListener('change', function () {
+                    table.draw();
+                });
+                routeEl.addEventListener('change', function () {
+                    table.draw();
+                });
+            </script>
+            <script>
+
+            </script>
+            <!-- <%-include("../partials/preloader-js")%> -->
+    </body>
+
+</html>

@@ -115,12 +115,13 @@
     const tooltip = new bootstrap.Tooltip(tooltipTrigger);
 
     // Show tooltip for 5 seconds on page load
-    setTimeout(function() {
-      tooltip.show(); // Show tooltip initially
-      setTimeout(function() {
-        tooltip.hide(); // Hide tooltip after 5 seconds
-      }, 2000);
-    }, 500); // Small delay to allow DOM rendering
+    // setTimeout(function() {
+    //   tooltip.show(); // Show tooltip initially
+    //   setTimeout(function() {
+    //     tooltip.hide(); // Hide tooltip after 5 seconds
+    //   }, 2000);
+    // }, 500); 
+    // Small delay to allow DOM rendering
     
     // Set tooltip to show on hover after the initial show
     // tooltipTrigger.addEventListener('mouseenter', function() {

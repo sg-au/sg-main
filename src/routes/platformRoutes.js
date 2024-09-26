@@ -816,7 +816,46 @@ router.get('/sg-compose', async(req, res) => {
     });
 });
 
+
+router.get('/sg-compose/dashboard', async(req, res) => {
+  try {
+    var endpoint = '/sg-mails';
+    var response = await axios.get(`${apiUrl}${endpoint}?populate=sender`, axiosConfig);
+    mails = response.data.data;
+    console.log(mails)
+    res.render("platform/pages/sg-mails-dashboard",{requests:mails});
+  } catch (error) {
+    console.error('An error occurred:', error);
+}
+try {
+  res.render("platform/pages/sg-mails-dashboard");
+} catch (err) {
+  next(err); // Passes the error to the next middleware (or error handler)
+}
+});
+
 router.post('/sg-compose', async(req, res) => {
+  var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
+  updateduser=user.data[0];
+  updateduser.phone=req.body.phone;
+  req.body.recipients=req.body.recipients.join();
+  await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);      
+  delete req.body.phone;
+  delete req.body.files;
+  req.body.status="pending";
+  req.body.sender=updateduser;
+  console.log(req.body);
+  axios.post(`${process.env.STRAPI_API_URL}/sg-mails`,{data:req.body}, axiosConfig)
+        .then((response) => {
+          res.redirect("/platform/sg-compose")
+        })
+        .catch((error) => {
+            console.log(error)
+            res.send("An error occurred in your submission.");
+        });
+});
+
+router.post('/sg-approved', async(req, res) => {
     console.log(req.body);
     var dict={
       "inductions":"Inductions",

@@ -103,15 +103,17 @@
                     <label for="select" class="form-label">Select Your Category of Mail<span style="color:rgb(177, 58, 58)">*</span></label>
                     <select required name="alias" id="alias" class="form-select">
                         <option disabled selected value="">Select</option>
-                        <option value="inductions">Inductions</option>
-                        <option value="lost&found">Lost and Found</option>
-                        <option value="jobs">Jobs</option>
-                        <option value="surveys">Surveys</option>
-                        <option value="campaigns">Campaigns</option>
-                        <option value="fundraisers">Fundraisers</option>
+                        <option value="Inductions">Inductions</option>
+                        <option value="Lost and Found">Lost and Found</option>
+                        <option value="Jobs and Internships">Jobs and Internships</option>
+                        <option value="Surveys">Surveys</option>
+                        <option value="Campaigns">Campaigns</option>
+                        <option value="Fundraisers">Fundraisers</option>
+                        <option value="Events and Invitations">Events and Invitations</option>
+                        <option value="Promotions">Promotions</option>
                     </select>
                     <br />
-                    <label for="select" class="form-label">Select Recipients<span style="color:rgb(126, 120, 120)">*</span></label>
+                    <label for="select" class="form-label">Select Recipients<span style="color:rgb(177, 58, 58)">*</span></label>
                     <select required name="recipients" id="select-recipients" class="form-select" multiple size="8">
                         <option disabled>Select</option>
                         <option value="students">All Students</option>
@@ -123,16 +125,19 @@
                         <option value="ug2024">UG2024</option>
                     </select>
                     <p style="font-size:14px;color:rgb(192, 58, 58);">hold the ctrl/cmd key to select multiple options</p>
-                    <label for="subject" class="form-label">Subject<span style="color:rgb(177, 58, 58)">*</span></label>
+                    <label for="subject" class="form-label">Subject (of mail)<span style="color:rgb(177, 58, 58)">*</span></label>
                     <input required name="subject" type="title" class="form-control" id="subject">
                     <br />
                     <label for="editor" class="form-label">Mail Draft <span style="color:rgb(177, 58, 58)">*</span></label>
                     <!-- Textarea that will be replaced by CKEditor -->
-                    <textarea style="margin-top:60px;padding:30px;" id="editor" name="mailbody"></textarea>
+                    <textarea style="margin-top:60px;padding:30px;" id="editor" name="mail_body"></textarea>
                     <p style="font-size:14px;">PLEASE NOTE: The mail that you send out will have you in CC and your signature at the bottom.</p>
                     <br />
                     <label for="files" class="form-label">File Attachments (if any)</span></label>
                     <input style="background:white" multiple name="files" type="file" class="form-control" id="file">
+                    <br />
+                    <label for="notes" class="form-label">Additional Notes (if any)</label>
+                    <input required name="notes" type="title" class="form-control" id="notes" placeholder="Use this space for any additional notes as requests to the approver">
                     <br />
                     <button class="btn btn-primary" type="submit">Request Mail</button>
                     <button class="btn btn-danger" type="button"  onclick="clearEditor();">Cancel Mail</button>
