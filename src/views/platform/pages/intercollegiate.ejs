@@ -100,7 +100,7 @@
 - Vibha: <a href=mailto:vibha.rawat_ug2023@ashoka.edu.in>vibha.rawat_ug2023@ashoka.edu.in</a> &nbsp;&nbsp;|&nbsp;&nbsp; 9667764435  <br />
 - Guntaas: <a href="mailto:guntaas.kaur_ug2023@ashoka.edu.in">guntaas.kaur_ug2023@ashoka.edu.in</a> &nbsp;&nbsp;|&nbsp;&nbsp; +91 98118 06032
                 </p>
-                <span class="fs-4">Page Maintained by Jazbaa</span>
+                <span class="fs-4">Page Maintained by Jazbaa &nbsp;&nbsp;|&nbsp;&nbsp; Click on a competition to view further details</span>
             </div>
               <div class="row" style="padding-bottom:20px;padding-top:20px">
                 <div class="col-sm-12 mb-3">
@@ -327,6 +327,7 @@
         document.getElementById("modalContent").innerHTML = description;
         document.getElementById("eventModalLabel").innerText = title;
         if(form_link==""){
+          document.getElementById("reg_link").removeAttribute("target");
           document.getElementById("reg_link").href = "javascript:void(0)";
           document.getElementById("reg_link").onclick = function() {
               // Your code here
@@ -336,6 +337,7 @@
           document.getElementById("reg_link").href = form_link;
         }
         if(website_link==""){
+          document.getElementById("event_website").removeAttribute("target");
           document.getElementById("event_website").href = "javascript:void(0)";
           document.getElementById("event_website").onclick = function() {
               // Your code here
