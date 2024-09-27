@@ -335,11 +335,12 @@
         }else{
           document.getElementById("reg_link").href = form_link;
         }
+        console.log(website_link);
+
         if(website_link==""){
           document.getElementById("event_website").removeAttribute("target");
           document.getElementById("event_website").href = "javascript:void(0)";
           document.getElementById("event_website").onclick = function() {
-              // Your code here
               alert("No Link provided!");
           };        
         }else{
