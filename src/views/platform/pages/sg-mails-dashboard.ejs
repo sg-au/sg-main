@@ -126,25 +126,18 @@
                                                                     <div class="modal-body">
                                                                         <label for="notes" class="form-label">Additional Notes Sent by the Sender (if any)</label>
                                                                         <div class="alert alert-success" role="alert">
-                                                                            Use this space for any additional notes as requests to the approver
+                                                                            <p id="notes"></p>
                                                                         </div>
-                                                                        <form id="myForm" action="/platform/sg-compose" method="POST">
+                                                                        <form id="myForm" enctype="multipart/form-data" method="POST" >
                                                                             <div class="mb-3">
-                                                                                <label for="newTicketTitle" class="form-label">Enter Contact Number <span style="color:rgb(177, 58, 58)">*</span></label>
+                                                                                <label for="newTicketTitle" class="form-label">Sender Email-ID</span></label>
                                                                                 <input
                                                                                 disabled
                                                                                 required
-                                                                                minlength="10"
-                                                                                maxlength="14"
-                                                                                name="phone"
-                                                                                type="tel"
                                                                                 class="form-control"
-                                                                                id="phoneNumber"
-                                                                                pattern="[0-9]{10}"
+                                                                                id="senderEmail"
                                                                                 value=""
-                                                                                title="Please enter a valid 10-digit phone number without spaces or special characters."
                                                                                 >
-                                                                                <div id="phone-number-error" class="text-danger"></div>
                                                                             </div>
                                                                             <label for="select" class="form-label">Select Your Category of Mail<span style="color:rgb(177, 58, 58)">*</span></label>
                                                                             <select required name="alias" id="alias" class="form-select">
@@ -177,18 +170,19 @@
                                                                             <label for="editor" class="form-label">Mail Draft <span style="color:rgb(177, 58, 58)">*</span></label>
                                                                             <!-- Textarea that will be replaced by CKEditor -->
                                                                             <textarea style="margin-top:60px;padding:30px;" id="editor" name="mail_body"></textarea>
-                                                                            <p style="font-size:14px;">PLEASE NOTE: The mail that you send out will have you in CC and your signature at the bottom.</p>
+                                                                            <!-- <p style="font-size:14px;">PLEASE NOTE: The mail that you send out will have you in CC and your signature at the bottom.</p> -->
                                                                             <br />
                                                                             <label for="files" class="form-label">File Attachments (if any)</span></label>
-                                                                            <input style="background:white" multiple name="files" type="file" class="form-control" id="file">
+                                                                            <input hidden type="text" id="attachment_path" name="attachment_path" value="">
                                                                             <br />
+                                                                            <span id="links"></span>
                                                                         </form>
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary"
                                                                             data-bs-dismiss="modal">Close</button>
-                                                                        <a id="returnLink" href=""
-                                                                            class="btn btn-success">Send Email</a>
+                                                                        
+                                                                        <button type="button" id="sendEmailBtn" class="btn btn-success">Send Email</button>
                                                                         
                                                                         <a id="rejectLink" href=""
                                                                             class="btn btn-danger">Reject Request</a>
@@ -227,7 +221,7 @@
                                                             style="width:100%">
                                                             <thead>
                                                                 <tr>
-                                                                    <th></th>
+                                                                    <!-- <th></th> -->
                                                                     <th>R.ID</th>
                                                                     <th>Name</th>
                                                                     <th>Requested At</th>
@@ -238,9 +232,9 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <%for(i=0;i<requests.length;i++){%>
+                                                                <% for(i=0; i < requests.length;i++){ %>
                                                                     <tr>
-                                                                        <td>
+                                                                        <!-- <td>
                                                                             <a
                                                                                 href="https://wa.me/91<%=requests[i].attributes.sender.data.attributes.phone%>">
                                                                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -386,7 +380,7 @@
                                                                                         d="M111.713 7.087l532.12 394.525L1179.439 7.087z" />
                                                                                 </svg>
                                                                             </a>
-                                                                        </td>
+                                                                        </td> -->
                                                                         <td>
                                                                             <%=requests[i].id%>
                                                                         </td>
@@ -419,14 +413,25 @@
                                                                             <%=requests[i].attributes.recipients.substring(0,25)%>...
                                                                         </td>
                                                                         <td>
-                                                                            <button data-bs-toggle="modal" data-bs-target="#approveRequestModal" type="button" class="btn btn-primary">View</button>
+                                                                            <button data-bs-toggle="modal" data-bs-target="#approveRequestModal" 
+                                                                                type="button" class="btn btn-primary view-button" data-id="<%=requests[i].id%>"
+                                                                                data-sender="<%=requests[i].attributes.sender.data.attributes.email%>"
+                                                                                data-status="<%=requests[i].attributes.status%>"
+                                                                                data-subject="<%=requests[i].attributes.subject%>"
+                                                                                data-recipients="<%=requests[i].attributes.recipients%>"
+                                                                                data-alias="<%=requests[i].attributes.alias%>"
+                                                                                data-mail="<%=requests[i].attributes.mail_body%>"
+                                                                                data-created-at="<%=requests[i].attributes.createdAt%>"
+                                                                                data-notes="<%=requests[i].attributes.notes%>"
+                                                                                data-files="<%=requests[i].attributes.attachment_path%>">View
+                                                                            </button>
                                                                         </td>
                                                                     </tr>
                                                                     <%}%>
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
-                                                                    <th></th>
+                                                                    <!-- <th></th> -->
                                                                     <th>R.ID</th>
                                                                     <th>Name</th>
                                                                     <th>Requested At</th>
@@ -448,38 +453,125 @@
             </div>
             </div>
             </div>
+
+            <script>
+                $(document).ready(function () {
+                    // Existing code for populating the modal...
+                
+                    // New code for handling email sending
+                    $('#sendEmailBtn').on('click', function () {
+                        // Gather all the necessary data from the form
+                        const senderEmail = $('#senderEmail').val();
+                        const alias = $('#alias').val();
+                        const recipients = $('#select-recipients').val().join(',');
+                        const subject = $('#subject').val();
+                        const mailBody = editorInstance.getData(); // Get content from CKEditor
+                        const attachmentPath = $('#attachment_path').val(); // You'll need to populate this with the actual attachment path
+                        
+                        // Create the data object to send
+                        const emailData = {
+                            senderEmail: senderEmail,
+                            alias: alias,
+                            recipients: recipients,
+                            subject: subject,
+                            mailbody: mailBody,
+                            attachment_path: attachmentPath
+                        };
+                
+                        // Send the POST request
+                        $.ajax({
+                            url: '/platform/sg-approved',
+                            method: 'POST',
+                            data: JSON.stringify(emailData),
+                            contentType: 'application/json',
+                            success: function(response) {
+                                alert('Email sent successfully!');
+                                $('#approveRequestModal').modal('hide');
+                                // Optionally, refresh the page or update the UI
+                                location.reload();
+                            },
+                            error: function(xhr, status, error) {
+                                alert('Error sending email: ' + error);
+                            }
+                        });
+                    });
+                });
+            </script>
+
+            <script>
+                $(document).ready(function () {
+                    // When a View button is clicked
+                    $('.view-button').on('click', function () {
+                        // Get the data attributes from the button
+                        const id = $(this).data('id');
+                        const sender = $(this).data('sender');
+                        const status = $(this).data('status');
+                        const subject = $(this).data('subject');
+                        const recipients = $(this).data('recipients');
+                        const alias = $(this).data('alias');
+                        const mail = $(this).data('mail');                        
+                        const createdAt = new Date($(this).data('created-at')).toLocaleDateString();
+                        const notes = $(this).data('notes');
+                        let files = $(this).data('files');
+                        
+                        // Populate the modal fields
+                        $('#approveRequestModalLabel').text(`Approve Mail From ${sender}`);
+                        $('#senderEmail').val(sender);
+                        // $('#phoneNumber').val(phone);
+                        $('#notes').text(notes);
+                        $('#alias').val(alias);
+                        $('#select-recipients').val(recipients.split(','));
+                        $('#subject').val(subject);
+                        $('#attachment_path').val(files);
+                        $('#links').html('');
+                        // $('#editor').val(`Mail body content for request created on ${createdAt}`);
+                        if (editorInstance) {
+                            editorInstance.setData(mail); // Populate CKEditor with HTML content
+                        } else {
+                            console.error("CKEditor instance not available");
+                        }
+                        files = files.split(',');
+                        let filesHtml = '';
+                        files.forEach(file => {
+                            filesHtml += `<a href="${file}" target="_blank">${file}</a><br/>`;  // Create <a> tag
+                        });
+                        $('#links').html(filesHtml);
+                    });
+                });
+            </script>
+            
             <script>
                 const phoneNumberInput = document.getElementById('phoneNumber');
-            const phoneNumberError = document.getElementById('phone-number-error');
-            let timeoutId;
-            
-            phoneNumberInput.addEventListener('keyup', function() {
-                clearTimeout(timeoutId); // Clear any existing timeout
-                timeoutId = setTimeout(validatePhoneNumber, 500); // Set a new timeout
-            });
-            
-            function validatePhoneNumber() {
-                // Allow only 10-digit phone numbers
-                const regex = /^\d{10}$/;
-            
-                if (!phoneNumberInput.value.match(regex)) {
-                    phoneNumberError.textContent = 'Please enter a valid 10-digit phone number.';
-                    phoneNumberInput.classList.add('is-invalid'); // Add Bootstrap class for visual feedback
-                    return 0;
-                } else {
+                const phoneNumberError = document.getElementById('phone-number-error');
+                let timeoutId;
+                
+                phoneNumberInput.addEventListener('keyup', function() {
+                    clearTimeout(timeoutId); // Clear any existing timeout
+                    timeoutId = setTimeout(validatePhoneNumber, 500); // Set a new timeout
+                });
+                
+                function validatePhoneNumber() {
+                    // Allow only 10-digit phone numbers
+                    const regex = /^\d{10}$/;
+                
+                    if (!phoneNumberInput.value.match(regex)) {
+                        phoneNumberError.textContent = 'Please enter a valid 10-digit phone number.';
+                        phoneNumberInput.classList.add('is-invalid'); // Add Bootstrap class for visual feedback
+                        return 0;
+                    } else {
+                        phoneNumberError.textContent = '';
+                        phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
+                        return 1;
+                    }
+                }
+                
+                // Remove the validation message quickly after the user starts typing again
+                phoneNumberInput.addEventListener('keydown', function() {
+                    clearTimeout(timeoutId); // Clear the timeout to remove the message quickly
                     phoneNumberError.textContent = '';
                     phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
-                    return 1;
-                }
-            }
-            
-            // Remove the validation message quickly after the user starts typing again
-            phoneNumberInput.addEventListener('keydown', function() {
-                clearTimeout(timeoutId); // Clear the timeout to remove the message quickly
-                phoneNumberError.textContent = '';
-                phoneNumberInput.classList.remove('is-invalid'); // Remove Bootstrap class
-            });
-                  </script>
+                });
+            </script>
             <script>
                  // Replace the <textarea> with a CKEditor instance and add plugins
                     let editorInstance;
@@ -654,8 +746,8 @@
                 DataTable.ext.search.push(function (settings, data, dataIndex) {
                     let day = dayEl.value;
                     let route = routeEl.value;
-                    let daydata = (data[4]) || 0;
-                    let routedata = (data[5]) || 0;
+                    let daydata = (data[3]) || 0;
+                    let routedata = (data[4]) || 0;
                     if (
                         (day == "Filter by Status" && route == "Filter by Alias") ||
                         (daydata.includes(day) && route == "Filter by Alias") ||

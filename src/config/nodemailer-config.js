@@ -1,4 +1,3 @@
-// passport-config.js
 const dotenv = require("dotenv"); // Load environment variables from a .env file
 dotenv.config({ path: ".././.env" }); // Load environment variables from a .env file
 const nodemailer = require('nodemailer');

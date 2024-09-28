@@ -8,6 +8,8 @@ const file = './data/tickets.jsonl'
 const helpers=require('../config/helperFunctions.js');
 const axios=require("axios");
 var pdf = require("pdf-creator-node");
+const { google } = require('googleapis');
+const multer = require('multer')
 // Read HTML Template
 var undertakingTemplate = fs.readFileSync("./data/undertaking-template.html", "utf8");
     
@@ -19,6 +21,23 @@ const axiosConfig = {
     },
 };
 
+// TODO: Move to separate file
+const upload = multer({ dest: 'uploads/' })
+
+const DRIVE_CLIENT_ID = process.env.DRIVE_CLIENT_ID;
+const DRIVE_CLIENT_SECRET = process.env.DRIVE_CLIENT_SECRET;
+const DRIVE_REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+const DRIVE_REFRESH_TOKEN = process.env.DRIVE_REFRESH_TOKEN;
+
+const oauth2Client = new google.auth.OAuth2(
+  DRIVE_CLIENT_ID,
+  DRIVE_CLIENT_SECRET,
+  DRIVE_REDIRECT_URI
+);
+
+oauth2Client.setCredentials({ refresh_token: DRIVE_REFRESH_TOKEN });
+
+const drive = google.drive({ version: 'v3', auth: oauth2Client });
 
 const apiUrl = process.env.STRAPI_API_URL;
 
@@ -801,6 +820,8 @@ router.get('/profile', (req, res) => {
     });
 });
 
+const options = ["Inductions", "Lost and Found", "Jobs", "Surveys", "Campaigns", "Fundraisers", "Events and Invitations", "Promotions"];
+
 
 router.get('/sg-compose', async(req, res) => {
   userEmail = req.user._json.email;
@@ -834,59 +855,193 @@ try {
 }
 });
 
-router.post('/sg-compose', async(req, res) => {
-  var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
-  updateduser=user.data[0];
-  updateduser.phone=req.body.phone;
-  req.body.recipients=req.body.recipients.join();
-  await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);      
-  delete req.body.phone;
-  delete req.body.files;
-  req.body.status="pending";
-  req.body.sender=updateduser;
-  console.log(req.body);
-  axios.post(`${process.env.STRAPI_API_URL}/sg-mails`,{data:req.body}, axiosConfig)
-        .then((response) => {
-          res.redirect("/platform/sg-compose")
-        })
-        .catch((error) => {
-            console.log(error)
-            res.send("An error occurred in your submission.");
+router.post('/sg-compose', upload.array('files'), async (req, res) => {
+  try {
+    var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
+    updateduser = user.data[0];
+    updateduser.phone = req.body.phone;
+    
+    if (Array.isArray(req.body.recipients)) {
+      req.body.recipients = req.body.recipients.join();
+    } else {
+      req.body.recipients = req.body.recipients;
+    }
+
+    await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);   
+    
+    // Handle file uploads
+    const attachment_path = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const response = await drive.files.create({
+          requestBody: {
+            name: file.originalname,
+            mimeType: file.mimetype,
+            parents: [process.env.GOOGLE_DRIVE_FOLDER_ID],
+          },
+          media: {
+            mimeType: file.mimetype,
+            body: fs.createReadStream(file.path),
+          },
         });
+
+        // Make the file publicly accessible
+        await drive.permissions.create({
+          fileId: response.data.id,
+          requestBody: {
+            role: 'reader',
+            type: 'anyone',
+          },
+        });
+
+        const result = await drive.files.get({
+          fileId: response.data.id,
+          fields: 'webViewLink, webContentLink',
+        });
+
+        attachment_path.push(result.data.webViewLink);
+
+        // Delete the temporary file
+        fs.unlinkSync(file.path);
+      }
+    }
+    
+    // Add file links to the request body
+    req.body.attachment_path = attachment_path.join(',');
+    delete req.body.phone;
+
+    console.log(req.body);
+    var aliasvalid = options.includes(req.body.alias) ? true : false;
+    if(!aliasvalid){
+      res.send("Invalid Alias");
+    }
+    else{
+
+    req.body.status = "pending";
+    req.body.sender = updateduser;
+
+    const response = await axios.post(`${process.env.STRAPI_API_URL}/sg-mails`, { data: req.body }, axiosConfig);
+    res.redirect("/platform/sg-compose");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred in your submission.");
+  }
 });
 
-router.post('/sg-approved', async(req, res) => {
-    console.log(req.body);
-    var dict={
-      "inductions":"Inductions",
-      "lost&found":"Lost and Found",
-      "jobs":"Jobs",
-      "surveys":"Surveys",
-      "campaigns":"Campaigns",
-      "fundraisers":"Fundraisers"
-    }
-    mailhtml=req.body.mailbody;
-    mailhtml+=`<br/><p style="color:rgb(177, 58, 58);font-size:12px;">Sent by ${req.user._json.name} using the <a href="https://sg.ashoka.edu.in/platform/sg-compose">SG Compose</a> feature by the Ministry of Technology</p>`
-    var alias = dict[req.body.alias] || "Forwards";
-    const mailOptions = {
-      from: alias+ ` <${process.env.SGMAIL_ID}>`,
-      to: "ibrahim.khalil_ug25@ashoka.edu.in",
-      cc:req.user._json.email,
-      subject: req.body.subject,
-      html: mailhtml,
-      replyTo:req.user._json.email
-    };
+// TODO: Move to a separate file
+function extractFileIds(attachment_path) {
+  if (!attachment_path) return [];
 
-    // Send the email
-    transporterSG.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error('Error occurred:', error.message);
-        res.sendStatus(400);
-        return;
+  const links = attachment_path.split(',');
+  
+  return links.map(link => {
+      // Extract file ID from various forms of Google Drive links
+      const patterns = [
+          /\/file\/d\/([^\/]+)/,  // matches /file/d/{fileId}
+          /id=([^&]+)/,           // matches id={fileId}
+          /\/([^\/]+)\/view/      // matches /{fileId}/view
+      ];
+
+      for (let pattern of patterns) {
+          const match = link.match(pattern);
+          if (match && match[1]) {
+              return match[1];
+          }
       }
-      console.log('Email sent successfully!', info.messageId);
+
+      console.warn(`Could not extract file ID from link: ${link}`);
+      return null;
+  }).filter(id => id !== null);
+}
+
+router.post('/sg-approved', async(req, res) => {
+  mailhtml = req.body.mailbody;
+  mailhtml += `<br/><p style="color:rgb(177, 58, 58);font-size:12px;">Sent by ${req.user._json.name} using the <a href="https://sg.ashoka.edu.in/platform/sg-compose">SG Compose</a> feature by the Ministry of Technology</p>`;
+  var aliasvalid = options.includes(req.body.alias) ? true : false;
+  if(!aliasvalid){
+    res.send("Invalid Alias");
+  }
+  else{
+// Create an array to store attachment objects
+// Extract file IDs from the attachment_path
+  const attachmentIds = extractFileIds(req.body.attachment_path);
+
+  const attachments = await Promise.all(attachmentIds.map(async (fileId, index) => {
+      try {
+          // Get file metadata
+          const fileMetadata = await drive.files.get({ fileId: fileId, fields: 'name, mimeType' });
+          
+          // Get file content
+          const response = await drive.files.get(
+              { fileId: fileId, alt: 'media' },
+              { responseType: 'stream' }
+          );
+
+          // Convert stream to buffer
+          const buffers = [];
+          for await (const chunk of response.data) {
+              buffers.push(chunk);
+          }
+          const fileBuffer = Buffer.concat(buffers);
+
+          return {
+              filename: fileMetadata.data.name,
+              content: fileBuffer,
+              contentType: fileMetadata.data.mimeType
+          };
+      } catch (error) {
+          console.error(`Error fetching attachment ${fileId}:`, error.message);
+          return null;
+      }
+  }));
+
+  // Filter out any null attachments (failed downloads)
+  const validAttachments = attachments.filter(attachment => attachment !== null);
+  
+  const mailOptions = {
+    from: req.body.alias + ` <${process.env.SGMAIL_ID}>`,
+    to: "vansh.bothra_ug25@ashoka.edu.in",
+    cc: req.user._json.email,
+    subject: req.body.subject,
+    html: mailhtml,
+    replyTo: req.user._json.email,
+    attachments: validAttachments
+  };
+
+  // Send the email
+  try {
+      await new Promise((resolve, reject) => {
+          transporterTECH.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                  console.error('Error occurred:', error.message);
+                  reject(error);
+              } else {
+                  console.log('Email sent successfully!', info.messageId);
+                  resolve(info);
+              }
+          });
+      });
+
+      // Delete files from Google Drive
+      for (const fileId of attachmentIds) {
+          try {
+              await drive.files.delete({ fileId: fileId });
+              console.log(`File ${fileId} deleted successfully.`);
+          } catch (error) {
+              console.error(`Error deleting file ${fileId}:`, error.message);
+          }
+      }
+
       res.sendStatus(202);
-    });
+  } catch (error) {
+      console.error('Error:', error.message);
+      res.sendStatus(400);
+  }
+  }
+
+  
+  
 });
 
 
