@@ -968,7 +968,7 @@ function extractFileIds(attachment_path) {
 
 router.post('/sg-approved', async(req, res) => {
   mailhtml = req.body.mail_body;
-  mailhtml += `<br/><p style="color:rgb(177, 58, 58);font-size:12px;">Sent by ${req.user._json.name} using the <a href="https://sg.ashoka.edu.in/platform/sg-compose">SG Compose</a> feature by the Ministry of Technology</p>`;
+  mailhtml += `<br/><p style="color:rgb(177, 58, 58);font-size:12px;">Email goals: Sent by ${req.user._json.name}, <a href="https://sg.ashoka.edu.in/platform/sg-compose">SG Compose</a>, and the Ministry of Technology.</p>`;
   var aliasvalid = options.includes(req.body.alias) ? true : false;
   if(!aliasvalid){
     res.send("Invalid Alias").status(400);
