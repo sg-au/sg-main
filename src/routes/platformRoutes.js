@@ -22,7 +22,7 @@ const axiosConfig = {
 };
 
 // TODO: Move to separate file
-const upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'uploads/'})
 
 const DRIVE_CLIENT_ID = process.env.DRIVE_CLIENT_ID;
 const DRIVE_CLIENT_SECRET = process.env.DRIVE_CLIENT_SECRET;
@@ -820,7 +820,7 @@ router.get('/profile', (req, res) => {
     });
 });
 
-const options = ["Inductions", "Lost and Found", "Jobs", "Surveys", "Campaigns", "Fundraisers", "Events and Invitations", "Promotions"];
+const options = ["Inductions", "Lost and Found", "Jobs and Internships", "Surveys", "Campaigns", "Fundraisers", "Events and Invitations", "Promotions"];
 
 
 router.get('/sg-compose', async(req, res) => {
@@ -840,19 +840,18 @@ router.get('/sg-compose', async(req, res) => {
 
 router.get('/sg-compose/dashboard', async(req, res) => {
   try {
-    var endpoint = '/sg-mails';
+    // console.log(mails)
+    if(process.env.HOR_MEMBERS_LIST.includes(req.user._json.email)){
+      var endpoint = '/sg-mails';
     var response = await axios.get(`${apiUrl}${endpoint}?populate=sender`, axiosConfig);
     mails = response.data.data;
-    console.log(mails)
-    res.render("platform/pages/sg-mails-dashboard",{requests:mails});
+      res.render("platform/pages/sg-mails-dashboard",{mailcomposes:mails});
+    }else{
+      res.send("error 404");
+    }
   } catch (error) {
     console.error('An error occurred:', error);
-}
-try {
-  res.render("platform/pages/sg-mails-dashboard");
-} catch (err) {
-  next(err); // Passes the error to the next middleware (or error handler)
-}
+  }
 });
 
 router.post('/sg-compose', upload.array('files'), async (req, res) => {
@@ -870,6 +869,18 @@ router.post('/sg-compose', upload.array('files'), async (req, res) => {
     await axios.put(`${apiUrl}/users/${user.data[0].id}`, updateduser, axiosConfig);   
     
     // Handle file uploads
+    const MAX_TOTAL_SIZE = 10 * 1024 * 1024; // 10 MB in bytes
+
+    // Calculate total size of uploaded files
+    let totalSize = 0;
+    req.files.forEach(file => {
+        totalSize += file.size;
+    });
+
+    // Check if total size exceeds 5MB
+    if (totalSize > MAX_TOTAL_SIZE) {
+        return res.status(400).send(`Total file size exceeds 10MB. Your files total: ${(totalSize / (1024 * 1024)).toFixed(2)}MB`);
+    }
     const attachment_path = [];
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
@@ -910,7 +921,7 @@ router.post('/sg-compose', upload.array('files'), async (req, res) => {
     req.body.attachment_path = attachment_path.join(',');
     delete req.body.phone;
 
-    console.log(req.body);
+    // console.log(req.body);
     var aliasvalid = options.includes(req.body.alias) ? true : false;
     if(!aliasvalid){
       res.send("Invalid Alias");
@@ -956,17 +967,17 @@ function extractFileIds(attachment_path) {
 }
 
 router.post('/sg-approved', async(req, res) => {
-  mailhtml = req.body.mailbody;
+  mailhtml = req.body.mail_body;
   mailhtml += `<br/><p style="color:rgb(177, 58, 58);font-size:12px;">Sent by ${req.user._json.name} using the <a href="https://sg.ashoka.edu.in/platform/sg-compose">SG Compose</a> feature by the Ministry of Technology</p>`;
   var aliasvalid = options.includes(req.body.alias) ? true : false;
   if(!aliasvalid){
-    res.send("Invalid Alias");
+    res.send("Invalid Alias").status(400);
+    console.log("invalid")
   }
   else{
 // Create an array to store attachment objects
 // Extract file IDs from the attachment_path
   const attachmentIds = extractFileIds(req.body.attachment_path);
-
   const attachments = await Promise.all(attachmentIds.map(async (fileId, index) => {
       try {
           // Get file metadata
@@ -998,10 +1009,12 @@ router.post('/sg-approved', async(req, res) => {
 
   // Filter out any null attachments (failed downloads)
   const validAttachments = attachments.filter(attachment => attachment !== null);
-  
+  // console.log(req.body)
+
+  // TODO: Add req.body.recipients to to field
   const mailOptions = {
     from: req.body.alias + ` <${process.env.SGMAIL_ID}>`,
-    to: "vansh.bothra_ug25@ashoka.edu.in",
+    to: "",
     cc: req.user._json.email,
     subject: req.body.subject,
     html: mailhtml,
@@ -1012,12 +1025,18 @@ router.post('/sg-approved', async(req, res) => {
   // Send the email
   try {
       await new Promise((resolve, reject) => {
-          transporterTECH.sendMail(mailOptions, (error, info) => {
+        transporterTECH.sendMail(mailOptions, async (error, info) => {
               if (error) {
                   console.error('Error occurred:', error.message);
                   reject(error);
               } else {
+                  var approver = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
+                  req.body.approver=approver.data[0];
+                  req.body.status="approved";
+                  console.log(req.body);
+                  await axios.put(`${apiUrl}/sg-mails/${req.body.mailid}`, { data: req.body }, axiosConfig);
                   console.log('Email sent successfully!', info.messageId);
+
                   resolve(info);
               }
           });
