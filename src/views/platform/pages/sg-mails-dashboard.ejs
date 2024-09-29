@@ -96,13 +96,12 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="flex-row mb-2">
-                                                            <span class="fs-6 fw-semibold">All SG Mail mailcomposes</span>
+                                                            <span class="fs-6 fw-semibold">All SG Mails</span>
                                                         </div>
                                                         <div class="flex-row mb-3">
                                                             <ul class="list-inline">
                                                                 <span style="font-size: 10px;" class="fs-3 fw-semibold">
-                                                                    Click on the WhatsApp icon to message the person or
-                                                                    the mail icon to mail the person. <br />
+                                                                    Click on the View button to review and approve/reject an email.<br />
                                                                 </span>
                                                             </ul>
                                                         </div>
@@ -136,6 +135,13 @@
                                                                                 required
                                                                                 class="form-control"
                                                                                 id="senderEmail"
+                                                                                value=""
+                                                                                >
+                                                                                <input
+                                                                                disabled
+                                                                                required
+                                                                                class="form-control"
+                                                                                id="username"
                                                                                 value=""
                                                                                 >
                                                                             </div>
@@ -188,9 +194,14 @@
                                                                                   <span class="sr-only">Loading...</span>
                                                                                 </div>
                                                                         </button>
-                                                                        
-                                                                        <a id="rejectLink" href=""
-                                                                            class="btn btn-danger">Reject Request</a>
+                                                                        <button type="button" id="rejectEmailBtn" class="btn btn-danger">
+                                                                            <span id="rejectEmailText">Reject Request</span>
+                                                                            <div class="d-flex justify-content-center">
+                                                                                <div id="rejectEmailSpinner" style="height:20px;width:20px;display:none" class="spinner-border" role="status">
+                                                                                  <span class="sr-only">Loading...</span>
+                                                                                </div>
+                                                                        </button>
+
                                                                       
                                                                     </div>
                                                                 </div>
@@ -274,6 +285,7 @@
                                                                             <%if(mailcomposes[i].attributes.status=="pending"){%>
                                                                                 <button data-bs-toggle="modal" data-bs-target="#approveRequestModal" 
                                                                                 type="button" class="btn btn-primary view-button"
+                                                                                data-name="<%=mailcomposes[i].attributes.sender.data.attributes.username%>"
                                                                                 data-sender="<%=mailcomposes[i].attributes.sender.data.attributes.email%>"
                                                                                 data-status="<%=mailcomposes[i].attributes.status%>"
                                                                                 data-subject="<%=mailcomposes[i].attributes.subject%>"
@@ -327,6 +339,7 @@
                     $('#sendEmailBtn').on('click', function () {
                         // Gather all the necessary data from the form
                         document.getElementById('sendEmailBtn').disabled=true;
+                        document.getElementById('rejectEmailBtn').disabled=true;
                         document.getElementById('sendEmailText').style.display="none";
                         document.getElementById('sendEmailSpinner').style.display="block";
 
@@ -337,9 +350,11 @@
                         const mailid = $('#mailid').val();
                         const mailBody = editorInstance.getData(); // Get content from CKEditor
                         const attachmentPath = $('#attachment_path').val(); // You'll need to populate this with the actual attachment path
+                        const name = $('#username').val(); // You'll need to populate this with the actual attachment path
                         
                         // Create the data object to send
                         const emailData = {
+                            name:name,
                             mailid:mailid,
                             senderEmail: senderEmail,
                             alias: alias,
@@ -368,6 +383,52 @@
                         });
                     });
                 });
+                    $('#rejectEmailBtn').on('click', function () {
+                        // Gather all the necessary data from the form
+                        document.getElementById('rejectEmailBtn').disabled=true;
+                        document.getElementById('sendEmailBtn').disabled=true;
+                        document.getElementById('rejectEmailText').style.display="none";
+                        document.getElementById('rejectEmailSpinner').style.display="block";
+
+                        const senderEmail = $('#senderEmail').val();
+                        const alias = $('#alias').val();
+                        const recipients = $('#select-recipients').val().join(',');
+                        const subject = $('#subject').val();
+                        const mailid = $('#mailid').val();
+                        const mailBody = editorInstance.getData(); // Get content from CKEditor
+                        const attachmentPath = $('#attachment_path').val(); // You'll need to populate this with the actual attachment path
+                        const name = $('#username').val(); // You'll need to populate this with the actual attachment path
+                        
+                        // Create the data object to send
+                        const emailData = {
+                            name:name,
+                            mailid:mailid,
+                            senderEmail: senderEmail,
+                            alias: alias,
+                            recipients: recipients,
+                            subject: subject,
+                            mail_body: mailBody,
+                            attachment_path: attachmentPath
+                        };
+                
+                        // Send the POST request
+                        $.ajax({
+                            url: '/platform/sg-rejected',
+                            method: 'POST',
+                            data: JSON.stringify(emailData),
+                            contentType: 'application/json',
+                            success: function(response) {
+                                $('#approveRequestModal').modal('hide');
+                                // Optionally, refresh the page or update the UI
+                                alert('Request rejected and user notified!');
+
+                                location.reload();
+                            },
+                            error: function(xhr, status, error) {
+                                alert('Error sending email: ' + error);
+                            }
+                        });
+                    });
             </script>
 
             <script>
@@ -375,6 +436,7 @@
                     // When a View button is clicked
                     $('.view-button').on('click', function () {
                         // Get the data attributes from the button
+                        const name = $(this).data('name');
                         const mailid = $(this).data('mailid');
                         const sender = $(this).data('sender');
                         const status = $(this).data('status');
@@ -389,7 +451,7 @@
                         // Populate the modal fields
                         $('#approveRequestModalLabel').text(`Approve Mail From ${sender}`);
                         $('#senderEmail').val(sender);
-                        // $('#phoneNumber').val(phone);
+                        $('#username').val(name);
                         $('#notes').val(notes);
                         $('#alias').val(alias);
                         $('#mailid').val(mailid);

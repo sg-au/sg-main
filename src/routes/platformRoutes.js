@@ -968,7 +968,8 @@ function extractFileIds(attachment_path) {
 
 router.post('/sg-approved', async(req, res) => {
   mailhtml = req.body.mail_body;
-  mailhtml += `<br/><p style="color:rgb(177, 58, 58);font-size:12px;">Email goals: Sent by ${req.user._json.name}, <a href="https://sg.ashoka.edu.in/platform/sg-compose">SG Compose</a>, and the Ministry of Technology.</p>`;
+  mailhtml += `<br/><p style="color:rgb(177, 58, 58);font-size:12px;">Email goals: Sent by ${req.body.name}, <a href="https://sg.ashoka.edu.in/platform/sg-compose">SG Compose</a>, and the Ministry of Technology.</p>`;
+  delete req.body.name;
   var aliasvalid = options.includes(req.body.alias) ? true : false;
   if(!aliasvalid){
     res.send("Invalid Alias").status(400);
@@ -1015,10 +1016,9 @@ router.post('/sg-approved', async(req, res) => {
   const mailOptions = {
     from: req.body.alias + ` <${process.env.SGMAIL_ID}>`,
     to: "",
-    cc: req.user._json.email,
+    cc: req.body.senderEmail,
     subject: req.body.subject,
     html: mailhtml,
-    replyTo: req.user._json.email,
     attachments: validAttachments
   };
 
@@ -1033,7 +1033,6 @@ router.post('/sg-approved', async(req, res) => {
                   var approver = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
                   req.body.approver=approver.data[0];
                   req.body.status="approved";
-                  console.log(req.body);
                   await axios.put(`${apiUrl}/sg-mails/${req.body.mailid}`, { data: req.body }, axiosConfig);
                   console.log('Email sent successfully!', info.messageId);
 
@@ -1058,9 +1057,54 @@ router.post('/sg-approved', async(req, res) => {
       res.sendStatus(400);
   }
   }
+});
 
-  
-  
+
+router.post('/sg-rejected', async(req, res) => {
+  const attachmentIds = extractFileIds(req.body.attachment_path);
+  delete req.body.name;
+  // TODO: Add req.body.recipients to to field
+  const mailOptions = {
+    from: `SG Compose <${process.env.SGMAIL_ID}>`,
+    to: req.body.senderEmail,
+    subject: "Email to Students Not Approved",
+    text: "Your mail could not be sent to the recipients due to non-compliance with the policy. Kindly reach out to the SG for further clarification by replying to this email.",
+    replyTo: req.user._json.email,
+  };
+
+  // Send the email
+  try {
+      await new Promise((resolve, reject) => {
+        transporterTECH.sendMail(mailOptions, async (error, info) => {
+              if (error) {
+                  console.error('Error occurred:', error.message);
+                  reject(error);
+              } else {
+                  var approver = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
+                  req.body.approver=approver.data[0];
+                  req.body.status="rejected";
+                  await axios.put(`${apiUrl}/sg-mails/${req.body.mailid}`, { data: req.body }, axiosConfig);
+                  console.log('Email sent successfully!', info.messageId);
+                  resolve(info);
+              }
+          });
+      });
+
+      // Delete files from Google Drive
+      for (const fileId of attachmentIds) {
+          try {
+              await drive.files.delete({ fileId: fileId });
+              console.log(`File ${fileId} deleted successfully.`);
+          } catch (error) {
+              console.error(`Error deleting file ${fileId}:`, error.message);
+          }
+      }
+
+      res.sendStatus(202);
+  } catch (error) {
+      console.error('Error:', error.message);
+      res.sendStatus(400);
+  }
 });
 
 
