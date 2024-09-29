@@ -1025,7 +1025,7 @@ router.post('/sg-approved', async(req, res) => {
   // Send the email
   try {
       await new Promise((resolve, reject) => {
-        transporterTECH.sendMail(mailOptions, async (error, info) => {
+        transporterSG.sendMail(mailOptions, async (error, info) => {
               if (error) {
                   console.error('Error occurred:', error.message);
                   reject(error);
@@ -1075,7 +1075,7 @@ router.post('/sg-rejected', async(req, res) => {
   // Send the email
   try {
       await new Promise((resolve, reject) => {
-        transporterTECH.sendMail(mailOptions, async (error, info) => {
+        transporterSG.sendMail(mailOptions, async (error, info) => {
               if (error) {
                   console.error('Error occurred:', error.message);
                   reject(error);
