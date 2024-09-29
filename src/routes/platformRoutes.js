@@ -1012,10 +1012,10 @@ router.post('/sg-approved', async(req, res) => {
   const validAttachments = attachments.filter(attachment => attachment !== null);
   // console.log(req.body)
 
-  // TODO: Add req.body.recipients to to field
+  // TODO: Add req.body.recipients to the 'to' field
   const mailOptions = {
     from: req.body.alias + ` <${process.env.SGMAIL_ID}>`,
-    to: "",
+    to: req.body.recipients,
     cc: req.body.senderEmail,
     subject: req.body.subject,
     html: mailhtml,
