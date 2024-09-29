@@ -44,6 +44,12 @@
              DB
             </a>
           <%}%>
+          <%if(HOR_MEMBERS_LIST.includes(email)){%>
+            <li class="nav-item dropdown">
+              <a class="nav-link nav-icon-hover" href="/platform/sg-compose/dashboard">
+               DB
+              </a>
+            <%}%>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link nav-icon-hover" href="#" id="drop2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" data-bs-placement="bottom" title="Drop a Feedback!">
