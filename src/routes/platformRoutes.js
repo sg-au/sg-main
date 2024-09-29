@@ -968,7 +968,7 @@ function extractFileIds(attachment_path) {
 
 router.post('/sg-approved', async(req, res) => {
   mailhtml = req.body.mail_body;
-  mailhtml += `<br/><p style="color:rgb(177, 58, 58);font-size:12px;">Email goals: Sent by ${req.body.name}, <a href="https://sg.ashoka.edu.in/platform/sg-compose">SG Compose</a>, and the Ministry of Technology.</p>`;
+  mailhtml += `<br/><p style="color:rgb(177, 58, 58);font-size:12px;">Sent by ${req.body.name} using <a href="https://sg.ashoka.edu.in/platform/sg-compose">SG Compose</a>, a feature by Ministry of Technology.</p>`;
   delete req.body.name;
   var aliasvalid = options.includes(req.body.alias) ? true : false;
   if(!aliasvalid){
