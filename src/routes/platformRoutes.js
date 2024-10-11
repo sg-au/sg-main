@@ -1108,6 +1108,11 @@ router.post('/sg-rejected', async(req, res) => {
 });
 
 
+router.get('/grade-planner', (req, res) => {
+  res.render("platform/pages/grade-planner");
+});
+
+
 router.get('/events', (req, res) => {
     res.render("platform/pages/events-2")
 });
