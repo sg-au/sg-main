@@ -843,7 +843,7 @@ router.get('/sg-compose/dashboard', async(req, res) => {
     // console.log(mails)
     if(process.env.HOR_MEMBERS_LIST.includes(req.user._json.email)){
       var endpoint = '/sg-mails';
-    var response = await axios.get(`${apiUrl}${endpoint}?populate=sender`, axiosConfig);
+    var response = await axios.get(`${apiUrl}${endpoint}?populate=sender&pagination[pageSize]=${3000}`, axiosConfig);
     mails = response.data.data;
       res.render("platform/pages/sg-mails-dashboard",{mailcomposes:mails});
     }else{
