@@ -310,28 +310,44 @@
                             modalBody.innerHTML = '';
 
                             retakeArray.forEach((retakeItem, index) => {
-                            const selectOptions = `<select onchange="updateRetakeAgainst(${index}, this.value)">
-                                                    <option value="">Select course to retake against</option>
-                                                    <% reversedSemesters.forEach((semester) => { %>
-                                                        <% semester.courses.forEach((prevCourse) => { %>
-                                                            <option value="<%= prevCourse.gradePoints %>">
-                                                            <%= prevCourse.title %> - <%= semester.semester %>
-                                                            </option>
+                                const selectOptions = `<select id="retake-select-${index}" onchange="updateRetakeAgainst(${index}, this.value)">
+                                                        <option value="">Select course to retake against</option>
+                                                        <% reversedSemesters.forEach((semester) => { %>
+                                                            <% semester.courses.forEach((prevCourse) => { %>
+                                                                <option value="<%= prevCourse.gradePoints %>|<%= prevCourse.title %>" 
+                                                                        data-title="<%= prevCourse.title %>">
+                                                                    <%= prevCourse.title %> - <%= semester.semester %>
+                                                                </option>
+                                                            <% }); %>
                                                         <% }); %>
-                                                    <% }); %>
                                                     </select>`;
 
-                            modalBody.innerHTML += `
-                                <div>
-                                Retaking: ${retakeItem.course.title}
-                                Retake against: ${selectOptions}
-                                </div>`;
+                                modalBody.innerHTML += `
+                                    <div>
+                                    Retaking: ${retakeItem.course.title}
+                                    <br />
+                                    Retake against: ${selectOptions}
+                                    </div>`;
+                            });
+
+                            // After rendering the select, set the selected course
+                            retakeArray.forEach((retakeItem, index) => {
+                                const selectElement = document.getElementById(`retake-select-${index}`);
+                                const options = selectElement.options;
+
+                                for (let i = 0; i < options.length; i++) {
+                                    if (options[i].getAttribute('data-title') === retakeItem.retakeCourse?.title) {
+                                        options[i].selected = true;
+                                        break;
+                                    }
+                                }
                             });
 
                             if (retakeArray.length > 0) {
                                 $('#retakeModal').modal('show');
                             }
                         }
+
 
                         function openModal(courseIndex, semesterIndex) {
                             var modal = new bootstrap.Modal(document.getElementById('retakeModal'), {
@@ -340,8 +356,17 @@
                             modal.show();
                         }
 
-                        function updateRetakeAgainst(index, retakeAgainst) {
-                            retakeArray[index].retakeAgainst = retakeAgainst;
+                        function updateRetakeAgainst(index, value) {
+                            // Split the value to extract gradePoints and title
+                            const [gradePoints, courseTitle] = value.split('|');
+
+                            // Update the retakeArray with both the course title and gradePoints
+                            retakeArray[index].retakeCourse = {
+                                title: courseTitle,
+                                gradePoints: gradePoints
+                            };
+
+                            console.log(`Updated retake array: `, retakeArray);  // For debugging purposes
                         }
                     
                         const gradePointsMap = {
@@ -362,22 +387,79 @@
                             'AU': 0.0,
                             'F (w/o P/F)': 0.0
                         };
-                        // var tempCGPA = parseFloat("<%= cgpa_data.degreeCGPA %>");
-                        // var temptotalCredits = parseInt("<%= cgpa_data.totalCredits %>")
+                        var CGPA = parseFloat("<%= cgpa_data.degreeCGPA %>");
+                        var totalCredits = parseInt("<%= cgpa_data.totalCredits %>")
                         var cgpa_data = JSON.parse('<%- JSON.stringify(cgpa_data) %>')
                         var reversedSemesters = cgpa_data.semesters.slice().reverse();
                         
+                        function getGradePoint(grade) {
+                            return gradePointsMap[grade] || 0; // Return the grade point, or 0 if grade is not valid
+                        }
+
+                        function getLesserGrade(grade1, grade2) {
+                            // Compare grade points and return the grade with the lesser grade point
+                            if (getGradePoint(grade1) > grade2) {
+                                return grade2;
+                            } else {
+                                return getGradePoint(grade1);
+                            }
+                        }
+
                         function updateCalculation() {
                             
-                            reversedSemesters.forEach((semester, semesterIndex) => {
-                                if (semester.semesterCreditsEarned == 0 && semester.gpa == 0) {
-                                    semester.courses.forEach((course, courseIndex) => {
-                                        courseGrade = document.getElementById("select " + (courseIndex+1) + " " + (semesterIndex+1)).value;
-                                        courseCreditsEarned = document.getElementById("creditsRegistered " + (courseIndex+1) + " " + (semesterIndex+1)).innerText;
-                                    })
+                            let semCredits = 0;
+                            let semCreditsCGPA = 0;
+                            let totalGradePoints = 0;
+                            let totalGradePointsCGPA = 0;
+
+                            // Iterate over each row in the table
+                            const rows = document.querySelectorAll('#tblListViewCR2 tbody tr');
+                            rows.forEach(row => {
+                                // Get the course code, selected grade, and credits
+                                const courseCode = row.querySelector('td:nth-child(2)')?.innerText;
+                                const gradeSelect = row.querySelector('select[name="letter-grade"]');
+                                const grade = gradeSelect ? gradeSelect.value : null;
+                                let credits = row.querySelector('td:nth-child(4)') ? parseFloat(row.querySelector('td:nth-child(4)').innerText) : 0;
+
+                                if (grade == "P" || grade == "TP" || grade == "F (w P/f)" || grade == "AU") {
+                                    credits = 0;
+                                }
+
+                                if (grade && grade !== 'Select') {
+                                    // Check if the course exists in the retake array
+                                    const retakeItem = retakeArray.find(item => item.course.code === courseCode);
+                                    let finalGrade = getGradePoint(grade);
+
+                                    if (retakeItem) {
+                                        // If the course is being retaken, get the lesser grade and subtract
+                                        console.log(parseFloat(retakeItem.retakeAgainst));
+                                        let gradetoSubtract = getLesserGrade(grade, parseFloat(retakeItem.retakeAgainst)/4);
+                                        semCreditsCGPA -= credits;
+                                        totalGradePointsCGPA -= gradetoSubtract * credits;
+                                    }
+                                    console.log(finalGrade, credits);
+                                    // const gradePoint = getGradePoint(finalGrade);
+                                    semCredits += credits;
+                                    semCreditsCGPA += credits;
+                                    totalGradePoints += finalGrade * credits;
+                                    totalGradePointsCGPA += finalGrade * credits;
                                 }
                             });
+                            console.log("Sem Credits: ", semCredits, "Total grade points: ", totalGradePoints);
+                            console.log("Sem Credits CGPA: ", semCreditsCGPA, "Total grade points CGPA: ", totalGradePointsCGPA);
+                            // Calculate CGPA and SemGPA
+                            const gpa = totalGradePoints / semCredits;
+                            let newCGPA = ((CGPA * totalCredits) + totalGradePoints) / (totalCredits + semCredits);
+                            newCGPA = Math.round(newCGPA * 100) / 100;
+                            // Display the calculated CGPA
+                            // alert(`Your GPA is: ${gpa.toFixed(2)}, and your new CGPA is: ${newCGPA.toFixed(2)}`); 
+                            document.getElementById("gpa-upcoming 1").innerText = "Predicted GPA: " + gpa.toFixed(2);
+                            document.getElementById("creditsEarned-upcoming 1").innerText = "Predicted Semester Credits Earned: " + semCredits;
+                            document.getElementById("cgpa-upcoming 1").innerText = "PCGPA: " + newCGPA;
+                            document.getElementById("blue-cgpa").innerText = "Predicted Degree/Diploma CGPA: " + newCGPA;
+                            document.getElementById("blue-totalCredits").innerText = "Predicted Total counted credits: " + (totalCredits + semCredits);
                         }
+                        
 
                     </script>
                         

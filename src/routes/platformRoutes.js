@@ -1274,7 +1274,7 @@ router.get('/cgpa-planner', async(req, res) => {
   if(cgpa_data==null){
     res.render("platform/pages/cgpa-planner-form");
   }else{
-    res.render("platform/pages/cgpa-planner",{cgpa_data:cgpa_data,pf_credits:pf_credits})
+    res.render("platform/pages/cgpa-planner2",{cgpa_data:cgpa_data,pf_credits:pf_credits})
   }
 });
 
