@@ -181,6 +181,9 @@
                                                                             <input hidden type="text" id="mailid" name="mailid" value="">
                                                                             <br />
                                                                             <span id="links"></span>
+                                                                            <br />
+                                                                            <label for="rejectReason" class="form-label">Reject Reason (if any)</span></label>
+                                                                            <input type="text" class="form-control" id="rejectReason" name="rejectReason">
                                                                         </form>
                                                                     </div>
                                                                     <div class="modal-footer">
@@ -398,6 +401,7 @@
                         const mailBody = editorInstance.getData(); // Get content from CKEditor
                         const attachmentPath = $('#attachment_path').val(); // You'll need to populate this with the actual attachment path
                         const name = $('#username').val(); // You'll need to populate this with the actual attachment path
+                        const rejectReason = $('#rejectReason').val();
                         
                         // Create the data object to send
                         const emailData = {
@@ -408,7 +412,8 @@
                             recipients: recipients,
                             subject: subject,
                             mail_body: mailBody,
-                            attachment_path: attachmentPath
+                            attachment_path: attachmentPath,
+                            rejectReason: rejectReason
                         };
                 
                         // Send the POST request

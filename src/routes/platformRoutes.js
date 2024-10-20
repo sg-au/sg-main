@@ -1078,15 +1078,16 @@ router.post('/sg-approved', async(req, res) => {
 router.post('/sg-rejected', async(req, res) => {
   const attachmentIds = extractFileIds(req.body.attachment_path);
   delete req.body.name;
+  let rejectReason = req.body.rejectReason;
   // TODO: Add req.body.recipients to to field
   const mailOptions = {
     from: `SG Compose <${process.env.SGMAIL_ID}>`,
     to: req.body.senderEmail,
     subject: "Email to Students Not Approved",
-    text: "Your mail could not be sent to the recipients due to non-compliance with the policy. Kindly reach out to the SG for further clarification by replying to this email.",
+    text: "Your mail could not be sent to the recipients due to non-compliance with the policy. Kindly reach out to the SG for further clarification by replying to this email.\nReason for rejection: " + rejectReason,
     replyTo: req.user._json.email,
   };
-
+  delete req.body.rejectReason;
   // Send the email
   try {
       await new Promise((resolve, reject) => {
