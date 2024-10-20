@@ -1420,7 +1420,7 @@ router.get('/assets', async(req, res) => {
 });
 
 router.get('/assets/dashboard', async(req, res) => {
-  if(req.user._json.email==process.env.BORROW_POC || req.user._json.email=='ibrahim.khalil_ug25@ashoka.edu.in'){
+  if(process.env.BORROW_POC.includes(req.user._json.email)){
     var borrow_data = await axios.get(`${apiUrl}/borrow-requests?populate=user&populate=asset`, axiosConfig);
     // console.log(borrow_data.data.data);
     res.render("platform/pages/assets-dashboard",{requests:borrow_data.data.data});
@@ -1430,7 +1430,7 @@ router.get('/assets/dashboard', async(req, res) => {
 });
 
 router.get('/assets/accept/:id', async(req, res) => {
-  if(req.user._json.email==process.env.BORROW_POC || req.user._json.email=='ibrahim.khalil_ug25@ashoka.edu.in'){
+  if(process.env.BORROW_POC.includes(req.user._json.email)){
     var borrow_data = await axios.get(`${apiUrl}/borrow-requests/${req.params.id}`, axiosConfig);
     temp = borrow_data.data.data.attributes;
     var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
@@ -1445,7 +1445,7 @@ router.get('/assets/accept/:id', async(req, res) => {
 });
 
 router.get('/assets/reject/:id', async(req, res) => {
-  if(req.user._json.email==process.env.BORROW_POC || req.user._json.email=='ibrahim.khalil_ug25@ashoka.edu.in'){
+  if(process.env.BORROW_POC.includes(req.user._json.email)){
     var borrow_data = await axios.get(`${apiUrl}/borrow-requests/${req.params.id}`, axiosConfig);
     temp = borrow_data.data.data.attributes;
     var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));
@@ -1459,7 +1459,7 @@ router.get('/assets/reject/:id', async(req, res) => {
   }
 });
 router.get('/assets/returned/:id', async(req, res) => {
-  if(req.user._json.email==process.env.BORROW_POC || req.user._json.email=='ibrahim.khalil_ug25@ashoka.edu.in'){
+  if(process.env.BORROW_POC.includes(req.user._json.email)){
     var borrow_data = await axios.get(`${apiUrl}/borrow-requests/${req.params.id}`, axiosConfig);
     temp = borrow_data.data.data.attributes;
     var user = (await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`, axiosConfig));

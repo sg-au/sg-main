@@ -110,36 +110,17 @@
                     <form>
                         <div class="row">
                           <div class="col-lg-6">
-                            <select class="form-select" id="day" name="day">
+                            <select style="display:none" class="form-select" id="day" name="day">
                               <option selected>Filter by Day</option>
                             </select>
                           </div>
                           <div class="col-lg-6">
                             <select class="form-select" id="route" name="route">
-                              <option>Filter by Route</option>
-                                                  <option value="Campus to Airport">Campus to Airport</option>
-                                                  <option value="Campus to Jahangirpuri">Campus to Jahangirpuri</option>
-                                                  <option value="Campus to Gurgaon">Campus to Gurgaon</option>
-                                                  <option value="Campus to New Delhi">Campus to New Delhi (Metro/Railway Station)</option>
-                                                  <option value="Campus to Nizamuddin">Campus to H. Nizamuddin</option>                                                
-                                                  <option value="Campus to Jaipur">Campus to Jaipur</option>
-                                                  <option value="Campus to Chandigarh">Campus to Chandigarh</option>
-                                                  <option value="Campus to Ludhiana">Campus to Ludhiana</option>
-                                                  <option value="Campus to Agra">Campus to Agra</option>
-                                                  <option value="Campus to Noida">Campus to Noida</option>
-                                                  <option value="Campus to Ghaziabad">Campus to Ghaziabad</option>
-  
-                                                  <!-- <option value="Airport to Campus">Airport to Campus</option>
-                                                  <option value="Jahangirpuri to Campus">Jahangirpuri to Campus</option>
-                                                  <option value="Gurgaon to Campus">Gurgaon to Campus</option>
-                                                  <option value="New Delhi to Campus">New Delhi (Metro/Railway Station) to Campus</option>
-                                                  <option value="Nizamuddin to Campus">H. Nizamuddin to Campus</option>
-                                                  <option value="Jaipur to Campus">Jaipur to Campus</option>
-                                                  <option value="Chandigarh to Campus">Chandigarh to Campus</option>
-                                                  <option value="Ludhiana to Campus">Ludhiana to Campus</option>
-                                                  <option value="Agra to Campus">Agra to Campus</option>
-                                                  <option value="Noida to Campus">Noida to Campus</option>
-                                                  <option value="Ghaziabad to Campus">Ghaziabad to Campus</option>           -->
+                              <option selected>Filter by Status</option>
+                              <option value="Pending">Pending</option>
+                              <option value="Issued">Issued</option>
+                              <option value="Rejected">Rejected</option>
+                              <option value="Returned">Returned</option>
                             </select>
                           </div>
                         </div>
@@ -322,16 +303,16 @@
     
     // Custom range filtering function
     DataTable.ext.search.push(function (settings, data, dataIndex) {
-        let day = dayEl.value;
+        // let day = dayEl.value;
         let route = routeEl.value;
-        let daydata = (data[5]) || 0;
-        let routedata = (data[4]) || 0;
+        // let daydata = (data[5]) || 0;
+        let routedata = (data[5]) || 0;
         // console.log(year);
         if (
-            (day == "Filter by Day" && route == "Filter by Route") ||
-            (daydata.includes(day) && route == "Filter by Route") ||
-            (day == "Filter by Day" && routedata.includes(route)) ||
-            (daydata.includes(day) && routedata.includes(route))
+            (route == "Filter by Status") ||
+            (route == "Filter by Status") ||
+            (routedata.includes(route)) ||
+            (routedata.includes(route))
         ) {
             // console.log(sem)
             return true;
@@ -343,9 +324,9 @@
     const table = new DataTable('#borrowRequests');
     
     // Changes to the inputs will trigger a redraw to update the table
-    dayEl.addEventListener('change', function () {
-        table.draw();
-    });
+    // dayEl.addEventListener('change', function () {
+    //     table.draw();
+    // });
     routeEl.addEventListener('change', function () {
         table.draw();
     });

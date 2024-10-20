@@ -117,6 +117,7 @@ function putImage(req, res, next) {
     res.locals.name = req.user._json.name;  
     res.locals.email = req.user._json.email;  
     res.locals.HOR_MEMBERS_LIST = process.env.HOR_MEMBERS_LIST;  
+    res.locals.BORROW_POC = process.env.BORROW_POC;  
     next();
     // Make the GET request to fetch data
   }
