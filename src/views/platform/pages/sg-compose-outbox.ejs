@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SG Platform</title>
+  <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap JS (for modals) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.gstatic.com" rel="preconnect" />
+  <link rel="stylesheet" href="/platform/assets/css/dataTables.css" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+    
+  <style>
+    @media screen and (max-width: 768px) {
+      .scroll {
+        display: block;
+        overflow-x: auto;
+      }
+      .upper {
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+  <%-include("../partials/preloader-css")%>
+  <%-include("../partials/preloader-js")%>
+
+</head>
+<%-include("../partials/post-head")%>
+
+<script>
+    function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+</script>
+
+<body>
+  <!--  Body Wrapper -->
+  <%-include("../partials/preloader")%>
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <%-include("../partials/sidebar")%>
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <%-include("../partials/header")%>
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="row justify-content-between">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="flex-row mb-2">
+                      <span class="fs-6 fw-semibold">My SG Compose Outbox</span>
+                    </div>
+                    <div class="flex-row mb-3">
+                      <ul class="list-inline">
+                        <span style="font-size: 10px;" class="fs-3 fw-semibold">
+                          View the status of all your email requests here. If your outbox contains a pending request, do not raise new requests till an approval or a rejection from the SG. Repeated spam requests will be blocked from the service or from the platform. In case of any queries, write directly to sg@ashoka.edu.in<br />
+                        </span>                                         
+                      </ul>
+                      <button style="box-shadow: 0px 3px 20px rgba(1, 41, 112, 0.5);float:right;margin-top: 30px;" type="button" 
+                                onclick="location.href='/platform/sg-compose/'" class="btn btn-primary m-1">
+                                <svg fill="#ffffff" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                    width="20px" height="20px" viewBox="0 0 45.402 45.402"
+                                    xml:space="preserve">
+                                <g>
+                                    <path d="M41.267,18.557H26.832V4.134C26.832,1.851,24.99,0,22.707,0c-2.283,0-4.124,1.851-4.124,4.135v14.432H4.141
+                                        c-2.283,0-4.139,1.851-4.138,4.135c-0.001,1.141,0.46,2.187,1.207,2.934c0.748,0.749,1.78,1.222,2.92,1.222h14.453V41.27
+                                        c0,1.142,0.453,2.176,1.201,2.922c0.748,0.748,1.777,1.211,2.919,1.211c2.282,0,4.129-1.851,4.129-4.133V26.857h14.435
+                                        c2.283,0,4.134-1.867,4.133-4.15C45.399,20.425,43.548,18.557,41.267,18.557z"/>
+                                </g>
+                                </svg>
+                                
+                               &nbsp;&nbsp;New Mail
+                            </button><br />
+                    </div>
+                    <br>
+                    <!-- Button to trigger modal -->
+
+
+                    <!-- <table class="inputs">
+                      <tbody>
+                        <tr>
+                          <td>Filter by Semester:</td>
+                          <td><input type="text" id="sem" name="sem"></td>
+                        </tr>
+                        <tr>
+                          <td>Filter by Year:</td>
+                          <td><input type="text" id="max" name="max"></td>
+                        </tr>
+                      </tbody>
+                    </table> -->
+                    <form>
+                        <div class="row">
+                          <div class="col-lg-6">
+                            <label for="route" class="form-label"> <span style="color:rgb(177, 58, 58)">Outbox Status</span></label>
+                            <select class="form-select" id="route" name="route">
+                              <option>All Mails</option>
+                              <option selected value="pending">Pending</option>
+                              <option value="approved">Approved</option>
+                              <option value="rejected">Rejected</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-6">
+                            
+                          </div>
+                        </div>
+                      </form>
+                      <br />
+                    <table id="borrowmails" class="table table-striped scroll" style="width:100%">
+                      <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Date of Request</th>
+                            <th>To</th>
+                            <th>Status</th>
+                            <th>Category</th>
+                            <th>Mail Request</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <%for(i=0;i<mails.length;i++){%>
+                            <tr>
+                              <td>
+                                <%=mails[i].id%>
+                              </td>
+                              <td>
+                                <%-new Date(mails[i].createdAt).toLocaleDateString('en', { month: 'short' })-%> <%-new Date(mails[i].createdAt).getDate()-%>, <%-new Date(mails[i].createdAt).getFullYear()-%>  
+                              </td>
+                              <td>
+                                <%=mails[i].recipients.substring(0,20)%>...
+                              </td>
+                              <td>
+                                <%if(mails[i].status=="pending"){%>
+                                <span class="bg-warning text-white"> <%=mails[i].status%></span>
+                                <%}else if(mails[i].status=="approved"){%>
+                                    <span class="bg-success text-white"> <%=mails[i].status%></span>
+                                <%}else{%>
+                                    <span class="bg-danger text-white"> <%=mails[i].status%></span>
+                                <%}%>
+                              </td>
+                              <td>
+                                <%=mails[i].alias%>
+                              </td>
+                              <td>
+                                <%-mails[i].subject.substring(0,40)-%>
+                              </td>
+                            </tr>
+                        <%}%>                      
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date of Request</th>
+                            <th>To</th>
+                            <th>Status</th>
+                            <th>Category</th>
+                            <th>Mail Request</th>
+                          </tr>
+                      </tfoot>
+                  </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/platform/assets/js/sidebarmenu.js"></script>
+  <script src="/platform/assets/js/app.min.js"></script>
+  <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/platform/assets/js/dashboard.js"></script>
+  <script src="/platform/assets/js/theme.js"></script>
+  <script src="/platform/assets/js/main.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> -->
+  <script src="/platform/assets/js/dataTables.js"></script>
+  <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
+   
+  <script>
+    const routeEl = document.querySelector('#route');
+    
+    // Custom range filtering function
+    DataTable.ext.search.push(function (settings, data, dataIndex) {
+        // let day = dayEl.value;
+        let route = routeEl.value;
+        // let daydata = (data[5]) || 0;
+        let routedata = (data[3]) || 0;
+        // console.log(year);
+        if (
+            (route == "All Mails") ||
+            (route == "All Mails") ||
+            (routedata.includes(route)) ||
+            (routedata.includes(route))
+        ) {
+            // console.log(sem)
+            return true;
+        }
+    
+        return false;
+    });
+    
+    const table = new DataTable('#borrowmails');
+    
+    // Changes to the inputs will trigger a redraw to update the table
+    // dayEl.addEventListener('change', function () {
+    //     table.draw();
+    // });
+    routeEl.addEventListener('change', function () {
+        table.draw();
+    });
+  </script>
+  <script>
+    
+  </script>
+  <!-- <%-include("../partials/preloader-js")%> -->
+</body>
+
+</html>

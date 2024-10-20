@@ -838,6 +838,21 @@ router.get('/sg-compose', async(req, res) => {
 });
 
 
+router.get('/sg-compose-outbox', async(req, res) => {
+  userEmail = req.user._json.email;
+    axios.get(`${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}&populate=sg_mails`,axiosConfig)
+    .then((response) => {
+      // Assuming you get a single user with the specified email
+      user = response.data[0];
+      res.render("platform/pages/sg-compose-outbox",{phone:user.phone,mails:user.sg_mails});
+    })
+    .catch((error) => {
+      console.error('Error fetching user:', error);
+      // Handle error
+    });
+});
+
+
 router.get('/sg-compose/dashboard', async(req, res) => {
   try {
     // console.log(mails)
@@ -932,7 +947,7 @@ router.post('/sg-compose', upload.array('files'), async (req, res) => {
     req.body.sender = updateduser;
 
     const response = await axios.post(`${process.env.STRAPI_API_URL}/sg-mails`, { data: req.body }, axiosConfig);
-    res.redirect("/platform/sg-compose");
+    res.redirect("/platform/sg-compose-outbox");
     }
   } catch (error) {
     console.error(error);
