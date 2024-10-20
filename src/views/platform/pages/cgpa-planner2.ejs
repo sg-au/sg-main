@@ -122,7 +122,7 @@
                                                            </button>
                                                         </li>
                                                         <li class="nav-item" role="presentation">
-                                                            <button class="nav-link small-pills" id="pills-1-tab" data-bs-toggle="pill" data-bs-target="#updateGrades" type="button" role="tab" aria-controls="#updateGrades" aria-selected="true">Past Semesters</button>
+                                                            <button class="nav-link small-pills" id="pills-1-tab" data-bs-toggle="pill" data-bs-target="#updateGrades" type="button" role="tab" aria-controls="#updateGrades" aria-selected="true">Grade Calculator</button>
                                                         </li>
                                                         <li class="nav-item" role="presentation">
                                                             <button class="nav-link small-pills" id="pills-12-tab" data-bs-toggle="pill" data-bs-target="#raiseGPASection" type="button" role="tab" aria-controls="#raiseGPASection" aria-selected="true">Raise GPA Calculator</button>
@@ -157,6 +157,10 @@
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <div style="overflow-x:scroll">
+                                                                        <div class="d-flex">
+                                                                            <span class="fs-3 fw-semibold"><a href="#PastSemData">Click </a>to view past semester data</span>
+                                                                        </div>
+                                                                        <br />
                                                                         <div class="d-flex">
                                                                             <button onclick="location.reload()" class="btn btn-light mr-2" style="border:1px solid black;">Reset Data</button>
                                                                             <a href="/platform/cgpa-planner-reset" class="btn btn-light">Re-sync From AMS</a>
@@ -271,12 +275,105 @@
                                                                         </table>
                                                                         <br />
                                                                         <button onclick="updateCalculation()" class="mx-auto d-block btn btn-primary" style="border: none; background-color: #0c3862; width: 60%; height: 40px;">Calculate</button>
+                                                                        <br />
+                                                                        <br />
+                                                                        <span class="fs-6 fw-semibold" id="PastSemData">Past Semester Data</span>
+                                                                        <br />
+                                                                        <br />
+                                                                        <div class="accordion" id="semesterAccordion">
+                                                                            <% 
+                                                                                var reversedSemesters = cgpa_data.semesters.slice().reverse(); // Reverse the array
+                                                                            %>
+                                                                        
+                                                                            <% reversedSemesters.forEach((semester, semesterIndex) => { %>
+                                                                                <% if(semester.semesterCreditsEarned != 0 && semester.gpa != 0) { %>
+                                                                        
+                                                                                <!-- Semester Header -->
+                                                                                <div class="accordion-item">
+                                                                                    <h2 class="accordion-header" id="heading<%= semesterIndex %>">
+                                                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= semesterIndex %>" aria-expanded="false" aria-controls="collapse<%= semesterIndex %>">
+                                                                                            Semester: <%= semester.semester %> (GPA: <%= semester.gpa %>, Credits Earned: <%= semester.semesterCreditsEarned %>)
+                                                                                        </button>
+                                                                                    </h2>
+                                                                        
+                                                                                    <!-- Collapsed content -->
+                                                                                    <div id="collapse<%= semesterIndex %>" class="accordion-collapse collapse" aria-labelledby="heading<%= semesterIndex %>" data-bs-parent="#semesterAccordion">
+                                                                                        <div class="accordion-body">
+                                                                                            <!-- Table for each semester -->
+                                                                                            <table class="table table-bordered">
+                                                                                                <thead>
+                                                                                                    <tr style="font-weight:bold;background:#c4122f;color:#fff">
+                                                                                                        <th class="table-checkbox" width="5px" data-filter="false" data-sorter="false">#</th>
+                                                                                                        <th>Code</th>
+                                                                                                        <th>Title</th>
+                                                                                                        <th style="width:1%">Grade</th>
+                                                                                                        <th style="width:1%">Credits Earned</th>
+                                                                                                        <th style="width:1%">Grade Points</th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody>
+                                                                                                    <% semester.courses.forEach((course, courseIndex) => { %>
+                                                                                                        <% if(course.grade == "AU") { %>
+                                                                                                            <tr style="color:red">
+                                                                                                                <td><%= courseIndex + 1 %></td>
+                                                                                                                <td><%= course.code %></td>
+                                                                                                                <td><%= course.title %></td>
+                                                                                                                <td><%= course.grade %></td>
+                                                                                                                <td style="white-space:nowrap;"><%= course.creditsEarned ? course.creditsEarned : 'N/A' %></td>
+                                                                                                                <td style="white-space:nowrap;"><%= course.gradePoints ? course.gradePoints : 'N/A' %></td>
+                                                                                                            </tr>
+                                                                                                        <% } else { %>
+                                                                                                            <tr>
+                                                                                                                <td><%= courseIndex + 1 %></td>
+                                                                                                                <td><%= course.code %></td>
+                                                                                                                <td><%= course.title %></td>
+                                                                                                                <td><%= course.grade %></td>
+                                                                                                                <td style="white-space:nowrap;"><%= course.creditsEarned ? course.creditsEarned : 'N/A' %></td>
+                                                                                                                <td style="white-space:nowrap;"><%= course.gradePoints ? course.gradePoints : 'N/A' %></td>
+                                                                                                            </tr>
+                                                                                                        <% } %>
+                                                                                                    <% }); %>
+                                                                        
+                                                                                                    <!-- Semester GPA, Credits Earned, CGPA Row -->
+                                                                                                    <tr style="font-weight:bold;background:#ddd;">
+                                                                                                        <td colspan="2" style="text-align:right"></td>
+                                                                                                        <td style="white-space:nowrap;text-align:right">GPA: <%= semester.gpa %></td>
+                                                                                                        <td colspan="2">Semester Credits Earned: <%= semester.semesterCreditsEarned %></td>
+                                                                                                        <td>CGPA: <%= semester.cgpa %></td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <% } %>
+                                                                            <% }); %>
+                                                                        </div>                                                                        
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <!-- Add content for evaluations here -->
                                                         </div>
-                                                        
+                                                        <div id="raiseGPASection" role="tabpanel" class="tab-pane fade" aria-labelledby="updateTab">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <button onclick="resetForm()" class="btn btn-light" style="float:right">Reset Values</button><br />
+                                                                        <br /><br />
+                                                                    <div class="card">
+                                                                        <div class="card-header">
+                                                                            In order to raise my GPA by <input class="form-control" style="width:100px;display:inline" type="number" step="0.01" id="raise"> points, if I maintain a <input class="form-control" style="width:100px;display:inline" type="number" step="0.01" id="average"> average GPA, it will take <input disabled class="form-control" style="width:100px;display:inline" type="number" step="0.01" id="additional"> additional credits.
+                                                                            <br /><br /><button onclick="raiseGPA()" class="btn btn-light" style="float:right;border:1px solid black">Calculate</button><br />
+                                                                            <br /><hr><br />
+                                                                            I am taking <input class="form-control" style="width:100px;display:inline" type="number" step="1" id="semesterCredits"> credits this semester. If I want to raise my CGPA by <input class="form-control" style="width:100px;display:inline" type="number" step="0.01" id="raiseAmount">, I need a <input disabled class="form-control" style="width:100px;display:inline" type="number" step="0.01" id="needGPA"> GPA average on all my courses this semester.
+                                                                            <br /><br /><button onclick="semGPA()" class="btn btn-light" style="float:right;border:1px solid black">Calculate</button><br />
+                                                                            <br /><hr><br />
+                                                                            If I average <input class="form-control" style="width:100px;display:inline" type="number" step="0.01" id="averageGPA"> GPA for the next <input class="form-control" style="width:100px;display:inline" type="number" step="1" id="newCredits"> credits, then my CGPA would be <input disabled class="form-control" style="width:100px;display:inline" type="number" step="0.01" id="newCGPA">.
+                                                                            <br /><br /><button onclick="cgpaAfterAverage()" class="btn btn-light" style="float:right;border:1px solid black">Calculate</button><br />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 
@@ -286,6 +383,147 @@
                                 </div>
                             </div>
                     </div>
+                    
+                    <script>
+                        // Function to reset all input fields by their specific ids
+                        function resetForm() {
+                            // Reset the value of each input field by its ID
+                            document.getElementById("raise").value = '';
+                            document.getElementById("average").value = '';
+                            document.getElementById("semesterCredits").value = '';
+                            document.getElementById("raiseAmount").value = '';
+                            document.getElementById("newCredits").value = '';
+                            document.getElementById("averageGPA").value = '';
+                            document.getElementById("additional").value = '';
+                            document.getElementById("newCGPA").value = '';
+                            document.getElementById("needGPA").value = '';
+                        }
+
+                        // targetGPA, currentGPA, totalCredits, averageGPA
+                        function calculateAdditionalCreditsNeeded(desiredGPA, currentGPA, totalCredits, averageGPA) {
+                            // Calculate the total grade points earned so far
+                            const totalPointsSoFar = currentGPA * totalCredits;
+                            
+                            // Formula to calculate the additional credits needed to reach the desired GPA
+                            const additionalCreditsNeeded = (desiredGPA * totalCredits - totalPointsSoFar) / (averageGPA - desiredGPA);
+                            
+                            // Return the number of additional credits needed, ensuring it's non-negative
+                            return additionalCreditsNeeded >= 0 ? additionalCreditsNeeded.toFixed(2) : 0;
+                        }
+                        
+                        function raiseGPA() {
+                            let currentGPA = parseFloat('<%=cgpa_data.degreeCGPA%>'); // Existing GPA from your backend
+                            let degreeCreditsUntilNow = parseInt('<%=cgpa_data.totalCredits%>'); // Total completed credits from backend
+                            let pfCredits = 0; // Parse P/F credits input as a float
+                        
+                            // Make sure to properly parse and handle the inputs
+                            const raiseAmount = parseFloat(document.getElementById("raise").value); // How much you want to raise your GPA
+                            const targetGPA = currentGPA + raiseAmount; // Calculate the target GPA
+                            
+                            if(targetGPA>4.0){
+                                alert("The target GPA is greater than 4.0. Please enter a lower GPA raise amount.");
+                            }
+
+                            if(targetGPA < 0 || raiseAmount < 0){
+                                alert("You have entered a negative value!");
+                            }
+                            
+                            const totalCredits = degreeCreditsUntilNow - pfCredits; // Adjust total credits by subtracting P/F credits
+                            const averageGPA = parseFloat(document.getElementById("average").value); // Average GPA you aim to maintain
+                            
+                            if(averageGPA < targetGPA){
+                                alert("Your average GPA input: " + averageGPA + " is lesser than the target GPA: " + targetGPA + ". Please select a higher average GPA or a lower GPA raise.")
+                            }
+                            // Check if inputs are valid
+                            if (isNaN(raiseAmount) || isNaN(totalCredits) || isNaN(averageGPA)) {
+                                alert("Please enter valid numbers.");
+                                return;
+                            }
+                        
+                            // Calculate additional credits required
+                            const additionalCredits = calculateAdditionalCreditsNeeded(targetGPA, currentGPA, totalCredits, averageGPA);
+                        
+                            // Display or return the result
+                            document.getElementById("additional").value=additionalCredits;
+                            // alert("You will need " + additionalCredits + " additional credits to raise your GPA by " + raiseAmount + " points.");
+                        }
+
+                        function calculateRequiredSemesterGPA(currentGPA, totalCredits, desiredGPAIncrease, semesterCredits) {
+                            // Calculate the desired GPA by adding the GPA increase to the current GPA
+                            const desiredGPA = currentGPA + desiredGPAIncrease;
+                            
+                            // Calculate the total grade points earned so far
+                            const totalPointsSoFar = currentGPA * totalCredits;
+                            
+                            // Calculate the total grade points required for the desired GPA
+                            const totalPointsRequired = desiredGPA * (totalCredits + semesterCredits);
+                            
+                            // Calculate the GPA required for this semester to reach the desired GPA
+                            const requiredSemesterGPA = (totalPointsRequired - totalPointsSoFar) / semesterCredits;
+                            
+                            // Return the required semester GPA, ensuring it's non-negative
+                            return requiredSemesterGPA >= 0 ? requiredSemesterGPA.toFixed(2) : 0;
+                        }
+
+                        function semGPA() {
+                            let currentGPA = parseFloat('<%=cgpa_data.degreeCGPA%>'); // Existing GPA
+                            let degreeCreditsUntilNow = parseInt('<%=cgpa_data.totalCredits%>'); // Total completed credits
+                            let pfCredits = parseFloat(document.getElementById("pfCredits").value) || 0; // Parse P/F credits
+                            let semesterCredits = parseFloat(document.getElementById("semesterCredits").value) || 0; // Parse semester credits
+                            let raiseAmount = parseFloat(document.getElementById("raiseAmount").value) || 0; // Parse GPA raise amount (fixed this part)
+                            
+                            const totalCredits = degreeCreditsUntilNow - pfCredits; // Adjust total credits by subtracting P/F credits
+
+                            if(semesterCredits < 0 || raiseAmount < 0){
+                                alert("You have entered a negative value!");
+                            }
+
+                            // Calculate the required semester GPA using the fixed function
+                            var needGPA = calculateRequiredSemesterGPA(currentGPA, totalCredits, raiseAmount, semesterCredits);
+                            
+                            // Output the result to the "needGPA" field
+                            if(needGPA>4.0){
+                                alert("The required GPA is greater than 4.0. Please enter a lower GPA raise amount or higher semester credits.");
+                            } else{
+                                document.getElementById("needGPA").value = needGPA;
+                            }
+                        }
+
+                        function calculateNewCGPA(currentGPA, totalCredits, averageGPA, newCredits) {
+                            // Calculate the total grade points earned so far
+                            const totalPointsSoFar = currentGPA * totalCredits;
+                            
+                            // Calculate the total grade points earned in the new credits
+                            const totalNewPoints = averageGPA * newCredits;
+                            
+                            // Calculate the new CGPA
+                            const newCGPA = (totalPointsSoFar + totalNewPoints) / (totalCredits + newCredits);
+                            
+                            // Return the new CGPA, rounded to 2 decimal places
+                            return newCGPA.toFixed(2);
+                        }
+
+                        function cgpaAfterAverage(){
+                            let currentGPA = parseFloat('<%=cgpa_data.degreeCGPA%>'); // Existing GPA
+                            let degreeCreditsUntilNow = parseInt('<%=cgpa_data.totalCredits%>'); // Total completed credits
+                            let pfCredits = parseFloat(document.getElementById("pfCredits").value) || 0; // Parse P/F credits
+                            let averageGPA = parseFloat(document.getElementById("averageGPA").value) || 0; // Parse semester credits
+                            let newCredits = parseFloat(document.getElementById("newCredits").value) || 0; // Parse GPA raise amount (fixed this part)
+                            
+                            const totalCredits = degreeCreditsUntilNow - pfCredits; // Adjust total credits by subtracting P/F credits
+
+                            if(averageGPA < 0 || newCredits < 0.0){
+                                alert("You have entered a negative value!");
+                            }
+
+                            // Calculate the required semester GPA using the fixed function
+                            var newCGPA = calculateNewCGPA(currentGPA, totalCredits, averageGPA, newCredits) 
+                            
+                            // Output the result to the "needGPA" field
+                            document.getElementById("newCGPA").value = newCGPA;
+                        }
+
+                    </script>
 
                     <script>
 
@@ -302,10 +540,10 @@
                             } else {
                                 retakeArray = retakeArray.filter(item => item.course.title !== courseData.title);
                             }
-                            updateRetakeModal();
+                            updateRetakeModal(checkbox.checked);
                         }
 
-                        function updateRetakeModal() {
+                        function updateRetakeModal(checked) {
                             const modalBody = document.getElementById('retakeModalBody');
                             modalBody.innerHTML = '';
 
@@ -343,7 +581,7 @@
                                 }
                             });
 
-                            if (retakeArray.length > 0) {
+                            if (retakeArray.length > 0 && checked) {
                                 $('#retakeModal').modal('show');
                             }
                         }
@@ -366,7 +604,7 @@
                                 gradePoints: gradePoints
                             };
 
-                            console.log(`Updated retake array: `, retakeArray);  // For debugging purposes
+                            // console.log(`Updated retake array: `, retakeArray);  // For debugging purposes
                         }
                     
                         const gradePointsMap = {
@@ -398,7 +636,9 @@
 
                         function getLesserGrade(grade1, grade2) {
                             // Compare grade points and return the grade with the lesser grade point
-                            if (getGradePoint(grade1) > grade2) {
+                            if (grade1 == "P") {
+                                return grade2;
+                            } else if (getGradePoint(grade1) > grade2) {
                                 return grade2;
                             } else {
                                 return getGradePoint(grade1);
@@ -421,10 +661,6 @@
                                 const grade = gradeSelect ? gradeSelect.value : null;
                                 let credits = row.querySelector('td:nth-child(4)') ? parseFloat(row.querySelector('td:nth-child(4)').innerText) : 0;
 
-                                if (grade == "P" || grade == "TP" || grade == "F (w P/f)" || grade == "AU") {
-                                    credits = 0;
-                                }
-
                                 if (grade && grade !== 'Select') {
                                     // Check if the course exists in the retake array
                                     const retakeItem = retakeArray.find(item => item.course.code === courseCode);
@@ -432,12 +668,16 @@
 
                                     if (retakeItem) {
                                         // If the course is being retaken, get the lesser grade and subtract
-                                        console.log(parseFloat(retakeItem.retakeAgainst));
-                                        let gradetoSubtract = getLesserGrade(grade, parseFloat(retakeItem.retakeAgainst)/4);
+                                        // console.log(parseFloat(retakeItem.retakeAgainst));
+                                        let gradetoSubtract = getLesserGrade(grade, parseFloat(retakeItem.retakeCourse.gradePoints)/credits);
                                         semCreditsCGPA -= credits;
                                         totalGradePointsCGPA -= gradetoSubtract * credits;
+                                        // console.log("Retake: ", gradetoSubtract, credits);
                                     }
-                                    console.log(finalGrade, credits);
+                                    if (grade == "P" || grade == "TP" || grade == "F (w P/f)" || grade == "AU") {
+                                        credits = 0;
+                                    }
+                                    // console.log(finalGrade, credits);
                                     // const gradePoint = getGradePoint(finalGrade);
                                     semCredits += credits;
                                     semCreditsCGPA += credits;
@@ -445,14 +685,13 @@
                                     totalGradePointsCGPA += finalGrade * credits;
                                 }
                             });
-                            console.log("Sem Credits: ", semCredits, "Total grade points: ", totalGradePoints);
-                            console.log("Sem Credits CGPA: ", semCreditsCGPA, "Total grade points CGPA: ", totalGradePointsCGPA);
+                            // console.log("Sem Credits: ", semCredits, "Total grade points: ", totalGradePoints);
+                            // console.log("Sem Credits CGPA: ", semCreditsCGPA, "Total grade points CGPA: ", totalGradePointsCGPA);
                             // Calculate CGPA and SemGPA
                             const gpa = totalGradePoints / semCredits;
-                            let newCGPA = ((CGPA * totalCredits) + totalGradePoints) / (totalCredits + semCredits);
+                            let newCGPA = ((CGPA * totalCredits) + totalGradePointsCGPA) / (totalCredits + semCreditsCGPA);
                             newCGPA = Math.round(newCGPA * 100) / 100;
-                            // Display the calculated CGPA
-                            // alert(`Your GPA is: ${gpa.toFixed(2)}, and your new CGPA is: ${newCGPA.toFixed(2)}`); 
+                            // Update with the new values
                             document.getElementById("gpa-upcoming 1").innerText = "Predicted GPA: " + gpa.toFixed(2);
                             document.getElementById("creditsEarned-upcoming 1").innerText = "Predicted Semester Credits Earned: " + semCredits;
                             document.getElementById("cgpa-upcoming 1").innerText = "PCGPA: " + newCGPA;
@@ -463,116 +702,6 @@
 
                     </script>
                         
-                    <!-- <script>
-                        const gradePointsMap = {
-                            'A': 4.0,
-                            'A-': 3.7,
-                            'B+': 3.3,
-                            'B': 3.0,
-                            'B-': 2.7,
-                            'C+': 2.3,
-                            'C': 2.0,
-                            'C-': 1.7,
-                            'D+': 1.3,
-                            'D': 1.0,
-                            'D-': 0.7,
-                            'F (w P/F)': 0.0,
-                            'TP': 0.0,
-                            'P': 0.0,
-                            'AU': 0.0,
-                            'F (w/o P/F)': 0.0
-                        };
-                        var tempCGPA = parseFloat("<%= cgpa_data.degreeCGPA %>");
-                        var tempDegreeCreditsUntilNow = parseInt("<%= cgpa_data.totalCredits %>")
-                        function updateCalc()
-                        {   
-                            idSuffix=courseIndex+" "+semesterIndex;
-                            correspondingSelectElement=document.getElementById("select "+idSuffix);
-                            correspondingCreditsRegistered=document.getElementById("creditsRegistered "+idSuffix);
-                            correspondingCreditsEarned=document.getElementById("creditsEarned "+idSuffix);
-                            correspondingGradePoints=document.getElementById("gradePoints "+idSuffix);
-                            
-                            if(correspondingSelectElement.value=="Select"){
-                                correspondingCreditsEarned.innerText="N/A";
-                                correspondingGradePoints.innerText="N/A";
-                            }else{
-                                if(correspondingSelectElement.value=='F (w P/F)' || correspondingSelectElement.value=='F (w/o P/F)'){
-                                    correspondingCreditsEarned.innerText="0";
-                                }else{
-                                    correspondingCreditsEarned.innerText=correspondingCreditsRegistered.innerText;
-                                }
-                                const creditsEarned=parseInt(correspondingCreditsEarned.innerText)?parseInt(correspondingCreditsEarned.innerText):0;
-                                correspondingGradePoints.innerText=creditsEarned * gradePointsMap[correspondingSelectElement.value];
-                            }
-                                // Ensure DOM updates (innerText) are complete before proceeding
-                            setTimeout(() => {
-                                // let creditElements = document.getElementsByClassName("creditsEarned " + semesterIndex);
-                                // let gradePointsElements = document.getElementsByClassName("gradePoints " + semesterIndex);
-                                let trElements=document.getElementsByClassName("tr " + semesterIndex);
-                                // console.log(trElements);
-                                var semesterCreditsForGPACalculation = 0;
-                                var semesterGradePointsForGPACalculation = 0;
-                                var semesterCreditsEarned=0;
-
-                                for (let tr of trElements) {
-                                    // Get the 5th, 6th, and 7th td elements (index starts at 0)
-                                    let td5 = tr.children[4]; // 5th td (index 4)
-                                    let td6 = tr.children[3]; // 4rd td (index 3)
-                                    let td7 = tr.children[6]; // 7th td (index 6)
-                                    let tdEarned= tr.children[5]; // 6th td (index 5)
-                                    // Get the innerText values of these td elements
-                                    let grade = td5 ? td5.children[0].value : null;
-                                    let creditsForGPA = td6 ? td6.innerText : null;
-                                    
-                                    if((tdEarned.innerText!="N/A" ||  tdEarned.innerText!="") && !isNaN(parseInt(tdEarned.innerText))){
-                                        semesterCreditsEarned+=parseInt(tdEarned.innerText);
-                                    }
-
-                                    let gradePoints = td7 ? td7.innerText : null;
-                                    let allowedGrades= [
-                                        'A', 'A-', 'B+', 'B', 'B-', 
-                                        'C+', 'C', 'C-', 'D+', 'D', 'D-','F (w/o P/F)'
-                                    ];
-
-                                    // console.log(correspondingSelectElement.value,creditValue)
-                                    if(allowedGrades.includes(grade) && !isNaN(parseInt(creditsForGPA)) && !isNaN(parseFloat(gradePoints))){
-                                        semesterCreditsForGPACalculation += parseInt(creditsForGPA);
-                                        semesterGradePointsForGPACalculation += parseFloat(gradePoints);
-                                    }
-                                }
-                                let gpa=!isNaN(semesterGradePointsForGPACalculation/semesterCreditsForGPACalculation)?semesterGradePointsForGPACalculation/semesterCreditsForGPACalculation:0;
-                                let gpaRounded=Math.round(gpa*100)/100;
-                                document.getElementById("gpa-upcoming "+semesterIndex).innerText="Predicted GPA: "+ gpaRounded;
-                                document.getElementById("creditsEarned-upcoming "+semesterIndex).innerText="Predicted Semester Credits Earned: "+semesterCreditsEarned;
-                                let degreeCgpa=parseFloat('<%= cgpa_data.degreeCGPA %>');
-                                let degreeCreditsUntilNow=parseInt('<%= cgpa_data.totalCredits %>');
-                                let pfCredits=document.getElementById("pfCredits").value;
-                                let gp=degreeCgpa*(degreeCreditsUntilNow-pfCredits);
-                                console.log("gp before: ",gp);
-                                if(parseInt(courseIndex)-1 == parseInt(document.getElementById("currentCourse").value)) {
-                                    [retakeGradePoints, retakeCreditsEarned] = document.getElementById("retakeCourse").value.split(",");
-                                    console.log("retakeGradePoints: ",retakeGradePoints, "currentGradePoints: ",correspondingGradePoints.innerText);
-                                    if(!isNaN(parseFloat(correspondingGradePoints.innerText)) && parseFloat(correspondingGradePoints.innerText) >= parseFloat(retakeGradePoints)){
-                                        gp -= parseFloat(retakeGradePoints);
-                                    }else{
-                                        gp -= parseFloat(correspondingGradePoints.innerText);
-                                    }
-                                    
-                                    degreeCreditsUntilNow -= parseInt(retakeCreditsEarned);
-                                }
-                                console.log("gp after: ",gp+semesterGradePointsForGPACalculation);
-                                let pcgpa=(gp+semesterGradePointsForGPACalculation)/(semesterCreditsForGPACalculation+(degreeCreditsUntilNow-pfCredits))
-                                tempCGPA=pcgpa-semesterGradePointsForGPACalculation;
-                                tempDegreeCreditsUntilNow=semesterCreditsForGPACalculation+(degreeCreditsUntilNow-pfCredits);
-                                
-                                let pcgpaRounded=Math.round(pcgpa*100)/100;
-                                document.getElementById("cgpa-upcoming "+semesterIndex).innerText="PCGPA: "+pcgpaRounded;
-                                document.getElementById("blue-cgpa").innerText="Predicted Degree/Diploma CGPA: "+pcgpaRounded;
-                                document.getElementById("blue-totalCredits").innerText="Predicted Total counted credits: "+(degreeCreditsUntilNow+semesterCreditsEarned);
-                            }, 0);  
-
-                        }
-                    </script> -->
                     <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
                     <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
                     <script src="/platform/assets/js/sidebarmenu.js"></script>
