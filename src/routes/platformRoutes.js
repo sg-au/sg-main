@@ -1084,7 +1084,7 @@ router.post('/sg-rejected', async(req, res) => {
     from: `SG Compose <${process.env.SGMAIL_ID}>`,
     to: req.body.senderEmail,
     subject: "Email to Students Not Approved",
-    text: "Your mail could not be sent to the recipients due to non-compliance with the policy. Kindly reach out to the SG for further clarification by replying to this email.\nReason for rejection: " + rejectReason,
+    text: "Dear Student, \nYour mail could not be sent to the recipients due to non-compliance with the policy. Kindly reach out to the SG for further clarification by replying to this email. \n\nReason for rejection: " + rejectReason +"\n\nSG Compose (feature by Ministry of Technology)",
     replyTo: req.user._json.email,
   };
   delete req.body.rejectReason;
