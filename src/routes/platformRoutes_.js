@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {transporterSG,transporterTECH} = require("../config/nodemailer-config"); // Import the Nodemailer configuration module
+const {transporterSG,transporterTECH} = require("../config/nodemailer-config.js"); // Import the Nodemailer configuration module
 const fs = require('fs');
 const publicTicketCategories = JSON.parse(fs.readFileSync('./data/category-subcategory-map.json', 'utf8'));
 const jsonfile = require('jsonfile')

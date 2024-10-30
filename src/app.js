@@ -9,13 +9,13 @@ const MongoDBStore = require("connect-mongodb-session")(session); // Store sessi
 const cors = require("cors"); // Middleware for handling Cross-Origin Resource Sharing (CORS)
 const passport = require("./config/passport-config"); // Import the Passport configuration module
 dotenv.config({ path: "../.env" }); // Load environment variables from a .env file
-const axios=require("axios");
-const fs = require('fs');
+const axios = require("axios");
+const fs = require("fs");
 
 // Require MongoDB configuration
 const connectToMongoDB = require("./config/mongodb-config.js");
 connectToMongoDB(); // Call the function to connect to MongoDB
-const whitelist = JSON.parse(fs.readFileSync('../whitelist.json'));
+const whitelist = JSON.parse(fs.readFileSync("../whitelist.json"));
 
 // Create a new MongoDBStore instance to store sessions
 const store = new MongoDBStore({
@@ -27,9 +27,9 @@ const store = new MongoDBStore({
 
 const axiosConfig = {
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     // Include authentication headers if required by your Strapi API
-    'Authorization': `Bearer ${process.env.STRAPI_API_KEY}`,
+    Authorization: `Bearer ${process.env.STRAPI_API_KEY}`,
   },
 };
 const apiUrl = process.env.STRAPI_API_URL;
@@ -42,7 +42,7 @@ const threeDays = 3 * 1000 * 60 * 60 * 24; // Define a three-day duration in mil
 
 // Import route handlers for different parts of the application
 const websiteRoutes = require("./routes/websiteRoutes.js");
-const platformRoutes = require("./routes/platformRoutes.js");
+const platformRoutes = require("./routes/platformRoutes");
 const tempRoutes = require("./routes/tempRoutes.js");
 
 // Configure application settings and middleware
@@ -92,11 +92,25 @@ app.use(
   })
 );
 
-var returnTo="/platform";
+var returnTo = "/platform";
 // Use route handlers for website and platform routes
 app.use("/", websiteRoutes);
-app.use("/platform", ensureAuthenticated, putImage, ensureIsStudent, ensureIsNotBlocked, platformRoutes);
-app.use("/temp", ensureAuthenticated, putImage, ensureIsStudent, ensureIsNotBlocked, tempRoutes);
+app.use(
+  "/platform",
+  ensureAuthenticated,
+  putImage,
+  ensureIsStudent,
+  ensureIsNotBlocked,
+  platformRoutes
+);
+app.use(
+  "/temp",
+  ensureAuthenticated,
+  putImage,
+  ensureIsStudent,
+  ensureIsNotBlocked,
+  tempRoutes
+);
 
 // Middleware to ensure the user is authenticated before accessing platform routes
 function ensureAuthenticated(req, res, next) {
@@ -113,16 +127,15 @@ function putImage(req, res, next) {
   if (req.user) {
     // Fetch the user's picture
     const userPicture = req.user._json.picture;
-    res.locals.imageUrl = encodeURI(userPicture);  
-    res.locals.name = req.user._json.name;  
-    res.locals.email = req.user._json.email;  
-    res.locals.HOR_MEMBERS_LIST = process.env.HOR_MEMBERS_LIST;  
-    res.locals.BORROW_POC = process.env.BORROW_POC;  
+    res.locals.imageUrl = encodeURI(userPicture);
+    res.locals.name = req.user._json.name;
+    res.locals.email = req.user._json.email;
+    res.locals.HOR_MEMBERS_LIST = process.env.HOR_MEMBERS_LIST;
+    res.locals.BORROW_POC = process.env.BORROW_POC;
     next();
     // Make the GET request to fetch data
   }
 }
-
 
 // Define a middleware function for ensuring a user is not blocked
 function ensureIsNotBlocked(req, res, next) {
@@ -132,23 +145,26 @@ function ensureIsNotBlocked(req, res, next) {
     const userEmail = req.user._json.email;
 
     // Make the GET request to fetch data
-    axios.get(`${apiUrl}/users?filters[email][$eqi]=${userEmail}`, axiosConfig)
-      .then(response => {
+    axios
+      .get(`${apiUrl}/users?filters[email][$eqi]=${userEmail}`, axiosConfig)
+      .then((response) => {
         // Access the response data
         const responseData = response.data[0];
 
         // Check if the user is blocked
         if (responseData && responseData.blocked) {
           // The user is blocked, so you can take action as needed (e.g., redirect or respond with an error)
-          return res.render("platform/pages/blocked",{reason:responseData.reason_blocked || ""});
+          return res.render("platform/pages/blocked", {
+            reason: responseData.reason_blocked || "",
+          });
         }
 
         // User is not blocked, continue to the next middleware
         next();
       })
-      .catch(error => {
+      .catch((error) => {
         // Handle errors, e.g., network errors or API response errors
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         // Optionally, you can respond with an error here
         res.status(500).send("Internal server error");
       });
@@ -163,10 +179,16 @@ function ensureIsStudent(req, res, next) {
   // Assuming you have a user object or user data available after authentication
   if (req.user) {
     const userEmail = req.user._json.email;
-    if((userEmail && userEmail.includes('_')) || userEmail.includes("ministry") || userEmail.includes("campus.life") ||   whitelist.includes(userEmail) || true){
+    if (
+      (userEmail && userEmail.includes("_")) ||
+      userEmail.includes("ministry") ||
+      userEmail.includes("campus.life") ||
+      whitelist.includes(userEmail) ||
+      true
+    ) {
       next();
-    }else{
-      res.render("platform/pages/not-student")
+    } else {
+      res.render("platform/pages/not-student");
     }
   } else {
     // User is not authenticated, so you may want to handle that case as well
@@ -180,27 +202,38 @@ app.set("view engine", "ejs");
 // Route for initiating Google OAuth authentication
 app.get(
   "/auth/google",
-  passport.authenticate("google", { hd:'ashoka.edu.in',scope: ["profile", "email"] })
+  passport.authenticate("google", {
+    hd: "ashoka.edu.in",
+    scope: ["profile", "email"],
+  })
 );
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   async (req, res) => {
     try {
-      const endpoint = '/users';
+      const endpoint = "/users";
 
       // Function to create a user in the Strapi /users collection
       const createUserInStrapi = async (userData) => {
         try {
-          const response = await axios.post(`${apiUrl}${endpoint}`, userData, axiosConfig);
-          console.log('User created successfully:', response.data);
+          const response = await axios.post(
+            `${apiUrl}${endpoint}`,
+            userData,
+            axiosConfig
+          );
+          console.log("User created successfully:", response.data);
         } catch (error) {
-          console.error('Error creating user:', error);
+          console.error("Error creating user:", error);
         }
       };
       // find the text between the underscore and the @, and capitalise it
-      batch=(req.user._json.email.match(/_(.*?)@/) || [])[1]?.toUpperCase() || "";
-      username=req.user._json.name.length>2?req.user._json.name:req.user._json.name.padStart(3, ' ');
+      batch =
+        (req.user._json.email.match(/_(.*?)@/) || [])[1]?.toUpperCase() || "";
+      username =
+        req.user._json.name.length > 2
+          ? req.user._json.name
+          : req.user._json.name.padStart(3, " ");
       const userData = {
         email: req.user._json.email,
         username: username,
@@ -208,48 +241,60 @@ app.get(
         password: "XXXXXXXXXXX",
         role: 1,
         confirmed: req.user._json.email_verified,
-        batch:batch
+        batch: batch,
       };
 
-
       // Check if a user with the same email exists
-      const response1 = await axios.get(`${apiUrl}${endpoint}?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
-      const response2 = await axios.get(`${apiUrl}${endpoint}?filters[username][$eqi]=${username}`, axiosConfig);
+      const response1 = await axios.get(
+        `${apiUrl}${endpoint}?filters[email][$eqi]=${req.user._json.email}`,
+        axiosConfig
+      );
+      const response2 = await axios.get(
+        `${apiUrl}${endpoint}?filters[username][$eqi]=${username}`,
+        axiosConfig
+      );
       // console.log(req.user._json.email, response)
       if (!response1.data || response1.data.length === 0) {
         // Create a new user if no matching user found
-        if(!response2.data || response2.data.length === 0){
+        if (!response2.data || response2.data.length === 0) {
           await createUserInStrapi(userData);
-        }else{
-          userData.username=userData.username+" "+Math.floor(Math.random() * 100) + 1;
+        } else {
+          userData.username =
+            userData.username + " " + Math.floor(Math.random() * 100) + 1;
           await createUserInStrapi(userData);
         }
       } else {
         //console.log("Updating user...");
 
-
-          try {
-              const response = await axios.get(`${apiUrl}${endpoint}?filters[email][$eqi]=${req.user._json.email}`, axiosConfig);
-              if(response && response.data && response.data.length!=0){
-                const update = response.data[0];
-                update.profile_url = req.user._json.picture // Update the profile_picture field with the Google OAuth picture
-                await axios.put(`${apiUrl}${endpoint}/${response.data[0].id}`, update, axiosConfig);  
-              }
-            } catch (error) {
-              console.error("Error updating user:", error);
+        try {
+          const response = await axios.get(
+            `${apiUrl}${endpoint}?filters[email][$eqi]=${req.user._json.email}`,
+            axiosConfig
+          );
+          if (response && response.data && response.data.length != 0) {
+            const update = response.data[0];
+            update.profile_url = req.user._json.picture; // Update the profile_picture field with the Google OAuth picture
+            await axios.put(
+              `${apiUrl}${endpoint}/${response.data[0].id}`,
+              update,
+              axiosConfig
+            );
           }
+        } catch (error) {
+          console.error("Error updating user:", error);
+        }
       }
 
       res.redirect(returnTo);
     } catch (error) {
-      console.error('An error occurred:', error);
+      console.error("An error occurred:", error);
       res.redirect("/");
     }
   }
 );
 // Route to log the user out
 app.get("/logout", (req, res) => {
-  req.logout(function(err) {
+  req.logout(function (err) {
     if (err) {
       return next(err); // Handle any errors during logout
     }
