@@ -253,6 +253,10 @@
         "name": "SG Website & Platform",
         "subcategories": [
           {
+            "name": "SG Website (Without Ashoka Sign In)",
+            "ministries": ["Technology Ministry"]
+          },
+          {
             "name": "SG Compose",
             "ministries": ["Technology Ministry"]
           },{
