@@ -61,7 +61,7 @@
         ]
       },
       {
-        "name": "Academic",
+        "name": "Academics",
         "subcategories": [
           {
             "name": "Major/Minor declaration",
@@ -84,7 +84,23 @@
             "ministries": ["Ministry of Academic Affairs"]
           },
           {
-            "name": "NEP",
+            "name": "Subject Specific Policies",
+            "ministries": ["Ministry of Academic Affairs"]
+          },
+          {
+            "name": "Project Related Queries",
+            "ministries": ["Ministry of Academic Affairs"]
+          },
+          {
+            "name": "Repository Related Queries",
+            "ministries": ["Ministry of Academic Affairs"]
+          },
+          {
+            "name": "Resources Related Queries",
+            "ministries": ["Ministry of Academic Affairs"]
+          },
+          {
+            "name": "General Academic Policies",
             "ministries": ["Ministry of Academic Affairs"]
           }
         ]
@@ -99,18 +115,207 @@
         ]
       },
       {
-        "name": "Health and Wellness",
+        "name": "Plastic Waste",
         "subcategories": [
           {
-            "name": "Infirmary",
-            "ministries": ["Ministry of Community Well Being"]
+            "name": "Bottles",
+            "ministries": ["Environment Ministry"]
           },
+          {
+            "name": "Other",
+            "ministries": ["Environment Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "Vendor Waste",
+        "subcategories": [
+          {
+            "name": "Fuel Zone",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "GreenNox",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "THC",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "Subway",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "Nescafe",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "Dhaba",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "Dosai",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "Dominoes",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "Food Village",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "Chat 24",
+            "ministries": ["Environment Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "EM Events",
+        "subcategories": [
+          {
+            "name": "Sip and Paint",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "Sports Day",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "Upcoming Events",
+            "ministries": ["Environment Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "Environmental Policy",
+        "subcategories": [
+          {
+            "name": "Sustainability Report Comparison and Analysis",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "Upcoming Recommendations",
+            "ministries": ["Environment Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "EVS Helpdesk",
+        "subcategories": [
+          {
+            "name": "How to Reach Out to Mentors",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "How to Become a Mentor",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "Mentor Requirements",
+            "ministries": ["Environment Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "Collection Drives",
+        "subcategories": [
+          {
+            "name": "Plastic",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "Paper",
+            "ministries": ["Environment Ministry"]
+          },
+          {
+            "name": "E-waste",
+            "ministries": ["Environment Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "Health and Wellness",
+        "subcategories": [
           {
             "name": "ACWB (Ashoka Center for Wellbeing)",
             "ministries": ["Ministry of Community Well Being"]
           },
           {
             "name": "OLS (Office of Learning Support)",
+            "ministries": ["Ministry of Community Well Being"]
+          }
+        ]
+      },
+      {
+        "name": "SG Website & Platform",
+        "subcategories": [
+          {
+            "name": "SG Compose",
+            "ministries": ["Technology Ministry"]
+          },{
+            "name": "Course Reviews",
+            "ministries": ["Technology Ministry"]
+          },{
+            "name": "Semester Planner",
+            "ministries": ["Technology Ministry"]
+          },{
+            "name": "CGPA Planner",
+            "ministries": ["Technology Ministry"]
+          }, {
+            "name": "Pool Cab",
+            "ministries": ["Technology Ministry"]
+          },{
+            "name": "Pool Subscription",
+            "ministries": ["Technology Ministry"]
+          },{
+            "name": "Borrow Assets",
+            "ministries": ["Technology Ministry"]
+          },{
+            "name": "Intercollegiate Events",
+            "ministries": ["Technology Ministry"]
+          },{
+            "name": "Resources",
+            "ministries": ["Technology Ministry"]
+          },{
+            "name": "Public Ticketing System",
+            "ministries": ["Technology Ministry"]
+          },{
+            "name": "Public Forum",
+            "ministries": ["Technology Ministry"]
+          },{
+            "name": "Office Hours",
+            "ministries": ["Technology Ministry"]
+          },{
+            "name": "Announcements",
+            "ministries": ["Technology Ministry"]
+          },{
+            "name": "Other",
+            "ministries": ["Technology Ministry"]
+          }
+        ]
+      },
+      {
+        "name": "Infirmary",
+        "subcategories": [
+          {
+            "name": "Medication",
+            "ministries": ["Ministry of Community Well Being"]
+          },
+          {
+            "name": "Ambulance",
+            "ministries": ["Ministry of Community Well Being"]
+          }
+          ,
+          {
+            "name": "Ppadcare Bins",
+            "ministries": ["Ministry of Community Well Being"]
+          }
+          ,
+          {
+            "name": "Pad Vending Machines",
             "ministries": ["Ministry of Community Well Being"]
           }
         ]
@@ -140,7 +345,7 @@
           },
           {
             "name": "WiFi",
-            "ministries": ["Technology Ministry", "Campus Life Ministry"]
+            "ministries": ["Technology Ministry"]
           }
         ]
       },
