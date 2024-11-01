@@ -12,25 +12,9 @@
     href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+  <link rel="stylesheet" href="/platform/assets/css/grade-planner.css" />
 </head>
 <%-include("../partials/post-head")%>
-
-<style>
-    .card {
-        margin-bottom: 10px;
-    }
-    .accordion-button{
-        background-color: #EAEFF4;
-    }
-    .accordion-button:not(.collapsed){
-        color: #fff;
-        background-color: #4a6ccc;
-    }
-    .accordion-button:not(.collapsed)::after{
-        background-image: url(
-  "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-    }
-</style>
 
 <body>
   <!--  Body Wrapper -->
@@ -51,7 +35,7 @@
                                     <!-- Course cards will be dynamically inserted here by JavaScript -->
                                 </div>
                         
-                                <button class="btn btn-primary mt-3" onclick="addNewCourse()">+ Add Course</button>
+                                <button class="btn btn-primary mt-3 mb-5" onclick="addNewCourse()">+ Add Course</button>
                         </div>
                     </div>
             </div>
