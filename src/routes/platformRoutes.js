@@ -1252,6 +1252,10 @@ router.get('/semester-planner', async(req, res) => {
   res.render("platform/pages/semester-planner",{courses:arr,obj:obj});  
 });
 
+router.get('/mail-spam-filter', async(req, res) => {
+  res.render("platform/pages/mail-spam-filter");
+});
+
 router.get('/cancel-cab-pool', async(req, res) => {
   userEmail=req.user._json.email;
   // var pool = (await axios.get(`${apiUrl}/pools?[pooler][email]=${userEmail}&filters[status][$eqi]=available`, axiosConfig));
