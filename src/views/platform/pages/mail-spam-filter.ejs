@@ -18,6 +18,16 @@
 <%- include("../partials/post-head") %>
 
 <body>
+<style>
+    .grey-bg{ 
+        background-color:rgb(234,239,243);
+        padding: 30px;
+        border-radius: 10px;
+    }
+    .form-check-input{
+        background-color: white;
+    }
+</style>
 <%- include("../partials/preloader") %>
 <!-- Body Wrapper -->
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -32,10 +42,21 @@
                 <div class="card">
                     <div class="card-body">
                         <h2 class="card-title text-center mb-4">Mail Spam Filter</h2>
+                        <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                            This is designed to help you declutter your gmail. Once you've entered your preferences, 
+                            click 'Download File'. Now, navigate to your gmail. Go to 'Filters and Blocked Addresses' 
+                            under settings. Then, select import filters, and choose the file you downloaded. 
+                            Click 'create filters', and your gmail will be configured within a few minutes
+                            (If you do not find your required email ID in the search bar, you can enter it yourself – it works the same).
+                            Don't worry, it's not as complicated as it sounds! <br>
+                        </p>  
                         <form id="mailSpamFilterForm">
                             <!-- Categories Section -->
-                            <div class="mb-4">
+                            <div class="mb-4 grey-bg">
                                 <h5>Categories</h5>
+                                <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                    Select categories that you wish to see as separate labels. For example, selecting 'Clubs' will create a label called 'Clubs' which contains all emails from Clubs at Ashoka only. <br>
+                                </p>  
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" id="clubs" name="categories" value="Clubs">
                                     <label class="form-check-label" for="clubs">Clubs</label>
@@ -64,11 +85,14 @@
 
 
                             <!-- Skip Primary Inbox Section -->
-                            <div class="mb-4">
+                            <div class="mb-4 grey-bg">
                               <h5>Skip Primary Inbox</h5>
+                              <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                Select email ID's that you do not want in your Primary Inbox. These will be visible under 'All Mail'. <br>
+                              </p>  
                               <div class="input-group">
                                   <input list="emailsList" id="skipPrimaryInbox" class="form-control" placeholder="Search and select emails..." />
-                                  <button type="button" class="btn btn-outline-secondary" id="addEmailSkipBtn">+</button>
+                                  <button type="button" class="btn btn-outline-primary" id="addEmailSkipBtn">+</button>
                               </div>
                               <datalist id="emailsList">
                                   <!-- Options will be populated by JavaScript -->
@@ -79,20 +103,23 @@
 
 
                             <!-- Custom Labels Section -->
-                            <div class="mb-4">
+                            <div class="mb-4 grey-bg">
                                 <h5>Custom Labels</h5>
+                                <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                    You can create your custom labels. Click Add Label for more information. <br>
+                                </p>  
                                 <button type="button" class="btn btn-primary mb-2" id="addLabelModalBtn" data-bs-toggle="modal" data-bs-target="#addLabelModal">Add Label</button>
                                 <div id="customLabels"></div>
                             </div>
 
                             <!-- Download Button -->
                             <div class="text-center">
-                                <button type="button" class="btn btn-success" id="downloadXmlBtn">Download XML</button>
+                                <button type="button" class="btn btn-success" id="downloadXmlBtn">Download File</button>
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> 
         </div>
 
         <!-- Add Label Modal -->
@@ -100,20 +127,23 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addLabelModalLabel">Add Custom Label</h5>
+                        <h5 class="modal-title" id="addLabelModalLabel">Add Custom Label</h5> 
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="newLabelForm">
                             <div class="mb-3">
                                 <label for="labelName" class="form-label">Label Name</label>
-                                <input type="text" class="form-control" id="labelName" required>
+                                <input type="text" class="form-control" id="labelName" placeholder="This is the name of the new category of emails you are creating." required>
                             </div>
                             <div class="mb-3">
                                 <label for="labelEmails" class="form-label">Email(s)</label>
+                                <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                    Select any email IDs whose emails you wish to see under this category. For example, if I'm making a label for History, I can add my History professors, the History representatives and the History society.
+                                </p> 
                                 <div class="input-group">
                                   <input list="labelsList" id="labelEmails" class="form-control" placeholder="Search and select emails..." />
-                                  <button type="button" class="btn btn-outline-secondary" id="addLabelBtn">+</button>
+                                  <button type="button" class="btn btn-outline-primary" id="addLabelBtn">+</button>
                                 </div>
                                 <datalist id="labelsList">
                                   <!-- Options will be populated by JavaScript -->
@@ -122,9 +152,12 @@
                             </div>
                             <div class="mb-3">
                                 <label for="labelKeywords" class="form-label">Keywords</label>
+                                <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                    Emails containing any of the words entered below will be categorised under this label. 
+                                </p> 
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="labelKeywords" placeholder="Add keywords...">
-                                    <button type="button" class="btn btn-outline-secondary" id="addKeywordBtn">+</button>
+                                    <button type="button" class="btn btn-outline-primary" id="addKeywordBtn">+</button>
                                 </div>
                                 <div id="selectedKeywords" class="mt-2"></div>
                             </div>
@@ -832,6 +865,23 @@
                 });
             });
 
+            // Trigger displaying email in 'Skip Primary Inbox' when pressing "Enter"
+            document.getElementById("skipPrimaryInbox").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();  // Prevent form submission
+                    document.getElementById("addEmailSkipBtn").click();
+                }
+            });
+
+            // Trigger displaying email in 'Custom Labels' when pressing "Enter"
+            document.getElementById("labelEmails").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();  // Prevent form submission
+                    document.getElementById("addLabelBtn").click();
+                }
+            });
+
+
             // Handle adding selected email to the list
             document.getElementById("addEmailSkipBtn").addEventListener("click", function() {
                 const emailInput = document.getElementById("skipPrimaryInbox");
@@ -881,41 +931,67 @@
             // Handle Save Label Button
             $('#saveLabelBtn').on('click', function () {
 
-              // Get values from input fields
-              var labelName = $('#labelName').val();
+            // Get values from input fields
+            var labelName = $('#labelName').val();
 
-              // Remove the 'x' and split emails into an array
-              var emailsText = $('#selectedLabels').text();
-              var emailsArray = emailsText.replace(/ ×/g, ',').split(',');
-              var emailValues = emailsArray.join(', ');
-              emailsArray = emailsArray.slice(0, -1);
+            // Remove the 'x' and split emails into an array
+            var emailsText = $('#selectedLabels').text();
+            var emailsArray = emailsText.replace(/ ×/g, ',').split(',');
+            var emailValues = emailsArray.join(', ');
+            emailsArray = emailsArray.slice(0, -1);
 
-              // Remove the 'x' and split keywords into an array
-              var keywordsText = $('#selectedKeywords').text();
-              var keywordsArray = keywordsText.replace(/ ×/g, ',').split(',');
-              keywordsArray = keywordsArray.slice(0, -1);
+            // Remove the 'x' and split keywords into an array
+            var keywordsText = $('#selectedKeywords').text();
+            var keywordsArray = keywordsText.replace(/ ×/g, ',').split(',');
+            keywordsArray = keywordsArray.slice(0, -1);
 
-              customLabels.push({name: labelName, keywords: keywordsArray, emails: emailsArray});
-              console.log(customLabels);
+            // Check if label name is empty or both email and keyword inputs are empty
+            if (labelName === '' || (emailsArray.length === 0 && keywordsArray.length === 0)) {
+                alert("Cannot create an empty label.");
+                return;  // Prevent further execution of the function
+            }
 
+            // Add custom label data to the array
+            customLabels.push({name: labelName, keywords: keywordsArray, emails: emailsArray});
+            console.log(customLabels);
 
-              // Create the label HTML with cleaned data
-              var labelHtml = '<div class="alert alert-info mt-2">Label Name:&nbsp;' + labelName + 
-                              '<br />Emails: ' + emailValues + 
-                              '<br />Keywords: ' + keywordsArray.join(',') + '</div>';
+            // Create the label HTML with cleaned data
+            var labelHtml = '<div class="alert alert-info mt-2">Label Name:&nbsp;' + labelName + 
+                            '<br />Emails: ' + emailValues + 
+                            '<br />Keywords: ' + keywordsArray.join(',') + '</div>';
 
-              // Append the label to the customLabels div
-              $('#customLabels').append(labelHtml);
+            // Append the label to the customLabels div
+            $('#customLabels').append(labelHtml);
 
-              // Hide the modal
-              $('#addLabelModal').modal('hide');
+            // Hide the modal
+            $('#addLabelModal').modal('hide');
 
-              // Clear all inputs in the modal
-              $('#labelName').val('');
-              $('#selectedLabels').text('');
-              $('#selectedKeywords').text('');
+            // Clear all inputs in the modal
+            $('#labelName').val('');
+            $('#selectedLabels').text('');
+            $('#selectedKeywords').text('');
 
             });
+
+            // Disable Save Button initially
+            $('#saveLabelBtn').prop('disabled', true);
+
+            // Monitor input changes and enable/disable button accordingly
+            $('#labelName, #selectedLabels, #selectedKeywords').on('input', function () {
+                var labelName = $('#labelName').val();
+                var emailsText = $('#selectedLabels').text();
+                var emailsArray = emailsText.replace(/ ×/g, ',').split(',');
+                var keywordsText = $('#selectedKeywords').text();
+                var keywordsArray = keywordsText.replace(/ ×/g, ',').split(',');
+
+                // Enable Save Button if inputs are valid
+                if (labelName !== '' && (emailsArray.length > 0 || keywordsArray.length > 0)) {
+                    $('#saveLabelBtn').prop('disabled', false);
+                } else {
+                    $('#saveLabelBtn').prop('disabled', true);
+                }
+            });
+
 
             // Function to collect data and generate XML
             function generateAndDownloadXML() {
@@ -984,9 +1060,31 @@
                 URL.revokeObjectURL(url);  // Clean up the URL object
             }
 
-            // Trigger the XML generation and download on button click
-            document.getElementById('downloadXmlBtn').addEventListener('click', generateAndDownloadXML);
+                // Enable/disable Download button based on input fields
+                function toggleDownloadButton() {
+                    const isAnyFieldFilled = 
+                        document.querySelectorAll('#selectedEmails .selected-email').length > 0 || 
+                        customLabels.length > 0 || 
+                        clubsCheckbox.checked || 
+                        societiesCheckbox.checked || 
+                        departmentsCheckbox.checked || 
+                        officesCheckbox.checked || 
+                        googleClassroomCheckbox.checked || 
+                        sharedFilesCheckbox.checked;
 
+                    document.getElementById('downloadXmlBtn').disabled = !isAnyFieldFilled;
+            }
+
+                // Attach the toggleDownloadButton function to each input element
+                document.querySelectorAll('input[type="checkbox"], #skipPrimaryInbox, #labelEmails, #labelKeywords').forEach(element => {
+                    element.addEventListener('change', toggleDownloadButton);
+                });
+                document.getElementById("addEmailSkipBtn").addEventListener("click", toggleDownloadButton);
+                document.getElementById("addLabelBtn").addEventListener("click", toggleDownloadButton);
+                document.getElementById("saveLabelBtn").addEventListener("click", toggleDownloadButton);
+
+                // Initial call to set the button's state on page load
+                toggleDownloadButton();
 
         </script>
     </div>
