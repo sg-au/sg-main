@@ -2,38 +2,995 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SG Platform</title>
-  <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
-  <link rel="stylesheet" href="/platform/assets/css/styles.css" />
-  <%-include("../partials/preloader-css")%>
-</head>
-<%-include("../partials/post-head")%>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SG Platform - Mail Spam Filter</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <%- include("../partials/preloader-css") %>
+    <!-- Add this in the <head> for select2 styles -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
+    <!-- Add this just before your custom script -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+<%- include("../partials/post-head") %>
 
 <body>
-  <%-include("../partials/preloader")%>
-  <!--  Body Wrapper -->
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+<%- include("../partials/preloader") %>
+<!-- Body Wrapper -->
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
-    <%-include("../partials/sidebar")%>
-    <!--  Main wrapper -->
+    <%- include("../partials/sidebar") %>
+    <!-- Main wrapper -->
     <div class="body-wrapper">
-      <%-include("../partials/header")%>
+        <%- include("../partials/header") %>
         
-      
+        <div class="container-fluid">
+            <div class="container-fluid" style="padding-top: 40px;">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4">Mail Spam Filter</h2>
+                        <form id="mailSpamFilterForm">
+                            <!-- Categories Section -->
+                            <div class="mb-4">
+                                <h5>Categories</h5>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="clubs" name="categories" value="Clubs">
+                                    <label class="form-check-label" for="clubs">Clubs</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="societies" name="categories" value="Societies">
+                                    <label class="form-check-label" for="societies">Societies</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="departments" name="categories" value="Departments">
+                                    <label class="form-check-label" for="departments">Departments</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="offices" name="categories" value="Offices">
+                                    <label class="form-check-label" for="offices">Offices</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="googleClassroom" name="categories" value="Google Classroom">
+                                    <label class="form-check-label" for="googleClassroom">Google Classroom</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="sharedFiles" name="categories" value="Shared Files">
+                                    <label class="form-check-label" for="sharedFiles">Shared Files</label>
+                                </div>
+                            </div>
 
-    
+
+                            <!-- Skip Primary Inbox Section -->
+                            <div class="mb-4">
+                              <h5>Skip Primary Inbox</h5>
+                              <div class="input-group">
+                                  <input list="emailsList" id="skipPrimaryInbox" class="form-control" placeholder="Search and select emails..." />
+                                  <button type="button" class="btn btn-outline-secondary" id="addEmailSkipBtn">+</button>
+                              </div>
+                              <datalist id="emailsList">
+                                  <!-- Options will be populated by JavaScript -->
+                              </datalist>
+                              <div id="selectedEmails" class="mt-2"></div>
+                            </div>
+
+
+
+                            <!-- Custom Labels Section -->
+                            <div class="mb-4">
+                                <h5>Custom Labels</h5>
+                                <button type="button" class="btn btn-primary mb-2" id="addLabelModalBtn" data-bs-toggle="modal" data-bs-target="#addLabelModal">Add Label</button>
+                                <div id="customLabels"></div>
+                            </div>
+
+                            <!-- Download Button -->
+                            <div class="text-center">
+                                <button type="button" class="btn btn-success" id="downloadXmlBtn">Download XML</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Label Modal -->
+        <div class="modal fade" id="addLabelModal" tabindex="-1" aria-labelledby="addLabelModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addLabelModalLabel">Add Custom Label</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="newLabelForm">
+                            <div class="mb-3">
+                                <label for="labelName" class="form-label">Label Name</label>
+                                <input type="text" class="form-control" id="labelName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="labelEmails" class="form-label">Email(s)</label>
+                                <div class="input-group">
+                                  <input list="labelsList" id="labelEmails" class="form-control" placeholder="Search and select emails..." />
+                                  <button type="button" class="btn btn-outline-secondary" id="addLabelBtn">+</button>
+                                </div>
+                                <datalist id="labelsList">
+                                  <!-- Options will be populated by JavaScript -->
+                              </datalist>
+                              <div id="selectedLabels" class="mt-2"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="labelKeywords" class="form-label">Keywords</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="labelKeywords" placeholder="Add keywords...">
+                                    <button type="button" class="btn btn-outline-secondary" id="addKeywordBtn">+</button>
+                                </div>
+                                <div id="selectedKeywords" class="mt-2"></div>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="saveLabelBtn">Save Label</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include("../partials/preloader-js") %>
+        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <script>
+            const clubsCheckbox = document.getElementById('clubs');
+            const societiesCheckbox = document.getElementById('societies');
+            const departmentsCheckbox = document.getElementById('departments');
+            const officesCheckbox = document.getElementById('offices');
+            const googleClassroomCheckbox = document.getElementById('googleClassroom');
+            const sharedFilesCheckbox = document.getElementById('sharedFiles');
+            var customLabels = []
+            var emails_json = [
+              {
+                  "Unnamed: 0": 0,
+                  "Name_df": " Anime Club",
+                  "Email": "anime@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 2,
+                  "Name_df": "Art and Design Collective",
+                  "Email": "adc@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 3,
+                  "Name_df": "Ashoka Business Club",
+                  "Email": "businessclub@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 4,
+                  "Name_df": "Ashoka Consulting  Club",
+                  "Email": "consulting@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 5,
+                  "Name_df": "Ashoka Debating Union",
+                  "Email": "debating@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 6,
+                  "Name_df": "Ashoka Investments Club",
+                  "Email": "investmentsclub@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 7,
+                  "Name_df": "Ashoka MUN Club",
+                  "Email": "ashoka.mun@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 8,
+                  "Name_df": "Ashoka Marketing Club",
+                  "Email": "marketingclub@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 9,
+                  "Name_df": "Ashoka University International Students Association (AUISA)",
+                  "Email": "newsletter@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 10,
+                  "Name_df": "Ashoka University International Students Association (AUISA)",
+                  "Email": "no-reply@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 11,
+                  "Name_df": "Ashoka University International Students Association (AUISA)",
+                  "Email": "systems@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 12,
+                  "Name_df": "Ashoka University Queer Collective (AUQC )",
+                  "Email": "newsletter@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 13,
+                  "Name_df": "Ashoka University Queer Collective (AUQC )",
+                  "Email": "no-reply@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 14,
+                  "Name_df": "Ashoka University Queer Collective (AUQC )",
+                  "Email": "systems@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 15,
+                  "Name_df": "Ashoka University Society for Sustainable Development Goals",
+                  "Email": "newsletter@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 16,
+                  "Name_df": "Ashoka University Society for Sustainable Development Goals",
+                  "Email": "no-reply@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 17,
+                  "Name_df": "Ashoka University Society for Sustainable Development Goals",
+                  "Email": "systems@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 18,
+                  "Name_df": "Ashoka Women in Business and Leadership",
+                  "Email": "awibnl@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 19,
+                  "Name_df": "Caperture: The Photography Society",
+                  "Email": "caperture@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 21,
+                  "Name_df": "Cycling Club",
+                  "Email": "ashokacyclingclub@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 27,
+                  "Name_df": "Her Campus Ashoka",
+                  "Email": "hcashoka@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 34,
+                  "Name_df": "Navrang",
+                  "Email": "filmsoc@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 35,
+                  "Name_df": "Neev: The Community Engagement Club",
+                  "Email": "neev@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 36,
+                  "Name_df": "Orators' Club",
+                  "Email": "orators@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 39,
+                  "Name_df": "Red Brick Words",
+                  "Email": "poetry@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 40,
+                  "Name_df": "Rotaract Club",
+                  "Email": "rotaract@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 41,
+                  "Name_df": "Ruhi",
+                  "Email": "ruhi@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 43,
+                  "Name_df": "Sports Enthusiast Club",
+                  "Email": "sec@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 45,
+                  "Name_df": "The Comic Relief",
+                  "Email": "thecomicrelief@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 46,
+                  "Name_df": "The Feminist Collective",
+                  "Email": "feministcollective@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 47,
+                  "Name_df": "The Green Room",
+                  "Email": "theatresociety@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 48,
+                  "Name_df": "The Northeast Collective",
+                  "Email": "northeastcollective@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 49,
+                  "Name_df": "Vistaar",
+                  "Email": "vistaar@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 50,
+                  "Name_df": "Ashoka Tech Consulting Club",
+                  "Email": "consulting@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 51,
+                  "Name_df": "Ashoka Fintech Club",
+                  "Email": "ashoka.mun@ashoka.edu.in",
+                  "Type": "Club"
+              },
+              {
+                  "Unnamed: 0": 53,
+                  "Name_df": "Ashoka Data Society (ADS) ",
+                  "Email": "ads@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 54,
+                  "Name_df": "Epigraph: The Literary society",
+                  "Email": "litsoc@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 55,
+                  "Name_df": "PhySoc",
+                  "Email": "philsoc@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 56,
+                  "Name_df": "Philosophy Society",
+                  "Email": "philsoc@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 57,
+                  "Name_df": "Psychology Society ",
+                  "Email": "psychology.society@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 58,
+                  "Name_df": "Ashoka University Economics Society",
+                  "Email": "econsoc@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 59,
+                  "Name_df": "Ashoka Society for India Studies",
+                  "Email": "asis@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 60,
+                  "Name_df": "Women in Computing Society (WiCS)",
+                  "Email": "wics@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 61,
+                  "Name_df": "Ashoka Political Science Society ",
+                  "Email": "polsoc@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 62,
+                  "Name_df": "The Computer Science Society (CS Soc)",
+                  "Email": "cs.society@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 63,
+                  "Name_df": "Ashoka Public Policy Society (APPS)",
+                  "Email": "publicpolsoc@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 64,
+                  "Name_df": "IEEE Ashoka Student Branch",
+                  "Email": "ieee.asb@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 65,
+                  "Name_df": "War Studies Society ",
+                  "Email": "warsoc@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 66,
+                  "Name_df": "Astronomy Society",
+                  "Email": "astronomysociety@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 67,
+                  "Name_df": "Ashoka Law Society ",
+                  "Email": "law@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 68,
+                  "Name_df": "AMFACS",
+                  "Email": "amfacs@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 69,
+                  "Name_df": "Mathematics Society",
+                  "Email": "math.society@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 70,
+                  "Name_df": "Biology Society ",
+                  "Email": "biosoc@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 71,
+                  "Name_df": "Ashoka Society for International Trade and Foreign Policy (ASITFP)",
+                  "Email": "asitfp@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 72,
+                  "Name_df": "Ashoka Women In Finance Society",
+                  "Email": "womeninfinance@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 73,
+                  "Name_df": "The Ashoka Journal of Biosciences",
+                  "Email": "biojournal@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 74,
+                  "Name_df": "Ashoka Climate Change and Environmental Studies Society (ACCESS)",
+                  "Email": "evs.soc@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 75,
+                  "Name_df": "Chemistry Society",
+                  "Email": "chemsoc@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 76,
+                  "Name_df": "Untitled: The Visual Arts Society",
+                  "Email": "untitled.visualarts@ashoka.edu.in",
+                  "Type": "Society"
+              },
+              {
+                  "Unnamed: 0": 77,
+                  "Name_df": "Physics",
+                  "Email": "physics.dept@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 78,
+                  "Name_df": "Chemistry",
+                  "Email": "chem.rep@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 79,
+                  "Name_df": "Biology",
+                  "Email": "biology@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 80,
+                  "Name_df": "History",
+                  "Email": "historyrepresentatives@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 81,
+                  "Name_df": "IR",
+                  "Email": "ir.rep@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 83,
+                  "Name_df": "Entrepreneurship",
+                  "Email": "eclub@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 84,
+                  "Name_df": "English",
+                  "Email": "englishandcreativewriting@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 85,
+                  "Name_df": "Media Studies",
+                  "Email": "media.studies@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 86,
+                  "Name_df": "CW",
+                  "Email": "creativewriting.rep@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 87,
+                  "Name_df": "Economics",
+                  "Email": "econsoc@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 89,
+                  "Name_df": "Computer Science",
+                  "Email": "cs.society@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 90,
+                  "Name_df": "Philosophy",
+                  "Email": "philsoc@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 91,
+                  "Name_df": "PPE",
+                  "Email": "ppe.rep@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 92,
+                  "Name_df": "Mathematics",
+                  "Email": "math.society@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 93,
+                  "Name_df": "Psychology",
+                  "Email": "psychology.society@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 94,
+                  "Name_df": "EVS",
+                  "Email": "evs.rep@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 97,
+                  "Name_df": "China Studies",
+                  "Email": "chinastudies@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 99,
+                  "Name_df": "Visual Arts",
+                  "Email": "untitled.visualarts@ashoka.edu.in",
+                  "Type": "Department"
+              },
+              {
+                  "Unnamed: 0": 100,
+                  "Name_df": "Physics",
+                  "Email": "physics.dept@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 101,
+                  "Name_df": "Chemistry",
+                  "Email": "chem.rep@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 102,
+                  "Name_df": "Biology",
+                  "Email": "biology@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 103,
+                  "Name_df": "History",
+                  "Email": "historyrepresentatives@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 105,
+                  "Name_df": "IR",
+                  "Email": "ir.rep@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 107,
+                  "Name_df": "Entrepreneurship",
+                  "Email": "eclub@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 108,
+                  "Name_df": "English",
+                  "Email": "englishandcreativewriting@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 109,
+                  "Name_df": "Media Studies",
+                  "Email": "media.studies@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 110,
+                  "Name_df": "CW",
+                  "Email": "creativewriting.rep@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 111,
+                  "Name_df": "Economics",
+                  "Email": "econsoc@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 114,
+                  "Name_df": "Computer Science",
+                  "Email": "cs.society@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 115,
+                  "Name_df": "Philosophy",
+                  "Email": "philsoc@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 116,
+                  "Name_df": "PPE",
+                  "Email": "ppe.rep@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 117,
+                  "Name_df": "Mathematics",
+                  "Email": "math.society@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 118,
+                  "Name_df": "Psychology",
+                  "Email": "psychology.society@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 119,
+                  "Name_df": "EVS",
+                  "Email": "evs.rep@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 122,
+                  "Name_df": "China Studies",
+                  "Email": "chinastudies@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 124,
+                  "Name_df": "Visual Arts",
+                  "Email": "untitled.visualarts@ashoka.edu.in",
+                  "Type": "Department Representatives"
+              },
+              {
+                  "Unnamed: 0": 125,
+                  "Name_df": "Centre for Studies in Gender and Sexuality",
+                  "Email": "csgs@ashoka.edu.in",
+                  "Type": "Centres"
+              },
+              {
+                  "Unnamed: 0": 126,
+                  "Name_df": "Center for Entrepreneurship",
+                  "Email": "eclub@ashoka.edu.in",
+                  "Type": "Centres"
+              },
+              {
+                  "Unnamed: 0": 129,
+                  "Name_df": "Office of Post Graduate Studies",
+                  "Email": "connect.postgraduate@ashoka.edu.in",
+                  "Type": "Offices"
+              },
+              {
+                  "Unnamed: 0": 130,
+                  "Name_df": "Office of Learning Support",
+                  "Email": "ols@ashoka.edu.in",
+                  "Type": "Offices"
+              },
+              {
+                  "Unnamed: 0": 131,
+                  "Name_df": "Career Development Office",
+                  "Email": "cdo@ashoka.edu.in",
+                  "Type": "Offices"
+              },
+              {
+                  "Unnamed: 0": 132,
+                  "Name_df": "Dining Ashoka",
+                  "Email": "dining@ashoka.edu.in",
+                  "Type": "Offices"
+              },
+              {
+                  "Unnamed: 0": 133,
+                  "Name_df": "IT Helpdesk",
+                  "Email": "philhelpdesk@ashoka.edu.in",
+                  "Type": "Offices"
+              },
+              {
+                  "Unnamed: 0": 142,
+                  "Name_df": "Cultural Ministry",
+                  "Email": "culturalministry@ashoka.edu.in",
+                  "Type": "Student Government"
+              },
+              {
+                  "Unnamed: 0": 143,
+                  "Name_df": "Ministry of Technology",
+                  "Email": "technology.ministry@ashoka.edu.in",
+                  "Type": "Student Government"
+              },
+              {
+                  "Unnamed: 0": 144,
+                  "Name_df": "Ministry of Community & Well Being",
+                  "Email": "well.being@ashoka.edu.in",
+                  "Type": "Student Government"
+              },
+              {
+                  "Unnamed: 0": 145,
+                  "Name_df": "Ministry of Academic Affairs",
+                  "Email": "academicaffairs.ministry@ashoka.edu.in",
+                  "Type": "Student Government"
+              },
+              {
+                  "Unnamed: 0": 146,
+                  "Name_df": "Sports Ministry",
+                  "Email": "sports.ministry@ashoka.edu.in",
+                  "Type": "Student Government"
+              },
+              {
+                  "Unnamed: 0": 147,
+                  "Name_df": "Campus Life Ministry",
+                  "Email": "campus.life@ashoka.edu.in",
+                  "Type": "Student Government"
+              },
+              {
+                  "Unnamed: 0": 148,
+                  "Name_df": "Environment Ministry",
+                  "Email": "environmentministry@ashoka.edu.in",
+                  "Type": "Student Government"
+              },
+              {
+                  "Unnamed: 0": 149,
+                  "Name_df": "Student Government",
+                  "Email": "sg@ashoka.edu.in",
+                  "Type": "Student Government"
+              }
+            ]
+
+            // Populate the datalist with emails
+            document.addEventListener("DOMContentLoaded", function() {
+                const datalist = document.getElementById("emailsList");
+                emails_json.forEach(emailObj => {
+                    const email = emailObj.Email;
+                    const option = document.createElement("option");
+                    option.value = email;
+                    datalist.appendChild(option);
+                });
+            });
+
+            document.addEventListener("DOMContentLoaded", function() {
+                const datalist = document.getElementById("labelsList");
+                emails_json.forEach(emailObj => {
+                    const email = emailObj.Email;
+                    const option = document.createElement("option");
+                    option.value = email;
+                    datalist.appendChild(option);
+                });
+            });
+
+            // Handle adding selected email to the list
+            document.getElementById("addEmailSkipBtn").addEventListener("click", function() {
+                const emailInput = document.getElementById("skipPrimaryInbox");
+                const email = emailInput.value;
+                if (email) {
+                    document.getElementById("selectedEmails").insertAdjacentHTML(
+                        "beforeend",
+                        `<span class="badge bg-primary me-2 selected-email">${email} <span class="close" onclick="removeItem(this)">&times;</span></span>`
+                    );
+                    emailInput.value = ""; // Clear input after selection
+                }
+            });
+
+            // Handle adding selected email to the list
+            document.getElementById("addLabelBtn").addEventListener("click", function() {
+                const emailInput = document.getElementById("labelEmails");
+                const email = emailInput.value;
+                
+                if (email) {
+                    document.getElementById("selectedLabels").insertAdjacentHTML(
+                        "beforeend",
+                        `<span class="badge bg-primary me-2 selected-email">${email} <span class="close" onclick="removeItem(this)">&times;</span></span>`
+                    );
+                    emailInput.value = ""; // Clear input after selection
+                }
+            });
+
+            // Function to remove an email from the selected list
+            function removeItem(element) {
+                element.parentNode.remove();
+            }
+
+            // Handle Custom Label Keywords Selection
+            $('#addKeywordBtn').on('click', function () {
+                var keyword = $('#labelKeywords').val();
+                if (keyword) {
+                    $('#selectedKeywords').append('<span class="badge bg-primary me-2 selected-keyword">' + keyword + ' <span class="close" onclick="removeItem(this)">&times;</span></span>');
+                    $('#labelKeywords').val('');
+                }
+            });
+
+            // Remove item from selection (email/keyword)
+            function removeItem(element) {
+                $(element).parent().remove();
+            }
+
+            // Handle Save Label Button
+            $('#saveLabelBtn').on('click', function () {
+
+              // Get values from input fields
+              var labelName = $('#labelName').val();
+
+              // Remove the 'x' and split emails into an array
+              var emailsText = $('#selectedLabels').text();
+              var emailsArray = emailsText.replace(/ ×/g, ',').split(',');
+              var emailValues = emailsArray.join(', ');
+              emailsArray = emailsArray.slice(0, -1);
+
+              // Remove the 'x' and split keywords into an array
+              var keywordsText = $('#selectedKeywords').text();
+              var keywordsArray = keywordsText.replace(/ ×/g, ',').split(',');
+              keywordsArray = keywordsArray.slice(0, -1);
+
+              customLabels.push({name: labelName, keywords: keywordsArray, emails: emailsArray});
+              console.log(customLabels);
+
+
+              // Create the label HTML with cleaned data
+              var labelHtml = '<div class="alert alert-info mt-2">Label Name:&nbsp;' + labelName + 
+                              '<br />Emails: ' + emailValues + 
+                              '<br />Keywords: ' + keywordsArray.join(',') + '</div>';
+
+              // Append the label to the customLabels div
+              $('#customLabels').append(labelHtml);
+
+              // Hide the modal
+              $('#addLabelModal').modal('hide');
+
+              // Clear all inputs in the modal
+              $('#labelName').val('');
+              $('#selectedLabels').text('');
+              $('#selectedKeywords').text('');
+
+            });
+
+            // Function to collect data and generate XML
+            function generateAndDownloadXML() {
+                
+              
+
+                // Collect skipped emails
+                const skippedEmails = Array.from(document.querySelectorAll('#selectedEmails .selected-email')).map(el => el.textContent.trim());                
+
+                // Generate XML content
+                let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<feed xmlns="http://www.w3.org/2005/Atom" xmlns:apps="http://schemas.google.com/apps/2006">\n';
+
+                // Add XML entries for skipped emails
+                skippedEmails.forEach(email => {
+                    xmlContent += `  <entry>\n    <category term="filter"/>\n    <title>Mail Filter</title>\n    <apps:property name="from" value="${email}"/>\n    <apps:property name="label" value="Spam"/>\n    <apps:property name="shouldArchive" value="true"/>\n  </entry>\n`;
+                });
+
+                // Add XML entries for custom labels
+                customLabels.forEach(label => {
+                    // Create filters for each email associated with the label
+                    label.emails.forEach(email => {
+                        xmlContent += `  <entry>\n    <category term="filter"/>\n    <title>${label.name} Filter</title>\n    <apps:property name="from" value="${email}"/>\n    <apps:property name="label" value="${label.name}"/>\n    <apps:property name="shouldArchive" value="true"/>\n  </entry>\n`;
+                    });
+                    // Create filters for each keyword associated with the label
+                    label.keywords.forEach(keyword => {
+                        xmlContent += `  <entry>\n    <category term="filter"/>\n    <title>${label.name} Keyword Filter</title>\n    <apps:property name="hasTheWord" value="${keyword}"/>\n    <apps:property name="label" value="${label.name}"/>\n    <apps:property name="shouldArchive" value="true"/>\n  </entry>\n`;
+                    });
+                });
+
+                // Google Classroom and Shared Files filters
+                if (googleClassroomCheckbox.checked) {
+                  xmlContent += `<entry><category term='filter'></category><apps:property name='from' value='no-reply@classroom.google.com'/><apps:property name='label' value='Google Classroom'/></entry>\n`;
+                }
+                if (sharedFilesCheckbox.checked) {
+                  xmlContent += `<entry><category term='filter'></category><apps:property name='from' value='drive-shares-dm-noreply@google.com'/><apps:property name='label' value='Shared Drives'/></entry>\n`;
+                }
+
+                const categories = [
+                  { checkbox: clubsCheckbox, type: 'Club', label: 'Clubs' },
+                  { checkbox: societiesCheckbox, type: 'Society', label: 'Societies' },                  
+                  { checkbox: departmentsCheckbox, type: 'Department', label: 'Departments' },
+                  { checkbox: officesCheckbox, type: 'Offices', label: 'Offices' },
+                ];
+
+                categories.forEach(category => {
+                  if (category.checkbox.checked) {
+                    const categoryEmails = emails_json.filter(item => item.Type && item.Type.trim() === category.type).map(item => item.Email);
+
+                    // Create individual XML entries for each email
+                    categoryEmails.forEach(email => {
+                      xmlContent += `<entry><category term='filter'></category><apps:property name='from' value='${email}'/><apps:property name='label' value='${category.label}'/></entry>\n`;
+                    });
+                  }
+                });
+
+                // Close XML feed
+                xmlContent += '</feed>';
+
+                // Create and download the XML file
+                const blob = new Blob([xmlContent], { type: 'application/xml' });
+                const url = URL.createObjectURL(blob);
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = 'gmail-filters.xml';
+                downloadLink.click();
+                URL.revokeObjectURL(url);  // Clean up the URL object
+            }
+
+            // Trigger the XML generation and download on button click
+            document.getElementById('downloadXmlBtn').addEventListener('click', generateAndDownloadXML);
+
+
+        </script>
     </div>
-  </div>
-  <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
-  <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/platform/assets/js/sidebarmenu.js"></script>
-  <script src="/platform/assets/js/app.min.js"></script>
-  <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
-  <script src="/platform/assets/js/theme.js"></script>
-  <%-include("../partials/preloader-js")%>
+</div>
 </body>
 
 </html>
