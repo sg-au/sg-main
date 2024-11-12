@@ -1006,18 +1006,18 @@
 
                 // Add XML entries for skipped emails
                 skippedEmails.forEach(email => {
-                    xmlContent += `  <entry>\n    <category term="filter"/>\n    <title>Mail Filter</title>\n    <apps:property name="from" value="${email}"/>\n    <apps:property name="label" value="Spam"/>\n    <apps:property name="shouldArchive" value="true"/>\n  </entry>\n`;
-                });
+                    xmlContent += `  <entry>\n    <category term="filter"/>\n    <title>Mail Filter</title>\n    <apps:property name="from" value="${email}"/>\n    <apps:property name="shouldArchive" value="true"/>\n      </entry>\n`;
+                });//<apps:property name="label" value="Spam"/>\n
 
                 // Add XML entries for custom labels
                 customLabels.forEach(label => {
                     // Create filters for each email associated with the label
                     label.emails.forEach(email => {
-                        xmlContent += `  <entry>\n    <category term="filter"/>\n    <title>${label.name} Filter</title>\n    <apps:property name="from" value="${email}"/>\n    <apps:property name="label" value="${label.name}"/>\n    <apps:property name="shouldArchive" value="true"/>\n  </entry>\n`;
+                        xmlContent += `  <entry>\n    <category term="filter"/>\n    <title>${label.name} Filter</title>\n    <apps:property name="from" value="${email}"/>\n    <apps:property name="label" value="${label.name}"/>\n     </entry>\n`;// <apps:property name="shouldArchive" value="true"/>\n
                     });
                     // Create filters for each keyword associated with the label
                     label.keywords.forEach(keyword => {
-                        xmlContent += `  <entry>\n    <category term="filter"/>\n    <title>${label.name} Keyword Filter</title>\n    <apps:property name="hasTheWord" value="${keyword}"/>\n    <apps:property name="label" value="${label.name}"/>\n    <apps:property name="shouldArchive" value="true"/>\n  </entry>\n`;
+                        xmlContent += `  <entry>\n    <category term="filter"/>\n    <title>${label.name} Keyword Filter</title>\n    <apps:property name="hasTheWord" value="${keyword}"/>\n    <apps:property name="label" value="${label.name}"/>\n    </entry>\n`;// <apps:property name="shouldArchive" value="true"/>\n
                     });
                 });
 
@@ -1055,7 +1055,7 @@
                 const url = URL.createObjectURL(blob);
                 const downloadLink = document.createElement('a');
                 downloadLink.href = url;
-                downloadLink.download = 'gmail-filters.xml';
+                downloadLink.download = 'mailFilters_by_MinistryOfTechnology.xml';
                 downloadLink.click();
                 URL.revokeObjectURL(url);  // Clean up the URL object
             }
@@ -1085,6 +1085,8 @@
 
                 // Initial call to set the button's state on page load
                 toggleDownloadButton();
+
+                document.getElementById('downloadXmlBtn').addEventListener('click', generateAndDownloadXML);
 
         </script>
     </div>
