@@ -114,7 +114,7 @@
                                     <div id="evaluations" class="tab-pane fade show active" aria-labelledby="evaluationTab">
                                         <div class="d-flex flex-wrap gap-2 my-3">
                                             <% data.filter((item) => item.Type === 'Club').forEach(item => { %>
-                                                <button class="btn btn-sm btn-outline-primary pill-btn  <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill('<%- item.Email %>')">
+                                                <button class="btn btn-sm btn-outline-primary pill-btn <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill(event, '<%- item.Email %>')">
                                                     <%- item.Name_df %>
                                                 </button>
                                             <% }); %>
@@ -123,7 +123,7 @@
                                     <div id="updateGrades" role="tabpanel" class="tab-pane fade">
                                         <div class="d-flex flex-wrap gap-2 my-3">
                                             <% data.filter((item) => item.Type === 'Society').forEach(item => { %>
-                                                <button class="btn btn-sm btn-outline-primary pill-btn <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill('<%- item.Email %>')">
+                                                <button class="btn btn-sm btn-outline-primary pill-btn <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill(event, '<%- item.Email %>')">
                                                     <%- item.Name_df %>
                                                 </button>
                                             <% }); %>
@@ -132,7 +132,7 @@
                                     <div id="raiseGPASection" role="tabpanel" class="tab-pane fade" aria-labelledby="updateTab">
                                         <div class="d-flex flex-wrap gap-2 my-3">
                                             <% data.filter((item) => item.Type === 'Department').forEach(item => { %>
-                                                <button class="btn btn-sm btn-outline-primary pill-btn <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill('<%- item.Email %>')">
+                                                <button class="btn btn-sm btn-outline-primary pill-btn <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill(event, '<%- item.Email %>')">
                                                     <%- item.Name_df %>
                                                 </button>
                                             <% }); %>
@@ -272,26 +272,35 @@
         
 
         <script>
-            const selectedEmails = [];
-        
-            function togglePill(email) {
-              const index = selectedEmails.indexOf(email);
-              if (index === -1) {
-                selectedEmails.push(email);
-              } else {
-                selectedEmails.splice(index, 1);
-              }
-              document.querySelectorAll('.pill-btn').forEach(btn => {
-                if (btn.getAttribute('onclick') === `togglePill('${email}')`) {
-                  btn.classList.toggle('active');
+            let selectedEmails = []; // Initialize the selectedEmails array.
+
+            function togglePill(event, email) {
+                event.preventDefault();
+
+                // Toggle the email in selectedEmails array
+                const index = selectedEmails.findIndex(e => e === email);
+                if (index === -1) {
+                    // Email not in the array, add it
+                    selectedEmails.push(email);
+                } else {
+                    // Email is in the array, remove it
+                    selectedEmails.splice(index, 1);
                 }
-              });
+
+                console.log(selectedEmails);
+
+                // Update the button classes to reflect active state based on selectedEmails
+                document.querySelectorAll('.pill-btn').forEach(button => {
+                    const buttonEmail = button.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    if (selectedEmails.some(e => e === buttonEmail)) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
             }
-        
-            function getSelectedEmails() {
-              console.log(selectedEmails);
-            }
-          </script>
+
+        </script>
         
         <script>
             const clubsCheckbox = document.getElementById('clubs');
