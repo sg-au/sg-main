@@ -1488,9 +1488,27 @@
                 let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<feed xmlns="http://www.w3.org/2005/Atom" xmlns:apps="http://schemas.google.com/apps/2006">\n';
 
                 // Add XML entries for skipped emails
-                skippedEmails.forEach(email => {
-                    xmlContent += `  <entry>\n    <category term="filter"/>\n    <title>Mail Filter</title>\n    <apps:property name="from" value="${email}"/>\n    <apps:property name="shouldArchive" value="true"/>\n      </entry>\n`;
-                });//<apps:property name="label" value="Spam"/>\n
+                // skippedEmails.forEach(email => {
+                //     xmlContent += `  <entry>\n    <category term="filter"/>\n    <title>Mail Filter</title>\n    <apps:property name="from" value="${email}"/>\n    <apps:property name="shouldArchive" value="true"/>\n      </entry>\n`;
+                // });//<apps:property name="label" value="Spam"/>\n
+// Add XML entries for emails in 'selectedEmails' to skip the primary inbox
+        selectedEmails.forEach(email => {
+            xmlContent += `
+            <entry>
+                <category term="excludePrimary" />
+                <title>Archived Email</title>
+                <summary>Email archived from Primary Inbox</summary>
+                <content>Filter to skip primary inbox for: ${email}</content>
+            </entry>`;
+        });
+
+        console.log(`
+            <entry>
+                <category term="excludePrimary" />
+                <title>Archived Email</title>
+                <summary>Email archived from Primary Inbox</summary>
+                <content>Filter to skip primary inbox for: ${email}</content>
+            </entry>`);
 
                 // Add XML entries for custom labels
                 customLabels.forEach(label => {
