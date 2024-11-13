@@ -1253,7 +1253,8 @@ router.get('/semester-planner', async(req, res) => {
 });
 
 router.get('/mail-spam-filter', async(req, res) => {
-  res.render("platform/pages/mail-spam-filter");
+  data = JSON.parse(fs.readFileSync('./data/emails.json', 'utf8'));
+  res.render("platform/pages/mail-spam-filter", {data: data, selectedEmails: []});
 });
 
 router.get('/cancel-cab-pool', async(req, res) => {

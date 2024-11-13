@@ -1,14 +1,14 @@
 [
     {
-        "Unnamed: 0": 0,
+        "Unnamed: 0": 1,
         "Name_df": " Anime Club",
         "Email": "anime@ashoka.edu.in",
         "Type": "Club"
     },
     {
         "Unnamed: 0": 2,
-        "Name_df": "Art and Design Collective",
-        "Email": "adc@ashoka.edu.in",
+        "Name_df": "Abhinaya",
+        "Email": "dancesociety@ashoka.edu.in",
         "Type": "Club"
     },
     {
@@ -50,613 +50,967 @@
     {
         "Unnamed: 0": 9,
         "Name_df": "Ashoka University International Students Association (AUISA)",
-        "Email": "newsletter@ashoka.edu.in",
+        "Email": "aia@ashoka.edu.in",
         "Type": "Club"
     },
     {
         "Unnamed: 0": 10,
-        "Name_df": "Ashoka University International Students Association (AUISA)",
-        "Email": "no-reply@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
-        "Unnamed: 0": 11,
-        "Name_df": "Ashoka University International Students Association (AUISA)",
-        "Email": "systems@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
-        "Unnamed: 0": 12,
-        "Name_df": "Ashoka University Queer Collective (AUQC )",
-        "Email": "newsletter@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
-        "Unnamed: 0": 13,
-        "Name_df": "Ashoka University Queer Collective (AUQC )",
-        "Email": "no-reply@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
-        "Unnamed: 0": 14,
-        "Name_df": "Ashoka University Queer Collective (AUQC )",
-        "Email": "systems@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
-        "Unnamed: 0": 15,
-        "Name_df": "Ashoka University Society for Sustainable Development Goals",
-        "Email": "newsletter@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
-        "Unnamed: 0": 16,
-        "Name_df": "Ashoka University Society for Sustainable Development Goals",
-        "Email": "no-reply@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
-        "Unnamed: 0": 17,
-        "Name_df": "Ashoka University Society for Sustainable Development Goals",
-        "Email": "systems@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
-        "Unnamed: 0": 18,
         "Name_df": "Ashoka Women in Business and Leadership",
         "Email": "awibnl@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 19,
-        "Name_df": "Caperture: The Photography Society",
-        "Email": "caperture@ashoka.edu.in",
+        "Unnamed: 0": 11,
+        "Name_df": "Clad - fashion club",
+        "Email": "clad@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 21,
+        "Unnamed: 0": 12,
         "Name_df": "Cycling Club",
         "Email": "ashokacyclingclub@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 27,
+        "Unnamed: 0": 13,
+        "Name_df": "Eeshto",
+        "Email": "eeshto@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 14,
+        "Name_df": "Enactus",
+        "Email": "enactus@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 15,
+        "Name_df": "Entrepreneurship Club",
+        "Email": "elcub@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 16,
+        "Name_df": "FarmFresh",
+        "Email": "farmfresh@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 17,
+        "Name_df": "Hallyu",
+        "Email": "hallyu@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 18,
         "Name_df": "Her Campus Ashoka",
         "Email": "hcashoka@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 34,
+        "Unnamed: 0": 19,
+        "Name_df": "Hindvi",
+        "Email": "hindiurdu@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 20,
+        "Name_df": "Kalinga",
+        "Email": "kalinga@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 21,
+        "Name_df": "Khayal",
+        "Email": "filmmakingclub@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 22,
+        "Name_df": "Lang-up",
+        "Email": "langup@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 23,
+        "Name_df": "Mad Batter",
+        "Email": "madbatter@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 24,
         "Name_df": "Navrang",
         "Email": "filmsoc@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 35,
+        "Unnamed: 0": 25,
         "Name_df": "Neev: The Community Engagement Club",
         "Email": "neev@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 36,
+        "Unnamed: 0": 26,
         "Name_df": "Orators' Club",
         "Email": "orators@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 39,
+        "Unnamed: 0": 27,
+        "Name_df": "Pawsitive",
+        "Email": "pawsitive@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 28,
+        "Name_df": "Quizzing club (Chakraview)",
+        "Email": "quizzing@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 29,
         "Name_df": "Red Brick Words",
         "Email": "poetry@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 40,
+        "Unnamed: 0": 30,
         "Name_df": "Rotaract Club",
         "Email": "rotaract@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 41,
+        "Unnamed: 0": 31,
         "Name_df": "Ruhi",
         "Email": "ruhi@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 43,
+        "Unnamed: 0": 32,
         "Name_df": "Sports Enthusiast Club",
         "Email": "sec@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 45,
+        "Unnamed: 0": 33,
+        "Name_df": "SOBAC",
+        "Email": "sobac@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 34,
         "Name_df": "The Comic Relief",
         "Email": "thecomicrelief@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 46,
-        "Name_df": "The Feminist Collective",
-        "Email": "feministcollective@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
-        "Unnamed: 0": 47,
+        "Unnamed: 0": 35,
         "Name_df": "The Green Room",
         "Email": "theatresociety@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 48,
-        "Name_df": "The Northeast Collective",
-        "Email": "northeastcollective@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
-        "Unnamed: 0": 49,
+        "Unnamed: 0": 36,
         "Name_df": "Vistaar",
         "Email": "vistaar@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 50,
+        "Unnamed: 0": 37,
         "Name_df": "Ashoka Tech Consulting Club",
         "Email": "consulting@ashoka.edu.in",
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 51,
+        "Unnamed: 0": 38,
         "Name_df": "Ashoka Fintech Club",
         "Email": "ashoka.mun@ashoka.edu.in",
         "Type": "Club"
     },
     {
+        "Unnamed: 0": 39,
+        "Name_df": "Ashoka Heath Research Club",
+        "Email": "ahrc@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 40,
+        "Name_df": "Ashoka Cycling Club",
+        "Email": "ashokacyclingclub@ashoka.edu.in",
+        "Type": "Club"
+    },
+    {
+        "Unnamed: 0": 41,
+        "Name_df": "Career Prep program",
+        "Email": "careerpre.cdo@ashoka.edu.in",
+        "Type": "Miscellaneous"
+    },
+    {
+        "Unnamed: 0": 42,
+        "Name_df": "Global Education",
+        "Email": "globaleducation@ashoka.edu.in",
+        "Type": "Miscellaneous"
+    },
+    {
+        "Unnamed: 0": 43,
+        "Name_df": "Ashoka Students Behavioural Insights Team",
+        "Email": "abit@ashoka.edu.in",
+        "Type": "Miscellaneous"
+    },
+    {
+        "Unnamed: 0": 44,
+        "Name_df": "Ashoka Basketball Association",
+        "Email": "aba@ashoka.edu.in",
+        "Type": "Miscellaneous"
+    },
+    {
+        "Unnamed: 0": 45,
+        "Name_df": "Coffee and More",
+        "Email": "coffee.more@ashoka.edu.in",
+        "Type": "Miscellaneous"
+    },
+    {
+        "Unnamed: 0": 46,
+        "Name_df": "Infirmary",
+        "Email": "infirmary@ashoka.edu.in",
+        "Type": "Miscellaneous"
+    },
+    {
+        "Unnamed: 0": 47,
+        "Name_df": "Election Commission",
+        "Email": "auec@ashoka.edu.in",
+        "Type": "Miscellaneous"
+    },
+    {
+        "Unnamed: 0": 48,
+        "Name_df": "Events & Invitations",
+        "Email": "events@ashoka.edu.in",
+        "Type": "Miscellaneous"
+    },
+    {
+        "Unnamed: 0": 49,
+        "Name_df": "Ashoka Internship",
+        "Email": "internships@ashoka.edu.in",
+        "Type": "Miscellaneous"
+    },
+    {
+        "Unnamed: 0": 50,
+        "Name_df": "Fundraisers",
+        "Email": "fundraising-ashoka@ashoka.edu.in",
+        "Type": "Miscellaneous"
+    },
+    {
+        "Unnamed: 0": 51,
+        "Name_df": "Surveys",
+        "Email": "survey@ashoka.edu.in",
+        "Type": "Miscellaneous"
+    },
+    {
+        "Unnamed: 0": 52,
+        "Name_df": "Internship cell",
+        "Email": "internshipcell@ashoka.edu.in",
+        "Type": "Miscellaneous"
+    },
+    {
         "Unnamed: 0": 53,
+        "Name_df": "Ashoka University Society for Sustainable Development Goals",
+        "Email": "ausdg@ashoka.edu.in",
+        "Type": "Society"
+    },
+    {
+        "Unnamed: 0": 54,
+        "Name_df": "Caperture: The Photography Society",
+        "Email": "caperture@ashoka.edu.in",
+        "Type": "Society"
+    },
+    {
+        "Unnamed: 0": 55,
         "Name_df": "Ashoka Data Society (ADS) ",
         "Email": "ads@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 54,
+        "Unnamed: 0": 56,
         "Name_df": "Epigraph: The Literary society",
         "Email": "litsoc@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 55,
+        "Unnamed: 0": 57,
         "Name_df": "PhySoc",
-        "Email": "philsoc@ashoka.edu.in",
+        "Email": "physoc@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 56,
+        "Unnamed: 0": 58,
         "Name_df": "Philosophy Society",
         "Email": "philsoc@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 57,
+        "Unnamed: 0": 59,
         "Name_df": "Psychology Society ",
         "Email": "psychology.society@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 58,
+        "Unnamed: 0": 60,
         "Name_df": "Ashoka University Economics Society",
         "Email": "econsoc@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 59,
+        "Unnamed: 0": 61,
         "Name_df": "Ashoka Society for India Studies",
         "Email": "asis@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 60,
+        "Unnamed: 0": 62,
         "Name_df": "Women in Computing Society (WiCS)",
         "Email": "wics@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 61,
+        "Unnamed: 0": 63,
         "Name_df": "Ashoka Political Science Society ",
         "Email": "polsoc@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 62,
+        "Unnamed: 0": 64,
         "Name_df": "The Computer Science Society (CS Soc)",
         "Email": "cs.society@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 63,
+        "Unnamed: 0": 65,
         "Name_df": "Ashoka Public Policy Society (APPS)",
         "Email": "publicpolsoc@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 64,
+        "Unnamed: 0": 66,
         "Name_df": "IEEE Ashoka Student Branch",
         "Email": "ieee.asb@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 65,
+        "Unnamed: 0": 67,
         "Name_df": "War Studies Society ",
         "Email": "warsoc@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 66,
+        "Unnamed: 0": 68,
         "Name_df": "Astronomy Society",
         "Email": "astronomysociety@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 67,
+        "Unnamed: 0": 69,
         "Name_df": "Ashoka Law Society ",
         "Email": "law@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 68,
+        "Unnamed: 0": 70,
         "Name_df": "AMFACS",
         "Email": "amfacs@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 69,
+        "Unnamed: 0": 71,
         "Name_df": "Mathematics Society",
         "Email": "math.society@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 70,
+        "Unnamed: 0": 72,
         "Name_df": "Biology Society ",
         "Email": "biosoc@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 71,
+        "Unnamed: 0": 73,
         "Name_df": "Ashoka Society for International Trade and Foreign Policy (ASITFP)",
         "Email": "asitfp@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 72,
+        "Unnamed: 0": 74,
         "Name_df": "Ashoka Women In Finance Society",
         "Email": "womeninfinance@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 73,
+        "Unnamed: 0": 75,
         "Name_df": "The Ashoka Journal of Biosciences",
         "Email": "biojournal@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 74,
+        "Unnamed: 0": 76,
         "Name_df": "Ashoka Climate Change and Environmental Studies Society (ACCESS)",
         "Email": "evs.soc@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 75,
+        "Unnamed: 0": 77,
         "Name_df": "Chemistry Society",
         "Email": "chemsoc@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 76,
+        "Unnamed: 0": 78,
         "Name_df": "Untitled: The Visual Arts Society",
         "Email": "untitled.visualarts@ashoka.edu.in",
         "Type": "Society"
     },
     {
-        "Unnamed: 0": 77,
+        "Unnamed: 0": 79,
+        "Name_df": "Art Society",
+        "Email": "art.society@ashoka.edu.in",
+        "Type": "Society"
+    },
+    {
+        "Unnamed: 0": 80,
+        "Name_df": "Edict",
+        "Email": "edict@ashoka.edu.in",
+        "Type": "Society"
+    },
+    {
+        "Unnamed: 0": 81,
         "Name_df": "Physics",
         "Email": "physics.dept@ashoka.edu.in",
         "Type": "Department"
     },
     {
-        "Unnamed: 0": 78,
+        "Unnamed: 0": 82,
         "Name_df": "Chemistry",
-        "Email": "chem.rep@ashoka.edu.in",
-        "Type": "Department"
-    },
-    {
-        "Unnamed: 0": 79,
-        "Name_df": "Biology",
-        "Email": "biology@ashoka.edu.in",
-        "Type": "Department"
-    },
-    {
-        "Unnamed: 0": 80,
-        "Name_df": "History",
-        "Email": "historyrepresentatives@ashoka.edu.in",
-        "Type": "Department"
-    },
-    {
-        "Unnamed: 0": 81,
-        "Name_df": "IR",
-        "Email": "ir.rep@ashoka.edu.in",
+        "Email": "chemistry@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 83,
-        "Name_df": "Entrepreneurship",
-        "Email": "eclub@ashoka.edu.in",
+        "Name_df": "Biology",
+        "Email": "biology@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 84,
-        "Name_df": "English",
-        "Email": "englishandcreativewriting@ashoka.edu.in",
+        "Name_df": "History",
+        "Email": "history@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 85,
-        "Name_df": "Media Studies",
-        "Email": "media.studies@ashoka.edu.in",
+        "Name_df": "IR",
+        "Email": "irevents@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 86,
-        "Name_df": "CW",
-        "Email": "creativewriting.rep@ashoka.edu.in",
+        "Name_df": "Pol Science",
+        "Email": "polevents@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 87,
-        "Name_df": "Economics",
-        "Email": "econsoc@ashoka.edu.in",
+        "Name_df": "Entrepreneurship",
+        "Email": "entrepreneurship@ashoka.edu.in",
+        "Type": "Department"
+    },
+    {
+        "Unnamed: 0": 88,
+        "Name_df": "English",
+        "Email": "englishandcreativewriting@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 89,
-        "Name_df": "Computer Science",
-        "Email": "cs.society@ashoka.edu.in",
+        "Name_df": "Media Studies",
+        "Email": "media.studies@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 90,
-        "Name_df": "Philosophy",
-        "Email": "philsoc@ashoka.edu.in",
+        "Name_df": "CW",
+        "Email": "creativewritingstudents@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 91,
-        "Name_df": "PPE",
-        "Email": "ppe.rep@ashoka.edu.in",
+        "Name_df": "Economics",
+        "Email": "economics@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 92,
-        "Name_df": "Mathematics",
-        "Email": "math.society@ashoka.edu.in",
+        "Name_df": "Philosophy",
+        "Email": "philosophy@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 93,
-        "Name_df": "Psychology",
-        "Email": "psychology.society@ashoka.edu.in",
+        "Name_df": "Mathematics",
+        "Email": "math@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 94,
+        "Name_df": "Psychology",
+        "Email": "psychology.dept@ashoka.edu.in",
+        "Type": "Department"
+    },
+    {
+        "Unnamed: 0": 95,
         "Name_df": "EVS",
-        "Email": "evs.rep@ashoka.edu.in",
+        "Email": "environmentstudies@ashoka.edu.in",
+        "Type": "Department"
+    },
+    {
+        "Unnamed: 0": 96,
+        "Name_df": "Socio Anthro",
+        "Email": "soa@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 97,
-        "Name_df": "China Studies",
-        "Email": "chinastudies@ashoka.edu.in",
+        "Name_df": "Performing Arts",
+        "Email": "performingarts@ashoka.edu.in",
+        "Type": "Department"
+    },
+    {
+        "Unnamed: 0": 98,
+        "Name_df": "Visual Arts",
+        "Email": "visualarts@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 99,
-        "Name_df": "Visual Arts",
-        "Email": "untitled.visualarts@ashoka.edu.in",
+        "Name_df": "Computer Science",
+        "Email": "cs.dept@ashoka.edu.in",
         "Type": "Department"
     },
     {
         "Unnamed: 0": 100,
-        "Name_df": "Physics",
-        "Email": "physics.dept@ashoka.edu.in",
-        "Type": "Department Representatives"
+        "Name_df": "English and creative writing ",
+        "Email": "englishandcwdepartment@ashoka.edu.in",
+        "Type": "Department"
     },
     {
         "Unnamed: 0": 101,
-        "Name_df": "Chemistry",
-        "Email": "chem.rep@ashoka.edu.in",
-        "Type": "Department Representatives"
+        "Name_df": "Centre for Climate change and sustainability",
+        "Email": "3cs@ashoka.edu.in",
+        "Type": "Centres"
     },
     {
         "Unnamed: 0": 102,
-        "Name_df": "Biology",
-        "Email": "biology@ashoka.edu.in",
-        "Type": "Department Representatives"
+        "Name_df": "Centre for Social Impact and Philantrophy",
+        "Email": "connect.csip@ashoka.edu.in",
+        "Type": "Centres"
     },
     {
         "Unnamed: 0": 103,
-        "Name_df": "History",
-        "Email": "historyrepresentatives@ashoka.edu.in",
-        "Type": "Department Representatives"
+        "Name_df": "Ashoka Centre for Well-Being",
+        "Email": "well.being@ashoka.edu.in",
+        "Type": "Centres"
+    },
+    {
+        "Unnamed: 0": 104,
+        "Name_df": "Ashoka centre for Translation",
+        "Email": "translation@ashoka.edu.in",
+        "Type": "Centres"
     },
     {
         "Unnamed: 0": 105,
-        "Name_df": "IR",
-        "Email": "ir.rep@ashoka.edu.in",
-        "Type": "Department Representatives"
+        "Name_df": "Centre for Analysis of Network Data and Insight Derivation",
+        "Email": "candid@ashoka.edu.in",
+        "Type": "Centres"
+    },
+    {
+        "Unnamed: 0": 106,
+        "Name_df": "Center for China Studies",
+        "Email": "chinastudies@ashoka.edu.in",
+        "Type": "Centres"
     },
     {
         "Unnamed: 0": 107,
-        "Name_df": "Entrepreneurship",
-        "Email": "eclub@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 108,
-        "Name_df": "English",
-        "Email": "englishandcreativewriting@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 109,
-        "Name_df": "Media Studies",
-        "Email": "media.studies@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 110,
-        "Name_df": "CW",
-        "Email": "creativewriting.rep@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 111,
-        "Name_df": "Economics",
-        "Email": "econsoc@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 114,
-        "Name_df": "Computer Science",
-        "Email": "cs.society@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 115,
-        "Name_df": "Philosophy",
-        "Email": "philsoc@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 116,
-        "Name_df": "PPE",
-        "Email": "ppe.rep@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 117,
-        "Name_df": "Mathematics",
-        "Email": "math.society@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 118,
-        "Name_df": "Psychology",
-        "Email": "psychology.society@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 119,
-        "Name_df": "EVS",
-        "Email": "evs.rep@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 122,
-        "Name_df": "China Studies",
-        "Email": "chinastudies@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 124,
-        "Name_df": "Visual Arts",
-        "Email": "untitled.visualarts@ashoka.edu.in",
-        "Type": "Department Representatives"
-    },
-    {
-        "Unnamed: 0": 125,
         "Name_df": "Centre for Studies in Gender and Sexuality",
         "Email": "csgs@ashoka.edu.in",
         "Type": "Centres"
     },
     {
-        "Unnamed: 0": 126,
+        "Unnamed: 0": 108,
         "Name_df": "Center for Entrepreneurship",
-        "Email": "eclub@ashoka.edu.in",
+        "Email": "entrepreneurship@ashoka.edu.in",
         "Type": "Centres"
     },
     {
-        "Unnamed: 0": 129,
+        "Unnamed: 0": 109,
+        "Name_df": "Center for Digitisation, AI and Society",
+        "Email": "digisoc@ashoka.edu.in",
+        "Type": "Centres"
+    },
+    {
+        "Unnamed: 0": 110,
+        "Name_df": "Ashoka Centre for a People-centric Energy Transition",
+        "Email": "contact@acpet.ashoka.edu.in",
+        "Type": "Centres"
+    },
+    {
+        "Unnamed: 0": 111,
+        "Name_df": "Centre for Economic Data and Analysis",
+        "Email": "ceda@ashoka.edu.in",
+        "Type": "Centres"
+    },
+    {
+        "Unnamed: 0": 112,
+        "Name_df": "Centre for Interdisciplinary Archaeological Research",
+        "Email": "ciar@ashoka.edu.in",
+        "Type": "Centres"
+    },
+    {
+        "Unnamed: 0": 113,
+        "Name_df": "Centre for Social and Behaviour Change",
+        "Email": "careersatcsbc@ashoka.edu.in",
+        "Type": "Centres"
+    },
+    {
+        "Unnamed: 0": 114,
+        "Name_df": "Koita Centre for Digital Health at Ashoka",
+        "Email": "kcdh-a@ashoka.edu.in",
+        "Type": "Centres"
+    },
+    {
+        "Unnamed: 0": 115,
+        "Name_df": "The Centre for the Creative and the Critical",
+        "Email": "ccc@ashoka.edu.in",
+        "Type": "Centres"
+    },
+    {
+        "Unnamed: 0": 116,
+        "Name_df": "Isaac Centre for Public Policy",
+        "Email": "icpp@ashoka.edu.in",
+        "Type": "Centres"
+    },
+    {
+        "Unnamed: 0": 117,
+        "Name_df": "Trivedi Centre for Political Data",
+        "Email": "tcpd-contact@ashoka.edu.in",
+        "Type": "Centres"
+    },
+    {
+        "Unnamed: 0": 118,
+        "Name_df": "Centre for Health Analytics Research and Trends",
+        "Email": "chart_tsb@ashoka.edu.in",
+        "Type": "Centres"
+    },
+    {
+        "Unnamed: 0": 119,
+        "Name_df": "Ashoka University Queer Collective (AUQC )",
+        "Email": "auqc@ashoka.edu.in",
+        "Type": "Collective"
+    },
+    {
+        "Unnamed: 0": 120,
+        "Name_df": "Ashoka University Queer Collective (AUQC )",
+        "Email": "vichitra@ashoka.edu.in",
+        "Type": "Collective"
+    },
+    {
+        "Unnamed: 0": 121,
+        "Name_df": "The Feminist Collective",
+        "Email": "feministcollective@ashoka.edu.in",
+        "Type": "Collective"
+    },
+    {
+        "Unnamed: 0": 122,
+        "Name_df": "The Northeast Collective",
+        "Email": "northeastcollective@ashoka.edu.in",
+        "Type": "Collective"
+    },
+    {
+        "Unnamed: 0": 123,
+        "Name_df": "Art and Design Collective",
+        "Email": "adc@ashoka.edu.in",
+        "Type": "Collective"
+    },
+    {
+        "Unnamed: 0": 124,
+        "Name_df": "Office of academic affairs ",
+        "Email": "oaa@ashoka.edu.in",
+        "Type": "Offices"
+    },
+    {
+        "Unnamed: 0": 125,
+        "Name_df": "Office of student affairs",
+        "Email": "studentaffairs@ashoka.edu.in",
+        "Type": "Offices"
+    },
+    {
+        "Unnamed: 0": 126,
+        "Name_df": "Office of Sustainability",
+        "Email": "sustainability@ashoka.edu.in",
+        "Type": "Offices"
+    },
+    {
+        "Unnamed: 0": 127,
         "Name_df": "Office of Post Graduate Studies",
         "Email": "connect.postgraduate@ashoka.edu.in",
         "Type": "Offices"
     },
     {
-        "Unnamed: 0": 130,
+        "Unnamed: 0": 128,
         "Name_df": "Office of Learning Support",
         "Email": "ols@ashoka.edu.in",
         "Type": "Offices"
     },
     {
-        "Unnamed: 0": 131,
+        "Unnamed: 0": 129,
         "Name_df": "Career Development Office",
         "Email": "cdo@ashoka.edu.in",
         "Type": "Offices"
     },
     {
-        "Unnamed: 0": 132,
+        "Unnamed: 0": 130,
         "Name_df": "Dining Ashoka",
         "Email": "dining@ashoka.edu.in",
         "Type": "Offices"
     },
     {
-        "Unnamed: 0": 133,
-        "Name_df": "IT Helpdesk",
-        "Email": "philhelpdesk@ashoka.edu.in",
+        "Unnamed: 0": 131,
+        "Name_df": "Student Life",
+        "Email": "life@ashoka.edu.in",
         "Type": "Offices"
     },
     {
-        "Unnamed: 0": 142,
+        "Unnamed: 0": 132,
+        "Name_df": "IT Helpdesk",
+        "Email": "it.helpdesk@ashoka.edu.in",
+        "Type": "Helpdesk"
+    },
+    {
+        "Unnamed: 0": 133,
+        "Name_df": "Philosophy HelpDesk",
+        "Email": "philhelpdesk@ashoka.edu.in",
+        "Type": "Helpdesk"
+    },
+    {
+        "Unnamed: 0": 134,
+        "Name_df": "Maths Helpdesk",
+        "Email": "maths.helpdesk@ashoka.edu.in",
+        "Type": "Helpdesk"
+    },
+    {
+        "Unnamed: 0": 135,
         "Name_df": "Cultural Ministry",
         "Email": "culturalministry@ashoka.edu.in",
         "Type": "Student Government"
     },
     {
-        "Unnamed: 0": 143,
+        "Unnamed: 0": 136,
         "Name_df": "Ministry of Technology",
         "Email": "technology.ministry@ashoka.edu.in",
         "Type": "Student Government"
     },
     {
-        "Unnamed: 0": 144,
+        "Unnamed: 0": 137,
         "Name_df": "Ministry of Community & Well Being",
         "Email": "well.being@ashoka.edu.in",
         "Type": "Student Government"
     },
     {
-        "Unnamed: 0": 145,
+        "Unnamed: 0": 138,
         "Name_df": "Ministry of Academic Affairs",
         "Email": "academicaffairs.ministry@ashoka.edu.in",
         "Type": "Student Government"
     },
     {
-        "Unnamed: 0": 146,
+        "Unnamed: 0": 139,
         "Name_df": "Sports Ministry",
         "Email": "sports.ministry@ashoka.edu.in",
         "Type": "Student Government"
     },
     {
-        "Unnamed: 0": 147,
+        "Unnamed: 0": 140,
         "Name_df": "Campus Life Ministry",
         "Email": "campus.life@ashoka.edu.in",
         "Type": "Student Government"
     },
     {
-        "Unnamed: 0": 148,
+        "Unnamed: 0": 141,
         "Name_df": "Environment Ministry",
         "Email": "environmentministry@ashoka.edu.in",
         "Type": "Student Government"
     },
     {
-        "Unnamed: 0": 149,
+        "Unnamed: 0": 142,
         "Name_df": "Student Government",
         "Email": "sg@ashoka.edu.in",
         "Type": "Student Government"
+    },
+    {
+        "Unnamed: 0": 143,
+        "Name_df": "Agneepath - Sports Fest",
+        "Email": "agneepath@ashoka.edu.in",
+        "Type": "Fest"
+    },
+    {
+        "Unnamed: 0": 144,
+        "Name_df": "Ent Weekender",
+        "Email": "ent.weekender@ashoka.edu.in",
+        "Type": "Fest"
+    },
+    {
+        "Unnamed: 0": 145,
+        "Name_df": "Banjara",
+        "Email": "fest@ashoka.edu.in",
+        "Type": "Fest"
+    },
+    {
+        "Unnamed: 0": 146,
+        "Name_df": "Ashoka Literature Festival",
+        "Email": "litfest@ashoka.edu.in",
+        "Type": "Fest"
+    },
+    {
+        "Unnamed: 0": 147,
+        "Name_df": "Ashoka Science Research Festival",
+        "Email": "asrf@ashoka.edu.in",
+        "Type": "Fest"
+    },
+    {
+        "Unnamed: 0": 148,
+        "Name_df": "Chakraview: The quizzing fest",
+        "Email": "chakraview@ashoka.edu.in",
+        "Type": "Fest"
+    },
+    {
+        "Unnamed: 0": 149,
+        "Name_df": "Psychology Representative ",
+        "Email": "psy.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 150,
+        "Name_df": "Sociology and Anthropology Representative",
+        "Email": "soa.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 151,
+        "Name_df": "English Representative",
+        "Email": "english.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 152,
+        "Name_df": "Creative Representative",
+        "Email": "creativewriting.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 153,
+        "Name_df": "Philosophy Representative",
+        "Email": "philosophy.studentrep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 154,
+        "Name_df": "Computer Science Representative ",
+        "Email": "cs.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 155,
+        "Name_df": "Biology representative",
+        "Email": "biology_ugrep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 156,
+        "Name_df": "IR Representative",
+        "Email": "ir.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 157,
+        "Name_df": "EVS Representative ",
+        "Email": "evs.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 158,
+        "Name_df": "Physics Representative",
+        "Email": "phys.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 159,
+        "Name_df": "Chemistry Representative",
+        "Email": "chem.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 160,
+        "Name_df": "PPE Representative",
+        "Email": "ppe.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 161,
+        "Name_df": "History Representative",
+        "Email": "historyrepresentatives@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 162,
+        "Name_df": "Economics Representative",
+        "Email": "econreps@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 163,
+        "Name_df": "Media Studies Representative",
+        "Email": "ms.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 164,
+        "Name_df": " Visual arts representative",
+        "Email": "studentrepresentative.visualarts@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 165,
+        "Name_df": "Political Science Representative",
+        "Email": "polsci.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 166,
+        "Name_df": "Mathematics Representative",
+        "Email": "math.rep@ashoka.edu.in",
+        "Type": "Representatives"
+    },
+    {
+        "Unnamed: 0": 167,
+        "Name_df": "English Colloquium",
+        "Email": "english.colloquium@ashoka.edu.in",
+        "Type": "Colloquium"
+    },
+    {
+        "Unnamed: 0": 168,
+        "Name_df": "History Colloquium",
+        "Email": "historycolloquium@ashoka.edu.in",
+        "Type": "Colloquium"
+    },
+    {
+        "Unnamed: 0": 169,
+        "Name_df": "Creative Writing Workshop",
+        "Email": "creativewriting.workshop@ashoka.edu.in",
+        "Type": "Workshop"
     }
 ]
