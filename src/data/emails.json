@@ -66,12 +66,6 @@
         "Type": "Club"
     },
     {
-        "Unnamed: 0": 12,
-        "Name_df": "Cycling Club",
-        "Email": "ashokacyclingclub@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
         "Unnamed: 0": 13,
         "Name_df": "Eeshto",
         "Email": "eeshto@ashoka.edu.in",
@@ -213,18 +207,6 @@
         "Unnamed: 0": 36,
         "Name_df": "Vistaar",
         "Email": "vistaar@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
-        "Unnamed: 0": 37,
-        "Name_df": "Ashoka Tech Consulting Club",
-        "Email": "consulting@ashoka.edu.in",
-        "Type": "Club"
-    },
-    {
-        "Unnamed: 0": 38,
-        "Name_df": "Ashoka Fintech Club",
-        "Email": "ashoka.mun@ashoka.edu.in",
         "Type": "Club"
     },
     {
