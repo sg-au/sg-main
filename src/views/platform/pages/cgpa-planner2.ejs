@@ -315,7 +315,7 @@
                                                            </button>
                                                         </li>
                                                         <li class="nav-item" role="presentation">
-                                                            <button class="nav-link small-pills" id="pills-1-tab" data-bs-toggle="pill" data-bs-target="#updateGrades" type="button" role="tab" aria-controls="#updateGrades" aria-selected="true">Grade Calculator</button>
+                                                            <button class="nav-link small-pills" id="pills-1-tab" data-bs-toggle="pill" data-bs-target="#updateGrades" type="button" role="tab" aria-controls="#updateGrades" aria-selected="true">Grade Planner</button>
                                                         </li>
                                                         <li class="nav-item" role="presentation">
                                                             <button class="nav-link small-pills" id="pills-12-tab" data-bs-toggle="pill" data-bs-target="#raiseGPASection" type="button" role="tab" aria-controls="#raiseGPASection" aria-selected="true">Raise GPA Calculator</button>
@@ -1333,7 +1333,7 @@
                             document.getElementById("creditsEarned-upcoming 1").innerText = "Predicted Semester Credits Earned: " + semCredits;
                             document.getElementById("cgpa-upcoming 1").innerText = "PCGPA: " + newCGPA;
                             document.getElementById("blue-cgpa").innerText = "Predicted Degree/Diploma CGPA: " + newCGPA;
-                            document.getElementById("blue-totalCredits").innerText = "Predicted Total counted credits: " + (totalCredits + semCredits + pfCredits);
+                            document.getElementById("blue-totalCredits").innerText = "Predicted Total counted credits: " + (totalCredits + semCreditsCGPA + pfCredits);
                         }
                         
 
