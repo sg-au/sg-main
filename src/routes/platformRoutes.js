@@ -1320,15 +1320,15 @@ router.get('/cgpa-planner-reset', async(req, res) => {
   res.redirect("/platform/cgpa-planner");
 });
 
-router.get('/clubs-socs-catalogue', async(req, res) => {
+router.get('/organisation-catalogue', async(req, res) => {
   var clubs = (await axios.get(`${apiUrl}/clubs`, axiosConfig));
   var societies = (await axios.get(`${apiUrl}/societies`, axiosConfig));
-  res.render("platform/pages/clubs-socs-catalogue",{clubs:clubs.data.data,societies:societies.data.data});
+  res.render("platform/pages/organisation-catalogue",{clubs:clubs.data.data,societies:societies.data.data});
 });
 
 router.get('/clubs-socs-catalogue/:id', async(req, res) => {
   var organisation = (await axios.get(`${apiUrl}/clubs/${req.params.id}`, axiosConfig));
-  res.render("platform/pages/club-soc",{club:organisation.data});
+  res.render("platform/pages/organisation",{club:organisation.data});
 });
 
 router.get('/pool-service', async (req, res) => {
