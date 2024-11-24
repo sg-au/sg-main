@@ -1,100 +1,87 @@
-<!doctype html>
-<html lang="en">
+<div class="container mt-5">
+  <h1 class="mb-4">Clubs and Societies Catalogue</h1>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SG Platform - Organisation Catalogue</title>
-  <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
-  <link rel="stylesheet" href="/platform/assets/css/styles.css" />
-  <%-include("../partials/preloader-css")%>
-</head>
-<%-include("../partials/post-head")%>
-
-<body>
-  <%-include("../partials/preloader")%>
-  <!--  Body Wrapper -->
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
-    <%-include("../partials/sidebar")%>
-    <!--  Main wrapper -->
-    <div class="body-wrapper">
-      <%-include("../partials/header")%>
-
-      <div class="container mt-5">
-        <h1 class="mb-4">Clubs and Societies Catalogue</h1>
-
-        <!-- Filter Section -->
-        <div id="filter-section" class="mb-4">
-          <h3>Filter by Topic</h3>
-          <form id="filter-form" class="form-inline">
-            <div>
-              <label><input type="checkbox" name="topics" value="sports"> Sports</label>
-            </div>
-            <div>
-              <label><input type="checkbox" name="topics" value="arts"> Arts</label>
-            </div>
-            <div>
-              <label><input type="checkbox" name="topics" value="science"> Science</label>
-            </div>
-            <div>
-              <label><input type="checkbox" name="topics" value="music"> Music</label>
-            </div>
-            <button type="button" id="apply-filters" class="btn btn-primary mt-3">Apply Filters</button>
-          </form>
-        </div>
-
-        <div id="results-section">
-          <ul id="results-list" class="list-group">
-            <% clubs.forEach(club => { %>
-              <li 
-                data-topics="<%= club.topics.join(', ') %>" 
-                class="list-group-item organisation-item">
-                <a href="/clubs-socs-catalogue/<%= club.id %>"><%= club.name %></a>
-              </li>
-            <% }); %>
-            <% societies.forEach(society => { %>
-              <li 
-                data-topics="<%= society.topics.join(', ') %>" 
-                class="list-group-item organisation-item">
-                <a href="/clubs-socs-catalogue/<%= society.id %>"><%= society.name %></a>
-              </li>
-            <% }); %>
-          </ul>
-        </div>
+  <!-- Filter Section -->
+  <div id="filter-section" class="mb-4">
+    <h3>Filter by Topic</h3>
+    <form id="filter-form" class="form-inline">
+      <div>
+        <label><input type="checkbox" name="topics" value="sports"> Sports</label>
       </div>
-    </div>
+      <div>
+        <label><input type="checkbox" name="topics" value="arts"> Arts</label>
+      </div>
+      <div>
+        <label><input type="checkbox" name="topics" value="science"> Science</label>
+      </div>
+      <div>
+        <label><input type="checkbox" name="topics" value="music"> Music</label>
+      </div>
+      <button type="button" id="apply-filters" class="btn btn-primary mt-3">Apply Filters</button>
+    </form>
   </div>
 
-  <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
-  <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/platform/assets/js/sidebarmenu.js"></script>
-  <script src="/platform/assets/js/app.min.js"></script>
-  <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
-  <script src="/platform/assets/js/theme.js"></script>
-  <%-include("../partials/preloader-js")%>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const applyFiltersButton = document.getElementById("apply-filters");
-      const organisationItems = document.querySelectorAll(".organisation-item");
+  <!-- Search Section -->
+  <div id="search-section" class="mb-4">
+    <h3>Search by Name</h3>
+    <input type="text" id="search-bar" class="form-control" placeholder="type to search...">
+  </div>
 
-      applyFiltersButton.addEventListener("click", () => {
-        const selectedFilters = Array.from(document.querySelectorAll('input[name="topics"]:checked'))
-          .map(input => input.value);
+  <div id="results-section">
+    <ul id="results-list" class="list-group">
+      <% clubs.forEach(club => { %>
+        <li 
+          data-name="<%= club.name %>" 
+          data-topics="<%= club.topics.join(', ') %>" 
+          class="list-group-item organisation-item">
+          <a href="/clubs-socs-catalogue/<%= club.id %>"><%= club.name %></a>
+        </li>
+      <% }); %>
+      <% societies.forEach(society => { %>
+        <li 
+          data-name="<%= society.name %>" 
+          data-topics="<%= society.topics.join(', ') %>" 
+          class="list-group-item organisation-item">
+          <a href="/clubs-socs-catalogue/<%= society.id %>"><%= society.name %></a>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
+</div>
 
-        organisationItems.forEach(item => {
-          const itemTopics = item.getAttribute("data-topics").split(", ");
-          const matches = selectedFilters.some(filter => itemTopics.includes(filter));
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const applyFiltersButton = document.getElementById("apply-filters");
+    const organisationItems = document.querySelectorAll(".organisation-item");
+    const searchBar = document.getElementById("search-bar");
 
-          if (selectedFilters.length === 0 || matches) {
-            item.style.display = "list-item";
-          } else {
-            item.style.display = "none";
-          }
-        });
+    applyFiltersButton.addEventListener("click", () => {
+      const selectedFilters = Array.from(document.querySelectorAll('input[name="topics"]:checked'))
+        .map(input => input.value);
+
+      organisationItems.forEach(item => {
+        const itemTopics = item.getAttribute("data-topics").split(", ");
+        const matches = selectedFilters.some(filter => itemTopics.includes(filter));
+
+        if (selectedFilters.length === 0 || matches) {
+          item.style.display = "list-item";
+        } else {
+          item.style.display = "none";
+        }
       });
     });
-  </script>
-</body>
 
-</html>
+    searchBar.addEventListener("input", () => {
+      const searchQuery = searchBar.value.toLowerCase();
+      organisationItems.forEach(item => {
+        const itemName = item.getAttribute("data-name").toLowerCase();
+
+        if (itemName.startsWith(searchQuery)) {
+          item.style.display = "list-item";
+        } else {
+          item.style.display = "none";
+        }
+      });
+    });
+  });
+</script>
