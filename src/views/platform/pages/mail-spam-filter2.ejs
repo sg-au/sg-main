@@ -45,7 +45,7 @@
             <div class="container-fluid" style="padding-top: 40px;">
                 <div class="card">
                     <div class="card-body">
-                        <h2 style="padding:25px;color:white" class="fs-6 fw-semibold text-center mb-4 bg-primary">Mail Filter Generator</h2>  
+                        <h2 style="padding:25px;" class="fs-6 fw-semibold text-center mb-4 bg-success">TailoredInbox</h2>  
                         <form id="mailSpamFilterForm">
 
                             <!-- Unsubscribe From Inbox Section -->
@@ -75,7 +75,7 @@
                                 <div class="tab-content">
                                     <div id="clubEmails" class="tab-pane fade show active" aria-labelledby="evaluationTab">
                                         <p style="font-size: 10px;" class="fs-3 fw-semibold">
-                                            Select clubs that you <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">DO NOT</span> want in your Inbox. These will be visible under 'All Mail'. <br>
+                                            Select clubs that you wish to indicate <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">FAVORITES</span> in your Inbox. These will be visible under 'Socials'. <br>
                                         </p>
                                         <div class="d-flex flex-wrap gap-2 my-3">
                                             <% data.filter((item) => item.Type === 'Club').forEach(item => { %>
@@ -91,7 +91,7 @@
                                     </div>
                                     <div id="societyEmails" role="tabpanel" class="tab-pane fade">
                                         <p style="font-size: 10px;" class="fs-3 fw-semibold">
-                                            Select societies that you <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">DO NOT</span> want in your Inbox. These will be visible under 'All Mail'. <br>
+                                            Select societies that you wish to indicate <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">FAVORITES</span> in your Inbox. These will be visible under 'Socials'. <br>
                                         </p>
                                         <div class="d-flex flex-wrap gap-2 my-3">
                                             <% data.filter((item) => item.Type === 'Society').forEach(item => { %>
@@ -107,7 +107,7 @@
                                     </div>
                                     <div id="deptEmails" role="tabpanel" class="tab-pane fade" aria-labelledby="updateTab">
                                         <p style="font-size: 10px;" class="fs-3 fw-semibold">
-                                            Select departments and reps that you <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">DO NOT</span> want in your Inbox. These will be visible under 'All Mail'. <br>
+                                            Select departments and reps that you wish to indicate <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">FAVORITES</span> in your Inbox. These will be visible under 'Socials'. <br>
                                         </p>
                                         <div class="d-flex flex-wrap gap-2 my-3">
                                             <% data.filter((item) => item.Type === 'Department').forEach(item => { %>

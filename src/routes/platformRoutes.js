@@ -1256,6 +1256,14 @@ router.get('/mail-spam-filter', async(req, res) => {
   data = JSON.parse(fs.readFileSync('./data/emails.json', 'utf8'));
   res.render("platform/pages/mail-spam-filter", {data: data, selectedEmails: []});
 });
+router.get('/mail-spam-filter2', async(req, res) => {
+  data = JSON.parse(fs.readFileSync('./data/emails.json', 'utf8'));
+  res.render("platform/pages/mail-spam-filter2", {data: data, selectedEmails: []});
+});
+router.get('/mail-spam-filter3', async(req, res) => {
+  data = JSON.parse(fs.readFileSync('./data/emails.json', 'utf8'));
+  res.render("platform/pages/mail-spam-filter3", {data: data, selectedEmails: []});
+});
 
 router.get('/cancel-cab-pool', async(req, res) => {
   userEmail=req.user._json.email;
