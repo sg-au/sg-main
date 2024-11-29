@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SG Platform</title>
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="/platform/assets/images/logos/favicon.png"
+    />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+    <%-include("../../partials/preloader-css")%>
+  </head>
+
+  <%-include("../../partials/post-head")%>
+
+  <body>
+    <%-include("../../partials/preloader")%>
+    <div
+      class="page-wrapper"
+      id="main-wrapper"
+      data-layout="vertical"
+      data-navbarbg="skin6"
+      data-sidebartype="full"
+      data-sidebar-position="fixed"
+      data-header-position="fixed"
+    >
+      <%-include("../../partials/sidebar")%>
+      <div class="body-wrapper">
+        <%-include("../../partials/header")%>
+
+        <div class="container-fluid">
+          <div class="container-fluid">
+            <h1 class="mb-4 mt-4">Clubs and Societies Catalogue</h1>
+
+            <div id="search-section" class="mb-4">
+              <!-- <h3>Search by Name</h3> -->
+              <input
+                type="text"
+                id="search-bar"
+                class="form-control"
+                placeholder="Type to search..."
+              />
+
+              <div class="form-inline d-flex gap-3 mt-2">
+                <div>
+                  <label
+                    ><input type="checkbox" name="topics" value="sports" />
+                    Sports</label
+                  >
+                </div>
+                <div>
+                  <label
+                    ><input type="checkbox" name="topics" value="arts" />
+                    Arts</label
+                  >
+                </div>
+                <div>
+                  <label
+                    ><input type="checkbox" name="topics" value="science" />
+                    Science</label
+                  >
+                </div>
+                <div>
+                  <label
+                    ><input type="checkbox" name="topics" value="music" />
+                    Music</label
+                  >
+                </div>
+              </div>
+
+              <!-- <button
+                type="button"
+                id="apply-filters"
+                class="btn btn-primary mt-3"
+              >
+                Apply Filters
+              </button> -->
+            </div>
+
+            <!-- Filter Section -->
+            <!-- <div id="filter-section" class="mb-4">
+              <h3>Filter by Topic</h3>
+              <form id="filter-form" class="form-inline">
+                <div>
+                  <label
+                    ><input type="checkbox" name="topics" value="sports" />
+                    Sports</label
+                  >
+                </div>
+                <div>
+                  <label
+                    ><input type="checkbox" name="topics" value="arts" />
+                    Arts</label
+                  >
+                </div>
+                <div>
+                  <label
+                    ><input type="checkbox" name="topics" value="science" />
+                    Science</label
+                  >
+                </div>
+                <div>
+                  <label
+                    ><input type="checkbox" name="topics" value="music" />
+                    Music</label
+                  >
+                </div>
+                <button
+                  type="button"
+                  id="apply-filters"
+                  class="btn btn-primary mt-3"
+                >
+                  Apply Filters
+                </button>
+              </form>
+            </div> -->
+
+            <div id="results-section">
+              <ul id="results-list" class="list-group">
+                <% clubs.forEach(club => { %>
+                <li
+                  data-name="<%= club.name %>"
+                  data-topics="<%= club.topics.join(', ') %>"
+                  class="list-group-item organisation-item"
+                >
+                  <a href="/clubs-socs-catalogue/<%= club.id %>"
+                    ><%= club.name %></a
+                  >
+                </li>
+                <% }); %> <% societies.forEach(society => { %>
+                <li
+                  data-name="<%= society.name %>"
+                  data-topics="<%= society.topics.join(', ') %>"
+                  class="list-group-item organisation-item"
+                >
+                  <a href="/clubs-socs-catalogue/<%= society.id %>"
+                    ><%= society.name %></a
+                  >
+                </li>
+                <% }); %>
+              </ul>
+            </div>
+          </div>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              const applyFiltersButton =
+                document.getElementById("apply-filters");
+              const organisationItems =
+                document.querySelectorAll(".organisation-item");
+              const searchBar = document.getElementById("search-bar");
+
+              applyFiltersButton.addEventListener("click", () => {
+                const selectedFilters = Array.from(
+                  document.querySelectorAll('input[name="topics"]:checked')
+                ).map((input) => input.value);
+
+                organisationItems.forEach((item) => {
+                  const itemTopics = item
+                    .getAttribute("data-topics")
+                    .split(", ");
+                  const matches = selectedFilters.some((filter) =>
+                    itemTopics.includes(filter)
+                  );
+
+                  if (selectedFilters.length === 0 || matches) {
+                    item.style.display = "list-item";
+                  } else {
+                    item.style.display = "none";
+                  }
+                });
+              });
+
+              searchBar.addEventListener("input", () => {
+                const searchQuery = searchBar.value.toLowerCase();
+                organisationItems.forEach((item) => {
+                  const itemName = item.getAttribute("data-name").toLowerCase();
+
+                  if (itemName.startsWith(searchQuery)) {
+                    item.style.display = "list-item";
+                  } else {
+                    item.style.display = "none";
+                  }
+                });
+              });
+            });
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/platform/assets/js/dashboard.js"></script>
+    <script src="/platform/assets/js/darkmode.js"></script>
+    <script src="/platform/assets/js/copytext.js"></script>
+
+    <%-include("../../partials/preloader-js")%>
+  </body>
+</html>
