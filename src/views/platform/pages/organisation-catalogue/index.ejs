@@ -53,146 +53,100 @@
               />
 
               <div class="form-inline d-flex gap-3 mt-2">
+                <% types.forEach(type => { %>
                 <div>
-                  <label
-                    ><input type="checkbox" name="topics" value="sports" />
-                    Sports</label
-                  >
+                  <input
+                    type="checkbox"
+                    name="types"
+                    value="<%= type %>"
+                    checked
+                  />
+                  <label class="text-capitalize"> <%= type %> </label>
                 </div>
-                <div>
-                  <label
-                    ><input type="checkbox" name="topics" value="arts" />
-                    Arts</label
-                  >
-                </div>
-                <div>
-                  <label
-                    ><input type="checkbox" name="topics" value="science" />
-                    Science</label
-                  >
-                </div>
-                <div>
-                  <label
-                    ><input type="checkbox" name="topics" value="music" />
-                    Music</label
-                  >
-                </div>
+                <% }); %>
               </div>
-
-              <!-- <button
-                type="button"
-                id="apply-filters"
-                class="btn btn-primary mt-3"
-              >
-                Apply Filters
-              </button> -->
             </div>
 
-            <!-- Filter Section -->
-            <!-- <div id="filter-section" class="mb-4">
-              <h3>Filter by Topic</h3>
-              <form id="filter-form" class="form-inline">
-                <div>
-                  <label
-                    ><input type="checkbox" name="topics" value="sports" />
-                    Sports</label
-                  >
-                </div>
-                <div>
-                  <label
-                    ><input type="checkbox" name="topics" value="arts" />
-                    Arts</label
-                  >
-                </div>
-                <div>
-                  <label
-                    ><input type="checkbox" name="topics" value="science" />
-                    Science</label
-                  >
-                </div>
-                <div>
-                  <label
-                    ><input type="checkbox" name="topics" value="music" />
-                    Music</label
-                  >
-                </div>
-                <button
-                  type="button"
-                  id="apply-filters"
-                  class="btn btn-primary mt-3"
-                >
-                  Apply Filters
-                </button>
-              </form>
-            </div> -->
-
             <div id="results-section">
-              <ul id="results-list" class="list-group">
-                <% clubs.forEach(club => { %>
-                <li
-                  data-name="<%= club.name %>"
-                  data-topics="<%= club.topics.join(', ') %>"
-                  class="list-group-item organisation-item"
+              <div id="results-list" class="row g-4">
+                <% organisations.forEach(org => { %>
+                <div
+                  class="col-12 col-md-6 col-lg-4 organisation-item"
+                  data-name="<%= org.name %>"
+                  data-type="<%= org.type %>"
                 >
-                  <a href="/clubs-socs-catalogue/<%= club.id %>"
-                    ><%= club.name %></a
-                  >
-                </li>
-                <% }); %> <% societies.forEach(society => { %>
-                <li
-                  data-name="<%= society.name %>"
-                  data-topics="<%= society.topics.join(', ') %>"
-                  class="list-group-item organisation-item"
-                >
-                  <a href="/clubs-socs-catalogue/<%= society.id %>"
-                    ><%= society.name %></a
-                  >
-                </li>
-                <% }); %>
-              </ul>
+                  <div class="card h-100">
+                    <% if (org.logo_url) { %>
+                    <img
+                      src="<%= org.logo_url %>"
+                      class="card-img-top"
+                      alt="<%= org.name %> Logo"
+                      style="height: 200px; object-fit: cover"
+                    />
+                    <% } else { %>
+                    <div
+                      class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                      style="height: 200px"
+                    >
+                      <i class="fa fa-building fa-4x text-muted"></i>
+                    </div>
+                    <% } %>
+                    <div class="card-body">
+                      <h5 class="card-title"><%= org.name %></h5>
+                      <p class="card-text">
+                        <span class="badge bg-primary text-capitalize"
+                          ><%= org.type %></span
+                        >
+                      </p>
+                      <% if (org.description) { %>
+                      <p class="card-text text-muted">
+                        <%= org.description.substring(0, 100) %>...
+                      </p>
+                      <% } %>
+                      <!-- <a
+                        href="/organisations-catalogue/<%= org.id %>"
+                        class="btn btn-primary"
+                        >Learn More</a
+                      > -->
+                    </div>
+                  </div>
+                </div>
+                <% }) %>
+              </div>
             </div>
           </div>
 
           <script>
             document.addEventListener("DOMContentLoaded", () => {
-              const applyFiltersButton =
-                document.getElementById("apply-filters");
               const organisationItems =
                 document.querySelectorAll(".organisation-item");
               const searchBar = document.getElementById("search-bar");
+              const typeCheckboxes = document.querySelectorAll(
+                'input[name="types"]'
+              );
 
-              applyFiltersButton.addEventListener("click", () => {
-                const selectedFilters = Array.from(
-                  document.querySelectorAll('input[name="topics"]:checked')
+              function filterOrganizations() {
+                const searchQuery = searchBar.value.toLowerCase();
+                const selectedTypes = Array.from(
+                  document.querySelectorAll('input[name="types"]:checked')
                 ).map((input) => input.value);
 
                 organisationItems.forEach((item) => {
-                  const itemTopics = item
-                    .getAttribute("data-topics")
-                    .split(", ");
-                  const matches = selectedFilters.some((filter) =>
-                    itemTopics.includes(filter)
-                  );
-
-                  if (selectedFilters.length === 0 || matches) {
-                    item.style.display = "list-item";
-                  } else {
-                    item.style.display = "none";
-                  }
-                });
-              });
-
-              searchBar.addEventListener("input", () => {
-                const searchQuery = searchBar.value.toLowerCase();
-                organisationItems.forEach((item) => {
                   const itemName = item.getAttribute("data-name").toLowerCase();
+                  const itemType = item.getAttribute("data-type");
 
-                  if (itemName.startsWith(searchQuery)) {
-                    item.style.display = "list-item";
-                  } else {
-                    item.style.display = "none";
-                  }
+                  const matchesSearch = itemName.includes(searchQuery);
+                  const matchesType = selectedTypes.includes(itemType);
+
+                  item.style.display =
+                    matchesSearch && matchesType ? "" : "none";
                 });
+              }
+
+              // Add event listeners
+              searchBar.addEventListener("input", filterOrganizations);
+              typeCheckboxes.forEach((checkbox) => {
+                checkbox.addEventListener("change", filterOrganizations);
               });
             });
           </script>

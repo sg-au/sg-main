@@ -1617,11 +1617,14 @@ router.get("/cgpa-planner-reset", async (req, res) => {
 });
 
 router.get("/organisation-catalogue", async (req, res) => {
-  // const clubs = await axios.get(`${apiUrl}/clubs`, axiosConfig);
-  // const societies = await axios.get(`${apiUrl}/societies`, axiosConfig);
+  const organisationsReq = await axios.get(
+    `${apiUrl}/organisations`,
+    axiosConfig
+  );
+  const organisations = organisationsReq.data.data.map((x) => x.attributes);
   res.render("platform/pages/organisation-catalogue", {
-    clubs: [],
-    societies: [],
+    organisations,
+    types: [...new Set(organisations.map((org) => org.type))],
   });
 });
 
@@ -2377,10 +2380,6 @@ router.post("/assets", async (req, res) => {
   }
   // also email the student with the undertaking and a ministry member attached
 });
-
-// const organisationCatalogueController = require("./platformRoutes/organisation-catalogue.js");
-
-// router.use("/organisation-catalogue", organisationCatalogueController);
 
 // router.get('/shuttle-service', async (req, res) => {
 //   var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=bids`, axiosConfig);
