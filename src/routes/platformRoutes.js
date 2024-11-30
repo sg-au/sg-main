@@ -1252,6 +1252,19 @@ router.get('/semester-planner', async(req, res) => {
   res.render("platform/pages/semester-planner",{courses:arr,obj:obj});  
 });
 
+router.get('/mail-spam-filter', async(req, res) => {
+  data = JSON.parse(fs.readFileSync('./data/emails.json', 'utf8'));
+  res.render("platform/pages/mail-spam-filter", {data: data, selectedEmails: []});
+});
+router.get('/mail-spam-filter2', async(req, res) => {
+  data = JSON.parse(fs.readFileSync('./data/emails.json', 'utf8'));
+  res.render("platform/pages/mail-spam-filter2", {data: data, selectedEmails: []});
+});
+router.get('/mail-spam-filter3', async(req, res) => {
+  data = JSON.parse(fs.readFileSync('./data/emails.json', 'utf8'));
+  res.render("platform/pages/mail-spam-filter3", {data: data, selectedEmails: []});
+});
+
 router.get('/cancel-cab-pool', async(req, res) => {
   userEmail=req.user._json.email;
   // var pool = (await axios.get(`${apiUrl}/pools?[pooler][email]=${userEmail}&filters[status][$eqi]=available`, axiosConfig));
@@ -1315,6 +1328,16 @@ router.get('/cgpa-planner-reset', async(req, res) => {
   res.redirect("/platform/cgpa-planner");
 });
 
+router.get('/organisation-catalogue', async(req, res) => {
+  var clubs = (await axios.get(`${apiUrl}/clubs`, axiosConfig));
+  var societies = (await axios.get(`${apiUrl}/societies`, axiosConfig));
+  res.render("platform/pages/organisation-catalogue",{clubs:clubs.data.data,societies:societies.data.data});
+});
+
+router.get('/clubs-socs-catalogue/:id', async(req, res) => {
+  var organisation = (await axios.get(`${apiUrl}/clubs/${req.params.id}`, axiosConfig));
+  res.render("platform/pages/organisation",{club:organisation.data});
+});
 
 router.get('/pool-service', async (req, res) => {
   try{

@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SG Platform</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <%-include("../partials/preloader-css")%>
+        <%-include("../partials/preloader-js")%>
+
+</head>
+<%- include("../partials/post-head") %>
+
+<body>
+<style>
+    .grey-bg{ 
+        background-color:rgb(234,239,243);
+        padding: 30px;
+        border-radius: 10px;
+    }
+    .form-check-input{
+        background-color: white;
+    }
+    
+</style>
+<%- include("../partials/preloader") %>
+<!-- Body Wrapper -->
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <%- include("../partials/sidebar") %>
+    <!-- Main wrapper -->
+    <div class="body-wrapper">
+        <%- include("../partials/header") %>
+        
+        <div class="container-fluid">
+            <div class="container-fluid" style="padding-top: 40px;">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 style="padding:25px;color:white" class="fs-6 fw-semibold text-center mb-4 bg-primary">Mail Filter Generator</h2>  
+                        <form id="mailSpamFilterForm">
+
+                            <!-- Unsubscribe From Inbox Section -->
+                            <div class="mb-4 grey-bg">  
+
+                              <div class="container mt-3">
+                                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                       <button class="nav-link small-pills active" id="pills-instructions-tab" data-bs-toggle="pill" data-bs-target="#clubEmails" type="button" role="tab" aria-controls="#clubEmails" aria-selected="true">
+                                          Clubs
+                                       </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link small-pills" id="pills-1-tab" data-bs-toggle="pill" data-bs-target="#societyEmails" type="button" role="tab" aria-controls="#societyEmails" aria-selected="true">Societies</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link small-pills" id="pills-12-tab" data-bs-toggle="pill" data-bs-target="#deptEmails" type="button" role="tab" aria-controls="#deptEmails" aria-selected="true">Departments</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link small-pills" id="pills-123-tab" data-bs-toggle="pill" data-bs-target="#customCategory" type="button" role="tab" aria-controls="#customCategory" aria-selected="true">Custom Category</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link small-pills" id="pills-1234-tab" data-bs-toggle="pill" data-bs-target="#downloadFilter" type="button" role="tab" aria-controls="#downloadFilter" aria-selected="true">Generate</button>
+                                    </li>
+                                </ul>
+                                <hr style="border-width: 3px;" />
+                                <div class="tab-content">
+                                    <div id="clubEmails" class="tab-pane fade show active" aria-labelledby="evaluationTab">
+                                        <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                            Select clubs that you <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">DO NOT</span> want in your Inbox. These will be visible under 'All Mail'. <br>
+                                        </p>
+                                        <div class="d-flex flex-wrap gap-2 my-3">
+                                            <% data.filter((item) => item.Type === 'Club').forEach(item => { %>
+                                                <button class="btn btn-sm btn-outline-primary pill-btn <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill(event, '<%- item.Email %>')">
+                                                    <%- item.Name_df %>
+                                                </button>
+                                            <% }); %>
+                                        </div>
+                                        <br />
+                                        <div class="text-center">
+                                            <button type="button" style="width: 40%;" class="btn btn-primary" onclick="switchTab('pills-1-tab')">Next</button>
+                                        </div>
+                                    </div>
+                                    <div id="societyEmails" role="tabpanel" class="tab-pane fade">
+                                        <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                            Select societies that you <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">DO NOT</span> want in your Inbox. These will be visible under 'All Mail'. <br>
+                                        </p>
+                                        <div class="d-flex flex-wrap gap-2 my-3">
+                                            <% data.filter((item) => item.Type === 'Society').forEach(item => { %>
+                                                <button class="btn btn-sm btn-outline-primary pill-btn <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill(event, '<%- item.Email %>')">
+                                                    <%- item.Name_df %>
+                                                </button>
+                                            <% }); %>
+                                        </div>
+                                        <br />
+                                        <div class="text-center">
+                                            <button type="button" style="width: 40%;" class="btn btn-primary" onclick="switchTab('pills-12-tab')">Next</button>
+                                        </div>
+                                    </div>
+                                    <div id="deptEmails" role="tabpanel" class="tab-pane fade" aria-labelledby="updateTab">
+                                        <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                            Select departments and reps that you <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">DO NOT</span> want in your Inbox. These will be visible under 'All Mail'. <br>
+                                        </p>
+                                        <div class="d-flex flex-wrap gap-2 my-3">
+                                            <% data.filter((item) => item.Type === 'Department').forEach(item => { %>
+                                                <button class="btn btn-sm btn-outline-primary pill-btn <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill(event, '<%- item.Email %>')">
+                                                    <%- item.Name_df %>
+                                                </button>
+                                            <% }); %>
+                                            <br />
+                                            <% data.filter((item) => item.Type === 'Representatives').forEach(item => { %>
+                                                <button class="btn btn-sm btn-outline-primary pill-btn <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill(event, '<%- item.Email %>')">
+                                                    <%- item.Name_df %>
+                                                </button>
+                                            <% }); %>
+                                        </div>
+                                        <br />
+                                        <div class="text-center">
+                                            <button type="button" style="width: 40%;" class="btn btn-primary" onclick="switchTab('pills-123-tab')">Next</button>
+                                        </div>
+                                    </div>
+                                    <div id="customCategory" role="tabpanel" class="tab-pane fade" aria-labelledby="customCategoryTab">
+                                        <p class="fs-3 fw-semibold" style="color: rgb(170, 9, 9);;">(This is optional)</p>
+                                        <form id="newLabelForm">
+                                            <div class="mb-3">
+                                                <label for="labelName" class="form-label">Category Name</label>
+                                                <input type="text" class="form-control" id="labelName" placeholder="This is the name of the new category of emails you are creating.">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="labelEmails" class="form-label">Email(s)</label>
+                                                <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                                    Select any email IDs whose emails you wish to see under this category. For example, if I'm making a label for History, I can add my History professors, the History representatives and the History society.
+                                                </p> 
+                                                <div class="input-group">
+                                                  <input list="labelsList" id="labelEmails" class="form-control" placeholder="Search and select emails..." />
+                                                  <button type="button" class="btn btn-outline-primary" id="addLabelBtn">+</button>
+                                                </div>
+                                                <datalist id="labelsList">
+                                                  <!-- Options will be populated by JavaScript -->
+                                              </datalist>
+                                              <div id="selectedLabels" class="mt-2"></div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="labelKeywords" class="form-label">Keywords</label>
+                                                <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                                    Emails containing any of the words entered below will be categorised under this label. 
+                                                </p> 
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="labelKeywords" placeholder="Add keywords...">
+                                                    <button type="button" class="btn btn-outline-primary" id="addKeywordBtn">+</button>
+                                                </div>
+                                                <div id="selectedKeywords" class="mt-2"></div>
+                                            </div>
+                                            <button type="button" class="btn btn-primary" id="saveLabelBtn">Create Label</button>
+                                        </form>
+                                        <div id="customLabels"></div>
+                                        <br /><br />
+                                        <div class="text-center">
+                                            <button type="button" style="width: 40%;" class="btn btn-primary" onclick="switchTab('pills-1234-tab')">Next</button>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="downloadFilter" role="tabpanel" aria-labelledby="downloadFilterTab">
+                                        <h5>Additional Filters</h5>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="googleClassroom" name="categories" value="Google Classroom">
+                                            <label class="form-check-label" for="googleClassroom">Google Classroom</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="superset" name="categories" value="Superset">
+                                            <label class="form-check-label" for="superset">Superset</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="sharedFiles" name="categories" value="Shared Files">
+                                            <label class="form-check-label" for="sharedFiles">Shared Files</label>
+                                        </div>
+                                        <br />
+                                        <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                            Click the button below to download the XML file containing the filters. Once the file is downloaded, upload it to the page open in the new tab and click on apply filters.<br>
+                                        </p>
+                                        <!-- Download Button -->
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-success" id="downloadXmlBtn" onclick="generateAndDownloadXML()">Generate Filters</button>
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                              <!-- <div>
+                                <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link small-pills active" id="pills-instructions-tab" data-bs-toggle="pill" data-bs-target="#clubs" type="button" role="tab" aria-controls="clubs" aria-selected="true">Clubs</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link small-pills" id="pills-1-tab" data-bs-toggle="pill" data-bs-target="#societies" type="button" role="tab" aria-controls="societies" aria-selected="false">Societies</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link small-pills" id="pills-12-tab" data-bs-toggle="pill" data-bs-target="#departments" type="button" role="tab" aria-controls="departments" aria-selected="false">Departments</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="pills-tabContent">
+                                    <div class="tab-pane fade show active" id="clubs" role="tabpanel" aria-labelledby="clubTab">
+                                        <div class="d-flex flex-wrap gap-2 my-3">
+                                            <% data.filter((item) => item.Type === 'Club').forEach(item => { %>
+                                                <button class="btn btn-sm btn-outline-primary pill-btn <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill('<%- item.Email %>')">
+                                                    <%- item.Name_df %>
+                                                </button>
+                                            <% }); %>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="societies" role="tabpanel" aria-labelledby="societyTab">
+                                        <div class="d-flex flex-wrap gap-2 my-3">
+                                            <% data.filter((item) => item.Type === 'Society').forEach(item => { %>
+                                                <button class="btn btn-sm btn-outline-primary pill-btn <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill('<%- item.Email %>')">
+                                                    <%- item.Name_df %>
+                                                </button>
+                                            <% }); %>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="departments" role="tabpanel" aria-labelledby="departmentTab">
+                                        <div class="d-flex flex-wrap gap-2 my-3">
+                                            <% data.filter((item) => item.Type === 'Department').forEach(item => { %>
+                                                <button class="btn btn-sm btn-outline-primary pill-btn <%= selectedEmails.includes(item.Email) ? 'active' : '' %>" onclick="togglePill('<%- item.Email %>')">
+                                                    <%- item.Name_df %>
+                                                </button>
+                                            <% }); %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                              
+
+                            </div>
+                            
+                        </div>
+                        <!-- Categories Section -->
+                        <!-- <div class="mb-4 grey-bg">
+                            <h5>Categories</h5>
+                            <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                Select categories that you wish to see as separate labels. For example, selecting 'Clubs' will create a label called 'Clubs' which contains all emails from Clubs at Ashoka only. <br>
+                            </p>  
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="clubs" name="categories" value="Clubs">
+                                <label class="form-check-label" for="clubs">Clubs</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="societies" name="categories" value="Societies">
+                                <label class="form-check-label" for="societies">Societies</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="departments" name="categories" value="Departments">
+                                <label class="form-check-label" for="departments">Departments</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="offices" name="categories" value="Offices">
+                                <label class="form-check-label" for="offices">Offices</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="googleClassroom" name="categories" value="Google Classroom">
+                                <label class="form-check-label" for="googleClassroom">Google Classroom</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="sharedFiles" name="categories" value="Shared Files">
+                                <label class="form-check-label" for="sharedFiles">Shared Files</label>
+                            </div>
+                        </div>     -->
+
+
+                            <!-- Custom Labels Section -->
+                            <!-- <div class="mb-4 grey-bg">
+                                <h5>Custom Labels</h5>
+                                <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                    You can create your custom labels. Click Add Label for more information. <br>
+                                </p>  
+                                <button type="button" class="btn btn-primary mb-2" id="addLabelModalBtn" data-bs-toggle="modal" data-bs-target="#addLabelModal">Add Label</button>
+                                
+                            </div> -->
+                            
+                        </form>
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+        <%- include("../partials/preloader-js") %>
+        
+        <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/platform/assets/js/sidebarmenu.js"></script>
+        <script src="/platform/assets/js/app.min.js"></script>
+        <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+        <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+        <script src="/platform/assets/js/dashboard.js"></script>
+        <script src="/platform/assets/js/theme.js"></script>
+        <script src="/platform/assets/js/main.js"></script>
+        <!-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> -->
+        <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script> -->
+        <!-- <%-include("../partials/preloader-js")%> -->
+
+        <script>
+            function switchTab(nextTabId) {
+                const nextTab = document.getElementById(nextTabId);
+                const tab = new bootstrap.Tab(nextTab);
+                tab.show();
+            }
+        </script>
+
+        <script>
+            let selectedEmails = []; // Initialize the selectedEmails array.
+
+            function togglePill(event, email) {
+                event.preventDefault();
+
+                // Toggle the email in selectedEmails array
+                const index = selectedEmails.findIndex(e => e === email);
+                if (index === -1) {
+                    // Email not in the array, add it
+                    selectedEmails.push(email);
+                } else {
+                    // Email is in the array, remove it
+                    selectedEmails.splice(index, 1);
+                }
+
+                console.log(selectedEmails);
+
+                // Update the button classes to reflect active state based on selectedEmails
+                document.querySelectorAll('.pill-btn').forEach(button => {
+                    const buttonEmail = button.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    if (selectedEmails.some(e => e === buttonEmail)) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
+            }
+
+        </script>
+        
+        <script>
+            const clubsCheckbox = document.getElementById('clubs');
+            const societiesCheckbox = document.getElementById('societies');
+            const departmentsCheckbox = document.getElementById('departments');
+            const officesCheckbox = document.getElementById('offices');
+            const googleClassroomCheckbox = document.getElementById('googleClassroom');
+            const sharedFilesCheckbox = document.getElementById('sharedFiles');
+            const supersetCheckbox = document.getElementById('superset');
+            var customLabels = [];
+
+            const emails_json = JSON.parse(`<%- JSON.stringify(data).replace(/'/g, "\\'") %>`);
+            console.log(emails_json);
+
+            document.addEventListener("DOMContentLoaded", function() {
+                const datalist = document.getElementById("labelsList");
+                emails_json.forEach(emailObj => {
+                    const email = emailObj.Email;
+                    const option = document.createElement("option");
+                    option.value = email;
+                    datalist.appendChild(option);
+                });
+            });
+
+            // Trigger displaying email in 'Custom Labels' when pressing "Enter"
+            document.getElementById("labelEmails").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();  // Prevent form submission
+                    document.getElementById("addLabelBtn").click();
+                }
+            });
+
+            // Handle adding selected email to the list
+            document.getElementById("addLabelBtn").addEventListener("click", function() {
+                const emailInput = document.getElementById("labelEmails");
+                const email = emailInput.value;
+                
+                if (email) {
+                    document.getElementById("selectedLabels").insertAdjacentHTML(
+                        "beforeend",
+                        `<span class="badge bg-primary me-2 selected-email">${email} <span class="close" onclick="removeItem(this)">&times;</span></span>`
+                    );
+                    emailInput.value = ""; // Clear input after selection
+                }
+            });
+
+            // Function to remove an email from the selected list
+            function removeItem(element) {
+                element.parentNode.remove();
+            }
+
+            document.getElementById("labelKeywords").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();  // Prevent form submission
+                    document.getElementById("addKeywordBtn").click();
+                }
+            });
+
+            // Handle Custom Label Keywords Selection
+            $('#addKeywordBtn').on('click', function () {
+                var keyword = $('#labelKeywords').val();
+                if (keyword) {
+                    $('#selectedKeywords').append('<span class="badge bg-primary me-2 selected-keyword">' + keyword + ' <span class="close" onclick="removeItem(this)">&times;</span></span>');
+                    $('#labelKeywords').val('');
+                }
+            });
+
+            // Remove item from selection (email/keyword)
+            function removeItem(element) {
+                $(element).parent().remove();
+            }
+
+            // Handle Save Label Button
+            $('#saveLabelBtn').on('click', function () {
+
+            // Get values from input fields
+            var labelName = $('#labelName').val();
+
+            // Remove the 'x' and split emails into an array
+            var emailsText = $('#selectedLabels').text();
+            var emailsArray = emailsText.replace(/ ×/g, ',').split(',');
+            var emailValues = emailsArray.join(', ');
+            emailsArray = emailsArray.slice(0, -1);
+
+            // Remove the 'x' and split keywords into an array
+            var keywordsText = $('#selectedKeywords').text();
+            var keywordsArray = keywordsText.replace(/ ×/g, ',').split(',');
+            keywordsArray = keywordsArray.slice(0, -1);
+
+            // Check if label name is empty or both email and keyword inputs are empty
+            if (labelName === '' || (emailsArray.length === 0 && keywordsArray.length === 0)) {
+                alert("Cannot create an empty label.");
+                return;  // Prevent further execution of the function
+            }
+
+            // Add custom label data to the array
+            customLabels.push({name: labelName, keywords: keywordsArray, emails: emailsArray});
+            console.log(customLabels);
+
+            // Create the label HTML with cleaned data
+            var labelHtml = '<div class="alert alert-info mt-2">Label Name:&nbsp;' + labelName + 
+                            '<br />Emails: ' + emailValues + 
+                            '<br />Keywords: ' + keywordsArray.join(',') + '</div>';
+
+            // Append the label to the customLabels div
+            $('#customLabels').append(labelHtml);
+
+            // Hide the modal
+            $('#addLabelModal').modal('hide');
+
+            // Clear all inputs in the modal
+            $('#labelName').val('');
+            $('#selectedLabels').text('');
+            $('#selectedKeywords').text('');
+
+            });
+
+            // Disable Save Button initially
+            $('#saveLabelBtn').prop('disabled', true);
+
+            // Monitor input changes and enable/disable button accordingly
+            $('#labelName, #selectedLabels, #selectedKeywords').on('input', function () {
+                var labelName = $('#labelName').val();
+                var emailsText = $('#selectedLabels').text();
+                var emailsArray = emailsText.replace(/ ×/g, ',').split(',');
+                var keywordsText = $('#selectedKeywords').text();
+                var keywordsArray = keywordsText.replace(/ ×/g, ',').split(',');
+
+                // Enable Save Button if inputs are valid
+                if (labelName !== '' && (emailsArray.length > 0 || keywordsArray.length > 0)) {
+                    $('#saveLabelBtn').prop('disabled', false);
+                } else {
+                    $('#saveLabelBtn').prop('disabled', true);
+                }
+            });
+
+
+            function generateAndDownloadXML() {
+    // Collect skipped emails
+    const skippedEmails = Array.from(document.querySelectorAll('#selectedEmails .selected-email')).map(el => el.textContent.trim());
+
+    // Start XML structure
+    let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<feed xmlns="http://www.w3.org/2005/Atom" xmlns:apps="http://schemas.google.com/apps/2006">\n';
+
+    // Add XML entry for skipped emails (set to archive)
+    if (skippedEmails.length > 0) {
+        xmlContent += `  <entry>
+    <category term="filter"/>
+    <title>Skip Primary Inbox</title>
+    <apps:property name="from" value="${skippedEmails.join('|')}"/>
+    <apps:property name="shouldArchive" value="true"/>
+  </entry>\n`;
+    }
+
+    // Add XML entries for custom labels
+    customLabels.forEach(label => {
+        if (label.emails.length > 0) {
+            xmlContent += `  <entry>
+    <category term="filter"/>
+    <title>${label.name} Filter - Email</title>
+    <apps:property name="from" value="${label.emails.join('|')}"/>
+    <apps:property name="label" value="${label.name}"/>
+  </entry>\n`;
+        }
+
+        if (label.keywords.length > 0) {
+            label.keywords.forEach(keyword => {
+                xmlContent += `  <entry>
+    <category term="filter"/>
+    <title>${label.name} Filter - Keyword</title>
+    <apps:property name="hasTheWord" value="${keyword}"/>
+    <apps:property name="label" value="${label.name}"/>
+  </entry>\n`;
+            });
+        }
+    });
+
+    // Google Classroom and Shared Files filters
+    if (googleClassroomCheckbox.checked) {
+        xmlContent += `  <entry>
+    <category term="filter"/>
+    <title>Google Classroom Filter</title>
+    <apps:property name="from" value="no-reply@classroom.google.com"/>
+    <apps:property name="label" value="Google Classroom"/>
+  </entry>\n`;
+    }
+    if (supersetCheckbox.checked) {
+        xmlContent += `  <entry>
+    <category term="filter"/>
+    <title>Shared Files Filter</title>
+    <apps:property name="from" value="notifications@joinsuperset.com"/>
+    <apps:property name="label" value="Shared Files"/>
+  </entry>\n`;
+    }
+    if (sharedFilesCheckbox.checked) {
+        xmlContent += `  <entry>
+    <category term="filter"/>
+    <title>Shared Files Filter</title>
+    <apps:property name="from" value="drive-shares-dm-noreply@google.com"/>
+    <apps:property name="label" value="Shared Files"/>
+  </entry>\n`;
+    }
+
+    // Consolidate emails for each category into one filter per category
+    const categories = [
+        { checkbox: clubsCheckbox, type: 'Club', label: 'Clubs' },
+        { checkbox: societiesCheckbox, type: 'Society', label: 'Societies' },
+        { checkbox: departmentsCheckbox, type: 'Department', label: 'Departments' },
+        { checkbox: officesCheckbox, type: 'Offices', label: 'Offices' },
+        {checkbox: 'centresCheckbox', type: 'Centres', label: 'Centres'},
+    ];
+
+    categories.forEach(category => {
+        if (true) {
+            const categoryEmails = emails_json
+                .filter(item => item.Type && item.Type.trim() === category.type)
+                .map(item => item.Email);
+
+            if (categoryEmails.length > 0) {
+                xmlContent += `  <entry>
+    <category term="filter"/>
+    <title>${category.label} Filter</title>
+    <apps:property name="from" value="${categoryEmails.join('|')}"/>
+    <apps:property name="label" value="${category.label}"/>
+  </entry>\n`;
+            }
+        }
+    });
+
+    // Close XML feed
+    xmlContent += '</feed>';
+
+    // Create and download the XML file
+    const blob = new Blob([xmlContent], { type: 'application/xml' });
+    const url = URL.createObjectURL(blob);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = 'mailFilters_by_MinistryOfTechnology.xml';
+    downloadLink.click();
+    URL.revokeObjectURL(url);  // Clean up the URL object
+}
+
+
+        </script>
+    </div>
+</div>
+</body>
+
+</html>
