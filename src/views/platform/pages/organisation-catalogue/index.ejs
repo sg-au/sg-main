@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SG Platform</title>
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="/platform/assets/images/logos/favicon.png"
+    />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+    <%-include("../../partials/preloader-css")%>
+    <style>
+
+      .search-bar {
+        width: 100%;
+        padding: 14px;
+        border-radius: 30px;
+        font-size: 14px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease-in-out;
+      }
+      
+      .search-bar:focus {
+        outline: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        border-color: #5d87ff; /* Change the border color on focus */
+      
+      }
+      
+      /* Style the placeholder text */
+      .search-bar::placeholder {
+        color: #888; /* Adjust the color to your preference */
+        transition: font-size 0.3s ease-out;
+      }
+      
+      /* Move the placeholder text on focus */
+      .search-bar:focus::placeholder {
+        font-size: 12px; /* Adjust the font size when moved to the top */
+      }
+      
+        </style>
+  </head>
+
+  <%-include("../../partials/post-head")%>
+
+  <body>
+    <%-include("../../partials/preloader")%>
+    <div
+      class="page-wrapper"
+      id="main-wrapper"
+      data-layout="vertical"
+      data-navbarbg="skin6"
+      data-sidebartype="full"
+      data-sidebar-position="fixed"
+      data-header-position="fixed"
+    >
+      <%-include("../../partials/sidebar")%>
+      <div class="body-wrapper">
+        <%-include("../../partials/header")%>
+
+        <div class="container-fluid">
+          <div class="container-fluid">
+            <div class="flex-row mb-2" style="text-align: center;">
+              <br />
+              <span class="fs-8 fw-semibold">Student Organisations Catalogue</span><br />
+              <!-- <p>
+                This section serves as a comprehensive resource for all intercollegiate events and competitions available for Ashoka University students. Here, you will find interest forms for each competition. Once you fill out the form, the designated Point of Contact (POC) for that event will reach out to you with further information. Please be sure to review the <a target="_blank" href="https://my.ashoka.edu.in/SIS/UploadedFile/OrientationMaterial/Policies_7134c043-59fe-4c07-baa1-564cfbea2a3e.pdf">off-campus policy</a> before applying for any competitions. If you encounter any challenges, don’t hesitate to reach out via email or phone: 
+                <br /><br />
+                - Vibha: <a href=mailto:vibha.rawat_ug2023@ashoka.edu.in>vibha.rawat_ug2023@ashoka.edu.in</a> &nbsp;&nbsp;|&nbsp;&nbsp; 9667764435  <br />
+                - Guntaas: <a href="mailto:guntaas.kaur_ug2023@ashoka.edu.in">guntaas.kaur_ug2023@ashoka.edu.in</a> &nbsp;&nbsp;|&nbsp;&nbsp; +91 98118 06032
+              </p> -->
+              <span class="fs-4">Find and connect with all student organizations through our catalog—featuring clubs, societies, fests, collectives, ISOs, leagues, and more!</span>
+              <br /><br />
+            </div>
+            <!-- <h1 class="mb-4 mt-4">Organisations Catalogue</h1> -->
+
+            <div id="search-section" class="mb-4">
+              <!-- <h3>Search by Name</h3> -->
+              <input
+                type="text"
+                id="search-bar"
+                class="form-control search-bar"
+                placeholder="Type to search..."
+              />
+
+              <div class="form-inline d-flex gap-3 mt-2">
+                <% types.forEach(type => { %>
+                <div>
+                  <input
+                    type="checkbox"
+                    name="types"
+                    value="<%= type %>"
+                    checked
+                  />
+                  <label class="text-capitalize"> <%= type %> </label>
+                </div>
+                <% }); %>
+              </div>
+            </div>
+
+            <div id="results-section">
+              <div id="results-list" class="row g-4">
+                <% organisations.forEach(org => { %>
+                <div
+                  class="col-12 col-md-6 col-lg-4 organisation-item"
+                  data-name="<%= org.name %>"
+                  data-type="<%= org.type %>"
+                >
+              
+                  <div class="card h-100">
+                    <% if (true) { %>
+                      <img
+                      src="<%=org.profile.data[0].attributes.profile_url%>"
+                      alt="<%= org.name %> Logo"
+                      width="100"
+                      height="100"
+                      style="margin:auto;margin-top:15px"
+                      class="rounded-circle"
+                    />
+                    <% } else { %>
+                    <div
+                      class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                      style="height: 200px"
+                    >
+                      <i class="fa fa-building fa-4x text-muted"></i>
+                    </div>
+                    <% } %>
+                    <div style="text-align:center" class="card-body">
+                      <h3 style="margin:auto" class="card-title"><%=org.profile.data[0].attributes.username%></h3><br/>
+                      <p class="card-text">
+                        <span class="badge bg-primary text-capitalize"
+                          ><%= org.type %></span
+                        >
+                      </p>
+                      <% if (org.short_description) { %>
+                      <p class="card-text text-muted">
+                        <%- org.short_description -%>
+                      </p>
+                      <% } %>
+                      <!-- <a
+                        href="/organisations-catalogue/<%= org.id %>"
+                        class="btn btn-primary"
+                        >Learn More</a
+                      > -->
+                    </div>
+                  </div>
+                </div>
+                <% }) %>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              const organisationItems =
+                document.querySelectorAll(".organisation-item");
+              const searchBar = document.getElementById("search-bar");
+              const typeCheckboxes = document.querySelectorAll(
+                'input[name="types"]'
+              );
+
+              function filterOrganizations() {
+                const searchQuery = searchBar.value.toLowerCase();
+                const selectedTypes = Array.from(
+                  document.querySelectorAll('input[name="types"]:checked')
+                ).map((input) => input.value);
+
+                organisationItems.forEach((item) => {
+                  const itemName = item.getAttribute("data-name").toLowerCase();
+                  const itemType = item.getAttribute("data-type");
+
+                  const matchesSearch = itemName.includes(searchQuery);
+                  const matchesType = selectedTypes.includes(itemType);
+
+                  item.style.display =
+                    matchesSearch && matchesType ? "" : "none";
+                });
+              }
+
+              // Add event listeners
+              searchBar.addEventListener("input", filterOrganizations);
+              typeCheckboxes.forEach((checkbox) => {
+                checkbox.addEventListener("change", filterOrganizations);
+              });
+            });
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/platform/assets/js/dashboard.js"></script>
+    <script src="/platform/assets/js/darkmode.js"></script>
+    <script src="/platform/assets/js/copytext.js"></script>
+
+    <%-include("../../partials/preloader-js")%>
+  </body>
+</html>
