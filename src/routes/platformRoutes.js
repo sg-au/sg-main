@@ -107,7 +107,7 @@ router.get("/course-reviews", (req, res) => {
   const maxCoursesToLoad = 3000;
   axios
     .get(
-      `${process.env.STRAPI_API_URL}/courses?fields[0]=courseCode&fields[1]=courseTitle&fields[2]=semester&fields[3]=year&populate[0]=faculties&populate[1]=course_reviews&populate[2]=reviews&pagination[pageSize]=${maxCoursesToLoad}&filters[$or][0][year][$eq]=2024&filters[$or][1][year][$eq]=2023&filters[$or][2][year][$eq]=2022&sort[0]=year:desc`,
+      `${process.env.STRAPI_API_URL}/courses?fields[0]=courseCode&fields[1]=courseTitle&fields[2]=semester&fields[3]=year&populate[0]=faculties&populate[1]=course_reviews&populate[2]=reviews&pagination[pageSize]=${maxCoursesToLoad}&filters[$or][0][year][$eq]=2024&filters[$or][1][year][$eq]=2024&filters[$or][2][year][$eq]=2024&sort[0]=year:desc`,
       axiosConfig
     )
     .then((response) => {
@@ -1618,10 +1618,12 @@ router.get("/cgpa-planner-reset", async (req, res) => {
 
 router.get("/organisation-catalogue", async (req, res) => {
   const organisationsReq = await axios.get(
-    `${apiUrl}/organisations`,
+    `${apiUrl}/organisations?populate[0]=profile`,
     axiosConfig
   );
   const organisations = organisationsReq.data.data.map((x) => x.attributes);
+  // console.log(organisations[0].profile.data[0].attributes.profile_url)
+
   res.render("platform/pages/organisation-catalogue", {
     organisations,
     types: [...new Set(organisations.map((org) => org.type))],
@@ -1630,7 +1632,7 @@ router.get("/organisation-catalogue", async (req, res) => {
 
 router.get("/clubs-socs-catalogue/:id", async (req, res) => {
   const organisation = await axios.get(
-    `${apiUrl}/clubs/${req.params.id}`,
+    `${apiUrl}/organisations/${req.params.id}`,
     axiosConfig
   );
   res.render("platform/pages/organisation", { club: organisation.data });

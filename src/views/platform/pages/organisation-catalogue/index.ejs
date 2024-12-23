@@ -20,6 +20,36 @@
       rel="stylesheet"
     />
     <%-include("../../partials/preloader-css")%>
+    <style>
+
+      .search-bar {
+        width: 100%;
+        padding: 14px;
+        border-radius: 30px;
+        font-size: 14px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease-in-out;
+      }
+      
+      .search-bar:focus {
+        outline: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        border-color: #5d87ff; /* Change the border color on focus */
+      
+      }
+      
+      /* Style the placeholder text */
+      .search-bar::placeholder {
+        color: #888; /* Adjust the color to your preference */
+        transition: font-size 0.3s ease-out;
+      }
+      
+      /* Move the placeholder text on focus */
+      .search-bar:focus::placeholder {
+        font-size: 12px; /* Adjust the font size when moved to the top */
+      }
+      
+        </style>
   </head>
 
   <%-include("../../partials/post-head")%>
@@ -41,14 +71,26 @@
 
         <div class="container-fluid">
           <div class="container-fluid">
-            <h1 class="mb-4 mt-4">Clubs and Societies Catalogue</h1>
+            <div class="flex-row mb-2" style="text-align: center;">
+              <br />
+              <span class="fs-8 fw-semibold">Student Organisations Catalogue</span><br />
+              <!-- <p>
+                This section serves as a comprehensive resource for all intercollegiate events and competitions available for Ashoka University students. Here, you will find interest forms for each competition. Once you fill out the form, the designated Point of Contact (POC) for that event will reach out to you with further information. Please be sure to review the <a target="_blank" href="https://my.ashoka.edu.in/SIS/UploadedFile/OrientationMaterial/Policies_7134c043-59fe-4c07-baa1-564cfbea2a3e.pdf">off-campus policy</a> before applying for any competitions. If you encounter any challenges, don’t hesitate to reach out via email or phone: 
+                <br /><br />
+                - Vibha: <a href=mailto:vibha.rawat_ug2023@ashoka.edu.in>vibha.rawat_ug2023@ashoka.edu.in</a> &nbsp;&nbsp;|&nbsp;&nbsp; 9667764435  <br />
+                - Guntaas: <a href="mailto:guntaas.kaur_ug2023@ashoka.edu.in">guntaas.kaur_ug2023@ashoka.edu.in</a> &nbsp;&nbsp;|&nbsp;&nbsp; +91 98118 06032
+              </p> -->
+              <span class="fs-4">Find and connect with all student organizations through our catalog—featuring clubs, societies, fests, collectives, ISOs, leagues, and more!</span>
+              <br /><br />
+            </div>
+            <!-- <h1 class="mb-4 mt-4">Organisations Catalogue</h1> -->
 
             <div id="search-section" class="mb-4">
               <!-- <h3>Search by Name</h3> -->
               <input
                 type="text"
                 id="search-bar"
-                class="form-control"
+                class="form-control search-bar"
                 placeholder="Type to search..."
               />
 
@@ -75,13 +117,16 @@
                   data-name="<%= org.name %>"
                   data-type="<%= org.type %>"
                 >
+              
                   <div class="card h-100">
-                    <% if (org.logo_url) { %>
-                    <img
-                      src="<%= org.logo_url %>"
-                      class="card-img-top"
+                    <% if (true) { %>
+                      <img
+                      src="<%=org.profile.data[0].attributes.profile_url%>"
                       alt="<%= org.name %> Logo"
-                      style="height: 200px; object-fit: cover"
+                      width="100"
+                      height="100"
+                      style="margin:auto;margin-top:15px"
+                      class="rounded-circle"
                     />
                     <% } else { %>
                     <div
@@ -91,16 +136,16 @@
                       <i class="fa fa-building fa-4x text-muted"></i>
                     </div>
                     <% } %>
-                    <div class="card-body">
-                      <h5 class="card-title"><%= org.name %></h5>
+                    <div style="text-align:center" class="card-body">
+                      <h3 style="margin:auto" class="card-title"><%=org.profile.data[0].attributes.username%></h3><br/>
                       <p class="card-text">
                         <span class="badge bg-primary text-capitalize"
                           ><%= org.type %></span
                         >
                       </p>
-                      <% if (org.description) { %>
+                      <% if (org.short_description) { %>
                       <p class="card-text text-muted">
-                        <%= org.description.substring(0, 100) %>...
+                        <%- org.short_description -%>
                       </p>
                       <% } %>
                       <!-- <a
