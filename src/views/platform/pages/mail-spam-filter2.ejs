@@ -485,15 +485,15 @@
     // Start XML structure
     let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<feed xmlns="http://www.w3.org/2005/Atom" xmlns:apps="http://schemas.google.com/apps/2006">\n';
 
-    // Add XML entry for skipped emails (set to archive)
-    if (skippedEmails.length > 0) {
-        xmlContent += `  <entry>
-    <category term="filter"/>
-    <title>Skip Primary Inbox</title>
-    <apps:property name="from" value="${skippedEmails.join('|')}"/>
-    <apps:property name="shouldArchive" value="true"/>
-  </entry>\n`;
-    }
+//     // Add XML entry for skipped emails (set to archive)
+//     if (skippedEmails.length > 0) {
+//         xmlContent += `  <entry>
+//     <category term="filter"/>
+//     <title>Skip Primary Inbox</title>
+//     <apps:property name="from" value="${skippedEmails.join('|')}"/>
+//     <apps:property name="shouldArchive" value="true"/>
+//   </entry>\n`;
+//     }
 
     // Add XML entries for custom labels
     customLabels.forEach(label => {
@@ -545,44 +545,43 @@
     }
 
     // Consolidate emails for each category into one filter per category
-    const categories = [
-        { checkbox: clubsCheckbox, type: 'Club', label: 'Clubs' },
-        { checkbox: societiesCheckbox, type: 'Society', label: 'Societies' },
-        { checkbox: departmentsCheckbox, type: 'Department', label: 'Departments' },
-        { checkbox: officesCheckbox, type: 'Offices', label: 'Offices' },
-        {checkbox: 'centresCheckbox', type: 'Centres', label: 'Centres'},
-    ];
+    // const categories = [
+    //     { checkbox: clubsCheckbox, type: 'Club', label: 'Clubs' },
+    //     { checkbox: societiesCheckbox, type: 'Society', label: 'Societies' },
+    //     { checkbox: departmentsCheckbox, type: 'Department', label: 'Departments' },
+    //     { checkbox: officesCheckbox, type: 'Offices', label: 'Offices' },
+    //     {checkbox: 'centresCheckbox', type: 'Centres', label: 'Centres'},
+    // ];
 
-    categories.forEach(category => {
-        if (true) {
-            const categoryEmails = emails_json
-                .filter(item => item.Type && item.Type.trim() === category.type)
-                .map(item => item.Email);
+        // const categoryEmails = emails_json
+        //     .filter(item => item.Type && item.Type.trim() === category.type)
+        //     .map(item => item.Email);
 
-            if (categoryEmails.length > 0) {
+            selectedEmails.forEach(email => {
+            if (email.length > 0) {
                 xmlContent += `  <entry>
-    <category term="filter"/>
-    <title>${category.label} Filter</title>
-    <apps:property name="from" value="${categoryEmails.join('|')}"/>
-    <apps:property name="label" value="${category.label}"/>
-  </entry>\n`;
+                    <category term="filter"/>
+                    <title>Filter</title>
+                    <apps:property name="from" value="${email}"/>
+                    <apps:property name="label" value="Tailored Inbox"/>
+                </entry>\n`;
             }
+        });
+        
+        
+
+            // Close XML feed
+            xmlContent += '</feed>';
+
+            // Create and download the XML file
+            const blob = new Blob([xmlContent], { type: 'application/xml' });
+            const url = URL.createObjectURL(blob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = 'mailFilters_by_MinistryOfTechnology.xml';
+            downloadLink.click();
+            URL.revokeObjectURL(url);  // Clean up the URL object
         }
-    });
-
-    // Close XML feed
-    xmlContent += '</feed>';
-
-    // Create and download the XML file
-    const blob = new Blob([xmlContent], { type: 'application/xml' });
-    const url = URL.createObjectURL(blob);
-    const downloadLink = document.createElement('a');
-    downloadLink.href = url;
-    downloadLink.download = 'mailFilters_by_MinistryOfTechnology.xml';
-    downloadLink.click();
-    URL.revokeObjectURL(url);  // Clean up the URL object
-}
-
 
         </script>
     </div>
