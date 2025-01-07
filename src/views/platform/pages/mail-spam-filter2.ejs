@@ -250,6 +250,7 @@
                                             <label class="form-check-label" for="sharedFiles">Shared Files</label>
                                         </div>
                                         <br />
+                                        <p style="font-size: 10px;" class = "fs-3">Note: The mails that you selected go into your tailored inbox. All remaining mails from clubs, societies, and departments go into the "Socials" category. However, to complete the process, we require a few additional steps from your end. Please refer to the tutorial for instructions!</p>
                                         <p style="font-size: 10px;" class="fs-3 fw-semibold">
                                             Click the button below to download the XML file containing the filters. Once the file is downloaded, upload it to the page open in the new tab and click on apply filters.<br>
                                         </p>
@@ -793,6 +794,23 @@ document.getElementById("saveSublabelBtn").addEventListener("click", function() 
 </entry>\n`;
         });
     });
+
+
+    //LOGIC TO GENERATE PSEUDO-FILTER FOR SOCIALS SMART LABEL
+    const allEmails = emails_json.map(item => item.Email);
+        
+        // Create array of unselected emails by filtering out selectedEmails
+        const unselectedEmails = allEmails.filter(email => !selectedEmails.includes(email));
+
+        // Add filter for unselected emails to go to "Socials" category
+        if (unselectedEmails.length > 0) {
+            xmlContent += `  <entry>
+    <category term="filter"/>
+    <title>Socials Filter</title>
+    <apps:property name="from" value="${unselectedEmails.join('|')}"/>
+    <apps:property name="smartLabelToApply" value="^social"/>
+</entry>\n`;
+        }
 
 
 
