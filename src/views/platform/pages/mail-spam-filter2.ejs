@@ -800,14 +800,14 @@ document.getElementById("saveSublabelBtn").addEventListener("click", function() 
     const allEmails = emails_json.map(item => item.Email);
         
         // Create array of unselected emails by filtering out selectedEmails
-        const unselectedEmails = allEmails.filter(email => !selectedEmails.includes(email));
+        // const unselectedEmails = allEmails.filter(email => !selectedEmails.includes(email));
 
         // Add filter for unselected emails to go to "Socials" category
-        if (unselectedEmails.length > 0) {
+        if (allEmails.length > 0) {
             xmlContent += `  <entry>
     <category term="filter"/>
     <title>Socials Filter</title>
-    <apps:property name="from" value="${unselectedEmails.join('|')}"/>
+    <apps:property name="from" value="${allEmails.join('|')}"/>
     <apps:property name="smartLabelToApply" value="^social"/>
 </entry>\n`;
         }
