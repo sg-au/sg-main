@@ -45,7 +45,8 @@
             <div class="container-fluid" style="padding-top: 40px;">
                 <div class="card">
                     <div class="card-body">
-                        <h2 style="padding:25px;" class="fs-6 fw-semibold text-center mb-4 bg-success">TailoredInbox</h2>  
+                        <h2 style="padding:25px; border-radius: 10px; color: white;" class="fs-6 fw-semibold text-center mb-4 bg-primary">Email Filters</h2>
+                        <p class="fs-3 fw-semibold text-left mb-4 grey-bg">Welcome to Email Filters by the Ministry of Technology. Create a new label called "Tailored Inbox" to serve as a clutter-free inbox containing mails you select.</p>  
                         <form id="mailSpamFilterForm">
 
                             <!-- Unsubscribe From Inbox Section -->
@@ -67,6 +68,11 @@
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link small-pills" id="pills-123-tab" data-bs-toggle="pill" data-bs-target="#customCategory" type="button" role="tab" aria-controls="#customCategory" aria-selected="true">Custom Category</button>
                                     </li>
+                                    <!--SUBLABELS TAB-->
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link small-pills" id="pills-sublabels-tab" data-bs-toggle="pill" data-bs-target="#sublabelsTab" type="button" role="tab" aria-controls="#sublabelsTab" aria-selected="true">Sublabels</button>
+                                    </li>
+
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link small-pills" id="pills-1234-tab" data-bs-toggle="pill" data-bs-target="#downloadFilter" type="button" role="tab" aria-controls="#downloadFilter" aria-selected="true">Generate</button>
                                     </li>
@@ -75,7 +81,7 @@
                                 <div class="tab-content">
                                     <div id="clubEmails" class="tab-pane fade show active" aria-labelledby="evaluationTab">
                                         <p style="font-size: 10px;" class="fs-3 fw-semibold">
-                                            Select clubs that you wish to indicate <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">FAVORITES</span> in your Inbox. These will be visible under 'Socials'. <br>
+                                            Select clubs that you wish to indicate as <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">FAVORITES</span> in your Inbox. These will be visible under the label 'Tailored Inbox'. All remaining clubs will go into the 'Socials' category. <br>
                                         </p>
                                         <div class="d-flex flex-wrap gap-2 my-3">
                                             <% data.filter((item) => item.Type === 'Club').forEach(item => { %>
@@ -91,7 +97,7 @@
                                     </div>
                                     <div id="societyEmails" role="tabpanel" class="tab-pane fade">
                                         <p style="font-size: 10px;" class="fs-3 fw-semibold">
-                                            Select societies that you wish to indicate <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">FAVORITES</span> in your Inbox. These will be visible under 'Socials'. <br>
+                                            Select societies that you wish to indicate as  <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">FAVORITES</span> in your Inbox. These will be visible under the label 'Tailored Inbox'. All remaining societies will go into the 'Socials' category. <br>
                                         </p>
                                         <div class="d-flex flex-wrap gap-2 my-3">
                                             <% data.filter((item) => item.Type === 'Society').forEach(item => { %>
@@ -107,7 +113,7 @@
                                     </div>
                                     <div id="deptEmails" role="tabpanel" class="tab-pane fade" aria-labelledby="updateTab">
                                         <p style="font-size: 10px;" class="fs-3 fw-semibold">
-                                            Select departments and reps that you wish to indicate <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">FAVORITES</span> in your Inbox. These will be visible under 'Socials'. <br>
+                                            Select departments and reps that you wish to indicate as  <span style="color: rgb(170, 9, 9); font-size: 16px; font-weight: bold;">FAVORITES</span> in your Inbox. These will be visible under the label 'Tailored Inbox'. All remaining clubs will go into the 'Socials' category.<br>
                                         </p>
                                         <div class="d-flex flex-wrap gap-2 my-3">
                                             <% data.filter((item) => item.Type === 'Department').forEach(item => { %>
@@ -134,6 +140,8 @@
                                                 <label for="labelName" class="form-label">Category Name</label>
                                                 <input type="text" class="form-control" id="labelName" placeholder="This is the name of the new category of emails you are creating.">
                                             </div>
+
+
                                             <div class="mb-3">
                                                 <label for="labelEmails" class="form-label">Email(s)</label>
                                                 <p style="font-size: 10px;" class="fs-3 fw-semibold">
@@ -144,10 +152,12 @@
                                                   <button type="button" class="btn btn-outline-primary" id="addLabelBtn">+</button>
                                                 </div>
                                                 <datalist id="labelsList">
-                                                  <!-- Options will be populated by JavaScript -->
+                                                    <!--items populated by javascript-->
                                               </datalist>
                                               <div id="selectedLabels" class="mt-2"></div>
                                             </div>
+
+
                                             <div class="mb-3">
                                                 <label for="labelKeywords" class="form-label">Keywords</label>
                                                 <p style="font-size: 10px;" class="fs-3 fw-semibold">
@@ -164,9 +174,67 @@
                                         <div id="customLabels"></div>
                                         <br /><br />
                                         <div class="text-center">
+                                            <button type="button" style="width: 40%;" class="btn btn-primary" onclick="switchTab('pills-sublabels-tab')">Next</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sublabels Tab -->
+                                    <div id="sublabelsTab" role="tabpanel" class="tab-pane fade" aria-labelledby="sublabelsTab">
+                                        <h5>Template Sublabels</h5>
+                                        <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                            Select template sublabels to organize your Tailored Inbox. These will create separate sections within your Tailored Inbox.
+                                        </p>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="clubsSublabel" name="sublabels" value="Clubs">
+                                            <label class="form-check-label" for="clubsSublabel">Clubs</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="societiesSublabel" name="sublabels" value="Societies">
+                                            <label class="form-check-label" for="societiesSublabel">Societies</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="departmentsSublabel" name="sublabels" value="Departments">
+                                            <label class="form-check-label" for="departmentsSublabel">Departments</label>
+                                        </div>
+                                    
+                                        <hr>
+                                    
+                                        <h5>Custom Sublabel</h5>
+                                        <p style="font-size: 10px;" class="fs-3 fw-semibold">
+                                            Create your own sublabels within Tailored Inbox to better organize your emails.
+                                        </p>
+                                        <form id="newSublabelForm">
+                                            <div class="mb-3">
+                                                <label for="sublabelName" class="form-label">Sublabel Name</label>
+                                                <input type="text" class="form-control" id="sublabelName" placeholder="Name for your new sublabel">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="sublabelEmails" class="form-label">Email(s)</label>
+                                                <div class="input-group">
+                                                    <input list="labelsList" id="sublabelEmails" class="form-control" placeholder="Search and select emails..." />
+                                                    <button type="button" class="btn btn-outline-primary" id="addSublabelEmailBtn">+</button>
+                                                </div>
+                                                <div id="selectedSublabelEmails" class="mt-2"></div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="sublabelKeywords" class="form-label">Keywords</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="sublabelKeywords" placeholder="Add keywords...">
+                                                    <button type="button" class="btn btn-outline-primary" id="addSublabelKeywordBtn">+</button>
+                                                </div>
+                                                <div id="selectedSublabelKeywords" class="mt-2"></div>
+                                            </div>
+                                            <button type="button" class="btn btn-primary" id="saveSublabelBtn">Create Sublabel</button>
+                                        </form>
+                                        <div id="customSublabels" class="mt-3"></div>
+                                        
+                                        <br /><br />
+                                        <div class="text-center">
                                             <button type="button" style="width: 40%;" class="btn btn-primary" onclick="switchTab('pills-1234-tab')">Next</button>
                                         </div>
                                     </div>
+
+
                                     <div class="tab-pane fade" id="downloadFilter" role="tabpanel" aria-labelledby="downloadFilterTab">
                                         <h5>Additional Filters</h5>
                                         <div class="form-check">
@@ -365,6 +433,37 @@
                 });
             });
 
+
+//CSS FOR THE SEARCH DROPDOWN
+const style = document.createElement('style');
+style.textContent = `
+    datalist {
+        position: absolute;
+        max-height: 200px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: white;
+        overflow-y: auto;
+        width: 100%;
+    }
+    
+    datalist option {
+        padding: 8px;
+        cursor: pointer;
+    }
+    
+    datalist option:hover {
+        background-color: #f0f0f0;
+    }
+    
+    input[list]::-webkit-calendar-picker-indicator {
+        display: none;
+    }
+`;
+document.head.appendChild(style);
+
+
+
             // Trigger displaying email in 'Custom Labels' when pressing "Enter"
             document.getElementById("labelEmails").addEventListener("keypress", function(event) {
                 if (event.key === "Enter") {
@@ -478,6 +577,90 @@
             });
 
 
+            //SUBLABEL CODE
+            let sublabels = [];
+
+            // Add keyboard event listeners for custom sublabels
+document.getElementById("sublabelEmails").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("addSublabelEmailBtn").click();
+    }
+});
+
+document.getElementById("sublabelKeywords").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("addSublabelKeywordBtn").click();
+    }
+});
+
+// Handle sublabel email addition
+document.getElementById("addSublabelEmailBtn").addEventListener("click", function() {
+    const emailInput = document.getElementById("sublabelEmails");
+    const email = emailInput.value;
+    
+    if (email) {
+        document.getElementById("selectedSublabelEmails").insertAdjacentHTML(
+            "beforeend",
+            `<span class="badge bg-primary me-2 selected-email">${email} <span class="close" onclick="removeItem(this)">&times;</span></span>`
+        );
+        emailInput.value = "";
+    }
+});
+
+// Handle sublabel keyword addition
+document.getElementById("addSublabelKeywordBtn").addEventListener("click", function() {
+    const keywordInput = document.getElementById("sublabelKeywords");
+    const keyword = keywordInput.value;
+    
+    if (keyword) {
+        document.getElementById("selectedSublabelKeywords").insertAdjacentHTML(
+            "beforeend",
+            `<span class="badge bg-primary me-2 selected-keyword">${keyword} <span class="close" onclick="removeItem(this)">&times;</span></span>`
+        );
+        keywordInput.value = "";
+    }
+});
+
+// Save sublabel
+document.getElementById("saveSublabelBtn").addEventListener("click", function() {
+    const sublabelName = document.getElementById("sublabelName").value;
+    
+    // Get emails
+    const emailsText = document.getElementById("selectedSublabelEmails").textContent;
+    const emailsArray = emailsText.replace(/ ×/g, ',').split(',').filter(e => e);
+    
+    // Get keywords
+    const keywordsText = document.getElementById("selectedSublabelKeywords").textContent;
+    const keywordsArray = keywordsText.replace(/ ×/g, ',').split(',').filter(k => k);
+    
+    if (sublabelName && (emailsArray.length > 0 || keywordsArray.length > 0)) {
+        sublabels.push({
+            name: sublabelName,
+            emails: emailsArray,
+            keywords: keywordsArray
+        });
+        
+        // Add visual confirmation
+        document.getElementById("customSublabels").insertAdjacentHTML(
+            "beforeend",
+            `<div class="alert alert-info mt-2">
+                Sublabel: ${sublabelName}<br>
+                Emails: ${emailsArray.join(", ")}<br>
+                Keywords: ${keywordsArray.join(", ")}
+            </div>`
+        );
+        
+        // Clear form
+        document.getElementById("sublabelName").value = "";
+        document.getElementById("selectedSublabelEmails").innerHTML = "";
+        document.getElementById("selectedSublabelKeywords").innerHTML = "";
+    }
+});
+//end of sublabel code
+
+
             function generateAndDownloadXML() {
     // Collect skipped emails
     const skippedEmails = Array.from(document.querySelectorAll('#selectedEmails .selected-email')).map(el => el.textContent.trim());
@@ -569,6 +752,49 @@
         });
         
         
+
+        //SUBLABEL LOGIC
+    // Add template sublabels
+    const templateSublabels = ['clubs', 'societies', 'departments'];
+    templateSublabels.forEach(type => {
+        if (document.getElementById(`${type}Sublabel`).checked) {
+            const emails = emails_json
+                .filter(item => item.Type.toLowerCase() === type.slice(0, -1))
+                .map(item => item.Email);
+                
+            if (emails.length > 0) {
+                xmlContent += `  <entry>
+    <category term="filter"/>
+    <title>Tailored Inbox/${type.charAt(0).toUpperCase() + type.slice(1)}</title>
+    <apps:property name="from" value="${emails.join('|')}"/>
+    <apps:property name="label" value="Tailored Inbox/${type.charAt(0).toUpperCase() + type.slice(1)}"/>
+</entry>\n`;
+            }
+        }
+    });
+
+    // Add custom sublabels
+    sublabels.forEach(sublabel => {
+        if (sublabel.emails.length > 0) {
+            xmlContent += `  <entry>
+    <category term="filter"/>
+    <title>Tailored Inbox/${sublabel.name}</title>
+    <apps:property name="from" value="${sublabel.emails.join('|')}"/>
+    <apps:property name="label" value="Tailored Inbox/${sublabel.name}"/>
+</entry>\n`;
+        }
+        
+        sublabel.keywords.forEach(keyword => {
+            xmlContent += `  <entry>
+    <category term="filter"/>
+    <title>Tailored Inbox/${sublabel.name}</title>
+    <apps:property name="hasTheWord" value="${keyword}"/>
+    <apps:property name="label" value="Tailored Inbox/${sublabel.name}"/>
+</entry>\n`;
+        });
+    });
+
+
 
             // Close XML feed
             xmlContent += '</feed>';
