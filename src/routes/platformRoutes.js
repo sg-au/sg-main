@@ -1539,6 +1539,9 @@ router.get('/mail-spam-filter3', async(req, res) => {
   res.render("platform/pages/mail-spam-filter3", {data: data, selectedEmails: []});
 });
 
+router.get("/wifi-ticket", async (req, res) => {
+  res.render("platform/pages/wifi-ticket");
+});
 router.get("/cancel-cab-pool", async (req, res) => {
   userEmail = req.user._json.email;
   // var pool = (await axios.get(`${apiUrl}/pools?[pooler][email]=${userEmail}&filters[status][$eqi]=available`, axiosConfig));

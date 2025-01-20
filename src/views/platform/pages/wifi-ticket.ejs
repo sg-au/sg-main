@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SG Platform</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+    <%-include("../partials/preloader-css")%>
+</head>
+<%-include("../partials/post-head")%>
+
+<style>
+    #divLink {
+        cursor: pointer;
+    }
+
+    .form-heading {
+        font-size: 1.75rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-size: 0.9rem;
+        font-weight: normal;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 0.9rem;
+    }
+
+    .btn-submit {
+        font-size: 0.8rem;
+        padding: 5px 15px;
+    }
+
+    .placeholder-box {
+        width: 100%;
+        height: 200px;
+        border: 2px dashed #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        color: #999;
+        margin-bottom: 20px;
+    }
+
+    .help-icon {
+        font-size: 0.8rem;
+        cursor: pointer;
+        margin-left: 5px;
+        color: #007bff;
+    }
+
+    .help-icon:hover {
+        color: #0056b3;
+    }
+
+    .modal-content {
+        font-size: 0.9rem;
+    }
+</style>
+
+<body>
+    <%-include("../partials/preloader")%>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <%-include("../partials/sidebar")%>
+        <div class="body-wrapper">
+            <%-include("../partials/header")%>
+            <div class="container-fluid">
+                <div class="container-fluid">
+                    <div class="row justify-content-between">
+                      <div class="card">
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="form-heading">Raise a ticket for WiFi related issues</div>
+                                <!-- Embed Speedtest -->
+                                <div id="speedtest-container" class="mb-4">
+                                    <iframe 
+                                        src="https://fast.com" 
+                                        style="width: 100%; height: 250px; border: none;" 
+                                        title="Speed Test"></iframe>
+                                </div>
+
+                                <!-- Inputs for Speed Values -->
+                                <div class="row mb-3">
+                                    <label for="downloadSpeed" class="col-sm-2 col-form-label form-label">Download Speed (Mbps)</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" step="0.01" class="form-control" id="downloadSpeed" placeholder="Enter your download speed">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="uploadSpeed" class="col-sm-2 col-form-label form-label">Upload Speed (Mbps)</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" step="0.01" class="form-control" id="uploadSpeed" placeholder="Enter your upload speed">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="ping" class="col-sm-2 col-form-label form-label">Ping (ms)</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" step="1" class="form-control" id="ping" placeholder="Enter your ping">
+                                    </div>
+                                </div>                              <form action="#" method="post">
+                                  <div class="row mb-3">
+                                      <label for="complaintType" class="col-sm-2 col-form-label form-label">Complaint Type</label>
+                                      <div class="col-sm-10">
+                                          <select class="form-select" id="complaintType" onchange="toggle24GHzOption(this)">
+                                              <option value="Speed">Speed</option>
+                                              <option value="Smart Device Configuration">Smart Device Configuration</option>
+                                              <option value="Forgot Password">Forgot Password</option>
+                                              <option value="Unblock Service">Unblock Service</option>
+                                              <option value="Damaged Hardware">Damaged Hardware</option>
+                                              <option value="Low router density">Low router density</option>
+                                              <option value="Other">Other</option>
+                                          </select>
+                                      </div>
+                                  </div>
+                                  <div class="row mb-3" id="24GHzOption" style="display: none;">
+                                      <div class="col-sm-10 offset-sm-2">
+                                          <div class="form-check">
+                                              <input class="form-check-input" type="radio" name="has24GHz" id="no24GHz" value="no">
+                                              <label class="form-check-label form-label" for="no24GHz">
+                                                  I do not have 2.4GHz WiFi
+                                              </label>
+                                              <span class="help-icon" onclick="openModal()">(?)</span>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="row mb-3">
+                                      <label for="location" class="col-sm-2 col-form-label form-label">Location</label>
+                                      <div class="col-sm-10">
+                                          <input type="text" class="form-control" id="location" placeholder="Enter your location">
+                                      </div>
+                                  </div>
+                                  <div class="row mb-3">
+                                      <label for="urgency" class="col-sm-2 col-form-label form-label">Urgency</label>
+                                      <div class="col-sm-10">
+                                          <select class="form-select" id="urgency">
+                                              <option value="Low">Low</option>
+                                              <option value="Medium">Medium</option>
+                                              <option value="High">High</option>
+                                          </select>
+                                      </div>
+                                  </div>
+                                  <div class="row mb-3">
+                                      <label for="inputMessage" class="col-sm-2 col-form-label form-label">Message</label>
+                                      <div class="col-sm-10">
+                                          <textarea class="form-control" id="inputMessage" rows="4" placeholder="Write your message"></textarea>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-sm-10 offset-sm-2">
+                                          <button type="submit" class="btn btn-primary btn-submit">Submit</button>
+                                      </div>
+                                  </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">What is 2.4GHz WiFi?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>2.4GHz WiFi is a wireless frequency band that slower speeds compared to 5GHz WiFi and is not enabled by default in most routers in Ashoka. Many older devices may not support 5Ghz WiFi, therefore we would request you to check if .</p>
+                    <h6>How to check if your computer supports only 2.4GHz WiFi:</h6>
+                    <ul>
+                        <li><strong>Windows:</strong> Open Command Prompt and run <code>netsh wlan show drivers</code>. Look for "Radio types supported." If you see 802.11a or 802.11ac, your device supports 5GHz.</li>
+                        <li><strong>MacOS:</strong> Hold the Option key and click the WiFi icon in the menu bar. Look for "Channel" in the WiFi details. If the channel is between 1-14, it is 2.4GHz. Higher channels indicate 5GHz.</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggle24GHzOption(select) {
+            const optionDiv = document.getElementById("24GHzOption");
+            optionDiv.style.display = select.value === "Speed" ? "block" : "none";
+        }
+
+        function openModal() {
+            const modal = new bootstrap.Modal(document.getElementById('infoModal'));
+            modal.show();
+        }
+    </script>
+
+    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/platform/assets/js/dashboard.js"></script>
+    <script src="/platform/assets/js/darkmode.js"></script>
+    <script src="/platform/assets/js/copytext.js"></script>
+    <%-include("../partials/preloader-js")%>
+</body>
+
+</html>
