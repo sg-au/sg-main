@@ -1,3 +1,4 @@
+<!-- views/calendar.ejs -->
 <!doctype html>
 <html lang="en">
 
@@ -10,6 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" integrity="sha512-SqYaQuhE5QDV46cU4yX/gPe6vXUnqLMxnpa0kBm36BT2rkZ66u5hDq5APKe9pcw/SgTkbXpY4HjOyddisEC4OQ==" crossorigin="anonymous" />
+
   <script type='text/javascript' src='fullcalendar/gcal.js'></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
@@ -18,298 +20,437 @@
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@5.11.3/main.global.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+  <%- include("../partials/post-head") %>
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      headerToolbar: {
-        start: 'prev,today,next',
-        center: 'title',
-        end: 'dayGridMonth,dayGridWeek,listWeek'
-      },
-      timeZone: 'Europe/Berlin',
-      weekNumbers: true,
-      initialView: 'dayGridMonth',
-      eventTimeFormat: {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      },
-      views: {
-        dayGridWeek: {
-          titleFormat: '{DD.{MM.}}YYYY'
-        },
-        listWeek: {
-          titleFormat: '{DD.{MM.}}YYYY'
-        }
-      },
-      events: [
-        {
-          title: "Festival in HH",
-          start: moment().add(1, 'days').format(),
-          end: moment().add(4, 'days').add(3, 'hours').format(),
-          className: 'festival',
-          color: 'orange',
-          textColor: 'black',
-          kind: 'festival',
-          state: 'hh'
-        },
-        {
-          title: "Party in HH",
-          start: moment().subtract(2, 'days').format(),
-          end: moment().subtract(2, 'days').add(3, 'hours').format(),
-          color: 'brightblue',
-          textColor: 'white',
-          kind: 'party',
-          state: 'hh'
-        },
-        {
-          title: "Party in SH",
-          start: moment().format(),
-          end: moment().add(3, 'hours').format(),
-          color: 'brightblue',
-          textColor: 'white',
-          kind: 'party',
-          state: 'sh'
-        },
-        {
-          title: "Concert in SH",
-          start: moment().add(1, 'days').format(),
-          end: moment().add(1, 'days').add(3, 'hours').format(),
-          color: 'red',
-          textColor: 'white',
-          kind: 'concert',
-          state: 'sh'
-        },
-        {
-          title: "Concert in HH",
-          start: moment().subtract(3, 'days').format(),
-          end: moment().subtract(3, 'days').add(3, 'hours').format(),
-          color: 'red',
-          textColor: 'white',
-          kind: 'concert',
-          state: 'hh'
-        },
-        {
-          title: "#1 Background title",
-          start: moment().subtract(6, 'days').format('YYYY-MM-DD'),
-          end: moment().subtract(2, 'days').format('YYYY-MM-DD'),
-          display: 'background',
-          kind: 'holiday',
-        },
-        {
-          title: "#2 title",
-          start: moment().subtract(8, 'days').format('YYYY-MM-DD'),
-          end: moment().subtract(8, 'days').format('YYYY-MM-DD'),
-          display: 'background',
-          color: '#ff9f89',
-          kind: 'holiday',
-        },
-        {
-          // FIX: Two Background events overlap each other
-          title: "#3 Overlap",
-          start: moment().subtract(8, 'days').format('YYYY-MM-DD'),
-          end: moment().subtract(8, 'days').format('YYYY-MM-DD'),
-          display: 'background',
-          kind: 'holiday',
-        }
-      ],
-      eventClassNames: function(info) {
-        
-        var result = true;
-        var states = [];
-        var kinds = [];
-        
-        // Find all checkbox that are event filters and enabled and save the values.
-        $("input[name='event_filter_sel']:checked").each(function () {
-          // Saving each type separately
-          if ($(this).data('type') == 'state') {
-            states.push($(this).val());
-          }
-          else if ($(this).data('type') == 'kind') {
-            kinds.push($(this).val());
-          }
-        });
-        
-        // If there are locations to check
-        if (states.length) {
-          result = result && states.indexOf(info.event.extendedProps.state) >= 0;
-        }
-        // If there are specific types of events
-        if (kinds.length) {
-          result = result && kinds.indexOf(info.event.extendedProps.kind) >= 0 || info.event.extendedProps.kind == 'holiday';
-        }
-        
-        if (!result) {
-          result = "hidden";
-        }
-        
-        return result;
-      },
+  <style>
+    :root {
+      --fc-small-font-size: .85em;
+      --fc-page-bg-color: #fff;
+      --fc-neutral-bg-color: rgba(208, 208, 208, 0.3);
+      --fc-neutral-text-color: #808080;
+      --fc-border-color: #ddd;
 
-      windowResize: function(view) {
-        var current_view = view.type;
-        var expected_view = $(window).width() > 800 ? 'dayGridMonth' : 'listWeek';
-        if (current_view !== expected_view) {
-          calendar.changeView(expected_view);
-        }
-      },
-    });
+      --fc-button-text-color: #fff;
+      --fc-button-bg-color: #5d87ff;
+      --fc-button-border-color: #5d87ff;
+      --fc-button-hover-bg-color: #1e2b37;
+      --fc-button-hover-border-color: #1a252f;
+      --fc-button-active-bg-color: #4a6ccc;
+      --fc-button-active-border-color: #4a6ccc;
 
-    calendar.render();
+      --fc-event-bg-color: #3788d8;
+      --fc-event-border-color: #3788d8;
+      --fc-event-text-color: #fff;
+      --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
 
-    if ($(window).width() < 800) {
-      calendar.changeView('listWeek');
+      --fc-more-link-bg-color: #d0d0d0;
+      --fc-more-link-text-color: inherit;
+
+      --fc-event-resizer-thickness: 8px;
+      --fc-event-resizer-dot-total-width: 8px;
+      --fc-event-resizer-dot-border-width: 1px;
+
+      --fc-non-business-color: rgba(215, 215, 215, 0.3);
+      --fc-bg-event-color: rgb(143, 223, 130);
+      --fc-bg-event-opacity: 0.3;
+      --fc-highlight-color: rgba(188, 232, 241, 0.3);
+      --fc-today-bg-color: rgba(255, 220, 40, 0.15);
+      --fc-now-indicator-color: red;
     }
 
-    $('input[class=event_filter]').change(function() {
+    /* Wrapper layout for large screens */
+
+    .card {
+    height: calc(100vh - 100px); /* Adjust based on your layout */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent overflow */
+  }
+
+  .card-body {
+    flex: 1;
+    overflow: hidden; /* Prevent overflow */
+    padding: 1.5rem;
+  }
+
+
+    .wrapper {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 190px;
+      grid-template-rows: 1fr;
+      grid-column-gap: 0px;
+      grid-row-gap: 0px;
+      margin-top: 0;
+      overflow: hidden;
+      height: calc(100vh - 200px);
+    }
+
+    .filter {
+      grid-area: 1 / 2 / 2 / 3;
+      margin: 1em 0 0 1em;
+    }
+    .event_filter_wrapper {
+      margin: .5em 0;
+    }
+
+    #calendar {
+      height: 100%;
+      max-height: 100%;
+      grid-area: 1 / 1 / 2 / 2;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 800px) {
+      .card{
+        height: calc(100vh - 80px);
+      }
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        /* height: calc(100vh - 150px); */
+        height: 100%;
+      }
+      .filter {
+        margin: 0 0 1em 0;
+        display: flex;
+      overflow-x: auto;
+      padding: 10px 0;
+      gap: 15px;
+      white-space: nowrap;
+      }
+      #calendar {
+        /* margin-top: 1em;
+        flex-grow: 1;
+        min-height: 500px; */
+        flex: 1;
+      min-height: 0; /* Remove minimum height */
+      height: 100%;
+      }
+      .event_filter_wrapper {
+      margin: 0;
+      display: inline-block;
+    }
+    .fc .fc-view-harness {
+      height: 100% !important; /* Force height containment */
+    }
+    }
+
+    .festival .fc-time {
+      display: none;
+    }
+
+    .fc-day-grid-event .fc-content {
+      white-space: normal;
+    }
+
+    a.fc-event-past {
+      background-color: grey !important; 
+      border: none;
+    }
+
+    a.fc-event.hidden {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+    .fc .fc-toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+    }
+
+    .fc .fc-toolbar-title {
+      font-size: 1.2em;
+    }
+
+    .fc .fc-button {
+      padding: 0.2em 0.4em;
+      font-size: 0.9em;
+    }
+    
+    .fc-view-harness {
+      font-size: 0.9em;
+    }
+  }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+          start: 'prev,today,next',
+          center: 'title',
+          end: 'dayGridMonth,dayGridWeek,timeGridDay, listWeek'
+        },
+        timeZone: 'Europe/Berlin',
+        weekNumbers: true,
+        initialView: 'dayGridMonth',
+        eventTimeFormat: {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        },
+        views: {
+          // dayGridWeek: {
+          //   titleFormat: '{DD.{MM.}}YYYY'
+          // },
+          // listWeek: {
+          //   titleFormat: '{DD.{MM.}}YYYY'
+          // }
+          dayGridMonth: {
+          titleFormat: { year: 'numeric', month: 'long' }
+        },
+        dayGridWeek: {
+          titleFormat: { year: 'numeric', month: 'short', day: '2-digit' },
+          dayHeaderFormat: { weekday: 'short', day: '2-digit' }
+        },
+        timeGridDay: {
+          titleFormat: { year: 'numeric', month: 'short', day: '2-digit' },
+          dayHeaderFormat: { weekday: 'long', day: '2-digit' }
+        },
+        listWeek: {
+          titleFormat: { year: 'numeric', month: 'short', day: '2-digit' },
+          dayHeaderFormat: { weekday: 'long', day: '2-digit' }
+        }
+        },
+        events: [
+          {
+            title: "Festival in HH",
+            start: moment().add(1, 'days').format(),
+            end: moment().add(4, 'days').add(3, 'hours').format(),
+            className: 'festival',
+            color: 'orange',
+            textColor: 'black',
+            kind: 'festival',
+            state: 'hh',
+            venue: 'Takshilla',
+            description: "This is a festival in Hamburg"
+          },
+          {
+            title: "Party in HH",
+            start: moment().subtract(2, 'days').format(),
+            end: moment().subtract(2, 'days').add(3, 'hours').format(),
+            color: 'brightblue',
+            textColor: 'white',
+            kind: 'party',
+            state: 'hh'
+          },
+          {
+            title: "Party in SH",
+            start: moment().format(),
+            end: moment().add(3, 'hours').format(),
+            color: 'brightblue',
+            textColor: 'white',
+            kind: 'party',
+            state: 'sh'
+          },
+          {
+            title: "Concert in SH",
+            start: moment().add(1, 'days').format(),
+            end: moment().add(1, 'days').add(3, 'hours').format(),
+            color: 'red',
+            textColor: 'white',
+            kind: 'concert',
+            state: 'sh'
+          },
+          {
+            title: "Concert in HH",
+            start: moment().subtract(3, 'days').format(),
+            end: moment().subtract(3, 'days').add(3, 'hours').format(),
+            color: 'red',
+            textColor: 'white',
+            kind: 'concert',
+            state: 'hh'
+          },
+          {
+            title: "#1 Background title",
+            start: moment().subtract(6, 'days').format('YYYY-MM-DD'),
+            end: moment().subtract(2, 'days').format('YYYY-MM-DD'),
+            display: 'background',
+            kind: 'holiday',
+          },
+          {
+            title: "#2 title",
+            start: moment().subtract(8, 'days').format('YYYY-MM-DD'),
+            end: moment().subtract(8, 'days').format('YYYY-MM-DD'),
+            display: 'background',
+            color: '#ff9f89',
+            kind: 'holiday',
+          },
+          {
+            // FIX: Two Background events overlap each other
+            title: "#3 Overlap",
+            start: moment().subtract(8, 'days').format('YYYY-MM-DD'),
+            end: moment().subtract(8, 'days').format('YYYY-MM-DD'),
+            display: 'background',
+            kind: 'holiday',
+          }
+        ],
+        height: '100%',
+        expandRows: true,
+        eventClick: function (info) {
+        // Display the event details when clicked
+          $('.modal-title').text(info.event.title);
+          // Create formatted content for modal body
+          let modalContent = '';
+          
+          if (info.event.extendedProps.venue) {
+            modalContent += '<p><strong>Venue:</strong> ' + info.event.extendedProps.venue + '</p>';
+          }
+          
+          if (info.event.extendedProps.description) {
+            modalContent += '<p><strong>Description:</strong> ' + info.event.extendedProps.description + '</p>';
+          }
+          
+          // Set the modal body content
+          $('.modal-body-text').html(modalContent);
+          $('.modal').modal('toggle');
+        },
+        eventClassNames: function(info) {
+          var result = true;
+          var states = [];
+          var kinds = [];
+          
+          // Collect checked filters
+          $("input[name='event_filter_sel']:checked").each(function () {
+            if ($(this).data('type') === 'state') {
+              states.push($(this).val());
+            }
+            else if ($(this).data('type') === 'kind') {
+              kinds.push($(this).val());
+            }
+          });
+          
+          // Filter by state
+          if (states.length) {
+            result = result && states.indexOf(info.event.extendedProps.state) >= 0;
+          }
+          // Filter by kind (holidays always displayed)
+          if (kinds.length) {
+            result = result && kinds.indexOf(info.event.extendedProps.kind) >= 0 || info.event.extendedProps.kind === 'holiday';
+          }
+          
+          if (!result) {
+            result = "hidden";
+          }
+          
+          return result;
+        },
+        windowResize: function(view) {
+          // var current_view = view.type;
+          // var expected_view = $(window).width() > 800 ? 'dayGridMonth' : 'listWeek';
+          // if (current_view !== expected_view) {
+          //   calendar.changeView(expected_view);
+          // }
+          const width = window.innerWidth;
+        let newView;
+        
+        if (width < 576) {
+          newView = 'listWeek';
+        } else if (width < 768) {
+          newView = 'timeGridDay';
+        } else if (width < 992) {
+          newView = 'dayGridWeek';
+        } else {
+          newView = 'dayGridMonth';
+        }
+        
+        if (calendar.view.type !== newView) {
+          calendar.changeView(newView);
+        }
+        },
+      });
+
       calendar.render();
+
+      // Switch to list view automatically if viewport is small
+      if ($(window).width() < 800) {
+        calendar.changeView('listWeek');
+      }
+
+      // Re-render when filters change
+      $('input[class=event_filter]').change(function() {
+        calendar.render();
+      });
     });
-      
-  });
   </script>
-
 </head>
-<%-include("../partials/post-head")%>
-
-<style>
-  :root {
-    --fc-small-font-size: .85em;
-    --fc-page-bg-color: #fff;
-    --fc-neutral-bg-color: rgba(208, 208, 208, 0.3);
-    --fc-neutral-text-color: #808080;
-    --fc-border-color: #ddd;
-
-    --fc-button-text-color: #fff;
-    --fc-button-bg-color: #5d87ff;
-    --fc-button-border-color: #5d87ff;
-    --fc-button-hover-bg-color: #1e2b37;
-    --fc-button-hover-border-color: #1a252f;
-    --fc-button-active-bg-color: #4a6ccc;
-    --fc-button-active-border-color: #4a6ccc;
-
-    --fc-event-bg-color: #3788d8;
-    --fc-event-border-color: #3788d8;
-    --fc-event-text-color: #fff;
-    --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
-
-    --fc-more-link-bg-color: #d0d0d0;
-    --fc-more-link-text-color: inherit;
-
-    --fc-event-resizer-thickness: 8px;
-    --fc-event-resizer-dot-total-width: 8px;
-    --fc-event-resizer-dot-border-width: 1px;
-
-    --fc-non-business-color: rgba(215, 215, 215, 0.3);
-    --fc-bg-event-color: rgb(143, 223, 130);
-    --fc-bg-event-opacity: 0.3;
-    --fc-highlight-color: rgba(188, 232, 241, 0.3);
-    --fc-today-bg-color: rgba(255, 220, 40, 0.15);
-    --fc-now-indicator-color: red;
-  }
-
-  .wrapper {
-    display: grid;
-    grid-template-columns: 1fr 190px;
-    grid-template-rows: 1fr;
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-  }
-
-  .filter {
-    grid-area: 1 / 2 / 2 / 3;
-    margin: 1em 0 0 1em;
-  }
-  .event_filter_wrapper {
-    margin: .5em 0;
-  }
-
-  #calendar {
-    margin: 3em 0 0 0;
-    grid-area: 1 / 1 / 2 / 2;
-  }
-
-  .festival .fc-time {
-    display: none;
-  }
-
-
-  .fc-day-grid-event .fc-content {
-    white-space: normal;
-  }
-
-  a.fc-event-past {
-    background-color: grey !important; 
-    border: none;
-  }
-
-  a.fc-event.hidden {
-    display: none;
-  }
-
-  /* .fc .fc-button-primary {
-    background-color: #5d87ff; 
-    border-color: #5d87ff; 
-    color: #fff; 
-  } */
-
-  /* .fc-button .fc-button-active {
-    background-color: #4a6ccc; 
-    border-color: #4a6ccc; 
-    color: #fff;
-  } */
-</style>
 
 <body>
-  <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
-    <%-include("../partials/sidebar")%>
-    <!--  Main wrapper -->
+    <%- include("../partials/sidebar") %>
     <div class="body-wrapper">
-      <%-include("../partials/header")%>
+      <%- include("../partials/header") %>
       <div class="container-fluid">
-        <!--  Row 1 -->
         <div class="row">
           <div class="col-lg-8 d-flex align-items-stretch card">
             <div class="card-body p-4">
-              <div class="filter">
-                <h3>Filter</h3>
-                <div class="event_filter_wrapper">
-                  <input id="hh" class="event_filter" name="event_filter_sel" type="checkbox" value="hh" data-type="state" />
-                  <label for="hh">Hamburg (HH)</label>
+              <!-- Filter + Calendar Wrapper -->
+              <div class="wrapper">
+                <div class="filter">
+                  <h3>Filter</h3>
+                  <div class="event_filter_wrapper">
+                    <input id="hh" class="event_filter" name="event_filter_sel" type="checkbox" value="hh" data-type="state" />
+                    <label for="hh">Hamburg (HH)</label>
+                  </div>
+                  <div class="event_filter_wrapper">
+                    <input id="sh" class="event_filter" name="event_filter_sel" type="checkbox" value="sh" data-type="state" />
+                    <label for="sh">Schleswig-Holstein (SH)</label>
+                  </div>
+                  <div class="event_filter_wrapper">
+                    <input id="party" class="event_filter" name="event_filter_sel" type="checkbox" value="party" data-type="kind" checked="true" />
+                    <label for="party">Party</label>
+                  </div>
+                  <div class="event_filter_wrapper">
+                    <input id="concert" class="event_filter" name="event_filter_sel" type="checkbox" value="concert" data-type="kind" checked="true" />
+                    <label for="concert">Concert</label>
+                  </div>
+                  <div class="event_filter_wrapper">
+                    <input id="festival" class="event_filter" name="event_filter_sel" type="checkbox" value="festival" data-type="kind" checked="true" />
+                    <label for="festival">Festival</label>
+                  </div>
                 </div>
-                <div class="event_filter_wrapper">
-                  <input id="sh" class="event_filter" name="event_filter_sel" type="checkbox" value="sh" data-type="state" />
-                  <label for="sh">Schleswig-Holstein (SH)</label>
-                </div>
-                <div class="event_filter_wrapper">
-                  <input id="party" class="event_filter" name="event_filter_sel"  type="checkbox" value="party" data-type="kind" checked="true" />
-                  <label for="party">Party</label>
-                </div>
-                <div class="event_filter_wrapper">
-                  <input id="concert" class="event_filter" name="event_filter_sel" type="checkbox" value="concert" data-type="kind" checked="true" />
-                  <label for="concert">Concert</label>
-                </div>
-                <div class="event_filter_wrapper">
-                  <input id="festival" class="event_filter" name="event_filter_sel" type="checkbox" value="festival" data-type="kind" checked="true" />
-                  <label for="festival">Festival</label>
-                </div>
+                <div id="calendar"></div>
               </div>
-            
-              <div id="calendar"></div>
-              
-            </div>
             </div>
           </div>
         </div>
-        <div class="py-6 px-6 text-center">
-          <p class="mb-0 fs-4">Design and Developed by <a href="https://adminmart.com/" target="_blank" class="pe-1 text-primary text-decoration-underline">AdminMart.com</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a></p>
+        <!-- <div class="py-6 px-6 text-center">
+          <p class="mb-0 fs-4">Design and Developed by 
+            <a href="https://adminmart.com/" target="_blank" class="pe-1 text-primary text-decoration-underline">
+              AdminMart.com
+            </a> 
+            Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+          </p>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="{$('.modal').modal('toggle');}">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-body-text">Modal body text goes here.</p>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="{$('.modal').modal('toggle');}">Close</button>
         </div>
       </div>
     </div>
   </div>
+
   <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/platform/assets/js/sidebarmenu.js"></script>
