@@ -125,5 +125,19 @@ router.get('/budget', (req, res) => {
     res.render("website/pages/budget",{ activePage: 'budget' })
 });
 
+// Centres and Offices
+router.get('/centres-offices/', (req, res) => {
+    res.render("website/pages/centres-offices",{ activePage: 'cabinet-mpa' })
+});
+// Centres and Offices
+
+
+// Fests
+router.get('/fests/', (req, res) => {
+    res.render("website/pages/fests",{ activePage: 'cabinet-mpa' })
+});
+// Fests
+
+
 // Export the router
 module.exports = router;

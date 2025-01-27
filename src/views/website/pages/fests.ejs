@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Ashoka Fests</title>
+
+    <script src="/website/assets/js/theme.js"></script>
+
+    <!-- SEO Meta Tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Learn about the various fests at Ashoka"
+    />
+    <meta
+      name="keywords"
+      content="Ashoka University, Fests, Events, Campus Life"
+    />
+    <meta name="author" content="Ashoka University Student Government" />
+
+    <!-- Open Graph Meta Tags for Social Sharing -->
+    <meta
+      property="og:title"
+      content="Fests - Ashoka University"
+    />
+    <meta
+      property="og:description"
+      content="Explore the fests at Ashoka University"
+    />
+    <meta property="og:image" content="to_be_inserted" />
+    <meta property="og:url" content="https://sg.ashoka.edu.in/council" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Fests - Ashoka University "
+    />
+    <meta
+      name="twitter:description"
+      content="Explore the fests at Ashoka University"
+    />
+    <meta name="twitter:image" content="to_be_inserted" />
+    <meta name="twitter:site" content="@ashokaunisg" />
+
+    <!-- Favicons -->
+    <link href="/website/assets/img/favicon.png" rel="icon" />
+    <link
+      href="/website/assets/img/apple-touch-icon.png"
+      rel="apple-touch-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Oswald"
+    />
+
+    <!-- Vendor CSS Files -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      href="/website/assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="/website/assets/vendor/icofont/icofont.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="/website/assets/vendor/remixicon/remixicon.css"
+      rel="stylesheet"
+    />
+    <link
+      href="/website/assets/vendor/boxicons/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="/website/assets/vendor/owl.carousel//website/assets/owl.carousel.min.css"
+      rel="stylesheet"
+    />
+    <link href="/website/assets/vendor/venobox/venobox.css" rel="stylesheet" />
+    <link href="/website/assets/vendor/aos/aos.css" rel="stylesheet" />
+
+    <!-- Template Main CSS File -->
+    <link href="/website/assets/css/style.css" rel="stylesheet" />
+
+    <style>
+      .card-body {
+        cursor: pointer;
+      }
+
+      .social-icons a {
+        margin-right: 10px;
+      }
+
+      .card {
+        margin-bottom: 20px;
+      }
+
+      .modal-body {
+        font-size: 16px;
+      }
+
+      .card {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <%- include("../partials/menu") %>
+
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="" style="margin-top: 100px">
+      <!-- Hero Section Content (You can add text, images, etc.) -->
+
+      <!-- Center Info Card -->
+      <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Fests</h2>
+        </div>
+        <div class="row d-flex flex-wrap">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <div
+              class="card"
+              data-bs-toggle="modal"
+              data-bs-target="#centerModal"
+            >
+              <div class="card-body">
+                <div class="bg-light p-3">
+                  <h5 class="card-title" id="centerName">Fest Name</h5>
+                  <p class="card-text" id="shortDescription">Description</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="centerModal"
+        tabindex="-1"
+        aria-labelledby="centerModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <!-- Add modal-dialog-centered here -->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="centerModalLabel">Fest Details</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <!-- Center Info -->
+              <!-- <h4 id="modalCenterName">Centre Name</h4> -->
+              <p id="modalDescription">Description</p>
+
+              <div class="social-icons">
+                <h6>Follow us:</h6>
+                <a href="#" id="instagramLink" class="btn btn-outline-dark mt-2">
+                  <i class="fa fa-instagram"></i> Instagram
+                </a>
+                <a href="#" id="linkedinLink" class="btn btn-outline-dark mt-2">
+                  <i class="fa fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="#" id="twitterLink" class="btn btn-outline-dark mt-2">
+                    <i class="fa fa-twitter"></i> Twitter
+                </a>
+              </div>
+
+              <div class="mt-3">
+                <h6>Website:</h6>
+                <a href="#" id="websiteLink" class="btn btn-outline-primary">
+                  Visit Website
+                </a>
+              </div>
+
+              <div class="mt-3">
+                <h6>Phone Number:</h6>
+                <p id="phoneNumber">+123 456 789</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Hero -->
+
+    <!-- Center Info Card -->
+    <main id="main"></main>
+
+    <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="/website/assets/vendor/jquery/jquery.min.js"></script>
+    <script src="/website/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/website/assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+    <script src="/website/assets/vendor/php-email-form/validate.js"></script>
+    <script src="/website/assets/vendor/waypoints/jquery.waypoints.min.js"></script>
+    <script src="/website/assets/vendor/counterup/counterup.min.js"></script>
+    <script src="/website/assets/vendor/owl.carousel/owl.carousel.min.js"></script>
+    <script src="/website/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="/website/assets/vendor/venobox/venobox.min.js"></script>
+    <script src="/website/assets/vendor/aos/aos.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="/website/assets/js/main.js"></script>
+
+    <!-- Custom JavaScript to populate modal -->
+  </body>
+</html>
