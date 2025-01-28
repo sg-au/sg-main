@@ -163,7 +163,7 @@ function ensureIsStudent(req, res, next) {
   // Assuming you have a user object or user data available after authentication
   if (req.user) {
     const userEmail = req.user._json.email;
-    if((userEmail && userEmail.includes('_')) || userEmail.includes("ministry") || userEmail.includes("campus.life") ||   whitelist.includes(userEmail) || true){
+    if((userEmail && userEmail.includes('_')) || userEmail.includes("ministry") || userEmail.includes("campus.life") ||   whitelist.includes(userEmail)){
       next();
     }else{
       res.render("platform/pages/not-student")
