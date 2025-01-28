@@ -48,6 +48,24 @@
       .search-bar:focus::placeholder {
         font-size: 12px; /* Adjust the font size when moved to the top */
       }
+
+      
+        .laptop {
+            width: 500px; /* Adjust height as needed */
+            background-color: #f0f0f0;
+        }
+
+        .offcanvas-body::-webkit-scrollbar {
+  width: 8px; /* Adjust width as needed */
+}
+
+.offcanvas-body::-webkit-scrollbar-track {
+  background-color: #f1f1f1; 
+}
+
+.offcanvas-body::-webkit-scrollbar-thumb {
+  background-color: #8ca5e9; 
+}
       
         </style>
   </head>
@@ -83,6 +101,22 @@
               <span class="fs-4">Find and connect with all student organizations through our catalog—featuring clubs, societies, fests, collectives, ISOs, leagues, and more!</span>
               <br /><br />
             </div>
+            
+            <div style="width:500px" class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Backdroped with scrolling</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div class="offcanvas-body">
+                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
+                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
+                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
+                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
+                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
+                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
+                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
+              </div>
+            </div>
             <!-- <h1 class="mb-4 mt-4">Organisations Catalogue</h1> -->
 
             <div id="search-section" class="mb-4">
@@ -110,6 +144,7 @@
             </div>
 
             <div id="results-section">
+
               <div id="results-list" class="row g-4">
                 <% organisations.forEach(org => { %>
                 <div
@@ -122,7 +157,6 @@
                     <% if (true) { %>
                       <img
                       src="<%=org.profile.data[0].attributes.profile_url%>"
-                      alt="<%= org.name %> Logo"
                       width="100"
                       height="100"
                       style="margin:auto;margin-top:15px"
@@ -153,6 +187,9 @@
                         class="btn btn-primary"
                         >Learn More</a
                       > -->
+                      <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Learn More</button>
+
+          
                     </div>
                   </div>
                 </div>
@@ -160,8 +197,17 @@
               </div>
             </div>
           </div>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6ZYgfuA2AurLXa18aFZKrr14/3LGndc/bedqH9L6WV9GsTgXe/1IacMEGsiWlL/s" crossorigin="anonymous"></script>
 
           <script>
+            const offcanvas = document.getElementById('offcanvasWithBothOptions');
+            window.addEventListener('resize', () => {
+                if (window.innerWidth <= 500) { // Adjust breakpoint as needed
+                    offcanvas.setAttribute("data-bs-scroll", "false");
+                } else {
+                    offcanvas.setAttribute("data-bs-scroll", "true");
+                }
+            });
             document.addEventListener("DOMContentLoaded", () => {
               const organisationItems =
                 document.querySelectorAll(".organisation-item");
