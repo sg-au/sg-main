@@ -218,7 +218,7 @@
   --bs-muted-rgb: 160, 160, 160;
 
   --bs-body-bg: #121212; /* Dark background for body */
-  --bs-body-color: #e0e0e0; /* Light text color */
+  --bs-body-color: #121212; /* Light text color */
   --bs-heading-color: #f0f0f0; /* Heading contrast */
   --bs-link-color: #669df6; /* Links in dark mode */
   --bs-link-hover-color: #4a7bcc; /* Slightly brighter hover */
@@ -250,7 +250,6 @@
   --bs-highlight-bg: #2e2e2e;
   --bs-box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.4); /* Stronger shadow for dark mode */
 }
-
 *,
 :after,
 :before {
@@ -10509,6 +10508,7 @@ fieldset:disabled .btn {
 }
 .text-nowrap {
   white-space: nowrap !important;
+  color: var(--bs-black);
 }
 .text-break {
   word-wrap: break-word !important;
@@ -16531,14 +16531,14 @@ fieldset:disabled .btn {
 }
 .left-sidebar {
   width: 270px;
-  background-color: #fff;
   position: absolute;
   -webkit-transition: 0.2s ease-in;
   transition: 0.2s ease-in;
   height: 100%;
   z-index: 11;
   border-right: 0px solid #fff;
-  background-color: #fff;
+  background-color: var(--bs-body-bg);
+  
 }
 .left-sidebar .scroll-sidebar {
   overflow-y: auto;
@@ -16562,7 +16562,7 @@ fieldset:disabled .btn {
 }
 .nav-small-cap {
   margin-top: 24px;
-  color: #2a3547;
+  color: var(--bs-black);
   font-size: 12px;
   font-weight: 700;
   padding: 3px 12px;
@@ -16573,7 +16573,7 @@ fieldset:disabled .btn {
   display: none;
 }
 .sidebar-nav ul .sidebar-item .sidebar-link {
-  color: #2a3547;
+  color: var(--bs-black);
   background-color: var(--bs-gray-200);
   display: -webkit-box;
   display: -ms-flexbox;
@@ -16713,7 +16713,8 @@ fieldset:disabled .btn {
   position: relative;
   z-index: 50;
   width: 100%;
-  background: #fff;
+  background: var(--bs-body-color);
+  color: var(--bs-body-color);
   padding: 0 25px;
 }
 .app-header .container-fluid,
@@ -17178,6 +17179,7 @@ ul {
 }
 .timeline-widget .timeline-item .timeline-desc {
   padding: 6px 16px;
+  color: var(--bs-black);
 }
 .timeline-widget .timeline-item .timeline-badge.badge-primary {
   border: 2px solid #5d87ff;
