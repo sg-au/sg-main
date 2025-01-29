@@ -32,11 +32,15 @@
 
       --fc-button-text-color: #fff;
       --fc-button-bg-color: #5d87ff;
+      /* --fc-button-bg-color: red; */
       --fc-button-border-color: #5d87ff;
       --fc-button-hover-bg-color: #1e2b37;
+      /* --fc-button-hover-bg-color: red; */
       --fc-button-hover-border-color: #1a252f;
       --fc-button-active-bg-color: #4a6ccc;
+      /* --fc-button-active-bg-color: red; */
       --fc-button-active-border-color: #4a6ccc;
+      /* --fc-button-active-border-color: red; */
 
       --fc-event-bg-color: #3788d8;
       --fc-event-border-color: #3788d8;
@@ -84,6 +88,16 @@
       margin-top: 0;
       overflow: hidden;
       height: calc(100vh - 200px);
+    }
+
+    .fc .fc-button{
+      text-transform: capitalize;
+    }
+
+    .fc .fc-today-button:disabled {
+      background-color: rgb(73, 108, 204) !important;
+      opacity: 100%;
+      /* border: none !important; */
     }
 
     .filter {
@@ -183,9 +197,9 @@
         headerToolbar: {
           start: 'prev,today,next',
           center: 'title',
-          end: 'dayGridMonth,dayGridWeek,timeGridDay, listWeek'
+          end: 'dayGridMonth,dayGridWeek,timeGridDay,listWeek'
         },
-        timeZone: 'Europe/Berlin',
+        timeZone: 'Asia/Kolkata',
         weekNumbers: true,
         initialView: 'dayGridMonth',
         eventTimeFormat: {
@@ -258,6 +272,33 @@
           },
           {
             title: "Concert in HH",
+            start: moment().subtract(3, 'days').format(),
+            end: moment().subtract(3, 'days').add(3, 'hours').format(),
+            color: 'red',
+            textColor: 'white',
+            kind: 'concert',
+            state: 'hh'
+          },
+          {
+            title: "test 1",
+            start: moment().subtract(3, 'days').format(),
+            end: moment().subtract(3, 'days').add(3, 'hours').format(),
+            color: 'red',
+            textColor: 'white',
+            kind: 'concert',
+            state: 'hh'
+          },
+          {
+            title: "test 2",
+            start: moment().subtract(3, 'days').format(),
+            end: moment().subtract(3, 'days').add(3, 'hours').format(),
+            color: 'red',
+            textColor: 'white',
+            kind: 'concert',
+            state: 'hh'
+          },
+          {
+            title: "test 3",
             start: moment().subtract(3, 'days').format(),
             end: moment().subtract(3, 'days').add(3, 'hours').format(),
             color: 'red',
@@ -346,14 +387,14 @@
           //   calendar.changeView(expected_view);
           // }
           const width = window.innerWidth;
-        let newView;
+        let newView = view.type;
         
         if (width < 576) {
-          newView = 'listWeek';
+          newView = 'dayGridMonth';
         } else if (width < 768) {
-          newView = 'timeGridDay';
+          newView = 'dayGridMonth';
         } else if (width < 992) {
-          newView = 'dayGridWeek';
+          newView = 'dayGridMonth';
         } else {
           newView = 'dayGridMonth';
         }
@@ -367,9 +408,9 @@
       calendar.render();
 
       // Switch to list view automatically if viewport is small
-      if ($(window).width() < 800) {
-        calendar.changeView('listWeek');
-      }
+      // if ($(window).width() < 800) {
+      //   calendar.changeView('listWeek');
+      // }
 
       // Re-render when filters change
       $('input[class=event_filter]').change(function() {
@@ -392,7 +433,7 @@
               <!-- Filter + Calendar Wrapper -->
               <div class="wrapper">
                 <div class="filter">
-                  <h3>Filter</h3>
+                  <h3>Filters</h3>
                   <div class="event_filter_wrapper">
                     <input id="hh" class="event_filter" name="event_filter_sel" type="checkbox" value="hh" data-type="state" />
                     <label for="hh">Hamburg (HH)</label>
