@@ -1572,6 +1572,10 @@ router.get("/office-hours", async (req, res) => {
   res.render("platform/pages/office-hours");
 });
 
+router.get("/degree-tracker", async (req, res) => {
+  res.render("platform/pages/degree-tracker");
+});
+
 router.get("/cgpa-planner", async (req, res) => {
   var user = await axios.get(
     `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`,

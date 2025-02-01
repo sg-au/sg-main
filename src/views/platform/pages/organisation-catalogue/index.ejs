@@ -19,6 +19,8 @@
       href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
     <%-include("../../partials/preloader-css")%>
     <style>
 
@@ -56,16 +58,16 @@
         }
 
         .offcanvas-body::-webkit-scrollbar {
-  width: 8px; /* Adjust width as needed */
-}
+          width: 8px; /* Adjust width as needed */
+        }
 
-.offcanvas-body::-webkit-scrollbar-track {
-  background-color: #f1f1f1; 
-}
+        .offcanvas-body::-webkit-scrollbar-track {
+          background-color: #f1f1f1; 
+        }
 
-.offcanvas-body::-webkit-scrollbar-thumb {
-  background-color: #8ca5e9; 
-}
+        .offcanvas-body::-webkit-scrollbar-thumb {
+          background-color: #8ca5e9; 
+        }
       
         </style>
   </head>
@@ -107,14 +109,7 @@
                 <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Backdroped with scrolling</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
               </div>
-              <div class="offcanvas-body">
-                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
-                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
-                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
-                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
-                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
-                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
-                <p>Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action. Try scrolling the rest of the page to see this option in action.</p>
+              <div id="clubDetails" class="offcanvas-body">
               </div>
             </div>
             <!-- <h1 class="mb-4 mt-4">Organisations Catalogue</h1> -->
@@ -171,7 +166,8 @@
                     </div>
                     <% } %>
                     <div style="text-align:center" class="card-body">
-                      <h3 style="margin:auto" class="card-title"><%=org.profile.data[0].attributes.username%></h3><br/>
+                      <h3 style="margin:auto" class="card-title"><%= org.name %></h3><br/>
+                      <!-- <h3 style="margin:auto" class="card-title"><%=org.profile.data[0].attributes.username%></h3><br/> -->
                       <p class="card-text">
                         <span class="badge bg-primary text-capitalize"
                           ><%= org.type %></span
@@ -189,7 +185,27 @@
                       > -->
                       <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Learn More</button>
 
-          
+                      <%
+                      function escapeDescription(org) {
+                          let orgCopy = JSON.parse(JSON.stringify(org)); // Deep copy to avoid modifying original object
+                          if (orgCopy.description) {
+                              orgCopy.description = orgCopy.description
+                                  .replace(/"/g, '\\"')  // Escape double quotes
+                                  .replace(/'/g, "\\'"); // Escape single quotes
+                          }
+                          return JSON.stringify(orgCopy);
+                      }
+
+                      let orgEscaped = escapeDescription(org);
+                      %>
+                      <button onclick='showClubDetails(`<%= orgEscaped %>`)' 
+                              class="btn btn-primary" 
+                              type="button" 
+                              data-bs-toggle="offcanvas" 
+                              data-bs-target="#offcanvasWithBothOptions" 
+                              aria-controls="offcanvasWithBothOptions">
+                          Learn More
+                      </button>          
                     </div>
                   </div>
                 </div>
@@ -198,8 +214,47 @@
             </div>
           </div>
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6ZYgfuA2AurLXa18aFZKrr14/3LGndc/bedqH9L6WV9GsTgXe/1IacMEGsiWlL/s" crossorigin="anonymous"></script>
-
           <script>
+                function showClubDetails(org) {
+    clubData = JSON.parse(org);
+    clubDetailsDiv = document.getElementById("clubDetails");
+    document.getElementById("offcanvasWithBothOptionsLabel").innerText = clubData.name;
+
+    // Social media icons
+    const socialIcons = {
+      Instagram: '<i class="fab fa-instagram"></i>',
+      Twitter: '<i class="fab fa-twitter"></i>',
+      LinkedIn: '<i class="fab fa-linkedin"></i>',
+      YouTube: '<i class="fab fa-youtube"></i>',
+      WhatsApp: '<i class="fab fa-whatsapp"></i>',
+      Website: '<i class="fas fa-globe"></i>',
+    };
+
+    const socialLinks = {
+      Instagram: clubData.instagram,
+      Twitter: clubData.twitter,
+      LinkedIn: clubData.linkedin,
+      YouTube: clubData.youtube,
+      WhatsApp: clubData.whatsapp,
+      Website: clubData.website_blog,
+    };
+
+    let socials = "";
+    for (const [platform, link] of Object.entries(socialLinks)) {
+      if (link) {
+        socials += `<a href="${link}" target="_blank" style="margin-right: 15px; font-size: 24px; color: inherit;">
+                      ${socialIcons[platform]}
+                    </a>`;
+      }
+    }
+
+    clubDetailsDiv.innerHTML = `
+      <p>${clubData.short_description}</p>
+      <div>${clubData.description}</div>
+      ${socials ? `<h5>Socials</h5><p>${socials}</p>` : ""}
+    `;
+  }
+            
             const offcanvas = document.getElementById('offcanvasWithBothOptions');
             window.addEventListener('resize', () => {
                 if (window.innerWidth <= 500) { // Adjust breakpoint as needed
