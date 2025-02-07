@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 <html lang="en">
 
 <head>
@@ -48,11 +48,9 @@
 
 <body>
     <%-include("../partials/preloader")%>
-    <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
         data-sidebar-position="fixed" data-header-position="fixed">
         <%-include("../partials/sidebar")%>
-        <!--  Main wrapper -->
         <div class="body-wrapper">
             <%-include("../partials/header")%>
             <div class="container-fluid">
@@ -71,7 +69,6 @@
     
                                                 </div>
                                                 <h5 class="card-title"><%= petition.attributes.headline %></h5>
-                                                <!-- <h6 class="card-subtitle mb-2 text-muted">Created By X</h6> -->
                                                 <h6 class="card-subtitle mb-2 text-muted">Date Created: <b><%= Date(petition.attributes.createdAt).substring(3,15) %></b></h6>
                                                 <h6 class="card-subtitle mb-2 text-muted">Number of Comments: <%= petition.attributes.signatures.data.length %></h6>
                                                 <p class="card-text" style="padding-top: 15px; padding-bottom: 15px;"><%= petition.attributes.description %></p>
@@ -80,7 +77,6 @@
                                                         class="badge bg-primary rounded-3 fw-semibold">Started By: <%=petition.attributes.department.data.attributes.name%></span></a>
     
                                                 
-                                                <!-- <div style="width: 100%; text-align: left; margin-top: 15px; "><a href="./individual-petition.html" class="btn btn-primary m-1">View Petition</a></div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -112,4 +108,4 @@
     <%-include("../partials/preloader-js")%>
 </body>
 
-</html>
+</html> -->
