@@ -92,8 +92,8 @@
         <div class="container-fluid">
           <div class="container-fluid" style="padding-top: 20px">
             <div class="py-6 px-6">
-              <div class="flex-row mb-2">
-                <span class="fs-8 fw-semibold">Intercollegiate Events Portal</span>
+              <div class="flex-row  text-dark mb-2">
+                <span class="fs-8 text-dark fw-semibold">Intercollegiate Events Portal</span>
                 <p>
                   This section serves as a comprehensive resource for all intercollegiate events and competitions available for Ashoka University students. Here, you will find interest forms for each competition. Once you fill out the form, the designated Point of Contact (POC) for that event will reach out to you with further information. Please be sure to review the <a target="_blank" href="https://my.ashoka.edu.in/SIS/UploadedFile/OrientationMaterial/Policies_7134c043-59fe-4c07-baa1-564cfbea2a3e.pdf">off-campus policy</a> before applying for any competitions. If you encounter any challenges, don’t hesitate to reach out via email or phone: 
 <br /><br />
@@ -109,7 +109,7 @@
               </div>
             <div class="row" id="togglediv">
             <%if(events.length==0){%>
-              <p class="fs-6 fw-semibold">No Events listed at this time.</p>
+              <p class="fs-6 text-dark fw-semibold">No Events listed at this time.</p>
             <%}%>
             <%for(var i=0;i<events.length;i++){%>
               <% var deadlinePassed = new Date() > new Date(events[i].attributes.deadline) %>

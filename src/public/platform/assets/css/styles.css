@@ -15,6 +15,7 @@
   --bs-purple: #6f42c1;
   --bs-pink: #d63384;
   --bs-red: #fa896b;
+  --icon-color: black !important; /* Color for dark mode */
   --bs-orange: #fd7e14;
   --bs-yellow: #ffae1f;
   --bs-green: #13deb9;
@@ -22,6 +23,7 @@
   --bs-cyan: #539bff;
   --bs-black: #000;
   --bs-white: #fff;
+  --bs-table-background: transparent;
   --bs-gray: #2a3547;
   --bs-gray-dark: #343a40;
   --bs-gray-100: #f6f9fc;
@@ -176,6 +178,8 @@
   --bs-gray: #a8b2c1; /* Neutral gray for dark mode */
   --bs-gray-dark: #8c98a9; /* Slightly darker neutral */
   --bs-gray-100: #1e1e1e; /* Background gray */
+  --icon-color: white !important;
+  --bs-table-background: white; /* Darker table background */
   --bs-gray-200: #2a2a2a;
   --bs-gray-300: #383838;
   --bs-gray-400: #4f4f4f;
@@ -220,7 +224,7 @@
   --bs-body-bg: #121212; /* Dark background for body */
   --bs-body-color: #121212; /* Light text color */
   --bs-heading-color: #f0f0f0; /* Heading contrast */
-  --bs-link-color: #669df6; /* Links in dark mode */
+  --bs-link-color:#5d87ff; /* Links in dark mode */
   --bs-link-hover-color: #4a7bcc; /* Slightly brighter hover */
   --bs-border-color: #444444; /* Subtle dark border */
 
@@ -508,6 +512,9 @@ th {
   font-weight: 600;
   text-align: inherit;
   text-align: -webkit-match-parent;
+}
+.cell{
+  background: var(--bs-white) !important;
 }
 tbody,
 td,
@@ -2300,7 +2307,7 @@ progress {
 }
 .table {
   --bs-table-color: var(--bs-body-color);
-  --bs-table-bg: transparent;
+  --bs-table-bg: var(--bs-table-background);
   --bs-table-border-color: #ebf1f6;
   --bs-table-accent-bg: transparent;
   --bs-table-striped-color: var(--bs-body-color);
@@ -2506,7 +2513,7 @@ progress {
 .form-label {
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #2a3547;
+  color: var(--bs-blue);
 }
 .col-form-label {
   padding-top: calc(8px + var(--bs-border-width));
@@ -2532,6 +2539,10 @@ progress {
   font-size: 0.875em;
   color: #5a6a85;
 }
+#pf_credits::placeholder,
+#gradeInput::placeholder{
+  color: var(--bs-blue);
+}
 .form-control {
   display: block;
   width: 100%;
@@ -2539,8 +2550,9 @@ progress {
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #5a6a85;
+  color: var(--bs-black);
   background-clip: padding-box;
+  background-color: var(--bs-form-control-bg);
   border: var(--bs-border-width) solid #dfe5ef;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2569,7 +2581,7 @@ progress {
   cursor: pointer;
 }
 .form-control:focus {
-  color: #5a6a85;
+  color: var(--bs-black);
   background-color: transparent;
   border-color: #aec3ff;
   outline: 0;
@@ -2765,7 +2777,9 @@ textarea.form-control-lg {
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #5a6a85;
+  color: var(--bs-black);
+  
+  background-color: var(--bs-form-control-bg);
   background-image: var(--bs-form-select-bg-img),
     var(--bs-form-select-bg-icon, none);
   background-repeat: no-repeat;
@@ -4725,7 +4739,7 @@ fieldset:disabled .btn {
   --bs-nav-link-padding-y: 0.5rem;
   --bs-nav-link-font-size: 1rem;
   --bs-nav-link-font-weight: 400;
-  --bs-nav-link-color: #2a3547;
+  --bs-nav-link-color: var(--bs-link-color);
   --bs-nav-link-hover-color: #2a3547;
   --bs-nav-link-disabled-color: var(--bs-secondary-color);
   display: -webkit-box;
@@ -10544,7 +10558,7 @@ fieldset:disabled .btn {
 }
 .text-dark {
   --bs-text-opacity: 1;
-  color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
+  color: var(--bs-black) !important;
 }
 .text-muted {
   --bs-text-opacity: 1;
@@ -17179,7 +17193,7 @@ ul {
 }
 .timeline-widget .timeline-item .timeline-desc {
   padding: 6px 16px;
-  color: var(--bs-black);
+  color: var(--bs-black) !important;
 }
 .timeline-widget .timeline-item .timeline-badge.badge-primary {
   border: 2px solid #5d87ff;

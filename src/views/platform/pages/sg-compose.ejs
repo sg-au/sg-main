@@ -72,7 +72,7 @@
                             <div class="container-fluid">
                                 <div class="container">
                                     <div class="row" id="myItems">
-                                        <div class="col-sm-12 mb-3">
+                                        <div class="col-sm-12 text-dark mb-3">
                                             <h3>Moving Forward; Not Just Forwards</h3>
                                             <p>
                                                 SG Compose is a streamlined email management platform designed for
@@ -84,10 +84,10 @@
                                             <!-- HTML Form -->
                                             <form id="myForm" action="/platform/sg-compose" method="POST"
                                                 enctype="multipart/form-data">
-                                                <div class="mb-3">
+                                                <div class="mb-3 ">
                                                     <label for="newTicketTitle" class="form-label">Enter Contact Number
                                                         <span style="color:rgb(177, 58, 58)">*</span></label>
-                                                    <input required minlength="10" maxlength="14" name="phone"
+                                                    <input class="form-control" required minlength="10" maxlength="14" name="phone"
                                                         type="tel" class="form-control" id="phoneNumber"
                                                         pattern="[0-9]{10}" value="<%=phone%>"
                                                         title="Please enter a valid 10-digit phone number without spaces or special characters.">
@@ -123,24 +123,24 @@
                                                     to select multiple options</p>
                                                 <label for="subject" class="form-label">Subject (of mail)<span
                                                         style="color:rgb(177, 58, 58)">*</span></label>
-                                                <input required name="subject" type="title" class="form-control"
+                                                <input class="form-control" required name="subject" type="title" class="form-control"
                                                     id="subject">
                                                 <br />
                                                 <label for="editor" class="form-label">Mail Draft <span
                                                         style="color:rgb(177, 58, 58)">*</span></label>
                                                 <!-- Textarea that will be replaced by CKEditor -->
-                                                <textarea style="margin-top:60px;padding:30px;" id="editor"
+                                                <textarea style=" margin-top:60px;padding:30px;" id="editor"
                                                     name="mail_body"></textarea>
                                                 <p style="font-size:14px;">PLEASE NOTE: The mail that you send out will
                                                     have you in CC and your signature at the bottom.</p>
                                                 <br />
                                                 <label for="files" class="form-label">File Attachments (if
                                                     any)</span></label>
-                                                <input style="background:white" multiple name="files" type="file"
+                                                <input class="form-control"  multiple name="files" type="file"
                                                     class="form-control" id="file">
                                                 <br />
                                                 <label for="notes" class="form-label">Additional Notes (if any)</label>
-                                                <input name="notes" type="title" class="form-control"
+                                                <input class="form-control" name="notes" type="title" class="form-control"
                                                     id="notes"
                                                     placeholder="Use this space for any additional notes as requests to the approver">
                                                 <br />

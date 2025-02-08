@@ -370,7 +370,8 @@
     <body>
         <%-include("../partials/preloader")%>
             <!--  Body Wrapper -->
-            <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+            <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
                 <%-include("../partials/sidebar")%>
                     <!--  Main wrapper -->
                     <div class="body-wrapper">
@@ -382,7 +383,7 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div>
-                                                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                                        <ul class="nav text-dark nav-pills mb-3" id="pills-tab" role="tablist">
                                                              <li class="nav-item" role="presentation">
                                                                 <button onclick="changeTimetableTo('instructions')" class="nav-link small-pills" id="pills-instructions-tab" data-bs-toggle="pill" data-bs-target="#pills-instructions" type="button" role="tab" aria-controls="pills-instructions" aria-selected="true">
                                                                    Instructions
@@ -411,21 +412,24 @@
                                                                 <g>
                                                                 <g>
                                                                     <path d="M370.001,26.35H18.5C8.282,26.35,0,34.633,0,44.85v289.477c0,10.218,8.282,18.5,18.5,18.5h262.662l-20.326-23.571
-                                                                    h-48.548v-29.603h25.435l-0.183-0.224c-6.49-7.407-10.784-15.061-12.85-22.429H44.4V102.175h299.7V277h-40.213
-                                                                    c6.104,6.485,12.491,13.053,17.853,18.368c3.759-3.521,8.191-7.416,13.159-11.314c16.925-13.288,33.388-21.414,48.932-24.151
-                                                                    c1.562-0.274,3.121-0.479,4.672-0.647V44.85C388.501,34.633,380.219,26.35,370.001,26.35z M129.038,299.653h47.175v29.601
-                                                                    h-47.175V299.653z M45.787,299.653h47.176v29.601H45.787V299.653z M92.963,79.521H45.787v-29.6h47.176V79.521z M176.213,79.521
-                                                                    h-47.175v-29.6h47.175V79.521z M259.463,79.521h-47.175v-29.6h47.175V79.521z M342.713,79.521h-47.175v-29.6h47.175V79.521z"/>
-                                                                    <path d="M464.662,354.325c-4.595-24.766-20.357-47.662-29.344-59.11c-12.191-15.53-27.666-21.767-45.99-18.538
-                                                                    c-13.086,2.305-27.307,9.429-42.271,21.177c-10.572,8.303-18.558,16.611-22.088,20.479c-8.874-7.644-33.651-33.175-45.816-47.571
-                                                                    c-6.109-7.229-21.865-22.604-33.621-11.991c-12.654,12.301,5.882,32.396,6.362,32.979l74.362,91.024
-                                                                    c-0.301,0.402-0.637,0.752-1.021,1.055c-7.133,5.601-27.943-4.69-36.344-10.245c-7.68-5.076-20.609-5.037-27.137,0.086
-                                                                    c-2.612,2.053-4.06,4.842-4.075,7.854c-0.021,4.338,2.815,8.82,8.422,13.313c0.063,0.051,0.177,0.149,0.339,0.289
-                                                                    c8.286,7.1,30.764,24.782,60.445,35.668c19.027,6.979,37.564,9.854,55.104,8.551c21.754-1.621,42.023-9.693,60.246-24
-                                                                    C461.781,399.991,469.327,379.461,464.662,354.325z"/>
-                                                                    <path d="M175.976,127.423c-2.845-2.387-6.815-2.905-10.183-1.335c-3.365,1.57-5.517,4.948-5.517,8.662v100.833
-                                                                    c0,3.715,2.151,7.092,5.517,8.661c1.291,0.604,2.671,0.897,4.042,0.897c2.204,0,4.386-0.763,6.141-2.233l60.163-50.416
-                                                                    c2.168-1.817,3.42-4.501,3.42-7.328s-1.252-5.511-3.42-7.327L175.976,127.423z"/>
+                                      h-48.548v-29.603h25.435l-0.183-0.224c-6.49-7.407-10.784-15.061-12.85-22.429H44.4V102.175h299.7V277h-40.213
+                                      c6.104,6.485,12.491,13.053,17.853,18.368c3.759-3.521,8.191-7.416,13.159-11.314c16.925-13.288,33.388-21.414,48.932-24.151
+                                      c1.562-0.274,3.121-0.479,4.672-0.647V44.85C388.501,34.633,380.219,26.35,370.001,26.35z M129.038,299.653h47.175v29.601
+                                      h-47.175V299.653z M45.787,299.653h47.176v29.601H45.787V299.653z M92.963,79.521H45.787v-29.6h47.176V79.521z M176.213,79.521
+                                      h-47.175v-29.6h47.175V79.521z M259.463,79.521h-47.175v-29.6h47.175V79.521z M342.713,79.521h-47.175v-29.6h47.175V79.521z"
+                                      fill="var(--icon-color)" />
+                                  <path d="M464.662,354.325c-4.595-24.766-20.357-47.662-29.344-59.11c-12.191-15.53-27.666-21.767-45.99-18.538
+                                      c-13.086,2.305-27.307,9.429-42.271,21.177c-10.572,8.303-18.558,16.611-22.088,20.479c-8.874-7.644-33.651-33.175-45.816-47.571
+                                      c-6.109-7.229-21.865-22.604-33.621-11.991c-12.654,12.301,5.882,32.396,6.362,32.979l74.362,91.024
+                                      c-0.301,0.402-0.637,0.752-1.021,1.055c-7.133,5.601-27.943-4.69-36.344-10.245c-7.68-5.076-20.609-5.037-27.137,0.086
+                                      c-2.612,2.053-4.06,4.842-4.075,7.854c-0.021,4.338,2.815,8.82,8.422,13.313c0.063,0.051,0.177,0.149,0.339,0.289
+                                      c8.286,7.1,30.764,24.782,60.445,35.668c19.027,6.979,37.564,9.854,55.104,8.551c21.754-1.621,42.023-9.693,60.246-24
+                                      C461.781,399.991,469.327,379.461,464.662,354.325z"
+                                      fill="var(--icon-color)" />
+                                  <path d="M175.976,127.423c-2.845-2.387-6.815-2.905-10.183-1.335c-3.365,1.57-5.517,4.948-5.517,8.662v100.833
+                                      c0,3.715,2.151,7.092,5.517,8.661c1.291,0.604,2.671,0.897,4.042,0.897c2.204,0,4.386-0.763,6.141-2.233l60.163-50.416
+                                      c2.168-1.817,3.42-4.501,3.42-7.328s-1.252-5.511-3.42-7.327L175.976,127.423z"
+                                      fill="var(--icon-color)" />
                                                                 </g>
                                                                 </g>
                                                             </g>
@@ -493,30 +497,30 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>8:30 am-10:00 am</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class='cell'></td>
+                                                                            <td  class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>10:10 am-11:40 am</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>11:50 am-1:20 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>1:20 pm-3:00 pm</td>
@@ -529,39 +533,39 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>3:00 pm-4:30 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>4:40 pm-6:10 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>6:20 pm-7:50 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>8:00 pm-9:30 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
+                                                                            <td class='cell'></td>
                                                                         </tr>
                                                                     </table>
                                                                 </div>
@@ -582,30 +586,30 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>8:30 am-10:00 am</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>10:10 am-11:40 am</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>11:50 am-1:20 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>1:20 pm-3:00 pm</td>
@@ -618,39 +622,39 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>3:00 pm-4:30 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>4:40 pm-6:10 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>6:20 pm-7:50 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>8:00 pm-9:30 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                     </table>
                                                                 </div>
@@ -670,30 +674,30 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>8:30 am-10:00 am</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>10:10 am-11:40 am</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>11:50 am-1:20 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>1:20 pm-3:00 pm</td>
@@ -706,39 +710,39 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>3:00 pm-4:30 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>4:40 pm-6:10 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>6:20 pm-7:50 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>8:00 pm-9:30 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                     </table>
                                                                 </div>
@@ -759,30 +763,30 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>8:30 am-10:00 am</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>10:10 am-11:40 am</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>11:50 am-1:20 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>1:20 pm-3:00 pm</td>
@@ -795,39 +799,39 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>3:00 pm-4:30 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>4:40 pm-6:10 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>6:20 pm-7:50 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>8:00 pm-9:30 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                     </table>
                                                                 </div>
@@ -848,30 +852,30 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>8:30 am-10:00 am</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>10:10 am-11:40 am</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>11:50 am-1:20 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>1:20 pm-3:00 pm</td>
@@ -884,39 +888,39 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>3:00 pm-4:30 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>4:40 pm-6:10 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>6:20 pm-7:50 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td class='time'>8:00 pm-9:30 pm</td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
+                                                                            <td class="cell"></td>
                                                                         </tr>
                                                                     </table>
                                                                 </div>
