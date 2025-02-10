@@ -63,31 +63,37 @@
     }
 
     /* Wrapper layout for large screens */
-
-    .card {
-    height: calc(100vh - 100px); /* Adjust based on your layout */
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Prevent overflow */
-  }
-
-  .card-body {
-    flex: 1;
-    overflow: hidden; /* Prevent overflow */
-    padding: 1.5rem;
-  }
-
-
     .wrapper {
       height: 100%;
-      display: grid;
-      grid-template-columns: 1fr 190px;
-      grid-template-rows: 1fr;
-      grid-column-gap: 0px;
-      grid-row-gap: 0px;
-      margin-top: 0;
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
       height: calc(100vh - 200px);
+    }
+
+    .filter {
+      padding: 1em 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .filter h3 {
+      margin: 0;
+      margin-right: 15px;
+    }
+
+    .event_filter_wrapper {
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    #calendar {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
     }
 
     .fc .fc-button{
@@ -114,58 +120,31 @@
       border-radius: 50%;
     }
 
-    .filter {
-      grid-area: 1 / 2 / 2 / 3;
-      margin: 1em 0 0 1em;
-    }
-    .event_filter_wrapper {
-      margin: .5em 0;
-    }
-
     .modal{
       top: 35%;
     }
 
-    #calendar {
-      height: 100%;
-      max-height: 100%;
-      grid-area: 1 / 1 / 2 / 2;
-    }
-
     /* Responsive adjustments */
     @media (max-width: 800px) {
-      .card{
+      .card {
         height: calc(100vh - 80px);
       }
       .wrapper {
-        display: flex;
-        flex-direction: column;
-        /* height: calc(100vh - 150px); */
         height: 100%;
       }
       .filter {
-        margin: 0 0 1em 0;
-        display: flex;
-      overflow-x: auto;
-      padding: 10px 0;
-      gap: 15px;
-      white-space: nowrap;
+        overflow-x: auto;
+        padding: 10px 0;
+        flex-wrap: nowrap;
       }
       #calendar {
-        /* margin-top: 1em;
-        flex-grow: 1;
-        min-height: 500px; */
         flex: 1;
-      min-height: 0; /* Remove minimum height */
-      height: 100%;
+        min-height: 0;
+        height: 100%;
       }
-      .event_filter_wrapper {
-      margin: 0;
-      display: inline-block;
-    }
-    .fc .fc-view-harness {
-      height: 100% !important; /* Force height containment */
-    }
+      .fc .fc-view-harness {
+        height: 100% !important;
+      }
     }
 
     .festival .fc-time {
@@ -204,6 +183,31 @@
     .fc-view-harness {
       font-size: 0.9em;
     }
+  }
+
+  /* Custom scrollbar styling */
+  .filter::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .filter::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+  }
+
+  .filter::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+  }
+
+  .filter::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  /* For Firefox */
+  .filter {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
   }
   </style>
 
