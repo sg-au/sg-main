@@ -61,23 +61,21 @@
       --fc-today-bg-color: rgba(255, 220, 40, 0.15);
       --fc-now-indicator-color: red;
     }
-
     /* Wrapper layout for large screens */
     .wrapper {
       height: 100%;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      height: calc(100vh - 200px);
+      padding: 20px;
     }
 
     .filter {
-      padding: 1em 0;
+      padding: 0.5em 0;
       display: flex;
       flex-wrap: wrap;
       gap: 15px;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     .filter h3 {
@@ -94,6 +92,26 @@
       flex: 1;
       min-height: 0;
       width: 100%;
+    }
+
+    .fc {
+      height: 100% !important;
+    }
+
+    .fc .fc-view-harness {
+      height: 100% !important;
+    }
+
+    .fc .fc-daygrid-body {
+      height: 100% !important;
+    }
+
+    .fc .fc-scrollgrid-liquid {
+      height: 100%;
+    }
+
+    .fc-view-harness-active {
+      height: 100% !important;
     }
 
     .fc .fc-button{
@@ -130,7 +148,7 @@
         height: calc(100vh - 80px);
       }
       .wrapper {
-        height: 100%;
+        padding: 10px;
       }
       .filter {
         overflow-x: auto;
@@ -142,8 +160,8 @@
         min-height: 0;
         height: 100%;
       }
-      .fc .fc-view-harness {
-        height: 100% !important;
+      .fc .fc-toolbar {
+        margin-bottom: 0.5em !important;
       }
     }
 
@@ -208,6 +226,103 @@
   .filter {
     scrollbar-width: thin;
     scrollbar-color: #888 #f1f1f1;
+  }
+
+  /* Calendar cell styling */
+  .fc .fc-daygrid-day-frame {
+    min-height: 50px;
+    height: auto;
+  }
+
+  .fc .fc-daygrid-day-events {
+    min-height: 1em;
+    margin-bottom: 1px;
+  }
+
+  .fc .fc-header-toolbar {
+    margin-bottom: 0.5em !important;
+  }
+
+  .fc .fc-daygrid-body {
+    width: 100% !important;
+  }
+
+  .fc .fc-daygrid-body-balanced .fc-daygrid-day-events {
+    position: relative;
+  }
+
+  /* Ensure responsive behavior */
+  @media (max-width: 768px) {
+    .fc .fc-daygrid-day-frame {
+      min-height: 40px;
+    }
+  }
+
+  /* Full height layout adjustments */
+  .container-fluid {
+    height: calc(100vh - 70px); /* Adjust for header height */
+    padding-bottom: 20px;
+  }
+
+  .row {
+    height: 100%;
+  }
+
+  .card {
+    height: 88vh !important;
+    margin-bottom: 0 !important;
+  }
+
+  .wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #calendar {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .fc {
+    height: 100% !important;
+  }
+
+  .fc .fc-view-harness {
+    height: 100% !important;
+  }
+
+  .fc .fc-daygrid-body {
+    width: 100% !important;
+  }
+
+  .fc .fc-daygrid-body-balanced .fc-daygrid-day-events {
+    position: relative;
+  }
+
+  .fc .fc-scrollgrid-liquid {
+    height: 100%;
+  }
+
+  .fc-view-harness-active {
+    height: 100% !important;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 800px) {
+    .container-fluid {
+      height: calc(100vh - 60px);
+    }
+    
+    .wrapper {
+      height: 100%;
+    }
+    
+    #calendar {
+      flex: 1;
+      min-height: 0;
+    }
   }
   </style>
 
