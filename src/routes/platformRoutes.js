@@ -1542,6 +1542,89 @@ router.get('/mail-spam-filter3', async(req, res) => {
 router.get("/wifi-ticket", async (req, res) => {
   res.render("platform/pages/wifi-ticket");
 });
+
+router.post("/wifi-ticket", async (req, res) => {
+  const ticketId = helpers.createTicketId("WIFI", 8);
+  
+  const mailOptions = {
+      from: `WiFi Ticket System <${process.env.TECHMAIL_ID}>`,
+      to: process.env.WIFI_SUPPORT,
+      cc: req.user._json.email,
+      subject: `WiFi Issue Ticket #${ticketId} - ${req.body.complaintType}`,
+      html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <style>
+                  body { font-family: Arial, sans-serif; }
+                  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                  th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+                  th { background-color: #f5f5f5; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h2>New WiFi Issue Ticket</h2>
+                  <table>
+                      <tr>
+                          <th>Ticket ID</th>
+                          <td>${ticketId}</td>
+                      </tr>
+                      <tr>
+                          <th>User</th>
+                          <td>${req.user._json.name} (${req.user._json.email})</td>
+                      </tr>
+                      <tr>
+                          <th>Download Speed</th>
+                          <td>${req.body.downloadSpeed} Mbps</td>
+                      </tr>
+                      <tr>
+                          <th>Upload Speed</th>
+                          <td>${req.body.uploadSpeed} Mbps</td>
+                      </tr>
+                      <tr>
+                          <th>Ping</th>
+                          <td>${req.body.ping} ms</td>
+                      </tr>
+                      <tr>
+                          <th>Complaint Type</th>
+                          <td>${req.body.complaintType}</td>
+                      </tr>
+                      <tr>
+                          <th>Location</th>
+                          <td>${req.body.location}</td>
+                      </tr>
+                      <tr>
+                          <th>Additional Details</th>
+                          <td>${req.body.message}</td>
+                      </tr>
+                      <tr>
+                          <th>Date Submitted</th>
+                          <td>${new Date().toLocaleString()}</td>
+                      </tr>
+                  </table>
+              </div>
+          </body>
+          </html>
+      `
+  };
+
+  try {
+      await transporterTECH.sendMail(mailOptions);
+      res.status(200).json({
+          success: true,
+          message: "WiFi ticket submitted successfully! You will receive a confirmation email shortly."
+      });
+  } catch (error) {
+      console.error("Error sending email:", error);
+      res.status(500).json({
+          success: false,
+          message: "Error submitting WiFi ticket. Please try again."
+      });
+  }
+});
+
 router.get("/cancel-cab-pool", async (req, res) => {
   userEmail = req.user._json.email;
   // var pool = (await axios.get(`${apiUrl}/pools?[pooler][email]=${userEmail}&filters[status][$eqi]=available`, axiosConfig));

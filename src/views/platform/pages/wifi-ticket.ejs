@@ -85,87 +85,100 @@
                           <div class="row">
                             <div class="col-md-12">
                               <div class="form-heading">Raise a ticket for WiFi related issues</div>
+                                <div class="accordion mb-4" id="instructionsAccordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header"></h2>
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#instructionsCollapse">
+                                                Instructions & Information
+                                            </button>
+                                        </h2>
+                                        <div id="instructionsCollapse" class="accordion-collapse collapse show" data-bs-parent="#instructionsAccordion">
+                                            <div class="accordion-body">
+                                                <h5>Steps to follow:</h5>
+                                                <ol>
+                                                    <li>Run the speed test below by waiting for it to complete</li>
+                                                    <li>Click on "Show More Info" once the test is complete</li>
+                                                    <li>Enter the following values from the test results:
+                                                        <ul>
+                                                            <li><b>Download Speed:</b> Shown as the main number</li>
+                                                            <li><b>Upload Speed:</b> Right-most under "more info"</li>
+                                                            <li><b>Ping:</b> The number in the middle under "more info"</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>Fill out the remaining details in the form</li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                    <p class="mb-0">Your complaint will be sent to IT and used for WiFi analytics to identify recurring issues in specific areas or types of problems, helping improve service for everyone.</p>
+                                <hr>
+
+                              <form action="/wifi-ticket" method="post" id="wifiTicketForm">
                                 <!-- Embed Speedtest -->
                                 <div id="speedtest-container" class="mb-4">
                                     <iframe 
+                                        id="speedtest-iframe"
                                         src="https://fast.com" 
                                         style="width: 100%; height: 250px; border: none;" 
                                         title="Speed Test"></iframe>
                                 </div>
 
-                                <!-- Inputs for Speed  -->
                                 <div class="row mb-3">
                                     <label for="downloadSpeed" class="col-sm-2 col-form-label form-label">Download Speed (Mbps)</label>
                                     <div class="col-sm-10">
-                                        <input type="number" step="0.01" class="form-control" id="downloadSpeed" placeholder="Enter your download speed">
+                                        <input type="number" name="downloadSpeed" step="0.01" class="form-control" id="downloadSpeed" required>
                                     </div>
                                 </div>
-
+                            
                                 <div class="row mb-3">
                                     <label for="uploadSpeed" class="col-sm-2 col-form-label form-label">Upload Speed (Mbps)</label>
                                     <div class="col-sm-10">
-                                        <input type="number" step="0.01" class="form-control" id="uploadSpeed" placeholder="Enter your upload speed">
+                                        <input type="number" name="uploadSpeed" step="0.01" class="form-control" id="uploadSpeed" required>
                                     </div>
                                 </div>
-
+                            
                                 <div class="row mb-3">
                                     <label for="ping" class="col-sm-2 col-form-label form-label">Ping (ms)</label>
                                     <div class="col-sm-10">
-                                        <input type="number" step="1" class="form-control" id="ping" placeholder="Enter your ping">
+                                        <input type="number" name="ping" step="1" class="form-control" id="ping" required>
                                     </div>
-                                </div>                              <form action="#" method="post">
-                                  <div class="row mb-3">
-                                      <label for="complaintType" class="col-sm-2 col-form-label form-label">Complaint Type</label>
-                                      <div class="col-sm-10">
-                                          <select class="form-select" id="complaintType" onchange="toggle24GHzOption(this)">
-                                              <option value="Speed">Speed</option>
-                                              <option value="Smart Device Configuration">Smart Device Configuration</option>
-                                              <option value="Forgot Password">Forgot Password</option>
-                                              <option value="Unblock Service">Unblock Service</option>
-                                              <option value="Damaged Hardware">Damaged Hardware</option>
-                                              <option value="Low router density">Low router density</option>
-                                              <option value="Other">Other</option>
-                                          </select>
-                                      </div>
-                                  </div>
-                                  <div class="row mb-3" id="24GHzOption" style="display: none;">
-                                      <div class="col-sm-10 offset-sm-2">
-                                          <div class="form-check">
-                                              <input class="form-check-input" type="radio" name="has24GHz" id="no24GHz" value="no">
-                                              <label class="form-check-label form-label" for="no24GHz">
-                                                  I do not have 2.4GHz WiFi
-                                              </label>
-                                              <span class="help-icon" onclick="openModal()">(?)</span>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div class="row mb-3">
-                                      <label for="location" class="col-sm-2 col-form-label form-label">Location</label>
-                                      <div class="col-sm-10">
-                                          <input type="text" class="form-control" id="location" placeholder="Enter your location">
-                                      </div>
-                                  </div>
-                                  <div class="row mb-3">
-                                      <label for="urgency" class="col-sm-2 col-form-label form-label">Urgency</label>
-                                      <div class="col-sm-10">
-                                          <select class="form-select" id="urgency">
-                                              <option value="Low">Low</option>
-                                              <option value="Medium">Medium</option>
-                                              <option value="High">High</option>
-                                          </select>
-                                      </div>
-                                  </div>
-                                  <div class="row mb-3">
-                                      <label for="inputMessage" class="col-sm-2 col-form-label form-label">Message</label>
-                                      <div class="col-sm-10">
-                                          <textarea class="form-control" id="inputMessage" rows="4" placeholder="Write your message"></textarea>
-                                      </div>
-                                  </div>
-                                  <div class="row">
-                                      <div class="col-sm-10 offset-sm-2">
-                                          <button type="submit" class="btn btn-primary btn-submit">Submit</button>
-                                      </div>
-                                  </div>
+                                </div>
+                            
+                                <div class="row mb-3">
+                                    <label for="complaintType" class="col-sm-2 col-form-label form-label">Complaint Type</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-select" id="complaintType" name="complaintType" required>
+                                            <option value="Speed">Speed</option>
+                                            <option value="Smart Device Configuration">Smart Device Configuration</option>
+                                            <option value="Forgot Password">Forgot Password</option>
+                                            <option value="Unblock Service">Unblock Service</option>
+                                            <option value="Damaged Hardware">Damaged Hardware</option>
+                                            <option value="Low router density">Low router density</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            
+                                <div class="row mb-3">
+                                    <label for="location" class="col-sm-2 col-form-label form-label">Location</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="location" name="location" required>
+                                    </div>
+                                </div>
+                            
+                                <div class="row mb-3">
+                                    <label for="message" class="col-sm-2 col-form-label form-label">Additional Details</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+                                    </div>
+                                </div>
+                            
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">Submit Ticket</button>
+                                </div>
+
                               </form>
                             </div>
                           </div>
@@ -209,6 +222,39 @@
             const modal = new bootstrap.Modal(document.getElementById('infoModal'));
             modal.show();
         }
+    </script>
+    <script>
+        document.getElementById('wifiTicketForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const response = await fetch('/platform/wifi-ticket', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        downloadSpeed: document.getElementById('downloadSpeed').value,
+                        uploadSpeed: document.getElementById('uploadSpeed').value,
+                        ping: document.getElementById('ping').value,
+                        complaintType: document.getElementById('complaintType').value,
+                        location: document.getElementById('location').value,
+                        message: document.getElementById('message').value
+                    })
+                });
+        
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(data.message);
+                    window.location.reload();
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert('Error submitting WiFi ticket. Please try again.');
+            }
+        });
     </script>
 
     <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
