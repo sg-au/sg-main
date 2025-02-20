@@ -1913,7 +1913,7 @@ router.get("/assets", async (req, res) => {
 router.get("/assets/dashboard", async (req, res) => {
   if (process.env.BORROW_POC.includes(req.user._json.email)) {
     var borrow_data = await axios.get(
-      `${apiUrl}/borrow-requests?populate=user&populate=asset&pagination[pageSize]=300}`,
+      `${apiUrl}/borrow-requests?populate=user&populate=asset&pagination[pageSize]=300`,
       axiosConfig
     );
     // console.log(borrow_data.data.data);
