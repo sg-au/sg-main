@@ -1716,12 +1716,12 @@ router.get("/cgpa-planner-reset", async (req, res) => {
 
 router.get("/organisation-catalogue", async (req, res) => {
   const organisationsReq = await axios.get(
-    `${apiUrl}/organisations?populate[0]=profile`,
+    `${apiUrl}/organisations?populate=profile,circle1_humans`,
     axiosConfig
   );
   const organisations = organisationsReq.data.data.map((x) => x.attributes);
   // console.log(organisations[0].profile.data[0].attributes.profile_url)
-
+  // console.log(organisations[0].circle1_humans.data);
   res.render("platform/pages/organisation-catalogue", {
     organisations,
     types: [...new Set(organisations.map((org) => org.type))],
