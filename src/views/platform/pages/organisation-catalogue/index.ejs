@@ -213,7 +213,7 @@
                   <div class="card h-100">
                     <% if (true) { %>
                       <img
-                      src="<%=org.profile.data[0].attributes.profile_url%>"
+                      src="<%org.profile.data[0].attributes.profile_url.replace(/=s\d+/g, "=s256");%>"
                       width="100"
                       height="100"
                       style="margin:auto;margin-top:15px"
@@ -328,7 +328,7 @@
 
               // Set profile image
               let profileImg = document.getElementById("orgProfileImage");
-              profileImg.src = clubData.profile.data[0].attributes.profile_url; 
+              profileImg.src = clubData.profile.data[0].attributes.profile_url.replace(/=s\d+/g, "=s256"); 
               profileImg.alt = clubData.name;
 
               // Set basic details
