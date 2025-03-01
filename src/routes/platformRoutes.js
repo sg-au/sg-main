@@ -1545,69 +1545,74 @@ router.get("/wifi-ticket", async (req, res) => {
 
 router.post("/wifi-ticket", async (req, res) => {
   const ticketId = helpers.createTicketId("WIFI", 8);
-  
+  console.log("wifi status: ", req.body.wifiStatus);
+  const isOnAshokaWifi = req.body.wifiStatus === "onWifi" ? true : false;
+  console.log("isOnAshokaWifi: ", isOnAshokaWifi);
   const mailOptions = {
-      from: `WiFi Ticket System <${process.env.TECHMAIL_ID}>`,
-      to: process.env.WIFI_SUPPORT,
-      cc: req.user._json.email,
-      subject: `WiFi Issue Ticket #${ticketId} - ${req.body.complaintType}`,
-      html: `
-          <!DOCTYPE html>
-          <html>
-          <head>
-              <style>
-                  body { font-family: Arial, sans-serif; }
-                  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                  th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-                  th { background-color: #f5f5f5; }
-              </style>
-          </head>
-          <body>
-              <div class="container">
-                  <h2>New WiFi Issue Ticket</h2>
-                  <table>
-                      <tr>
-                          <th>Ticket ID</th>
-                          <td>${ticketId}</td>
-                      </tr>
-                      <tr>
-                          <th>User</th>
-                          <td>${req.user._json.name} (${req.user._json.email})</td>
-                      </tr>
-                      <tr>
-                          <th>Download Speed</th>
-                          <td>${req.body.downloadSpeed} Mbps</td>
-                      </tr>
-                      <tr>
-                          <th>Upload Speed</th>
-                          <td>${req.body.uploadSpeed} Mbps</td>
-                      </tr>
-                      <tr>
-                          <th>Ping</th>
-                          <td>${req.body.ping} ms</td>
-                      </tr>
-                      <tr>
-                          <th>Complaint Type</th>
-                          <td>${req.body.complaintType}</td>
-                      </tr>
-                      <tr>
-                          <th>Location</th>
-                          <td>${req.body.location}</td>
-                      </tr>
-                      <tr>
-                          <th>Additional Details</th>
-                          <td>${req.body.message}</td>
-                      </tr>
-                      <tr>
-                          <th>Date Submitted</th>
-                          <td>${new Date().toLocaleString()}</td>
-                      </tr>
-                  </table>
-              </div>
-          </body>
-          </html>
-      `
+    from: `WiFi Ticket System <${process.env.TECHMAIL_ID}>`,
+    to: process.env.WIFI_SUPPORT,
+    cc: req.user._json.email,
+    subject: `WiFi Issue Ticket #${ticketId} - ${req.body.complaintType}`,
+    html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+                th { background-color: #f5f5f5; }
+                .warning { color: #dc3545; font-weight: bold; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>New WiFi Issue Ticket</h2>
+                ${!isOnAshokaWifi ? 
+                    '<p class="warning">Note: User was not able to submit this page through Ashoka Wifi, as it was not working for them.</p>' : ''}
+                <table>
+                    <tr>
+                        <th>Ticket ID</th>
+                        <td>${ticketId}</td>
+                    </tr>
+                    <tr>
+                        <th>User</th>
+                        <td>${req.user._json.name} (${req.user._json.email})</td>
+                    </tr>
+                    <tr>
+                        <th>Network Status</th>
+                        <td>${isOnAshokaWifi ? 'On Ashoka WiFi' : 'Not on Ashoka WiFi'}</td>
+                    </tr>
+                    <tr>
+                        <th>Download Speed</th>
+                        <td>${isOnAshokaWifi ? req.body.downloadSpeed + ' Mbps' : 'N/A'}</td>
+                    </tr>
+                    <tr>
+                        <th>Upload Speed</th>
+                        <td>${isOnAshokaWifi ? req.body.uploadSpeed + ' Mbps' : 'N/A'}</td>
+                    </tr>
+                    <tr>
+                        <th>Complaint Type</th>
+                        <td>${req.body.complaintType}</td>
+                    </tr>
+                    <tr>
+                        <th>Location</th>
+                        <td>${req.body.location}</td>
+                    </tr>
+                    <tr>
+                        <th>Additional Details</th>
+                        <td>${req.body.message}</td>
+                    </tr>
+                    <tr>
+                        <th>Date Submitted</th>
+                        <td>${new Date().toLocaleString()}</td>
+                    </tr>
+                </table>
+            </div>
+        </body>
+        </html>
+    `
   };
 
   try {
