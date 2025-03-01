@@ -1564,7 +1564,7 @@ router.post("/wifi-ticket", async (req, res) => {
   });
   
   const mailOptions = {
-    from: `WiFi Ticket System <${process.env.TECHMAIL_ID}>`,
+    from: `WiFi Tickets <${process.env.TECHMAIL_ID}>`,
     to: process.env.WIFI_SUPPORT,
     cc: req.user._json.email,
     subject: `WiFi Issue Ticket #${ticketId} - ${req.body.complaintType}`,
