@@ -10,6 +10,7 @@ const publicTicketCategories = JSON.parse(
 );
 const jsonfile = require("jsonfile");
 const file = "./data/tickets.jsonl";
+const wifiTicket_file = "./data/wifi-tickets.jsonl";
 const helpers = require("../config/helperFunctions.js");
 const axios = require("axios");
 var pdf = require("pdf-creator-node");
@@ -1545,9 +1546,23 @@ router.get("/wifi-ticket", async (req, res) => {
 
 router.post("/wifi-ticket", async (req, res) => {
   const ticketId = helpers.createTicketId("WIFI", 8);
-  console.log("wifi status: ", req.body.wifiStatus);
   const isOnAshokaWifi = req.body.wifiStatus === "onWifi" ? true : false;
-  console.log("isOnAshokaWifi: ", isOnAshokaWifi);
+  const wifi_obj = {
+    ticketId: ticketId,
+    user: req.user._json.email,
+    networkStatus: isOnAshokaWifi ? "On Ashoka WiFi" : "Not on Ashoka WiFi",
+    downloadSpeed: isOnAshokaWifi ? req.body.downloadSpeed + " Mbps" : "N/A",
+    // uploadSpeed: isOnAshokaWifi ? req.body.uploadSpeed + " Mbps" : "N/A",
+    complaintType: req.body.complaintType,
+    location: req.body.location,
+    additionalDetails: req.body.message,
+    dateSubmitted: new Date().toLocaleString(),
+  };
+
+  jsonfile.writeFile(wifiTicket_file, wifi_obj, { flag: "a+" }, function (err) {
+    if (err) console.error(err);
+  });
+  
   const mailOptions = {
     from: `WiFi Ticket System <${process.env.TECHMAIL_ID}>`,
     to: process.env.WIFI_SUPPORT,
@@ -1587,10 +1602,6 @@ router.post("/wifi-ticket", async (req, res) => {
                     <tr>
                         <th>Download Speed</th>
                         <td>${isOnAshokaWifi ? req.body.downloadSpeed + ' Mbps' : 'N/A'}</td>
-                    </tr>
-                    <tr>
-                        <th>Upload Speed</th>
-                        <td>${isOnAshokaWifi ? req.body.uploadSpeed + ' Mbps' : 'N/A'}</td>
                     </tr>
                     <tr>
                         <th>Complaint Type</th>

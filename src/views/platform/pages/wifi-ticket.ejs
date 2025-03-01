@@ -101,7 +101,7 @@
                                                 <li>Enter the following values from the test results:
                                                     <ul>
                                                         <li><b>Download Speed:</b> Shown as the main number</li>
-                                                        <li><b>Upload Speed:</b> Right-most under "more info"</li>
+                                                        <!-- <li><b>Upload Speed:</b> Right-most under "more info"</li> -->
                                                     </ul>
                                                 </li>
                                                 <li>Fill out the remaining details in the form</li>
@@ -144,12 +144,12 @@
                                         </div>
                                     </div>
                                 
-                                    <div class="row mb-3">
+                                    <!-- <div class="row mb-3">
                                         <label for="uploadSpeed" class="col-sm-2 col-form-label form-label">Upload Speed (Mbps) -- (click on show more info)</label>
                                         <div class="col-sm-10">
                                             <input type="number" name="uploadSpeed" step="0.01" class="form-control" id="uploadSpeed">
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 
@@ -297,7 +297,7 @@
                     body: JSON.stringify({
                         wifiStatus: document.getElementById('wifiStatus').value,
                         downloadSpeed: document.getElementById('downloadSpeed').value,
-                        uploadSpeed: document.getElementById('uploadSpeed').value,
+                        // uploadSpeed: document.getElementById('uploadSpeed').value,
                         complaintType: document.getElementById('complaintType').value,
                         location: document.getElementById('location').value,
                         message: document.getElementById('message').value
