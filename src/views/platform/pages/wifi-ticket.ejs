@@ -97,12 +97,11 @@
                                             <h5>Steps to follow if you are on Ashoka Wifi:</h5>
                                             <ol>
                                                 <li>Run the speed test below by waiting for it to complete</li>
-                                                <li>Click on "Show More Info" once the test is complete</li>
-                                                <li>Enter the following values from the test results:
-                                                    <ul>
+                                                <li>Enter the Download Speed from the test results
+                                                    <!-- <ul>
                                                         <li><b>Download Speed:</b> Shown as the main number</li>
-                                                        <!-- <li><b>Upload Speed:</b> Right-most under "more info"</li> -->
-                                                    </ul>
+                                                        <li><b>Upload Speed:</b> Right-most under "more info"</li>
+                                                    </ul> -->
                                                 </li>
                                                 <li>Fill out the remaining details in the form</li>
                                             </ol>
@@ -112,7 +111,7 @@
                             </div>
                             
                                 <hr>
-                                    <p class="mb-0">Your complaint will be sent to IT and used for WiFi analytics to identify recurring issues in specific areas or types of problems, helping improve service for everyone.</p>
+                                    <p class="mb-0" style="font-weight: 700;">Your complaint will be sent to IT and used for WiFi analytics to identify recurring issues in specific areas or types of problems, helping improve service for everyone. IT will communicate to you about your complaint over the email.</p>
                                 <hr>
 
                               <form action="/wifi-ticket" method="post" id="wifiTicketForm">
@@ -129,13 +128,8 @@
                                 </div>
 
                                 <div id="speedTestSection" style="display: none;">
-                                    <div id="speedtest-container" class="mb-4">
-                                        <iframe 
-                                            id="speedtest-iframe"
-                                            src="https://fast.com" 
-                                            style="width: 100%; height: 250px; border: none;" 
-                                            title="Speed Test"></iframe>
-                                    </div>
+                                    <!-- <div style="text-align:right;"><div style="max-height:360px;"><div style="width:100%;height:360px;position:relative;"><iframe style="border:none;position:absolute;top:0;left:0;width:100%;height:90%;max-height:360px;border:none;overflow:hidden !important;color: white;" src="//openspeedtest.com/speedtest"></iframe></div></div></div> -->
+                                    <div style="text-align:right;"><div style="max-height:360px;"><div style="width:100%;height:360px;position:relative;"><iframe style="border:none;position:absolute;top:0;left:0;width:100%;height:90%;max-height:360px;border:none;overflow:hidden !important;" src="https://www.metercustom.net/plugin/"></iframe></div></div></div>
 
                                     <div class="row mb-3">
                                         <label for="downloadSpeed" class="col-sm-2 col-form-label form-label">Download Speed (Mbps)</label>
