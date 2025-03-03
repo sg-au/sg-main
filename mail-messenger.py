@@ -5,19 +5,20 @@ from email.header import decode_header
 import time
 from dotenv import load_dotenv
 import os
-from groq import Groq
+# from groq import Groq
 import pandas as pd
 from langchain_google_genai import ChatGoogleGenerativeAI
+from datetime import datetime
 
 load_dotenv()
-STRAPI_API_TOKEN = os.getenv('STRAPI_API_TOKEN')
+STRAPI_API_TOKEN = os.getenv('STRAPI_API_KEY')
 #check is emails are being read multiple times, if yes, mark email as read
 
-client = Groq(
-    api_key= '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', 
-)
+# client = Groq(
+#     api_key= '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', 
+# )
 
-model = ChatGoogleGenerativeAI(model="gemini-1.0-pro", google_api_key='AIzaSyBpD8n0V6-9MiBPsJEM9ymX0G0awBb-V1Y')
+model = ChatGoogleGenerativeAI(model="gemini-1.5-pro", google_api_key='AIzaSyAgMK_EkfiYjVWlsEnC9em6gFnlR2zEAQM')
 
 EMAIL = os.getenv('EMAIL')
 PASSWORD = os.getenv('APP_PASSWORD')
@@ -155,7 +156,7 @@ def check_inbox():
                             response_tuple = eval(llm_response)  
 
                             if response_tuple[0]:  # If it's an event
-                                send_to_strapi(response_tuple[1])
+                                send_to_strapi(response_tuple)[1]
                             
                             email_data.append({
                                 "Subject": subject,
@@ -175,38 +176,85 @@ def check_inbox():
 
     except Exception as e:
         # I'm saving it here in the exception block because gemini will throw an error after processing about 20 mails so that's when it gets saved
-        if email_data:
-            df = pd.DataFrame(email_data)
-            df.to_excel("LLM-results-5.xlsx", index=False)
-            print("Data saved to LLM-results.xlsx")
-        print(f"Error: {e}")
+        # if email_data:
+        #     df = pd.DataFrame(email_data)
+        #     df.to_excel("LLM-results-5.xlsx", index=False)
+        #     print("Data saved to LLM-results.xlsx")
+        print(f"Error here: {e}")
 
-def send_to_strapi(event_data):
+
+def send_to_strapi(response_tuple):
+    # Extract the event data from the tuple
+    event_data = response_tuple[1]  # The second element is the JSON content
+
+    # Validate event_data structure
+    if not isinstance(event_data, dict):
+        print("Invalid event_data: Not a dictionary")
+        return
+
+    if "Date, Time, Venue" not in event_data or not isinstance(event_data["Date, Time, Venue"], dict):
+        print("Invalid event_data: Missing or incorrect 'Date, Time, Venue' field")
+        return
+
+    # Extract date and time
+    date_str = event_data["Date, Time, Venue"].get("Date", "TBD")
+    time_str = event_data["Date, Time, Venue"].get("Time", "TBD")
+    venue = event_data["Date, Time, Venue"].get("Venue", "TBD")  # Default to "TBD" if venue is missing
+
+    # Handle time (single timestamp or range)
+    if " - " in time_str:
+        start_time_str, end_time_str = time_str.split(" - ")
+    else:
+        start_time_str = time_str
+        end_time_str = time_str  # Use the same time for start and end if no range is provided
+
+    # Parse date and time into datetime objects
+    try:
+        # Combine date and time into a single string
+        start_datetime_str = f"{date_str} {start_time_str}"
+        end_datetime_str = f"{date_str} {end_time_str}"
+
+        # Parse into datetime objects
+        start_datetime = datetime.strptime(start_datetime_str, "%Y-%m-%d %I:%M %p")
+        end_datetime = datetime.strptime(end_datetime_str, "%Y-%m-%d %I:%M %p")
+
+        # Convert to ISO 8601 format
+        start_iso = start_datetime.isoformat() + "Z"  # Add "Z" for UTC timezone
+        end_iso = end_datetime.isoformat() + "Z"  # Add "Z" for UTC timezone
+    except ValueError as e:
+        print(f"Error parsing date or time: {e}")
+        return
+
+    # Transform the event data to match Strapi schema
+    strapi_data = {
+        "data": {
+            "title": event_data.get("Name of the event", "Untitled Event"),
+            "description": event_data.get("Descriptive Summary", "No description available"),
+            "kind": "event",  # You can modify this based on your needs
+            "start": start_iso,  # Use ISO 8601 format
+            "end": end_iso,  # Use ISO 8601 format
+            "venue": venue,
+            "display": "block",  # You can modify this based on your needs
+            "color": "#4a5568",  # You can modify this based on your needs
+            "allDay": False  # Add the allDay field
+        }
+    }
+
+    print(f"Strapi Data: {strapi_data}")
+
+    # Send data to Strapi
     headers = {
         "Authorization": f"Bearer {STRAPI_API_TOKEN}",
         "Content-Type": "application/json"
     }
-    
-    # Transform the event data to match Strapi schema
-    strapi_data = {
-        "data": {
-            "title": event_data["Name of the event"],
-            "description": event_data["Descriptive Summary"],
-            "kind": "event",  # You can modify this based on your needs
-            "start": event_data["Date, Time, Venue"]["Date"] + "T" + event_data["Date, Time, Venue"]["Time"].split(" - ")[0],
-            "end": event_data["Date, Time, Venue"]["Date"] + "T" + event_data["Date, Time, Venue"]["Time"].split(" - ")[1],
-            "venue": event_data["Date, Time, Venue"]["Venue"],
-            "display": "block",  # You can modify this based on your needs
-            "color": "#4a5568"  # You can modify this based on your needs
-        }
-    }
-    
+
     try:
         response = requests.post(STRAPI_URL, json=strapi_data, headers=headers)
         response.raise_for_status()
-        print(f"Successfully sent event to Strapi: {event_data['Name of the event']}")
+        print(f"Successfully sent event to Strapi: {event_data.get('Name of the event', 'Untitled Event')}")
     except Exception as e:
         print(f"Error sending to Strapi: {e}")
+        print(f"Response: {response.text if response else 'No response'}")
 
 check_inbox()
 
