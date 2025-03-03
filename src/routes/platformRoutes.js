@@ -754,9 +754,10 @@ router.get("/public-forum/:id", async (req, res) => {
       axiosConfig
     );
     var comments = await axios.get(
-      `${apiUrl}${com_endpoint}?populate=author,forum&pagination[pageSize]=1000`,
+      `${apiUrl}${com_endpoint}?populate=author,forum&pagination[pageSize]=1000&filters[forum][id][$eq]=${petitionID}`,
       axiosConfig
     );
+    
     var user_array = [];
     response.data.data.attributes.signatures.data.forEach((userSign) => {
       user_array.push(userSign.attributes.email);
