@@ -1,10 +1,17 @@
 import imaplib
 import email
+import requests
 from email.header import decode_header
 import time
+from dotenv import load_dotenv
+import os
 from groq import Groq
 import pandas as pd
 from langchain_google_genai import ChatGoogleGenerativeAI
+
+load_dotenv()
+STRAPI_API_TOKEN = os.getenv('STRAPI_API_TOKEN')
+#check is emails are being read multiple times, if yes, mark email as read
 
 client = Groq(
     api_key= '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', 
@@ -12,10 +19,14 @@ client = Groq(
 
 model = ChatGoogleGenerativeAI(model="gemini-1.0-pro", google_api_key='AIzaSyBpD8n0V6-9MiBPsJEM9ymX0G0awBb-V1Y')
 
-EMAIL = "vaani.goenka_ug2024@ashoka.edu.in"
-PASSWORD = "jait xepc kvuk onfr"
+EMAIL = os.getenv('EMAIL')
+PASSWORD = os.getenv('APP_PASSWORD')
 IMAP_SERVER = "imap.gmail.com"
 IMAP_PORT = 993
+
+# Add Strapi configuration
+STRAPI_URL = os.getenv('STRAPI_API_URL')+'/calendar-events'
+# STRAPI_URL = "http://localhost:1337/api/calendar-events"
 
 email_data = []
 
@@ -143,6 +154,9 @@ def check_inbox():
                             print(f"Here is my response: {llm_response}")
                             response_tuple = eval(llm_response)  
 
+                            if response_tuple[0]:  # If it's an event
+                                send_to_strapi(response_tuple[1])
+                            
                             email_data.append({
                                 "Subject": subject,
                                 "From": from_,
@@ -166,6 +180,33 @@ def check_inbox():
             df.to_excel("LLM-results-5.xlsx", index=False)
             print("Data saved to LLM-results.xlsx")
         print(f"Error: {e}")
+
+def send_to_strapi(event_data):
+    headers = {
+        "Authorization": f"Bearer {STRAPI_API_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    
+    # Transform the event data to match Strapi schema
+    strapi_data = {
+        "data": {
+            "title": event_data["Name of the event"],
+            "description": event_data["Descriptive Summary"],
+            "kind": "event",  # You can modify this based on your needs
+            "start": event_data["Date, Time, Venue"]["Date"] + "T" + event_data["Date, Time, Venue"]["Time"].split(" - ")[0],
+            "end": event_data["Date, Time, Venue"]["Date"] + "T" + event_data["Date, Time, Venue"]["Time"].split(" - ")[1],
+            "venue": event_data["Date, Time, Venue"]["Venue"],
+            "display": "block",  # You can modify this based on your needs
+            "color": "#4a5568"  # You can modify this based on your needs
+        }
+    }
+    
+    try:
+        response = requests.post(STRAPI_URL, json=strapi_data, headers=headers)
+        response.raise_for_status()
+        print(f"Successfully sent event to Strapi: {event_data['Name of the event']}")
+    except Exception as e:
+        print(f"Error sending to Strapi: {e}")
 
 check_inbox()
 

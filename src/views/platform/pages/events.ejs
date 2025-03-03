@@ -72,25 +72,32 @@
     .filter {
       padding: 0.5em 0;
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: 15px;
-      align-items: center;
-      margin-bottom: 10px;
+      font-size: 1em;
+      margin-bottom: 20px;
     }
 
     .filter h3 {
       margin: 0;
-      margin-right: 15px;
+      margin-bottom: 10px;
+    }
+
+    .filters-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: nowrap;
+      gap: 15px;
     }
 
     .event_filter_wrapper {
       margin: 0;
       white-space: nowrap;
+      min-width: 150px;
     }
 
     #calendar {
       flex: 1;
-      min-height: 0;
       width: 100%;
     }
 
@@ -185,7 +192,7 @@
     @media (max-width: 768px) {
     .fc .fc-toolbar {
       display: flex;
-      flex-direction: column;
+      /* flex-direction: column; */
       gap: 0.5em;
     }
 
@@ -200,6 +207,14 @@
     
     .fc-view-harness {
       font-size: 0.9em;
+    }
+  }
+
+  @media (max-width: 500px){
+    .fc .fc-toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
     }
   }
 
@@ -230,14 +245,32 @@
 
   /* Calendar cell styling */
   .fc .fc-daygrid-day-frame {
-    min-height: 50px;
-    height: auto;
+    /* height: 100%; */
+    min-height: 90px;
+    height: 100%;
   }
+
+  .fc .fc-bg-event {
+  opacity: var(--fc-bg-event-opacity);
+  width: 100% !important; /* Force full width */
+  right: 0 !important;
+  left: 0 !important;
+  height: 100% !important; /* Force full height */
+}
+
 
   .fc .fc-daygrid-day-events {
     min-height: 1em;
     margin-bottom: 1px;
+    /* z-index: 2; */
   }
+
+  /* Week number styling */
+.fc .fc-daygrid-week-number {
+  font-size: 0.9em;
+  padding: 2px 4px;
+  color: var(--fc-neutral-text-color);
+}
 
   .fc .fc-header-toolbar {
     margin-bottom: 0.5em !important;
@@ -256,12 +289,46 @@
     .fc .fc-daygrid-day-frame {
       min-height: 40px;
     }
+    .fc .fc-bg-event {
+    opacity: var(--fc-bg-event-opacity) !important;
+      right: 0 !important;
+      left: 0 !important;
+      height: 100% !important;
+  }
+
+  .fc-list-table td {
+      max-width: 150px;
+      font-size: 0.9em;
+      /* margin-right: 20px; */
+    }
+    
+    .fc-list-day-text,
+    .fc-list-day-side-text {
+      font-size: 0.9em;
+    }
+  .fc .fc-daygrid-week-number {
+    font-size: 0.6em;
+    padding: 1px 2px;
+  }
+  
+  /* Adjust the week number column width */
+  .fc .fc-daygrid-body-natural .fc-daygrid-day-number,
+  .fc .fc-daygrid-week-number {
+    min-width: 1.2em;
+  }
+  
+  /* Week number column */
+  .fc-theme-standard td:first-child {
+    max-width: 20px;
+  }
   }
 
   /* Full height layout adjustments */
   .container-fluid {
-    height: calc(100vh - 70px); /* Adjust for header height */
+    /* height: calc(100vh - 70px); Adjust for header height */
+    height: auto;
     padding-bottom: 20px;
+    max-height: none;
   }
 
   .row {
@@ -269,8 +336,9 @@
   }
 
   .card {
-    height: 88vh !important;
+    height: 100vh !important;
     margin-bottom: 0 !important;
+    overflow: visible;
   }
 
   .wrapper {
@@ -324,12 +392,70 @@
       min-height: 0;
     }
   }
+
+  /* List view responsive styling */
+  .fc-list-table td {
+    white-space: normal !important; /* Allows text to wrap */
+    max-width: 200px; /* Maximum width for content */
+    padding: 8px !important;
+  }
+
+  @media (max-width: 768px) {
+    .fc-list-table td {
+      max-width: 150px;
+      font-size: 0.9em;
+    }
+    
+    .fc-list-day-text,
+    .fc-list-day-side-text {
+      font-size: 0.9em;
+    }
+  }
   </style>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
+    async function getData() {
+      try {
+        const STRAPI_URL = '<%= process.env.STRAPI_API_URL %>';
+        const api_url = `${STRAPI_URL}/calendar-events`;
+        const STRAPI_API_TOKEN = '<%= process.env.STRAPI_API_KEY %>';
+        
+        const response = await fetch(api_url, {
+          headers: {
+            'Authorization': `Bearer ${STRAPI_API_TOKEN}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data);
+        const events = data.data.map(item => ({
+          title: item.attributes.title,
+          start: item.attributes.start,
+          end: item.attributes.end,
+          color: item.attributes.color,
+          textColor: 'white',
+          description: item.attributes.description,
+          kind: item.attributes.kind || 'holiday',
+          display: item.attributes.display || 'block',
+          venue: item.attributes.venue,
+          allDay: item.attributes.allDay
+        }));        
+        console.log("Fetched events:", events);
+        
+        return events;
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        return [];
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async function() {
+      var calendarEl = document.getElementById('calendar');
       var calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
           start: 'prev,today,next',
@@ -367,106 +493,20 @@
           dayHeaderFormat: { weekday: 'long', day: '2-digit' }
         }
         },
-        events: [
-          {
-            title: "Festival in HH",
-            start: moment().add(1, 'days').format(),
-            end: moment().add(4, 'days').add(3, 'hours').format(),
-            className: 'festival',
-            color: 'orange',
-            textColor: 'black',
-            kind: 'festival',
-            state: 'hh',
-            venue: 'Takshilla',
-            description: "This is a festival in Hamburg"
-          },
-          {
-            title: "Party in HH",
-            start: moment().subtract(2, 'days').format(),
-            end: moment().subtract(2, 'days').add(3, 'hours').format(),
-            color: 'brightblue',
-            textColor: 'white',
-            kind: 'party',
-            state: 'hh'
-          },
-          {
-            title: "Party in SH",
-            start: moment().format(),
-            end: moment().add(3, 'hours').format(),
-            color: 'brightblue',
-            textColor: 'white',
-            kind: 'party',
-            state: 'sh'
-          },
-          {
-            title: "Concert in SH",
-            start: moment().add(1, 'days').format(),
-            end: moment().add(1, 'days').add(3, 'hours').format(),
-            color: 'red',
-            textColor: 'white',
-            kind: 'concert',
-            state: 'sh'
-          },
-          {
-            title: "Concert in HH",
-            start: moment().subtract(3, 'days').format(),
-            end: moment().subtract(3, 'days').add(3, 'hours').format(),
-            color: 'red',
-            textColor: 'white',
-            kind: 'concert',
-            state: 'hh'
-          },
-          {
-            title: "test 1",
-            start: moment().subtract(3, 'days').format(),
-            end: moment().subtract(3, 'days').add(3, 'hours').format(),
-            color: 'red',
-            textColor: 'white',
-            kind: 'concert',
-            state: 'hh'
-          },
-          {
-            title: "test 2",
-            start: moment().subtract(3, 'days').format(),
-            end: moment().subtract(3, 'days').add(3, 'hours').format(),
-            color: 'red',
-            textColor: 'white',
-            kind: 'concert',
-            state: 'hh'
-          },
-          {
-            title: "test 3",
-            start: moment().subtract(3, 'days').format(),
-            end: moment().subtract(3, 'days').add(3, 'hours').format(),
-            color: 'red',
-            textColor: 'white',
-            kind: 'concert',
-            state: 'hh'
-          },
-          {
-            title: "#1 Background title",
-            start: moment().subtract(6, 'days').format('YYYY-MM-DD'),
-            end: moment().subtract(2, 'days').format('YYYY-MM-DD'),
-            display: 'background',
-            kind: 'holiday',
-          },
-          {
-            title: "#2 title",
-            start: moment().subtract(8, 'days').format('YYYY-MM-DD'),
-            end: moment().subtract(8, 'days').format('YYYY-MM-DD'),
-            display: 'background',
-            color: '#ff9f89',
-            kind: 'holiday',
-          },
-          {
-            // FIX: Two Background events overlap each other
-            title: "#3 Overlap",
-            start: moment().subtract(8, 'days').format('YYYY-MM-DD'),
-            end: moment().subtract(8, 'days').format('YYYY-MM-DD'),
-            display: 'background',
-            kind: 'holiday',
-          }
-        ],
+        events: await getData(),
+  // eventDidMount: function(info) {
+  //   console.log('Event mounted:', info.event);
+  // },
+        // lazyFetching: true,
+  //       loading: function(isLoading) {
+  //   if (isLoading) {
+  //     console.log('Loading events...');
+  //     // Optional: Show loading indicator
+  //   } else {
+  //     console.log('Finished loading events');
+  //     // Optional: Hide loading indicator
+  //   }
+  // },
         height: '100%',
         expandRows: true,
         eventClick: function (info) {
@@ -553,6 +593,10 @@
       $('input[class=event_filter]').change(function() {
         calendar.render();
       });
+        // Add a refresh button if needed
+      $('#refresh-calendar').click(function() {
+        calendar.refetchEvents();
+      });
     });
   </script>
 </head>
@@ -571,25 +615,27 @@
               <div class="wrapper">
                 <div class="filter">
                   <h3>Filters</h3>
-                  <div class="event_filter_wrapper">
-                    <input id="hh" class="event_filter" name="event_filter_sel" type="checkbox" value="hh" data-type="state" />
-                    <label for="hh">Hamburg (HH)</label>
-                  </div>
-                  <div class="event_filter_wrapper">
-                    <input id="sh" class="event_filter" name="event_filter_sel" type="checkbox" value="sh" data-type="state" />
-                    <label for="sh">Schleswig-Holstein (SH)</label>
-                  </div>
-                  <div class="event_filter_wrapper">
-                    <input id="party" class="event_filter" name="event_filter_sel" type="checkbox" value="party" data-type="kind" checked="true" />
-                    <label for="party">Party</label>
-                  </div>
-                  <div class="event_filter_wrapper">
-                    <input id="concert" class="event_filter" name="event_filter_sel" type="checkbox" value="concert" data-type="kind" checked="true" />
-                    <label for="concert">Concert</label>
-                  </div>
-                  <div class="event_filter_wrapper">
-                    <input id="festival" class="event_filter" name="event_filter_sel" type="checkbox" value="festival" data-type="kind" checked="true" />
-                    <label for="festival">Festival</label>
+                  <div class="filters-container">
+                    <div class="event_filter_wrapper">
+                      <input id="hh" class="event_filter" name="event_filter_sel" type="checkbox" value="hh" data-type="state" />
+                      <label for="hh">Hamburg (HH)</label>
+                    </div>
+                    <div class="event_filter_wrapper">
+                      <input id="sh" class="event_filter" name="event_filter_sel" type="checkbox" value="sh" data-type="state" />
+                      <label for="sh">Schleswig-Holstein (SH)</label>
+                    </div>
+                    <div class="event_filter_wrapper">
+                      <input id="party" class="event_filter" name="event_filter_sel" type="checkbox" value="party" data-type="kind" />
+                      <label for="party">Party</label>
+                    </div>
+                    <div class="event_filter_wrapper">
+                      <input id="concert" class="event_filter" name="event_filter_sel" type="checkbox" value="concert" data-type="kind" />
+                      <label for="concert">Concert</label>
+                    </div>
+                    <div class="event_filter_wrapper">
+                      <input id="festival" class="event_filter" name="event_filter_sel" type="checkbox" value="festival" data-type="kind"/>
+                      <label for="festival">Festival</label>
+                    </div>
                   </div>
                 </div>
                 <div id="calendar"></div>
