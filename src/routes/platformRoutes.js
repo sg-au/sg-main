@@ -737,17 +737,12 @@ router.get("/public-forum", async (req, res) => {
       `${apiUrl}${endpoint}?populate=comments,signatures,department`,
       axiosConfig
     );
-
-    // Ensure data structure is always present
-    const petitions = response.data?.data || [];
-
-    res.render("platform/pages/public-forum", { petitions });
+    console.log(response.data);
+    res.render("platform/pages/public-forum", { petitions: response.data });
   } catch (error) {
     console.error("An error occurred:", error);
-    res.status(500).send("Internal Server Error");
   }
 });
-
 
 router.get("/public-forum/:id", async (req, res) => {
   try {
