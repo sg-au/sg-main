@@ -117,7 +117,7 @@
                               <form action="/wifi-ticket" method="post" id="wifiTicketForm">
                                 <!-- Embed Speedtest -->
                                 <div class="row mb-3">
-                                    <label class="col-sm-4 col-form-label form-label">Are you currently on Ashoka WiFi?</label>
+                                    <label class="col-sm-4 col-form-label form-label">Are you currently on Ashoka WiFi?<span style="color:rgb(177, 58, 58)">*</span></label>
                                     <div class="col-sm-8">
                                         <select class="form-select" id="wifiStatus" name="wifiStatus" onchange="toggleSpeedTest()" required>
                                             <option value="">Select an option</option>
@@ -154,10 +154,17 @@
                                         <input type="number" name="ping" step="1" class="form-control" id="ping" required>
                                     </div>
                                 </div> -->
+
+                                <div class="row mb-3">
+                                    <label for="newTicketTitle" class="col-sm-2 col-form-label form-label">Contact Number<span style="color:rgb(177, 58, 58)">*</span></label>
+                                    <div class="col-sm-10">
+                                        <input required minlength="10" maxlength="14" name="phone" type="tel" class="form-control" id="phoneNumber" pattern="[0-9]{10}" value="<%=phone%>" title="Please enter your phone number for IT to contact you.">                                    
+                                    </div>
+                                </div>
                             
                                 <div class="row mb-3">
                                     <label for="complaintType" class="col-sm-2 col-form-label form-label">
-                                        Complaint Type
+                                        Complaint Type<span style="color:rgb(177, 58, 58)">*</span>
                                         <!-- <button type="button" class="btn btn-link p-0 help-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Select the type of WiFi issue you are experiencing">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
                                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -180,7 +187,7 @@
                             
                                 <div class="row mb-3">
                                     <label for="location" class="col-sm-2 col-form-label form-label">
-                                        Location
+                                        Location<span style="color:rgb(177, 58, 58)">*</span>
                                         <!-- <button type="button" class="btn btn-link p-0 help-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter the specific location where you are experiencing the WiFi issue">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
                                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -189,13 +196,51 @@
                                         </button> -->
                                     </label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="location" name="location" placeholder="Eg. 'RH6, Room 230, Left Side', 'AC02 005'" required>
+                                        <!-- <input type="text" class="form-control" id="location" name="location" placeholder="Eg. 'RH6, Room 230, Left Side', 'AC02 005'" required> -->
+                                        <select class="form-select" id="location" name="location" required>
+                                            <option value="">Select a location...</option>
+                                            <option value="RH-01">RH-01</option>
+                                            <option value="RH-02">RH-02</option>
+                                            <option value="RH-03">RH-03</option>
+                                            <option value="RH-04">RH-04</option>
+                                            <option value="RH-05">RH-05</option>
+                                            <option value="RH-06">RH-06</option>
+                                            <option value="RH-07">RH-07</option>
+                                            <option value="Admin Block">Admin Block</option>
+                                            <option value="AC-01">AC-01</option>
+                                            <option value="AC-02">AC-02</option>
+                                            <option value="AC-03">AC-03</option>
+                                            <option value="AC-04">AC-04</option>
+                                            <option value="AC-05">AC-05</option>
+                                            <option value="Mess">Mess</option>
+                                            <option value="Fuel Zone">Fuel Zone</option>
+                                            <option value="Sanghvi Library">Sanghvi Library</option>
+                                            <option value="Library">Library</option>
+                                            <option value="Library Cafe">Library Cafe</option>
+                                            <option value="Sports Complex">Sports Complex</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="location" class="col-sm-2 col-form-label form-label">
+                                        Room/Floor<span style="color:rgb(177, 58, 58)">*</span>
+                                        <!-- <button type="button" class="btn btn-link p-0 help-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter the specific location where you are experiencing the WiFi issue">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                                            </svg>
+                                        </button> -->
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="specific-location" name="specific-location" placeholder="Eg. 'Room 230, Left Side', 'Class 005', '2nd Floor'" required>                                        
                                     </div>
                                 </div>
                             
                                 <div class="row mb-3">
                                     <label for="message" class="col-sm-2 col-form-label form-label">
-                                        Additional Details
+                                        Additional Details<span style="color:rgb(177, 58, 58)">*</span>
                                         <!-- <button type="button" class="btn btn-link p-0 help-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Provide any additional information about your WiFi issue">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
                                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -289,11 +334,13 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
+                        phone: document.getElementById('phoneNumber').value,
                         wifiStatus: document.getElementById('wifiStatus').value,
                         downloadSpeed: document.getElementById('downloadSpeed').value,
                         // uploadSpeed: document.getElementById('uploadSpeed').value,
                         complaintType: document.getElementById('complaintType').value,
                         location: document.getElementById('location').value,
+                        specificLocation: document.getElementById('specific-location').value,
                         message: document.getElementById('message').value
                     })
                 });

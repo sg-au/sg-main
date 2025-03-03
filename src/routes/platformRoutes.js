@@ -1541,20 +1541,48 @@ router.get('/mail-spam-filter3', async(req, res) => {
 });
 
 router.get("/wifi-ticket", async (req, res) => {
-  res.render("platform/pages/wifi-ticket");
+  userEmail = req.user._json.email;
+  axios
+    .get(
+      `${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`,
+      axiosConfig
+    )
+    .then((response) => {
+      // Assuming you get a single user with the specified email
+      user = response.data[0];
+      res.render("platform/pages/wifi-ticket", { phone: user.phone });
+    })
+    .catch((error) => {
+      console.error("Error fetching user:", error);
+      // Handle error
+    });
 });
 
 router.post("/wifi-ticket", async (req, res) => {
+  // make a put request to update user phone number
+  var user = await axios.get(
+    `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`,
+    axiosConfig
+  );
+  updateduser = user.data[0];
+  updateduser.phone = req.body.phone;
+  await axios.put(
+    `${apiUrl}/users/${user.data[0].id}`,
+    updateduser,
+    axiosConfig
+  );
   const ticketId = helpers.createTicketId("WIFI", 8);
   const isOnAshokaWifi = req.body.wifiStatus === "onWifi" ? true : false;
   const wifi_obj = {
     ticketId: ticketId,
     user: req.user._json.email,
+    phone: req.body.phone,
     networkStatus: isOnAshokaWifi ? "On Ashoka WiFi" : "Not on Ashoka WiFi",
     downloadSpeed: isOnAshokaWifi ? req.body.downloadSpeed + " Mbps" : "N/A",
     // uploadSpeed: isOnAshokaWifi ? req.body.uploadSpeed + " Mbps" : "N/A",
     complaintType: req.body.complaintType,
     location: req.body.location,
+    specificLocation: req.body.specificLocation,
     additionalDetails: req.body.message,
     dateSubmitted: new Date().toLocaleString(),
   };
@@ -1596,6 +1624,10 @@ router.post("/wifi-ticket", async (req, res) => {
                         <td>${req.user._json.name} (${req.user._json.email})</td>
                     </tr>
                     <tr>
+                        <th>Phone Number</th>
+                        <td>${req.body.phone}</td>
+                    </tr>
+                    <tr>
                         <th>Network Status</th>
                         <td>${isOnAshokaWifi ? 'On Ashoka WiFi' : 'Not on Ashoka WiFi'}</td>
                     </tr>
@@ -1610,6 +1642,10 @@ router.post("/wifi-ticket", async (req, res) => {
                     <tr>
                         <th>Location</th>
                         <td>${req.body.location}</td>
+                    </tr>
+                    <tr>
+                        <th>Room/Floor</th>
+                        <td>${req.body.specificLocation}</td>
                     </tr>
                     <tr>
                         <th>Additional Details</th>
