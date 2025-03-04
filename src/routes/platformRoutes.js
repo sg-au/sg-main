@@ -1059,12 +1059,12 @@ router.get("/sg-compose/dashboard", async (req, res) => {
 
 router.post("/sg-compose", upload.array("files"), async (req, res) => {
   try {
-    var user = await axios.get(
-      `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`,
-      axiosConfig
-    );
-    updateduser = user.data[0];
-    updateduser.phone = req.body.phone;
+    // var user = await axios.get(
+    //   `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`,
+    //   axiosConfig
+    // );
+    // updateduser = user.data[0];
+    // updateduser.phone = req.body.phone;
 
     if (Array.isArray(req.body.recipients)) {
       req.body.recipients = req.body.recipients.join();
@@ -1072,11 +1072,11 @@ router.post("/sg-compose", upload.array("files"), async (req, res) => {
       req.body.recipients = req.body.recipients;
     }
 
-    await axios.put(
-      `${apiUrl}/users/${user.data[0].id}`,
-      updateduser,
-      axiosConfig
-    );
+    // await axios.put(
+    //   `${apiUrl}/users/${user.data[0].id}`,
+    //   updateduser,
+    //   axiosConfig
+    // );
 
     // Handle file uploads
     const MAX_TOTAL_SIZE = 10 * 1024 * 1024; // 10 MB in bytes
@@ -1136,7 +1136,7 @@ router.post("/sg-compose", upload.array("files"), async (req, res) => {
 
     // Add file links to the request body
     req.body.attachment_path = attachment_path.join(",");
-    delete req.body.phone;
+    // delete req.body.phone;
 
     // console.log(req.body);
     var aliasvalid = options.includes(req.body.alias) ? true : false;
