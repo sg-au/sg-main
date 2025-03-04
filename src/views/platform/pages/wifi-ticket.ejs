@@ -326,6 +326,12 @@
             const submitBtn = document.getElementById('submitWifiTicket');
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...`;
+
+            const userDateTime = new Date().toLocaleString('en-US', { 
+                timeZone: 'Asia/Kolkata',  // Use Indian timezone
+                dateStyle: 'full',
+                timeStyle: 'medium'
+            });
             
             try {
                 const response = await fetch('/platform/wifi-ticket', {
@@ -341,7 +347,8 @@
                         complaintType: document.getElementById('complaintType').value,
                         location: document.getElementById('location').value,
                         specificLocation: document.getElementById('specific-location').value,
-                        message: document.getElementById('message').value
+                        message: document.getElementById('message').value,
+                        submissionTimestamp: userDateTime
                     })
                 });
                 

@@ -1586,7 +1586,7 @@ router.post("/wifi-ticket", async (req, res) => {
     location: req.body.location,
     specificLocation: req.body.specificLocation,
     additionalDetails: req.body.message,
-    dateSubmitted: new Date().toLocaleString(),
+    submissionTimestamp: req.body.submissionTimestamp,
   };
 
   jsonfile.writeFile(wifiTicket_file, wifi_obj, { flag: "a+" }, function (err) {
@@ -1655,7 +1655,7 @@ router.post("/wifi-ticket", async (req, res) => {
                     </tr>
                     <tr>
                         <th>Date Submitted</th>
-                        <td>${new Date().toLocaleString()}</td>
+                        <td>${req.body.submissionTimestamp}</td>
                     </tr>
                 </table>
             </div>
