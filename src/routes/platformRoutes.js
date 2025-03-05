@@ -1059,11 +1059,11 @@ router.get("/sg-compose/dashboard", async (req, res) => {
 
 router.post("/sg-compose", upload.array("files"), async (req, res) => {
   try {
-    // var user = await axios.get(
-    //   `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`,
-    //   axiosConfig
-    // );
-    // updateduser = user.data[0];
+    var user = await axios.get(
+      `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`,
+      axiosConfig
+    );
+    updateduser = user.data[0];
     // updateduser.phone = req.body.phone;
 
     if (Array.isArray(req.body.recipients)) {
