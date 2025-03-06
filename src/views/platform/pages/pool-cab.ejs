@@ -177,7 +177,7 @@
                               </td>
                               <td><%=new Date('1970-01-01T' + pools[i].attributes.time).toLocaleTimeString('en-US', { hour12: true }) %></td>
                               <td>
-                                <%=pools[i].attributes.journey.replace(/\b(?:(?!to)\w)/g, match => match.toUpperCase())%>
+                                <%pools[i].attributes.journey.replace(/\b(?:(?!to)\w)/g, match => match.toUpperCase())%>
                               </td>
                               <td>
                                 <%let date = new Date(pools[i].attributes.day);%>
