@@ -1440,6 +1440,7 @@ router.get("/pool-cab", async (req, res) => {
       );
       
       var pools = pool_data.data.data;
+      console.log(pools);
       // next 5 days only
       let filteredPools = pools.filter((pool) => {
         let poolDate = new Date(pool.attributes.day);
