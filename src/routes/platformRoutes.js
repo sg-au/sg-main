@@ -1435,7 +1435,7 @@ router.get("/pool-cab", async (req, res) => {
       });
     } else {
       var pool_data = await axios.get(
-        `${apiUrl}/pools?populate=pooler&fields[0]=journey&pagination[pageSize]=2000&_where[day_gte]=${dateRange.currentDate}&_where[day_lt]=${dateRange.futureDate}`,
+        `${apiUrl}/pools?populate=pooler&fields[0]=journey&fields[1]=day&fields[2]=time&pagination[pageSize]=2000&_where[day_gte]=${dateRange.currentDate}&_where[day_lt]=${dateRange.futureDate}`,
         axiosConfig
       );
       
