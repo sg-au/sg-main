@@ -1449,10 +1449,13 @@ router.get("/pool-cab", async (req, res) => {
         }/${poolDate.getDate()}/${poolDate.getFullYear()}`;
         return acceptableDates.includes(poolDateString);
       });
+
+      console.log(filteredPools);
       var i = 0;
       while (i < user_detail.length && user_detail[i] != "available") {
         i++;
       }
+      console.log(user_detail)
       res.render("platform/pages/pool-cab", {
         pools: filteredPools,
         user_detail: user_detail[i - 1],
