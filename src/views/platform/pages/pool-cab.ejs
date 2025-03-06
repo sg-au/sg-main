@@ -169,15 +169,18 @@
                                 
                               </td>
                               <td>
-                                
                                 <%=pools[i].attributes.pooler.data.attributes.username%></td>
-                              
                               <td>
                                 <%=pools[i].attributes.pooler.data.attributes.phone%>
                               </td>
                               <td><%=new Date('1970-01-01T' + pools[i].attributes.time).toLocaleTimeString('en-US', { hour12: true }) %></td>
                               <td>
-                                <%pools[i].attributes.journey.replace(/\b(?:(?!to)\w)/g, match => match.toUpperCase())%>
+                                <%let route = pools[i].attributes.journey;%>
+                                <%let temp = route.split(" ");%>
+                                <%temp[0] = temp[0].charAt(0).toUpperCase() + temp[0].slice(1);%>
+                                <%temp[2] = temp[2].charAt(0).toUpperCase() + temp[2].slice(1);%>
+                                <%route = temp.join(" ");%>
+                                <%=route%>                              
                               </td>
                               <td>
                                 <%let date = new Date(pools[i].attributes.day);%>
