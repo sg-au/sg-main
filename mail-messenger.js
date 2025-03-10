@@ -83,79 +83,83 @@ function handleImapError(imap, error) {
 function checkInbox() {
   try {
     const imap = createImapConnection();
-    
-    // Open label, not mailbox, previously we were trying to open 'mailbox' which was causing the error
+
+    // Open label, not mailbox
     function openInbox(cb) {
-        const labelName = 'test';  // Use the correct label name here
-        imap.openBox(labelName, false, (err, box) => {
-          if (err) {
-            console.log(`Error opening label: ${err.message}`); 
-            handleImapError(imap, err);
-            return;
-          }
-          cb(null, box);
-        });
-      }      
+      const labelName = 'test';  // Use the correct label name here
+      imap.openBox(labelName, false, (err, box) => {
+        if (err) {
+          console.log(`Error opening label: ${err.message}`); 
+          handleImapError(imap, err);
+          return;
+        }
+        cb(null, box);
+      });
+    }
 
     imap.once('ready', function() {
       // Reset reconnect attempts on successful connection
       imapReconnectAttempts = 0;
       console.log("Successfully connected to IMAP server");
-      
+
       openInbox(function(err, box) {
         if (err) {
           handleImapError(imap, err);
           return;
         }
-        
-        imap.search(['UNSEEN'], function(err, results) {
+
+        imap.search(['ALL'], function(err, results) {
           if (err) {
             handleImapError(imap, err);
             return;
           }
-          
+
           if (results.length > 0) {
             console.log(`Found ${results.length} new email(s):`);
-            
+
             let body = "";
             let originalMsgId = "";
             let prevReferences = "";
-            
+            let msgIds = [];  // This will store the message IDs of the emails in the thread
+
             const fetch = imap.fetch(results, { bodies: '', struct: true });
-            
+
             fetch.on('message', function(msg, seqno) {
               msg.on('body', function(stream, info) {
                 let buffer = '';
-                
+
                 stream.on('data', function(chunk) {
                   buffer += chunk.toString('utf8');
                 });
-                
+
                 stream.on('error', function(err) {
                   console.log(`Error in message stream: ${err}`);
                 });
-                
+
                 stream.once('end', function() {
                   simpleParser(buffer)
                     .then(async (parsed) => {
                       const subject = parsed.subject;
                       const from = parsed.from.text;
                       const msgId = parsed.messageId;
-                      const references = parsed.references ? 
+                      const references = parsed.references ?
                         (Array.isArray(parsed.references) ? parsed.references.join(' ') : parsed.references) 
                         : null;
-                      
+
+                      // Track message ID in case of threading
                       if (references !== null && prevReferences && references.includes(prevReferences)) {
                         originalMsgId = "Found";
+                        msgIds.push(msgId);  // Add the current msgId to the list if it's part of a thread
                       } else {
                         originalMsgId = null;
+                        msgIds = [msgId];  // Start a new list with the current msgId
                       }
-                      
+
                       console.log(`Subject: ${subject}`);
-                      
+
                       // Get message body
                       body = (parsed.text || '') + body;
-                      
+
                       // Handle threaded emails
                       if (originalMsgId === "Found") {
                         body = `This is a thread email. Look out for changes in the original event based on the time when the email was sent. 
@@ -165,9 +169,10 @@ function checkInbox() {
                         prevReferences = references;
                         return;
                       }
-                      
+
                       // Process standalone emails
                       if (!parsed.inReplyTo && !references) {
+                        console.log(body);
                         const prompt = `You are given the body of an email sent out to a college student of Ashoka University. 
                         Your task is to identify whether or not the email is an event email. 
                         An event is defined as the following - 
@@ -177,7 +182,7 @@ function checkInbox() {
                         An event always has a date, time (compulsorily) and a venue (optionally, venue could be 'tbd' or unspecified) associated with it. Moreover, the language
                         in the email corresponds to a that of an event clearly. Note that 'deadlines' are not the same as timings of an events. Look out
                         for differences in date-time mentioned in deadlines v/s for events.
-                        Once you have identified it, respond with a tuple. The first item in the tuple is a boolean True or False ONLY. Do not even change the case of the words. It has to be True/False.
+                        Once you have identified it, respond with a tuple. The first item in the tuple is a boolean True or False ONLY. Do not even change the case of the words.
                         If your answer is false, the second item is an empty object. 
                         If you answer is true, the second item is a JSON object containing specifications of the event.
                         Specifications of the event include: 
@@ -202,42 +207,45 @@ function checkInbox() {
                             "Descriptive Summary": "The AI and Ethics Symposium brings together leading experts, scholars, and students to explore the ethical implications of artificial intelligence. The event includes keynote speeches and poster presentations."
                         }
                         Make sure you appropriately close the braces in the JSON object and follow all specifications of how a JSON object should be.
-                        Your answer should be ONLY the tuple. No other surrounding words or phrases. The tuple must NOT be enclosed in brackets. I repeat, the tuple must NOT be enclosed in brackets and there should be no other surrounding characters or words from you. Just write True/False followed by a comma and then the object. No other characters.
+                        Your answer should be ONLY the tuple. No other surrounding words or phrases.
+                        The tuple must NOT be enclosed in brackets and there should be no other surrounding characters or words from you. Just write True/False followed by a comma and then the object. No other characters.
                         The email is provided to you below: 
                         Subject: ${subject} From: ${from}
                         Body: ${body}.`;
-                        
+
                         try {
                           // (using proper Node.js HTTP client):
                         const result = await model.generateContent(prompt);
                         const llmResponse = await result.response.text(); // Add 'await'
                           console.log(`Here is my response: ${llmResponse}`);
-                          
+
                           // Parse tuple from response using regex
                           const match = llmResponse.match(/(True|False),\s*({.*}|\{\})/s);
-                          
+
                           if (match) {
                             const isEvent = match[1] === 'True';
                             let eventObject = match[2];
-                            
+
                             try {
                               // Parse event object if it's a string
                               if (typeof eventObject === 'string') {
                                 eventObject = JSON.parse(eventObject);
                               }
-                              
-                              const responseTuple = [isEvent, eventObject];
-                              
+
+                              const responseTuple = [isEvent, eventObject, msgIds]; // Add msgIds as the third item
+                              console.log("Response tuple: ", responseTuple);
+
                               if (responseTuple[0]) {  // If it's an event
                                 sendToStrapi(responseTuple);
                               }
-                              
+
                               emailData.push({
                                 "Subject": subject,
                                 "From": from,
                                 "Body Summary": body.length > 200 ? body.substring(0, 200) + "..." : body,
                                 "LLM Response (True/False)": responseTuple[0],
                                 "LLM Object Returned": responseTuple[1],
+                                "Message IDs": responseTuple[2],  // Add message IDs to the data
                               });
                             } catch (error) {
                               console.log(`Error parsing event object: ${error}`);
@@ -245,7 +253,7 @@ function checkInbox() {
                           } else {
                             console.log("Could not parse LLM response as a tuple");
                           }
-                          
+
                           // Reset body for the next iteration
                           body = "";
                         } catch (error) {
@@ -258,17 +266,17 @@ function checkInbox() {
                     });
                 });
               });
-              
+
               msg.once('error', function(err) {
                 console.log(`Error processing message: ${err}`);
               });
             });
-            
+
             fetch.once('error', function(err) {
               console.log(`Fetch error: ${err}`);
               handleImapError(imap, err);
             });
-            
+
             fetch.once('end', function() {
               console.log('Done fetching all messages!');
               imap.end();
@@ -280,43 +288,43 @@ function checkInbox() {
         });
       });
     });
-    
+
     imap.once('error', function(err) {
       handleImapError(imap, err);
     });
-    
+
     imap.once('close', function() {
       console.log('IMAP connection closed');
     });
-    
+
     imap.once('end', function() {
       console.log('IMAP connection ended');
     });
-    
+
     // Set up a timeout for connection
     const connectionTimeout = setTimeout(() => {
       if (imap.state !== 'connected') {
         console.log('Connection timeout. Attempting to reconnect...');
-        
+
         try {
           imap.end();
         } catch (e) {
           console.log(`Error ending timed-out connection: ${e.message}`);
         }
-        
+
         handleImapError(imap, new Error('Connection timeout'));
       }
     }, 30000); // 30 second timeout
-    
+
     // Clear the timeout when connected
     imap.once('ready', () => {
       clearTimeout(connectionTimeout);
     });
-    
+
     imap.connect();
   } catch (e) {
     console.log(`Setup error: ${e}`);
-    
+
     // Attempt to reconnect after delay
     setTimeout(() => {
       console.log(`Attempting to reconnect after setup error...`);
