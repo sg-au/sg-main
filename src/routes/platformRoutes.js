@@ -1356,8 +1356,40 @@ router.get("/events", (req, res) => {
   res.render("platform/pages/events-2");
 });
 
-router.get("/event", (req, res) => {
-  res.render("platform/pages/events");
+router.get("/event", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${apiUrl}/calendar-events`,
+      axiosConfig
+    );
+    
+    // Make sure we handle potential null or undefined values
+    const events = response.data.data.map(item => ({
+      title: item.attributes.title || '',
+      start: item.attributes.start || '',
+      end: item.attributes.end || '',
+      color: item.attributes.color || '',
+      textColor: 'white',
+      description: item.attributes.description || '',
+      kind: item.attributes.kind || 'holiday',
+      display: item.attributes.display || 'block',
+      venue: item.attributes.venue || '',
+      allDay: item.attributes.allDay || false
+    }));
+
+    // Safely stringify the events
+    const safeEvents = JSON.stringify(events)
+      .replace(/\\/g, '\\\\')  // Escape backslashes
+      .replace(/</g, '\\u003c') // Escape < to prevent XSS
+      .replace(/>/g, '\\u003e'); // Escape > to prevent XSS
+
+    res.render("platform/pages/events", { 
+      events: safeEvents
+    });
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    res.render("platform/pages/events", { events: '[]' });
+  }
 });
 
 router.get("/pool-cab", async (req, res) => {
@@ -2332,7 +2364,7 @@ router.post("/assets", async (req, res) => {
                               <h3>Acknowledgment of Responsibility:</h3>
                               <p>I understand that failure to return the device on time, or returning it in a damaged condition, may result in penalties, including the suspension of borrowing privileges and additional disciplinary actions as deemed appropriate by the university.</p>
 
-                              <h3>Borrower’s Details:</h3>
+                              <h3>Borrower's Details:</h3>
                               <p><strong>Full Name:</strong> ${
                                 req.user._json.name
                               }</p>
