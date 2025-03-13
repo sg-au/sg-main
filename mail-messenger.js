@@ -84,9 +84,9 @@ function checkInbox() {
   try {
     const imap = createImapConnection();
 
-    // Open label, not mailbox
+    // Opens the inbox at the specified labelName
     function openInbox(cb) {
-      const labelName = 'test';  // Use the correct label name here
+      const labelName = 'test';  // Change this to text for some other label
       imap.openBox(labelName, false, (err, box) => {
         if (err) {
           console.log(`Error opening label: ${err.message}`); 
@@ -108,7 +108,7 @@ function checkInbox() {
           return;
         }
 
-        imap.search(['ALL'], function(err, results) {
+        imap.search(['ALL'], function(err, results) { // change 'ALL' to 'UNSEEN' or 'SEEN' to look for emails under those categories
           if (err) {
             handleImapError(imap, err);
             return;
@@ -118,8 +118,8 @@ function checkInbox() {
             console.log(`Found ${results.length} new email(s):`);
 
             let body = "";
-            let originalMsgId = "";
-            let prevReferences = "";
+            let originalMsgId = ""; // Stores whether the current email points to a parent email or not
+            let prevReferences = ""; // Stores the 'References' of the previous email. if this matches (substring) the references of the current email we know they are part of the same thread
             let msgIds = [];  // This will store the message IDs of the emails in the thread
 
             const fetch = imap.fetch(results, { bodies: '', struct: true });
@@ -144,18 +144,24 @@ function checkInbox() {
                       const msgId = parsed.messageId;
                       const references = parsed.references ?
                         (Array.isArray(parsed.references) ? parsed.references.join(' ') : parsed.references) 
-                        : null;
-
+                        : null; 
+                      console.log("\nPrevious references: ", prevReferences);
+                      console.log("\nReferences: ",references);
                       // Track message ID in case of threading
-                      if (references !== null && prevReferences && references.includes(prevReferences)) {
+                      if (references !== null && prevReferences !== null) { // Conditions that the current email points to a parent email
+                        // Originally prrevReferences is "" so it works for the first result too
+                        console.log("\nHERE!");
                         originalMsgId = "Found";
-                        msgIds.push(msgId);  // Add the current msgId to the list if it's part of a thread
+                        prevReferences = (references !== null) ? references : ""; // set current references as Previous References for the next iteration, if the email does not contain references then this becomes null
+                        console.log("\nPrev References set as: ", prevReferences);
+                        msgIds.push(msgId);  // Add the current msgId to the list if it's part of a thread - we maintain this for event ID
                       } else {
                         originalMsgId = null;
                         msgIds = [msgId];  // Start a new list with the current msgId
                       }
 
                       console.log(`Subject: ${subject}`);
+                      console.log(originalMsgId);
 
                       // Get message body
                       body = (parsed.text || '') + body;
@@ -166,13 +172,12 @@ function checkInbox() {
                         Threads also by default contain the portion of the email they are written in reply to. This content begins in the following way: On Sat, Nov 16, 2024 at 10:19 AM Eeshto: The Gaming Society <eeshto@ashoka.edu.in> wrote: 
                         i.e. it is a timestamp followed by the sender. And the body of this email is preceeded by the characters > . So note that this is simply a reference to the previous / any of the previous
                         emails and so do not consider this content as an update to the event. Ignore it.\n` + `Subject: ${subject}` + body;
-                        prevReferences = references;
                         return;
                       }
 
-                      // Process standalone emails
-                      if (!parsed.inReplyTo && !references) {
-                        console.log(body);
+                      // Process standalone emails - this means they are not 'inReplyTo' any emails.
+                      if (!parsed.inReplyTo) {
+                        console.log("\n\nBODY: ", body);
                         const prompt = `You are given the body of an email sent out to a college student of Ashoka University. 
                         Your task is to identify whether or not the email is an event email. 
                         An event is defined as the following - 
@@ -212,7 +217,8 @@ function checkInbox() {
                         The email is provided to you below: 
                         Subject: ${subject} From: ${from}
                         Body: ${body}.`;
-
+                        
+                
                         try {
                           // (using proper Node.js HTTP client):
                         const result = await model.generateContent(prompt);
@@ -253,8 +259,7 @@ function checkInbox() {
                           } else {
                             console.log("Could not parse LLM response as a tuple");
                           }
-
-                          // Reset body for the next iteration
+                            // Reset body for the next iteration
                           body = "";
                         } catch (error) {
                           console.log(`Error getting response from AI model: ${error}`);
