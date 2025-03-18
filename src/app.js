@@ -11,6 +11,8 @@ const passport = require("./config/passport-config"); // Import the Passport con
 dotenv.config({ path: "../.env" }); // Load environment variables from a .env file
 const axios=require("axios");
 const fs = require('fs');
+const organisations = ["technology.ministry@ashoka.edu.in"];
+// const organisations = JSON.parse(fs.readFileSync('../organisations.json'));
 
 // Require MongoDB configuration
 const connectToMongoDB = require("./config/mongodb-config.js");
@@ -43,6 +45,7 @@ const threeDays = 3 * 1000 * 60 * 60 * 24; // Define a three-day duration in mil
 // Import route handlers for different parts of the application
 const websiteRoutes = require("./routes/websiteRoutes.js");
 const platformRoutes = require("./routes/platformRoutes.js");
+const organisationRoutes = require("./routes/organisationRoutes.js");
 const tempRoutes = require("./routes/tempRoutes.js");
 
 // Configure application settings and middleware
@@ -96,6 +99,7 @@ var returnTo="/platform";
 // Use route handlers for website and platform routes
 app.use("/", websiteRoutes);
 app.use("/platform", ensureAuthenticated, putImage, ensureIsStudent, ensureIsNotBlocked, platformRoutes);
+app.use("/organisation", ensureAuthenticated, putImage, ensureIsOrganisation, ensureIsNotBlocked, organisationRoutes);
 app.use("/temp", ensureAuthenticated, putImage, ensureIsStudent, ensureIsNotBlocked, tempRoutes);
 
 // Middleware to ensure the user is authenticated before accessing platform routes
@@ -167,6 +171,21 @@ function ensureIsStudent(req, res, next) {
       next();
     }else{
       res.render("platform/pages/not-student")
+    }
+  } else {
+    // User is not authenticated, so you may want to handle that case as well
+    res.status(401).send("User is not authenticated");
+  }
+}
+
+function ensureIsOrganisation(req, res, next) {
+  // Assuming you have a user object or user data available after authentication
+  if (req.user) {
+    const userEmail = req.user._json.email;    
+    if(organisations.includes(userEmail)){
+      next();
+    }else{
+      res.render("organisation/pages/not-organisation")
     }
   } else {
     // User is not authenticated, so you may want to handle that case as well

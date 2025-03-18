@@ -1,0 +1,125 @@
+.course-card {
+    margin-bottom: 2rem;
+}
+
+/* Muted gray highlight for the extra credit section */
+.extra-credit-section {
+    border: 2px dashed #b3b3b3;
+    background-color: #f7f7f7;
+    margin-top: 20px;
+}
+
+/* Always show computed grade box */
+.current-grade-box {
+    border: 2px solid #ccc;
+    padding: 15px;
+    font-size: 1.5rem;
+    background-color: #f6fff5;
+}
+
+/* Enable horizontal scrolling for course content */
+.course-card .card-body {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 1rem;
+}
+
+/* Maintain proper column layout */
+.component-header, .component-row {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    align-items: center;
+    justify-content: space-between;
+    width: 100%; /* Ensure content stays within the card */
+}
+
+.component-header > div,
+.component-row > div {
+    flex: 1; /* Each column takes equal space */
+    text-align: center; /* Center-align headers and inputs */
+    padding: 5px;
+}
+
+.component-letter {
+    padding: 5px;
+    height: 38px; /* Match input field height */
+}
+
+/* Ensure remove-component button is properly positioned and easy to click */
+.component-row {
+    display: flex;
+    align-items: center; /* Align all elements vertically in the center */
+    justify-content: space-between; /* Spread elements evenly */
+    flex-wrap: nowrap; /* Prevent the row from breaking */
+}
+
+/* Ensure the last column aligns the button to the right */
+.component-row .col-12.col-md-2:last-child {
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    padding-right: 5px; /* Add 5px padding on the right */
+}
+
+/* Remove button styling for alignment */
+.remove-component-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-left: auto; /* Push the button to the right if needed */
+}
+
+/* Adjustments for mobile screens */
+@media only screen and (max-width: 768px) {
+    .course-card .card-body {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .component-header, .component-row {
+        display: flex;
+        min-width: 800px; /* Prevent shrinking on small screens */
+    }
+
+    .component-header > div, .component-row > div {
+        flex: 1;
+        min-width: 150px;
+    }
+
+    /* Ensure the header elements stack correctly without overlap */
+    .course-card .card-header {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+    }
+
+    .course-card .card-header input {
+        margin-top: 10px;
+        max-width: 80%; /* Maintain a smaller input for mobile while not being full-width */
+    }
+
+    /* Align add buttons vertically for easier tapping */
+    .extra-credit-toggle-btn {
+        width: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .add-component-btn {
+        margin-bottom: 10px;
+    }
+
+    /* Grade box padding for a better experience on mobile */
+    .current-grade-box {
+        font-size: 1.2rem;
+        padding: 10px;
+    }
+}

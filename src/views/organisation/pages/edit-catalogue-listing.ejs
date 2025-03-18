@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SG Platform</title>
+    <link rel="shortcut icon" type="image/png" href="/organisation/assets/images/logos/favicon.png" />
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JS (for modals) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="/organisation/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/organisation/assets/css/dataTables.css" />
+    <%-include("../partials/preloader-css")%>
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.1.0/ckeditor5.css">
+
+        <!-- CKEditor 5 -->
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.1.0/ckeditor5.js",
+                "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.1.0/"
+            }
+        }
+    </script>
+    <style>
+        .ck-editor__editable_inline {
+            padding: 20px;
+            /* Add padding inside the editor */
+            min-height: 200px;
+            /* Optional: Set minimum height */
+            box-sizing: border-box;
+            /* Ensure padding doesn't affect width */
+        }
+
+        /* Adjust padding or margin for unordered and ordered lists */
+        .ck-content ul,
+        .ck-content ol {
+            padding-left: 30px;
+            /* Increase this value as needed */
+            margin-left: 0px;
+            /* Ensure margin doesn't push the bullets too far */
+        }
+
+        /* You can also adjust list item styling */
+        .ck-content li {
+            margin-left: 0px;
+            padding-left: 5px;
+            /* Fine-tune spacing for the list items */
+        }
+    </style>
+
+</head>
+<%-include("../partials/post-head")%>
+
+    <body>
+        <%-include("../partials/preloader")%>
+            <!--  Body Wrapper -->
+            <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6"
+                data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+
+                <%-include("../partials/sidebar")%>
+
+                    <!--  Main wrapper -->
+                    <div class="body-wrapper">
+                        <%-include("../partials/header")%>
+                            <div class="container-fluid">
+                                <div class="">
+                                    <div class="container-fluid">
+                                        <div class="row justify-content-between">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h3 style="margin-bottom: 32px;">Edit your listing for <%=
+                                                                    listing.attributes.name %>
+                                                            </h3>
+                                                        </div>
+                                                        <form action="/organisation/update-catalogue-listing" method="post" id="editOrgForm">
+                                                            <!-- Hidden ID field -->
+                                                            <input type="hidden" name="id" value="<%= listing.id %>">
+
+                                                            <!-- Name Field -->
+                                                            <label for="name" class="form-label">Name
+                                                                <spanstyle="color:rgb(177, 58, 58)">*</span></label>
+                                                            <input required name="name" type="text"
+                                                                value="<%= listing.attributes.name %>"
+                                                                class="form-control" id="name">
+                                                            <br />
+
+                                                            <!-- Short Description -->
+                                                            <div class="row mb-3">
+                                                                <label for="short_description" class="form-label">Short
+                                                                    Description</label>
+                                                                <textarea name="short_description" rows="5"
+                                                                    class="form-control" id="short_description"
+                                                                    required><%= listing.attributes.short_description %></textarea>
+                                                            </div>
+
+                                                            <!-- Description with CKEditor -->
+                                                            <div class="row mb-3">
+                                                                <label for="description"
+                                                                    class="form-label">Description</label>
+                                                                <div class="col-12">
+                                                                    <textarea name="description" style="margin-top:60px;padding:30px;"
+                                                                        id="editor"></textarea>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Website/Blog -->
+                                                            <div class="row mb-3">
+                                                                <label for="website_blog"
+                                                                    class="form-label">Website/Blog</label>                                                                
+                                                                <input type="text" name="website_blog"
+                                                                    class="form-control" id="website_blog"
+                                                                    value="<%= listing.attributes.website_blog || '' %>">                                                            
+                                                            </div>
+
+                                                            <!-- Instagram -->
+                                                            <div class="row mb-3">
+                                                                <label for="instagram"
+                                                                    class="form-label">Instagram</label>                                                                
+                                                                <input type="text" name="instagram"
+                                                                    class="form-control" id="instagram"
+                                                                    value="<%= listing.attributes.instagram || '' %>">                                                            
+                                                            </div>
+
+                                                            <!-- LinkedIn -->
+                                                            <div class="row mb-3">
+                                                                <label for="linkedin"
+                                                                    class="form-label">LinkedIn</label>                                                                
+                                                                <input type="text" name="linkedin"
+                                                                    class="form-control" id="linkedin"
+                                                                    value="<%= listing.attributes.linkedin || '' %>">                                                                
+                                                            </div>
+
+                                                            <!-- Twitter -->
+                                                            <div class="row mb-3">
+                                                                <label for="twitter"
+                                                                    class="form-label">Twitter</label>                                                                
+                                                                <input type="text" name="twitter"
+                                                                    class="form-control" id="twitter"
+                                                                    value="<%= listing.attributes.twitter || '' %>">                                                                
+                                                            </div>
+
+                                                            <!-- YouTube -->
+                                                            <div class="row mb-3">
+                                                                <label for="youtube"
+                                                                    class="form-label">YouTube</label>                                                                
+                                                                <input type="text" name="youtube"
+                                                                    class="form-control" id="youtube"
+                                                                    value="<%= listing.attributes.youtube || '' %>">                                                            
+                                                            </div>
+
+                                                            <!-- Submit Button -->
+                                                            <div class="text-center">
+                                                                <button type="submit" class="btn btn-primary"
+                                                                    id="saveChangesBtn">
+                                                                    <span id="saveChangesText">Save Changes</span>
+                                                                    <div id="saveChangesSpinner"
+                                                                        style="height:20px;width:20px;display:none"
+                                                                        class="spinner-border" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                    </div>
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+            </div>
+            </div>
+            <!-- CKEditor Initialization -->
+            <script>
+                // Replace the <textarea> with a CKEditor instance and add plugins
+                let editorInstance;
+                function clearEditor() {
+                    document.getElementById('myForm').reset();
+                    if (editorInstance) {
+                        editorInstance.setData('');  // Clear the editor content
+                    } else {
+                        console.error("Editor instance not available");
+                    }
+
+                    // Reset other form fields if necessary
+                    document.getElementById('myForm').reset();
+                }
+            </script>
+            <script type="module">
+                import {
+                    ClassicEditor,
+                    Essentials,
+                    Paragraph,
+                    Bold,
+                    Italic,
+                    Font,
+                    Heading,
+                    Alignment,
+                    List,
+                    Indent,
+                    Link,
+                    Table,
+                    CodeBlock,
+                    BlockQuote,
+                    FindAndReplace,
+                    FontBackgroundColor,
+                    FontColor,
+                    PageBreak,
+                    SpecialCharacters,
+                    Undo,
+                } from 'ckeditor5';
+
+                ClassicEditor
+                    .create(document.querySelector('#editor'), {  
+                        initialData: "<%- listing.attributes.description %>",                      
+                        plugins: [
+                            Essentials, Paragraph, Bold, Italic, Font, Heading, Alignment, List, Indent,
+                            Link, Table, CodeBlock, BlockQuote, FindAndReplace,
+                            FontBackgroundColor, FontColor, PageBreak,
+                            SpecialCharacters, Undo
+                        ],
+                        toolbar: {
+                            shouldNotGroupWhenFull: true,
+                            items: [
+                                // Document-wide tools
+                                'undo', 'redo', '|', 'importWord', '|', 'findAndReplace', 'selectAll', '|',
+                                'insertTemplate', 'tableOfContents', '|',
+
+                                // Insertables
+                                'link', 'insertTable', 'blockQuote',
+                                'horizontalLine', '|',
+
+                                // Block-level formatting
+                                'heading', 'style', '|',
+
+                                // Basic styles, font and inline formatting
+                                'bold', 'italic', 'underline', 'strikethrough', '|',
+                                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor',
+                                'highlight', 'superscript', 'subscript', 'code', '|',
+                                'removeFormat', '|',
+
+                                // Text alignment
+                                'alignment', '|',
+
+                                // Lists and indentation
+                                'bulletedList', 'numberedList', 'multilevelList', 'todoList', '|'
+                            ]
+                        },
+                        fontFamily: {
+                            supportAllValues: true,
+                        },
+                        fontSize: {
+                            options: [10, 12, 14, 'default', 18, 20, 22],
+                            supportAllValues: true,
+                        },
+                        fontColor: {
+                            columns: 12,
+                            colors: [
+                                { color: 'hsl(0, 0%, 0%)', label: 'Black' },
+                                { color: 'hsl(0, 75%, 60%)', label: 'Red' },
+                                // Add more colors as needed
+                            ],
+                        },
+                        fontBackgroundColor: {
+                            columns: 12,
+                            colors: [
+                                { color: 'hsl(0, 0%, 100%)', label: 'White' },
+                                { color: 'hsl(0, 75%, 60%)', label: 'Red' },
+                                // Add more background colors as needed
+                            ],
+                        },
+                        list: {
+                            properties: {
+                                styles: true,
+                                startIndex: true,
+                                reversed: true,
+                            },
+                        },
+                        link: {
+                            decorators: {
+                                toggleDownloadable: {
+                                    mode: 'manual',
+                                    label: 'Downloadable',
+                                    attributes: {
+                                        download: 'file',
+                                    },
+                                },
+                            },
+                            addTargetToExternalLinks: true,
+                            defaultProtocol: 'https://',
+                        },
+                        heading: {
+                            options: [
+                                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                                { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+                                { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
+                                { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
+                                { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' },
+                            ],
+                        },
+                        alignment: {
+                            options: ['left', 'center', 'right', 'justify']
+                        },
+                        table: {
+                            contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+                        },
+                        // Disable sticky toolbar
+                        ui: {
+                            viewportOffset: {
+                                top: 70,  // Adjust this value as needed
+                            }
+                        },
+                        language: 'en',
+                    })
+                    .then(editor => {
+
+                        // Add custom padding to the editable content area
+                        editor.ui.view.editable.element.style.padding = '20px'; // Adjust padding as needed
+                        // window.editor = editor; // Store the editor instance globally
+                        editorInstance = editor; // Store the editor instance globally
+
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            </script>
+
+            <script src="/organisation/assets/libs/jquery/dist/jquery.min.js"></script>
+            <script src="/organisation/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="/organisation/assets/js/sidebarmenu.js"></script>
+            <script src="/organisation/assets/js/app.min.js"></script>
+            <script src="/organisation/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+            <script src="/organisation/assets/libs/simplebar/dist/simplebar.js"></script>
+            <script src="/organisation/assets/js/dashboard.js"></script>
+            <script src="/organisation/assets/js/darkmode.js"></script>
+            <script src="/organisation/assets/js/theme.js"></script>
+            <%-include("../partials/preloader-js")%>
+    </body>
+
+</html>

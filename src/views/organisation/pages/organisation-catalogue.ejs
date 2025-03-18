@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SG Platform</title>
+  <link rel="shortcut icon" type="image/png" href="/organisation/assets/images/logos/favicon.png" />
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap JS (for modals) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <link rel="stylesheet" href="/organisation/assets/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.gstatic.com" rel="preconnect" />
+  <link rel="stylesheet" href="/organisation/assets/css/dataTables.css" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+  <%-include("../partials/preloader-css")%>
+
+  <style>
+    .responsive-h2 {
+      font-size: 3.5rem;
+    }
+
+    /* Responsive Paragraph */
+    .responsive-p {
+      font-size: 1.2rem;
+    }
+
+    /* Media Queries for smaller screens */
+    @media (max-width: 1200px) {
+      .responsive-h2 {
+        font-size: 3rem;
+      }
+      .responsive-p {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .responsive-h2 {
+        font-size: 2.5rem;
+      }
+      .responsive-p {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .responsive-h2 {
+        font-size: 2rem;
+      }
+      .responsive-p {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<%-include("../partials/post-head")%>
+
+<body>
+  <%-include("../partials/preloader")%>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    
+    <%-include("../partials/sidebar")%>
+
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <%-include("../partials/header")%>
+      <div class="container-fluid">
+        <div class="row g-4">
+                <div style="margin-top: 40px;" class="col-12">
+                    <h2>Your Organisation(s)</h2>
+                    <p>
+                        Browse through your listed organisations and click on the edit button to edit/update your listing.
+                    </p>                    
+                </div>
+            <% linkedListings.forEach(org => { %>
+                <div
+                  class="col-12 col-md-6 col-lg-6 organisation-item"
+                  data-name="<%= org.name %>"
+                  data-type="<%= org.type %>"
+                >
+              
+                  <div class="card h-100">
+                    <% if (true) { %>
+                      <img
+                        src="<%= organisation.profile_url 
+                                ? organisation.profile_url.replace(/=s\d+/g, '=s256') 
+                                : '' %>"
+                        width="100"
+                        height="100"
+                        style="margin:auto;margin-top:15px"
+                        class="rounded-circle"
+                      />
+
+                    <% } else { %>
+                    <div
+                      class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                      style="height: 200px"
+                    >
+                      <i class="fa fa-building fa-4x text-muted"></i>
+                    </div>
+                    <% } %>
+                    <div style="text-align:center" class="card-body">
+                      <h3 style="margin:auto" class="card-title"><%= org.name %></h3><br/>
+                      <p class="card-text">
+                        <span class="badge bg-primary text-capitalize"
+                          ><%= org.type %></span
+                        >
+                      </p>
+                      <% if (org.short_description) { %>
+                        <p class="card-text text-muted" style="text-align: justify;">
+                            <%- org.short_description.length > 300 ? 
+                                org.short_description.substring(0, 300) + '...' : 
+                                org.short_description 
+                            %>
+                        </p>
+                      <% } %>
+                      <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);">
+                        <a href="/organisation/edit-catalogue-listing/<%= org.id %>" target="_blank" class="btn btn-primary">
+                          Edit Listing
+                        </a>
+                      </div>                                            
+                    </div>
+                  </div>
+                </div>
+            <% }) %>        
+        </div>                                      
+      </div>      
+    </div>
+  </div>
+  </div>
+  <script src="/organisation/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/organisation/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/organisation/assets/js/sidebarmenu.js"></script>
+  <script src="/organisation/assets/js/app.min.js"></script>
+  <script src="/organisation/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="/organisation/assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/organisation/assets/js/dashboard.js"></script>
+  <script src="/organisation/assets/js/darkmode.js"></script>
+  <script src="/organisation/assets/js/theme.js"></script>
+  <%-include("../partials/preloader-js")%>
+</body>
+</html>
