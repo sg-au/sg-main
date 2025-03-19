@@ -51,7 +51,7 @@ router.get("/organisation-catalogue", async (req, res) => {
 router.get("/edit-catalogue-listing/:id", async (req, res) => {
   try {    
     let listing = await axios.get(
-      `${apiUrl}/organisations/${req.params.id}?populate=profile`,
+      `${apiUrl}/organisations/${req.params.id}?populate=profile&populate=circle1_humans&populate=circle2_humans`,
       axiosConfig
     );
     listing = listing.data.data;
@@ -59,12 +59,18 @@ router.get("/edit-catalogue-listing/:id", async (req, res) => {
     const hasAccess = linkedOrganisations.some(org => 
       org.attributes.email === req.user._json.email
     );
+    // console.log(listing.attributes.circle1_humans.data);
     if (hasAccess) {
+      let users = await axios.get(
+        `${apiUrl}/users?pagination[pageSize]=4000`,
+        axiosConfig
+      );            
       res.render("organisation/pages/edit-catalogue-listing", {            
         listing: listing,
+        users: users.data,
       });
     } else {
-      res.redirect("/organisation/no-access");
+      res.send("error 404");
     }
   } catch (err) {
     res.send(err);
@@ -74,13 +80,15 @@ router.get("/edit-catalogue-listing/:id", async (req, res) => {
 router.post("/update-catalogue-listing", async (req, res) => {
     try {
         const listingId = req.body.id;
+        req.body.circle1_humans = JSON.parse(req.body.circle1_humans);        
 
-        // const { data: existingListing } = await axios.get(`${apiUrl}/organisations/${listingId}`, axiosConfig);
+        const { data: existingListing } = await axios.get(`${apiUrl}/organisations/${listingId}`, axiosConfig);
         const updatedListing = {
             data: {
                 name: req.body.name,
                 short_description: req.body.short_description,
                 description: req.body.description,
+                circle1_humans: req.body.circle1_humans,
                 website_blog: req.body.website_blog,
                 instagram: req.body.instagram,
                 linkedin: req.body.linkedin,

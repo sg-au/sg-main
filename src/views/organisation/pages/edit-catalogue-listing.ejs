@@ -116,6 +116,28 @@
                                                                 </div>
                                                             </div>
 
+                                                            <!-- Circle 1 Humans -->
+                                                            <div class="row mb-3">
+                                                                <label for="circle1_humans" class="form-label">Circle 1 Humans</label>
+                                                                <div class="col-12">
+                                                                    <!-- Search input -->
+                                                                    <div class="input-group mb-3">
+                                                                        <input type="text" class="form-control" id="userSearchInput" placeholder="Start typing to search users...">                                                                        
+                                                                    </div>
+                                                                    
+                                                                    <!-- Search results dropdown -->
+                                                                    <div id="searchResults" class="dropdown-menu" style="max-height: 200px; width: 90%; display: none;"></div>
+                                                                    
+                                                                    <!-- Selected users chips container -->
+                                                                    <div id="selectedUsers" class="d-flex flex-wrap gap-2 mb-3">
+                                                                        <!-- Chips will be displayed here -->
+                                                                    </div>
+                                                                    
+                                                                    <!-- Hidden input to store the actual value -->
+                                                                    <input type="hidden" name="circle1_humans" id="circle1_humans" value="">
+                                                                </div>
+                                                            </div>                                                            
+
                                                             <!-- Website/Blog -->
                                                             <div class="row mb-3">
                                                                 <label for="website_blog"
@@ -184,6 +206,114 @@
                     </div>
             </div>
             </div>
+            <script>
+                // Initialize the selected users array from existing data
+                let selectedUsers = [];
+                let listing = JSON.parse('<%- JSON.stringify(listing) %>');                
+                
+                // Parse the existing circle1_humans data if it exists
+                if (listing.attributes.circle1_humans && listing.attributes.circle1_humans.data) {
+                    selectedUsers = listing.attributes.circle1_humans.data;
+                }
+                
+                // Available users from the database
+                const allUsers = JSON.parse(`<%- JSON.stringify(users) %>` || []);                
+                
+                // Initialize chips when the page loads
+                document.addEventListener('DOMContentLoaded', function() {
+                    renderSelectedUsers();
+                    
+                    // Set up event listeners
+                    document.getElementById('userSearchInput').addEventListener('input', handleSearchInput);
+                    document.getElementById('searchUsersBtn').addEventListener('click', showSearchResults);
+                    
+                    // Close search results when clicking outside
+                    document.addEventListener('click', function(event) {
+                        if (!event.target.closest('#userSearchInput') && !event.target.closest('#searchResults')) {
+                            document.getElementById('searchResults').style.display = 'none';
+                        }
+                    });
+                });
+
+                let circle1_humans = document.getElementById('circle1_humans');
+                
+                function handleSearchInput(event) {
+                    const searchTerm = event.target.value.trim().toLowerCase();
+                    if (searchTerm.length >= 2) {
+                        showSearchResults();
+                    } else {
+                        document.getElementById('searchResults').style.display = 'none';
+                    }
+                }
+                
+                function showSearchResults() {
+                    const searchTerm = document.getElementById('userSearchInput').value.trim().toLowerCase();
+                    const resultsContainer = document.getElementById('searchResults');
+                    
+                    // Clear previous results
+                    resultsContainer.innerHTML = '';
+                    
+                    if (searchTerm.length < 2) return;
+                    
+                    // Filter users based on search term
+                    const filteredUsers = allUsers.filter(user => {
+                        // Modify this according to your user object structure
+                        return user.username.toLowerCase().includes(searchTerm) && 
+                               !selectedUsers.some(selected => selected.id === user.id);
+                    });
+                    
+                    if (filteredUsers.length === 0) {
+                        resultsContainer.innerHTML = '<div class="dropdown-item">No users found</div>';
+                    } else {
+                        filteredUsers.forEach(user => {
+                            const item = document.createElement('a');
+                            item.classList.add('dropdown-item');
+                            item.classList.remove('w-100');
+                            item.style.cursor = 'pointer';                            
+                            item.href = '#';
+                            item.textContent = user.username;
+                            item.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                addUser(user);
+                                resultsContainer.style.display = 'none';
+                                document.getElementById('userSearchInput').value = '';
+                            });
+                            resultsContainer.appendChild(item);                            
+                        });
+                    }
+                    
+                    resultsContainer.style.display = 'block';
+                }
+                
+                function addUser(user) {
+                    if (!selectedUsers.some(selected => selected.id === user.id)) {
+                        selectedUsers.push(user);
+                        circle1_humans.value = JSON.stringify(selectedUsers);                        
+                        renderSelectedUsers();
+                    }
+                }
+                
+                function removeUser(userId) {                    
+                    selectedUsers = selectedUsers.filter(user => user.id !== userId);
+                    circle1_humans.value = selectedUsers;
+                    renderSelectedUsers();
+                }
+                
+                function renderSelectedUsers() {
+                    const container = document.getElementById('selectedUsers');
+                    container.innerHTML = '';
+                    
+                    selectedUsers.forEach(user => {                        
+                        const chip = document.createElement('div');
+                        chip.classList.add('badge', 'bg-primary', 'text-wrap', 'p-2');
+                        chip.innerHTML = `                 
+                            ${(user.attributes)? user.attributes.username : user.username}
+                            <span class="ms-1" role="button" onclick="removeUser(${user.id})">&times;</span>
+                        `;
+                        container.appendChild(chip);
+                    });
+                }
+            </script>
             <!-- CKEditor Initialization -->
             <script>
                 // Replace the <textarea> with a CKEditor instance and add plugins
