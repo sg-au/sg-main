@@ -20,7 +20,7 @@ const STRAPI_URL = process.env.STRAPI_API_URL + '/calendar-events';
 const genAI = new GoogleGenerativeAI('AIzaSyDizK_MmGhXjOSBleHy2rI-sbV20l2j1_A');
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
-Create Imap connection
+//Create Imap connection
 const imapConfig = {
     user: EMAIL,
     password: PASSWORD,
@@ -88,7 +88,6 @@ function openInbox(imap, cb) {
     imap.openBox(labelName, false, cb);
 }
 
-// Listen for new mails
 imap.once('ready', function () {
     openInbox(imap, (err, box) => {
         if (err) throw err;
@@ -106,7 +105,7 @@ imap.once('ready', function () {
     });
 });
 
-// When we know we have a new email, we check the inbox by searching by unseen criteria
+// ISSUE: It is sending eventData twice due to some asynchronity issue
 function checkEmails() {
     imap.search(['UNSEEN'], (err, results) => {
         if (err || !results.length) return;
@@ -115,6 +114,8 @@ function checkEmails() {
             bodies: ['HEADER.FIELDS (SUBJECT FROM REFERENCES IN-REPLY-TO MESSAGE-ID)', 'TEXT'], 
             markSeen: true 
         });
+
+        let processed = false;
 
         fetch.on('message', (msg) => {
             let emailData = {
@@ -153,34 +154,40 @@ function checkEmails() {
                         emailData.body = parsed.text || '';
                         console.log("Email data: ", emailData);
                         const references = emailData.references;
-                        // At this point, you can use the fully populated emailData object
-                        // For example, you could pass it to another function for further processing
-                        const terms = references.match(/<([^>]+)>/g); // Extract terms within <>
+                        const terms = references.match(/<([^>]+)>/g);
                             if (terms) {
                             for (const term of terms) {
-                                const uid = term.replace(/[<>]/g, ''); // Remove the < and >
+                                const uid = emailData.messageId
+                                    .replace(/[^a-zA-Z0-9]/g, '') 
+                                    .replace(/mailgmailcom$/, ''); 
+                                console.log("\nUID: ", uid);
 
                                 if (eventExistsInStrapiWithID(uid)) {
                                 const data = getDataFromStrapi(uid);
                                 console.log(`Data for ${uid}:`, data);
-
-                                // Delete event after fetching data
-                                deleteEvent(uid);
-                                console.log(`Event ${uid} deleted`);
                                 // Concatenate strapi data with email Data, ask LLM to come up with updated event details
                                 const compiledData = {
                                     message: `These are the old event details: ${JSON.stringify(data, null, 2)}\n\nLook for changes in content given to you below and give a response accordingly, following all previously mentioned instructions: ${JSON.stringify(emailData, null, 2)}`
                                 };
-                                sendToStrapi(getLLMresponse(compiledData, emailData.messageId));
+                                processEvent(compiledData, emailData.messageId, emailData.fromEmail);
+                                
                                 }
                             }
                             }
                         if (references != '') // Means it is not a reply email that corresponds to an event
                         {}
-                        else // Means it is a standalone event email, the first of its kind
-                            sendToStrapi(getLLMresponse(emailData, emailData.messageId));
+                        else if (emailData.references == '') // Means it is a standalone email, the first of its kind 
+                        {
+                            console.log("\nHERE!")
+                            processEvent(emailData, emailData.messageId, emailData.fromEmail);
+                            
+                        }
                     });
                 }
+            });
+
+            msg.once('end', () => {
+                
             });
 
             msg.once('end', () => {
@@ -215,6 +222,8 @@ async function getDataFromStrapi(uid) {
     const response = await axios.get(`${STRAPI_URL}?filters[uid][$eq]=${uid}`, { headers });
     //console.log(response.data.data);
     console.log(response.data.data);
+    const id = getIDfromUID(uid);
+    deleteEvent(id);
 }
 
 // Working
@@ -229,8 +238,7 @@ async function getIDfromUID(uid) {
 }
 
 // Working
-async function deleteEvent(uid){
-    const eventID = await getIDfromUID(uid);
+async function deleteEvent(eventID){
     console.log(eventID);
     const headers = {
         "Authorization": `Bearer ${STRAPI_API_TOKEN}`,
@@ -246,8 +254,8 @@ async function deleteEvent(uid){
 }
 
 //Working
-//LLM Response function that returns responseTuple of the format [true/false, {JSON eventData}]
-async function getLLMresponse(emailData) {
+//Send to LLM -> get response -> sendToStrapi
+async function processEvent(emailData, messageID, fromEmail) {
     const prompt = `You are given the body of an email sent out to a college student of Ashoka University. 
                         Your task is to identify whether or not the email is an event email. 
                         An event is defined as the following - 
@@ -304,8 +312,11 @@ async function getLLMresponse(emailData) {
             }
 
             const responseTuple = [isEvent, eventObject]; 
-            console.log("Response tuple: ", responseTuple);
-            return responseTuple;
+            console.log("\nResponse tuple cool.");
+            if (isEvent) 
+                sendToStrapi(responseTuple, messageID, fromEmail);
+            else    
+                console.log("\nNot an event.");
 
         } catch (error) {
             console.log(`Error parsing event object: ${error}`);
@@ -318,10 +329,11 @@ async function getLLMresponse(emailData) {
         }
 }
 
-// Send to Strapi function
-async function sendToStrapi(responseTuple, messageID) {
+// Send to Strapi function, used by processEvent
+async function sendToStrapi(responseTuple, messageID, fromEmail) {
     // Extract the event data from the tuple
     const eventData = responseTuple[1];  // The second element is the JSON content
+    console.log("\nEvent Data: ", eventData);
   
     // Validate event_data structure
     if (typeof eventData !== 'object') {
@@ -366,7 +378,11 @@ async function sendToStrapi(responseTuple, messageID) {
       // Convert to ISO 8601 format
       const startIso = startDatetime.toISOString();
       const endIso = endDatetime.toISOString();
-  
+      // Strapi has constraints on the UID format, so we are following those.
+      const uid = messageID
+        .replace(/[^a-zA-Z0-9]/g, '') // Remove all special characters
+        .replace(/mailgmailcom$/, ''); // Remove "mailgmailcom" if it exists at the end
+
       // Transform the event data to match Strapi schema
       const strapiData = {
         "data": {
@@ -379,7 +395,8 @@ async function sendToStrapi(responseTuple, messageID) {
           "display": "block",  // You can modify this based on your needs
           "color": "#4a5568",  // You can modify this based on your needs
           "allDay": false , // Add the allDay field
-          "uid": messageID
+          "uid": uid,
+          "host": fromEmail
         }
       };
   
