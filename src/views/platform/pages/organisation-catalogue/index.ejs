@@ -123,7 +123,7 @@
                 - Vibha: <a href=mailto:vibha.rawat_ug2023@ashoka.edu.in>vibha.rawat_ug2023@ashoka.edu.in</a> &nbsp;&nbsp;|&nbsp;&nbsp; 9667764435  <br />
                 - Guntaas: <a href="mailto:guntaas.kaur_ug2023@ashoka.edu.in">guntaas.kaur_ug2023@ashoka.edu.in</a> &nbsp;&nbsp;|&nbsp;&nbsp; +91 98118 06032
               </p> -->
-                <span class="fs-4">Find and connect with all <%= organisations.length %> student organizations through our catalog—featuring clubs, societies, fests, collectives, ISOs, leagues, and more! </span>
+                <span class="fs-4">Find and connect with all <%= organisations.length %> student organizations through our catalogue—featuring clubs, societies, fests, collectives, ISOs, leagues, and more! </span>
               <br /><br />
             </div>
             
@@ -145,6 +145,30 @@
                 class="form-control search-bar"
                 placeholder="Type to search..."
               />
+
+              <div class="mt-3 d-flex justify-content-center">
+                <div class="form-check custom-checkbox">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="inductions-open"
+                    style="cursor: pointer; display: none;"
+                  />
+                  <label 
+                    class="form-check-label px-2 py-1 rounded-pill" 
+                    for="inductions-open"
+                    style="
+                      cursor: pointer;
+                      background-color: #f0f2f5;
+                      transition: all 0.3s ease;
+                      font-size: 0.9rem;
+                      border: 1px solid #dee2e6;
+                    "
+                  >
+                    <span style="padding: inherit; font-size: x-small; margin-bottom: -2px;" class="badge bg-success rounded-pill py-2"> </span> &nbsp;Show Inductions Open Only
+                  </label>
+                </div>
+              </div>
 
               <div class="mt-3">
                 <div class="d-flex flex-wrap gap-3 justify-content-center">
@@ -169,7 +193,7 @@
                     >
                       Select All
                     </label>
-                  </div>
+                  </div>                  
                   <% types.forEach(type => { %>
                     <div class="form-check custom-checkbox">
                       <input
@@ -210,16 +234,21 @@
                   data-type="<%= org.type %>"
                 >
               
-                  <div class="card h-100">
+                    <div class="card h-100">
                     <% if (true) { %>
+                      <% if (org.induction) { %>
+                      <div style="position: absolute; top: 12px; right: 8px; z-index: 1;">
+                        <span id="inductionBadge" style="font-size: x-small; padding: inherit;" class="badge bg-success rounded-pill px-2 py-2"> </span>
+                      </div>
+                      <% } %>
                       <img
-                        src="<%= org.profile?.data?.[0]?.attributes?.profile_url 
-                                ? org.profile.data[0].attributes.profile_url.replace(/=s\d+/g, '=s256') 
-                                : '' %>"
-                        width="100"
-                        height="100"
-                        style="margin:auto;margin-top:15px"
-                        class="rounded-circle"
+                      src="<%= org.profile?.data?.[0]?.attributes?.profile_url 
+                          ? org.profile.data[0].attributes.profile_url.replace(/=s\d+/g, '=s256') 
+                          : '' %>"
+                      width="100"
+                      height="100"
+                      style="margin:auto;margin-top:15px"
+                      class="rounded-circle"
                       />
 
                     <% } else { %>
@@ -233,56 +262,55 @@
                     <div style="text-align:center" class="card-body">
                       <h3 style="margin:auto" class="card-title"><%= org.name %></h3><br/>
                       <p class="card-text">
-                        <span class="badge bg-primary text-capitalize"
-                          ><%= org.type %></span
-                        >
+                        <span class="badge bg-primary text-capitalize"><%= org.type %></span>                      
                       </p>
                       <% if (org.short_description) { %>
-                        <p class="card-text text-muted" style="text-align: justify;">
-                            <%- org.short_description.length > 300 ? 
-                                org.short_description.substring(0, 300) + '...' : 
-                                org.short_description 
-                            %>
-                        </p>
+                      <p class="card-text text-muted" style="text-align: justify;">
+                        <%- org.short_description.length > 300 ? 
+                          org.short_description.substring(0, 300) + '...' : 
+                          org.short_description 
+                        %>
+                      </p>
                       <% } %>
 
                       <%
-                        function escapeDescription(org) {
-                            let orgCopy = JSON.parse(JSON.stringify(org)); // Deep copy
-                            
-                            // Helper function to escape special characters
-                            function escapeString(str) {
-                                if (typeof str !== 'string') return str;
-                                return str
-                                    .replace(/\\/g, '\\\\')    // Escape backslashes
-                                    .replace(/"/g, '\\"')      // Escape double quotes
-                                    .replace(/\n/g, '\\n')     // Escape newlines
-                                    .replace(/\r/g, '\\r')     // Escape carriage returns
-                                    .replace(/\t/g, '\\t')     // Escape tabs
-                                    .replace(/\f/g, '\\f');    // Escape form feeds
-                            }
+                      function escapeDescription(org) {
+                        let orgCopy = JSON.parse(JSON.stringify(org)); // Deep copy                        
+                        
+                        // Helper function to escape special characters
+                        function escapeString(str) {
+                          if (typeof str !== 'string') return str;
+                          return str
+                            .replace(/\\/g, '\\\\')    // Escape backslashes
+                            .replace(/"/g, '\\"')      // Escape double quotes
+                            .replace(/\n/g, '\\n')     // Escape newlines
+                            .replace(/\r/g, '\\r')     // Escape carriage returns
+                            .replace(/\t/g, '\\t')     // Escape tabs
+                            .replace(/\f/g, '\\f');    // Escape form feeds
+                        }
 
-                            // Escape description and short_description
-                            if (orgCopy.description) {
-                                orgCopy.description = escapeString(orgCopy.description);
-                            }
-                            if (orgCopy.short_description) {
-                                orgCopy.short_description = escapeString(orgCopy.short_description);
-                            }
+                        // Escape description and short_description
+                        if (orgCopy.description) {
+                          orgCopy.description = escapeString(orgCopy.description);
+                          orgCopy.induction_description = escapeString(orgCopy.induction_description);
+                        }
+                        if (orgCopy.short_description) {
+                          orgCopy.short_description = escapeString(orgCopy.short_description);
+                        }
 
-                            // Convert to JSON string and escape for HTML
-                            return JSON.stringify(orgCopy);
-                          }
+                        // Convert to JSON string and escape for HTML
+                        return JSON.stringify(orgCopy);
+                        }
 
-                          let orgEscaped = escapeDescription(org);
-                        %>
-                        <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);">
-                          <button onclick='showClubDetails(`<%= orgEscaped %>`)' class="btn btn-primary" type="button">
-                          Learn More
-                          </button>
-                        </div>
+                        let orgEscaped = escapeDescription(org);
+                      %>
+                      <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);">
+                        <button onclick='showClubDetails(`<%= orgEscaped %>`)' class="btn btn-primary" type="button">
+                        Learn More
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                    </div>
                 </div>
                 <% }) %>
               </div>
@@ -306,12 +334,31 @@
                           <h4 id="orgName" class="mb-3"></h4>
                           <p><strong>Type:</strong> <span id="orgType"></span></p>
                           <p><strong>People:</strong> <span id="orgPeople" style="text-decoration: underline;"></span></p>
+                          <p><strong>Inductions:</strong> <span id="orgInduction"></span> | <strong>Deadline:</strong> <span id="orgInductionDeadline"></span></p>
                           <h5 style="display: inline-block; margin-right: 10px;">Social Links:</h5> <span id="orgSocials"></span>
                         </div>
+                        <!-- Inductions -->
                         
                         <!-- Description -->
                         <div class="col-md-12">                          
-                          <div id="orgDescription" class="p-3" style="padding: 10px; text-align: justify; max-height: 300px; overflow-y: scroll;"></div>
+                          <div class="p-3" style="text-align: justify; max-height: 350px; overflow-y: scroll;">                            
+                            <div class="accordion" id="inductionAccordion">
+                              <div class="accordion-item">
+                                <h2 class="accordion-header" id="inductionHeading">
+                                  <button class="accordion-button collapsed" style="background-color: #e6e3e3;" type="button" data-bs-toggle="collapse" data-bs-target="#inductionCollapse" aria-expanded="false" aria-controls="inductionCollapse">
+                                    <strong>Inductions Information</strong>
+                                  </button>
+                                </h2>
+                                <div id="inductionCollapse" class="accordion-collapse collapse" aria-labelledby="inductionHeading" data-bs-parent="#inductionAccordion">
+                                  <div class="accordion-body">
+                                    <div id="orgInductionDescription" style="text-align: justify; overflow-y: auto;"></div>
+                                  </div>
+                                </div>
+                              </div>
+                              <br />
+                            </div>                            
+                            <div id="orgDescription"></div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -322,6 +369,29 @@
 
           </div>
           <script>
+            document.addEventListener("DOMContentLoaded", function() {
+              // Select all induction badges (there might be multiple)
+              const inductionBadges = document.querySelectorAll("#inductionBadge");
+              
+              // Add hover functionality to each badge
+              inductionBadges.forEach(badge => {
+                // Set initial text
+                badge.innerText = " "; // Initially empty
+                
+                // Apply pointer cursor
+                badge.style.cursor = "pointer";
+                
+                // Show text on hover
+                badge.addEventListener("mouseenter", function() {
+                  this.innerText = "Inductions Open";
+                });
+                
+                // Hide text when not hovering
+                badge.addEventListener("mouseleave", function() {
+                  this.innerText = " ";
+                });
+              });
+            });
             function showClubDetails(org) {
               // console.log(org);
               let clubData = JSON.parse(org);
@@ -341,7 +411,29 @@
                 .map(person => person.attributes.username)
                 .join(", ");
               document.getElementById("orgPeople").innerText = peopleList || "N/A";
-
+              document.getElementById("orgInduction").innerText = clubData.induction ? "Open" : "Closed";
+              // Format the induction deadline date
+              let deadlineText = "N/A";
+              if (clubData.induction_end) {
+                try {
+                  const deadline = new Date(clubData.induction_end);
+                  // Format: "March 30, 2025 at 6:30 PM"
+                  deadlineText = deadline.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric'
+                  }) + ' at ' + 
+                  deadline.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                  });
+                } catch (e) {
+                  console.error("Error formatting date:", e);
+                  deadlineText = clubData.induction_end; // Fallback to original value
+                }
+              }
+              document.getElementById("orgInductionDeadline").innerText = deadlineText;
               // Set social links
               const socialIcons = {
                 Instagram: '<i class="fab fa-instagram"></i>',
@@ -371,9 +463,17 @@
               }
               document.getElementById("orgSocials").innerHTML = socialsHTML || "No links available.";
               // console.log(clubData.description)
+              // Set inductions description
+              console.log(clubData.induction_description);
+              (document.getElementById("orgInductionDescription")).innerHTML = clubData.induction_description || "";
               // Set description
               (document.getElementById("orgDescription")).innerHTML = clubData.description;
-
+              // Hide induction div if inductions are closed
+              if (!clubData.induction) {
+                document.getElementById("inductionAccordion").style.display = "none";
+              } else {
+                document.getElementById("inductionAccordion").style.display = "block";
+              }
               // Show the modal
               let orgDetailsModal = new bootstrap.Modal(document.getElementById("orgDetailsModal"));
               orgDetailsModal.show();
@@ -396,53 +496,60 @@
             // }
 
             document.addEventListener("DOMContentLoaded", () => {
-            const organisationItems = document.querySelectorAll(".organisation-item");
-            const searchBar = document.getElementById("search-bar");
-            const typeCheckboxes = document.querySelectorAll('input[name="types"]');
-            const selectAllCheckbox = document.getElementById("select-all");
+              const organisationItems = document.querySelectorAll(".organisation-item");
+              const searchBar = document.getElementById("search-bar");
+              const typeCheckboxes = document.querySelectorAll('input[name="types"]');
+              const selectAllCheckbox = document.getElementById("select-all");
+              const inductionsCheckbox = document.getElementById("inductions-open");
 
-            function filterOrganizations() {
-              const searchQuery = searchBar.value.toLowerCase();
-              const selectedTypes = Array.from(
-                document.querySelectorAll('input[name="types"]:checked')
-              ).map((input) => input.value);
+              function filterOrganizations() {
+                const searchQuery = searchBar.value.toLowerCase();
+                const selectedTypes = Array.from(
+                  document.querySelectorAll('input[name="types"]:checked')
+                ).map((input) => input.value);
+                const showInductionsOnly = inductionsCheckbox.checked;
 
-              organisationItems.forEach((item) => {
-                const itemName = item.getAttribute("data-name").toLowerCase();
-                const itemType = item.getAttribute("data-type");
+                organisationItems.forEach((item) => {
+                  const itemName = item.getAttribute("data-name").toLowerCase();
+                  const itemType = item.getAttribute("data-type");
+                  const hasInduction = item.querySelector(".bg-success") !== null;
 
-                const matchesSearch = itemName.includes(searchQuery);
-                const matchesType = selectedTypes.length === 0 || selectedTypes.includes(itemType);
+                  const matchesSearch = itemName.includes(searchQuery);
+                  const matchesType = selectedTypes.length === 0 || selectedTypes.includes(itemType);
+                  const matchesInduction = !showInductionsOnly || hasInduction;
 
-                item.style.display = matchesSearch && matchesType ? "" : "none";
+                  item.style.display = matchesSearch && matchesType && matchesInduction ? "" : "none";
+                });
+              }
+
+              function updateSelectAllState() {
+                const allChecked = [...typeCheckboxes].every(checkbox => checkbox.checked);
+                selectAllCheckbox.checked = allChecked;
+              }
+
+              // "Select All" checkbox behavior
+              selectAllCheckbox.addEventListener("change", () => {
+                const isChecked = selectAllCheckbox.checked;
+                typeCheckboxes.forEach(checkbox => {
+                  checkbox.checked = isChecked;
+                });
+                filterOrganizations(); // Re-filter when toggling "Select All"
               });
-            }
 
-            function updateSelectAllState() {
-              const allChecked = [...typeCheckboxes].every(checkbox => checkbox.checked);
-              selectAllCheckbox.checked = allChecked;
-            }
-
-            // "Select All" checkbox behavior
-            selectAllCheckbox.addEventListener("change", () => {
-              const isChecked = selectAllCheckbox.checked;
-              typeCheckboxes.forEach(checkbox => {
-                checkbox.checked = isChecked;
+              // Update "Select All" state when any individual checkbox is toggled
+              typeCheckboxes.forEach((checkbox) => {
+                checkbox.addEventListener("change", () => {
+                  updateSelectAllState();
+                  filterOrganizations();
+                });
               });
-              filterOrganizations(); // Re-filter when toggling "Select All"
+
+              // Add event listener for inductions checkbox
+              inductionsCheckbox.addEventListener("change", filterOrganizations);
+
+              // Add event listener for search bar
+              searchBar.addEventListener("input", filterOrganizations);
             });
-
-            // Update "Select All" state when any individual checkbox is toggled
-            typeCheckboxes.forEach((checkbox) => {
-              checkbox.addEventListener("change", () => {
-                updateSelectAllState();
-                filterOrganizations();
-              });
-            });
-
-            // Add event listener for search bar
-            searchBar.addEventListener("input", filterOrganizations);
-          });
           </script>
         </div>
       </div>
