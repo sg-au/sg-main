@@ -1362,20 +1362,27 @@ router.get("/event", async (req, res) => {
       `${apiUrl}/calendar-events`,
       axiosConfig
     );
+
+    const colorMap = {};
     
     // Make sure we handle potential null or undefined values
     const events = response.data.data.map(item => ({
       title: item.attributes.title || '',
-      start: item.attributes.start || '',
-      end: item.attributes.end || '',
-      color: item.attributes.color || '',
-      textColor: 'white',
+      // start: item.attributes.start || '',
+      start: item.attributes.allDay?'All Day' : (item.start || ''),
+      // end: item.attributes.end || '', //make dynamic
+      end: item.attributes.allDay?'All Day':(item.attributes.end || ''),
+      // color: item.attributes.color || '',//make dynamic based on kind
+      color: colorMap[item.attributes.kind] || 'blue',
+      textColor: 'white', //make dynamic based on kind
       description: item.attributes.description || '',
       kind: item.attributes.kind || 'holiday',
-      display: item.attributes.display || 'block',
+      display: 'block',
       venue: item.attributes.venue || '',
       allDay: item.attributes.allDay || false
     }));
+
+
 
     // Safely stringify the events
     const safeEvents = JSON.stringify(events)
@@ -1389,6 +1396,28 @@ router.get("/event", async (req, res) => {
   } catch (error) {
     console.error('Error fetching events:', error);
     res.render("platform/pages/events", { events: '[]' });
+  }
+});
+
+router.get("/event/save-preferences", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${apiUrl}/organisations?populate[profile][fields]=email&fields[0]=name&fields[1]=type`,
+      axiosConfig
+    );
+
+    // Map the API response to the required format
+    const orgsList = response.data.data.map(item => ({
+      name: item.attributes.name,
+      type: item.attributes.type
+    }));
+
+
+    res.render("platform/pages/events-user-preferences", { orgsList:orgsList });
+  }
+  catch (error) {
+    console.error('Error fetching organizations:', error);
+    res.render("platform/pages/events-user-preferences", { orgsList: [] });
   }
 });
 

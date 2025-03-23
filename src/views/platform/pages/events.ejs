@@ -18,6 +18,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/moment@5.11.3/main.global.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@5.11.3/main.global.min.js"></script>
+  <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.9/index.global.min.js'></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <%- include("../partials/post-head") %>
@@ -411,11 +412,37 @@
       font-size: 0.9em;
     }
   }
+
+  .btn-primary {
+    background-color: #5d87ff;
+    border-color: #5d87ff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #4a6ccc;
+    border-color: #4a6ccc;
+  }
+  
+  .modal-footer {
+    justify-content: space-between;
+  }
+  
+  #addToCalendar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  #addToCalendar i {
+    font-size: 1.1em;
+  }
   </style>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
+      var currentEvent = null; // Store the currently selected event
+
       var calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
           start: 'prev,today,next',
@@ -425,6 +452,14 @@
         timeZone: 'Asia/Kolkata',
         weekNumbers: true,
         initialView: 'dayGridMonth',
+        
+        // Add Google Calendar configuration
+        googleCalendarApiKey: 'AIzaSyDLD3suIq_0k_Z7siUO0ds8ECCcpcQnGIg',
+        events: {
+          googleCalendarId: 'c_04d65778dd8717e6ae1a9f9af91803a75219343136aab4def92d0577a81b3f73@group.calendar.google.com',
+          className: 'gcal-event' // optional: add custom class
+        },
+        
         eventTimeFormat: {
           hour: '2-digit',
           minute: '2-digit',
@@ -447,24 +482,23 @@
           dayHeaderFormat: { weekday: 'long', day: '2-digit' }
         }
         },
-        events: JSON.parse('<%- events %>'),
         height: '100%',
         expandRows: true,
-        eventClick: function (info) {
-        // Display the event details when clicked
+        eventClick: function(info) {
+          info.jsEvent.preventDefault();
+          currentEvent = info.event; // Store the clicked event
+          
           $('.modal-title').text(info.event.title);
-          // Create formatted content for modal body
           let modalContent = '';
           
-          if (info.event.extendedProps.venue) {
-            modalContent += '<p><strong>Venue:</strong> ' + info.event.extendedProps.venue + '</p>';
+          if (info.event.extendedProps.location) {
+            modalContent += '<p><strong>Venue:</strong> ' + info.event.extendedProps.location + '</p>';
           }
           
           if (info.event.extendedProps.description) {
             modalContent += '<p><strong>Description:</strong> ' + info.event.extendedProps.description + '</p>';
           }
           
-          // Set the modal body content
           $('.modal-body-text').html(modalContent);
           $('.modal').modal('toggle');
         },
@@ -499,11 +533,6 @@
           return result;
         },
         windowResize: function(view) {
-          // var current_view = view.type;
-          // var expected_view = $(window).width() > 800 ? 'dayGridMonth' : 'listWeek';
-          // if (current_view !== expected_view) {
-          //   calendar.changeView(expected_view);
-          // }
           const width = window.innerWidth;
         let newView = view.type;
         
@@ -523,12 +552,39 @@
         },
       });
 
-      calendar.render();
+      // Add event listener for the "Add to Calendar" button
+      document.getElementById('addToCalendar').addEventListener('click', function() {
+        if (currentEvent) {
+          // Create Google Calendar URL with event details
+          const event = {
+            text: currentEvent.title,
+            dates: {
+              start: currentEvent.start.toISOString(),
+              end: currentEvent.end ? currentEvent.end.toISOString() : currentEvent.start.toISOString()
+            },
+            details: currentEvent.extendedProps.description || '',
+            location: currentEvent.extendedProps.location || '',
+          };
 
-      // Switch to list view automatically if viewport is small
-      // if ($(window).width() < 800) {
-      //   calendar.changeView('listWeek');
-      // }
+          // Create Google Calendar URL
+          const googleCalendarUrl = new URL('https://www.google.com/calendar/render');
+          googleCalendarUrl.searchParams.append('action', 'TEMPLATE');
+          googleCalendarUrl.searchParams.append('text', event.text);
+          googleCalendarUrl.searchParams.append('dates', event.dates.start.replace(/[-:]/g, '') + '/' + event.dates.end.replace(/[-:]/g, ''));
+          googleCalendarUrl.searchParams.append('details', event.details);
+          if (event.location) {
+            googleCalendarUrl.searchParams.append('location', event.location);
+          }
+
+          // Open Google Calendar in a new tab
+          window.open(googleCalendarUrl.toString(), '_blank');
+          
+          // Optionally close the modal after opening Google Calendar
+          $('.modal').modal('hide');
+        }
+      });
+
+      calendar.render();
 
       // Re-render when filters change
       $('input[class=event_filter]').change(function() {
@@ -584,14 +640,6 @@
             </div>
           </div>
         </div>
-        <!-- <div class="py-6 px-6 text-center">
-          <p class="mb-0 fs-4">Design and Developed by 
-            <a href="https://adminmart.com/" target="_blank" class="pe-1 text-primary text-decoration-underline">
-              AdminMart.com
-            </a> 
-            Distributed by <a href="https://themewagon.com">ThemeWagon</a>
-          </p>
-        </div> -->
       </div>
     </div>
   </div>
@@ -609,13 +657,14 @@
           <p class="modal-body-text">Modal body text goes here.</p>
         </div>
         <div class="modal-footer">
-          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          <button type="button" class="btn btn-primary" id="addToCalendar">
+            <i class="fa fa-calendar-plus-o"></i> Add to My Calendar
+          </button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="{$('.modal').modal('toggle');}">Close</button>
         </div>
       </div>
     </div>
-  </div>
-
+ </div>
   <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/platform/assets/js/sidebarmenu.js"></script>
