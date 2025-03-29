@@ -308,18 +308,40 @@
         function savePreferences() {
           selectedPreferences = [];
           document.querySelectorAll('.pref-checkbox:checked').forEach(checkbox => {
+            // Find the corresponding organization in orgsList to get its email
+            const org = orgsList.find(org => org.name === checkbox.value);
             selectedPreferences.push({
               name: checkbox.value,
-              type: checkbox.dataset.type
+              type: checkbox.dataset.type,
+              email: org.email // Include the email
             });
           });
 
           // Set the saved flag to true
           hasPreferencesSaved = true;
           updateContinueButton();
-          
-          console.log('Saved preferences:', selectedPreferences);
-          alert(`Saved ${selectedPreferences.length} preferences!`);
+
+          // Make POST request to save preferences
+          fetch('/platform/event/save-preferences', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ preferences: selectedPreferences })
+          })
+          .then(response => {
+            if (response.ok) {
+              hasPreferencesSaved = true;
+              updateContinueButton();
+              alert(`Saved ${selectedPreferences.length} preferences!`);
+            } else {
+              throw new Error('Failed to save preferences');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to save preferences. Please try again.');
+          });
         }
 
         // Add click event listener to save button

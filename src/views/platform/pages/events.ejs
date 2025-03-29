@@ -95,6 +95,9 @@
       margin: 0;
       white-space: nowrap;
       min-width: 150px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     #calendar {
@@ -144,10 +147,6 @@
       border: none;
       color: white;
       border-radius: 50%;
-    }
-
-    .modal{
-      top: 35%;
     }
 
     /* Responsive adjustments */
@@ -439,8 +438,15 @@
   </style>
 
   <script>
+    const GOOGLE_CALENDAR_API_KEY = '<%= process.env.GOOGLE_CALENDAR_API_KEY %>';
+    const GOOGLE_CALENDAR_ID = '<%= process.env.GOOGLE_CALENDAR_ID %>';
+  </script>
+
+  <script>
     document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
+      const orgsList = JSON.parse(document.getElementById('orgsList').value);
+      const userPreferences = JSON.parse(document.getElementById('userPreferences').value);
       var currentEvent = null; // Store the currently selected event
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -454,11 +460,37 @@
         initialView: 'dayGridMonth',
         
         // Add Google Calendar configuration
-        googleCalendarApiKey: 'AIzaSyDLD3suIq_0k_Z7siUO0ds8ECCcpcQnGIg',
-        events: {
-          googleCalendarId: 'c_04d65778dd8717e6ae1a9f9af91803a75219343136aab4def92d0577a81b3f73@group.calendar.google.com',
-          className: 'gcal-event' // optional: add custom class
-        },
+        googleCalendarApiKey: GOOGLE_CALENDAR_API_KEY,
+        eventSources: [
+          {
+            googleCalendarId: GOOGLE_CALENDAR_ID,
+            className: 'gcal-event',
+            // This transformer function processes each event retrieved from Google Calendar
+            eventDataTransform: function(eventData) {
+              if (eventData.extendedProperties && eventData.extendedProperties.shared && eventData.extendedProperties.shared.emailSource) {
+                const emailSource = eventData.extendedProperties.shared.emailSource;
+                
+                // First check if this is a user preference
+                if (userPreferences.some(pref => pref.email === emailSource)) {
+                  eventData.kind = 'userPreference';
+                } 
+                // If not a user preference, check orgsList
+                else {
+                  const matchingOrg = orgsList.find(org => org.email === emailSource);
+                  if (matchingOrg) {
+                    eventData.kind = matchingOrg.type.toLowerCase();
+                  } else {
+                    eventData.kind = 'other';
+                  }
+                }
+              } else {
+                eventData.kind = 'other';
+              }
+              
+              return eventData;
+            }
+          }
+        ],
         
         eventTimeFormat: {
           hour: '2-digit',
@@ -498,6 +530,12 @@
           if (info.event.extendedProps.description) {
             modalContent += '<p><strong>Description:</strong> ' + info.event.extendedProps.description + '</p>';
           }
+
+          // Add kind information to the modal
+          if (info.event.extendedProps.kind || info.event.extendedProps.extendedProperties?.shared?.kind) {
+            const kind = info.event.extendedProps.kind || info.event.extendedProps.extendedProperties.shared.kind;
+            modalContent += '<p><strong>Type:</strong> ' + kind + '</p>';
+          }
           
           $('.modal-body-text').html(modalContent);
           $('.modal').modal('toggle');
@@ -521,36 +559,120 @@
           if (states.length) {
             result = result && states.indexOf(info.event.extendedProps.state) >= 0;
           }
+
           // Filter by kind (holidays always displayed)
           if (kinds.length) {
-            result = result && kinds.indexOf(info.event.extendedProps.kind) >= 0 || info.event.extendedProps.kind === 'holiday';
+            // First try to get kind from extendedProps.kind
+            const eventKind = info.event.extendedProps.kind || 
+                             (info.event.extendedProps.extendedProperties && 
+                              info.event.extendedProps.extendedProperties.shared && 
+                              info.event.extendedProps.extendedProperties.shared.kind) || 
+                             'event';
+            
+            result = result && (kinds.indexOf(eventKind) >= 0 || eventKind === 'holiday');
           }
+          
+          // Add extra classes based on kind
+          let kindClass = '';
+          const eventKind = info.event.extendedProps.kind || 
+                           (info.event.extendedProperties && 
+                            info.event.extendedProperties.shared && 
+                            info.event.extendedProperties.shared.kind) || 
+                           'event';
+          
+          kindClass = 'event-kind-' + eventKind;
           
           if (!result) {
-            result = "hidden";
+            return "hidden";
           }
           
-          return result;
+          return [kindClass];
+        },
+        eventDidMount: function(info) {
+          // Get kind from extended properties
+          const kind = info.event.extendedProps.kind || 
+                      (info.event.extendedProperties?.shared?.kind) || 'default';
+          
+          // Check if event source matches user preferences
+          const emailSource = info.event.extendedProperties?.private?.emailSource;
+          if (emailSource && userPreferences.includes(emailSource)) {
+            info.el.classList.add('user-preference-event');
+          }
+
+          info.el.classList.add(`event-kind-${kind}`);
         },
         windowResize: function(view) {
           const width = window.innerWidth;
-        let newView = view.type;
-        
-        if (width < 576) {
-          newView = 'dayGridMonth';
-        } else if (width < 768) {
-          newView = 'dayGridMonth';
-        } else if (width < 992) {
-          newView = 'dayGridMonth';
-        } else {
-          newView = 'dayGridMonth';
+          let newView = view.type;
+          
+          if (width < 576) {
+            newView = 'dayGridMonth';
+          } else if (width < 768) {
+            newView = 'dayGridMonth';
+          } else if (width < 992) {
+            newView = 'dayGridMonth';
+          } else {
+            newView = 'dayGridMonth';
+          }
+          
+          if (calendar.view.type !== newView) {
+            calendar.changeView(newView);
+          }
         }
-        
-        if (calendar.view.type !== newView) {
-          calendar.changeView(newView);
-        }
-        },
       });
+
+      // Create filter buttons after calendar is loaded
+      createFilterButtons();
+      calendar.render();
+
+      function createFilterButtons() {
+        const filterContainer = document.getElementById('calendar-filters');
+        const kinds = ['club', 'society', 'ministry', 'department', 'userPreference'];
+        
+        kinds.forEach(kind => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'event_filter_wrapper';
+          
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.id = `filter-${kind}`;
+          checkbox.className = 'event_filter';
+          checkbox.name = 'event_filter_sel';
+          checkbox.value = kind;
+          checkbox.dataset.type = 'kind';
+          checkbox.checked = false;
+          
+          const label = document.createElement('label');
+          label.htmlFor = `filter-${kind}`;
+          label.textContent = kind === 'club' ? 'Clubs' :  kind === 'society' ? 'Societies' :  kind === 'ministry' ? 'Ministries' : kind === 'department' ? 'Departments' : 'Preferences';
+          
+          wrapper.appendChild(checkbox);
+          wrapper.appendChild(label);
+          filterContainer.appendChild(wrapper);
+        });
+      }
+
+      function updateFilters() {
+        const events = calendar.getEvents();
+        events.forEach(event => {
+          const kind = event.extendedProps.kind || 
+                      (event.extendedProperties?.shared?.kind) || 'default';
+          const emailSource = event.extendedProperties?.private?.emailSource;
+          
+          // Check if this event should be shown based on filters
+          const kindFilter = document.getElementById(`filter-${kind}`).checked;
+          const userPrefFilter = document.getElementById('filter-userPreference').checked;
+          
+          let shouldShow = kindFilter;
+          
+          // If it's a user preference event, also check that filter
+          if (emailSource && userPreferences.includes(emailSource)) {
+            shouldShow = shouldShow || userPrefFilter;
+          }
+          
+          event.setProp('display', shouldShow ? 'auto' : 'none');
+        });
+      }
 
       // Add event listener for the "Add to Calendar" button
       document.getElementById('addToCalendar').addEventListener('click', function() {
@@ -584,13 +706,12 @@
         }
       });
 
-      calendar.render();
-
       // Re-render when filters change
       $('input[class=event_filter]').change(function() {
         calendar.render();
       });
-        // Add a refresh button if needed
+      
+      // Add a refresh button if needed
       $('#refresh-calendar').click(function() {
         calendar.refetchEvents();
       });
@@ -612,27 +733,8 @@
               <div class="wrapper">
                 <div class="filter">
                   <h3>Filters</h3>
-                  <div class="filters-container">
-                    <div class="event_filter_wrapper">
-                      <input id="hh" class="event_filter" name="event_filter_sel" type="checkbox" value="hh" data-type="state" />
-                      <label for="hh">Hamburg (HH)</label>
-                    </div>
-                    <div class="event_filter_wrapper">
-                      <input id="sh" class="event_filter" name="event_filter_sel" type="checkbox" value="sh" data-type="state" />
-                      <label for="sh">Schleswig-Holstein (SH)</label>
-                    </div>
-                    <div class="event_filter_wrapper">
-                      <input id="party" class="event_filter" name="event_filter_sel" type="checkbox" value="party" data-type="kind" />
-                      <label for="party">Party</label>
-                    </div>
-                    <div class="event_filter_wrapper">
-                      <input id="concert" class="event_filter" name="event_filter_sel" type="checkbox" value="concert" data-type="kind" />
-                      <label for="concert">Concert</label>
-                    </div>
-                    <div class="event_filter_wrapper">
-                      <input id="festival" class="event_filter" name="event_filter_sel" type="checkbox" value="festival" data-type="kind"/>
-                      <label for="festival">Festival</label>
-                    </div>
+                  <div class="filters-container" id="calendar-filters">
+                    <!-- Filters will be added here dynamically -->
                   </div>
                 </div>
                 <div id="calendar"></div>
@@ -673,6 +775,11 @@
   <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
   <script src="/platform/assets/js/dashboard.js"></script>
   <script src="/platform/assets/js/theme.js"></script>
+ 
 </body>
+
+<!-- Hidden input fields for data from server -->
+<input type="hidden" id="orgsList" value='<%= JSON.stringify(orgsList) %>' />
+<input type="hidden" id="userPreferences" value='<%= JSON.stringify(userPreferences) %>' />
 
 </html>

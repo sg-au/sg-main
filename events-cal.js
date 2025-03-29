@@ -3,259 +3,292 @@ const { simpleParser } = require('mailparser');
 const dotenv = require('dotenv');
 const axios = require('axios');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-const util = require('util');
 const moment = require('moment');
+const { google } = require('googleapis');
 dotenv.config();
 
 const { default: fetch, Headers } = require('node-fetch');
 globalThis.fetch = fetch;
 globalThis.Headers = Headers;
 
-const EMAIL = process.env.EMAIL;
-const PASSWORD = process.env.APP_PASSWORD;
-const IMAP_SERVER = "imap.gmail.com";
-const IMAP_PORT = 993;
-const STRAPI_API_TOKEN = process.env.STRAPI_API_KEY;
-const STRAPI_URL = process.env.STRAPI_API_URL + '/calendar-events';
 const genAI = new GoogleGenerativeAI('AIzaSyDizK_MmGhXjOSBleHy2rI-sbV20l2j1_A');
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
-//Create Imap connection
-const imapConfig = {
-    user: EMAIL,
-    password: PASSWORD,
-    host: IMAP_SERVER,
-    port: IMAP_PORT,
-    tls: true,
-    tlsOptions: { rejectUnauthorized: false },
-    keepalive: true,
-    authTimeout: 30000 
-};
 
-function createImapConnection(imapConfig) {
-    return new Imap(imapConfig);
+// Set up Google Calendar auth
+const oauth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    process.env.GOOGLE_REDIRECT_URI
+  );
+  
+oauth2Client.setCredentials({
+    refresh_token: process.env.GOOGLE_REFRESH_TOKEN
+  });
+  
+const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+
+// Check if an event with the given threadId already exists
+async function findExistingEvent(threadId) {
+  try {
+    const response = await calendar.events.list({
+      calendarId: process.env.GOOGLE_CALENDAR_ID,
+      privateExtendedProperty: `threadId=${threadId}`
+    });
+    
+    if (response.data.items && response.data.items.length > 0) {
+      return response.data.items[0]; // Return the first matching event
+    }
+    return null;
+  } catch (error) {
+    console.log(`Error finding existing event: ${error}`);
+    return null;
+  }
 }
 
-function handleImapError(imap, error) {
-    console.log(`IMAP Error: ${error}`);
+// Check if the email contains updated event information
+async function checkForEventUpdates(emailData, existingEventDetails) {
+    const prompt = `You are given the body of an email and details of an existing event.
+                   Your task is to incorporate any changes or updates to the event and return the final event object.
+                   
+                   Existing event details:
+                   ${JSON.stringify(existingEventDetails, null, 2)}
+                   
+                   The email is provided below:
+                   Subject: ${emailData.subject}
+                   From: ${emailData.fromEmail}
+                   Body: ${emailData.body}
+                   
+                   Return the updated event object in the following format:
+                   {
+                     "Name of the event": "Updated event name",
+                     "Organising Body": ["Updated Organising Body"],
+                     "Date, Time, Venue": {
+                       "Date": "Updated date",
+                       "Time": "Updated time",
+                       "Venue": "Updated venue"
+                     },
+                     "Descriptive Summary": "Updated description"
+                   }`;
     
-    // Only attempt to reconnect if we haven't reached the maximum number of attempts
-    if (imapReconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-      imapReconnectAttempts++;
-      console.log(`Connection lost. Attempting to reconnect (attempt ${imapReconnectAttempts} of ${MAX_RECONNECT_ATTEMPTS})...`);
-      
-      // Close existing connection if it's still active
-      try {
-        if (imap && imap.state !== 'disconnected') {
-          imap.end();
+    try {
+        const result = await model.generateContent(prompt);
+        const response = result.response.text();
+        
+        // Clean the response to ensure it's valid JSON
+        const cleanedResponse = response.replace(/```json|```|`|\n/g, '').trim();
+        
+        try {
+            // Parse the JSON response
+            const parsedResponse = JSON.parse(cleanedResponse);
+            // console.log(`Final event object:`, JSON.stringify(parsedResponse, null, 2));
+            return parsedResponse; // Return the complete event object
+        } catch (jsonError) {
+            console.log(`Error parsing response from model: ${jsonError}`);
+            return null; // Handle error appropriately
         }
-      } catch (e) {
-        console.log(`Error ending existing connection: ${e.message}`);
+    } catch (error) {
+        console.log(`Error checking for event updates: ${error}`);
+        return null; // Handle error appropriately
+    }
+}
+
+// Apply updates to existing event
+function applyUpdatesToEvent(existingEvent, updates) {
+    const updatedEvent = {...existingEvent};
+    
+    // Check if there are venue updates
+    if (updates["Date, Time, Venue"] && updates["Date, Time, Venue"].Venue) {
+      updatedEvent.location = updates["Date, Time, Venue"].Venue;
+      console.log(`Updating venue to: ${updates["Date, Time, Venue"].Venue}`);
+    }
+    
+    // Check for date or time updates
+    if (updates["Date, Time, Venue"]) {
+      // Handle date updates
+      if (updates["Date, Time, Venue"].Date) {
+        const newDate = updates["Date, Time, Venue"].Date;
+        const startDateTime = moment(existingEvent.start.dateTime);
+        const endDateTime = moment(existingEvent.end.dateTime);
+        
+        console.log(`Updating date from ${startDateTime.format('YYYY-MM-DD')} to ${newDate}`);
+        
+        // Update date portion while preserving time
+        startDateTime.set({
+          'year': moment(newDate).year(),
+          'month': moment(newDate).month(),
+          'date': moment(newDate).date()
+        });
+        
+        endDateTime.set({
+          'year': moment(newDate).year(),
+          'month': moment(newDate).month(),
+          'date': moment(newDate).date()
+        });
+        
+        updatedEvent.start.dateTime = startDateTime.toISOString();
+        updatedEvent.end.dateTime = endDateTime.toISOString();
       }
       
-      // Wait before reconnecting
-      setTimeout(() => {
-        console.log(`Reconnecting to IMAP server...`);
-        checkInbox();
-      }, RECONNECT_DELAY);
-    } else {
-      console.log(`Maximum reconnection attempts (${MAX_RECONNECT_ATTEMPTS}) reached. Giving up.`);
-      // Reset the counter after giving up
-      setTimeout(() => {
-        imapReconnectAttempts = 0;
-      }, 60000); // Reset after 1 minute
+      // Handle time updates
+      if (updates["Date, Time, Venue"].Time) {
+        const timeString = updates["Date, Time, Venue"].Time;
+        const timeParts = timeString.split(' - ');
+        
+        // console.log(`Updating time to: ${timeString}`);
+        
+        if (timeParts.length >= 2) {
+          const startTime = moment(timeParts[0], "h:mm A");
+          const endTime = moment(timeParts[1], "h:mm A");
+          
+          const startDateTime = moment(existingEvent.start.dateTime);
+          const endDateTime = moment(existingEvent.end.dateTime);
+          
+          // Calculate original duration in minutes before we change anything
+          const originalDurationMinutes = endDateTime.diff(startDateTime, 'minutes');
+          // console.log(`Original event duration: ${originalDurationMinutes} minutes`);
+          
+          // Update start time
+          startDateTime.set({
+            'hour': startTime.hour(),
+            'minute': startTime.minute(),
+            'second': 0
+          });
+          
+          // Two approaches for end time:
+          // 1. Use the specified end time
+          if (timeParts.length === 2) {
+            endDateTime.set({
+              'hour': endTime.hour(),
+              'minute': endTime.minute(),
+              'second': 0
+            });
+            // console.log(`Using explicitly specified end time: ${endTime.format('h:mm A')}`);
+          } 
+          // 2. Maintain the original duration if only start time was clearly specified
+          else {
+            const newEndTime = moment(startDateTime).add(originalDurationMinutes, 'minutes');
+            endDateTime.set({
+              'hour': newEndTime.hour(),
+              'minute': newEndTime.minute(),
+              'second': 0
+            });
+            console.log(`Maintaining original duration. New end time: ${newEndTime.format('h:mm A')}`);
+          }
+          
+          updatedEvent.start.dateTime = startDateTime.toISOString();
+          updatedEvent.end.dateTime = endDateTime.toISOString();
+          
+          console.log(`Updated time: ${moment(updatedEvent.start.dateTime).format('h:mm A')} - ${moment(updatedEvent.end.dateTime).format('h:mm A')}`);
+        }
+      }
     }
-}
+    
+    return updatedEvent;
+  }
 
-const imap = new Imap(imapConfig);
-imap.connect();
-
-imap.once('error', (err) => {
-    console.error('IMAP Error:', err);
-    if (err.source === 'timeout') {
-        console.log('Reconnecting in 10 seconds...');
-        setTimeout(() => imap.connect(), 10000); // Retry connection
+async function sendToGoogleCalendar(responseTuple, fromEmail, threadId) {
+    const eventData = responseTuple[1];
+  
+    if (typeof eventData !== 'object') {
+        console.log("Invalid eventData: Not an object");
+        return;
     }
-});
-
-imap.once('end', () => {
-    console.log('IMAP Connection closed. Reconnecting...');
-    setTimeout(() => imap.connect(), 5000); // Reconnect after 5 seconds
-});
-
-function openInbox(imap, cb) {
-    const labelName = 'test';  // Change this to text for some other label
-    imap.openBox(labelName, false, cb);
-}
-
-imap.once('ready', function () {
-    openInbox(imap, (err, box) => {
-        if (err) throw err;
-        console.log(`Listening for new emails in ${box.name}...`);
-
-        setInterval(() => {
-            console.log('Periodically checking for new emails...');
-            checkEmails();
-        }, 60000); // 60 seconds
-
-        imap.on('mail', function () {
-            console.log('New email detected...');
-            checkEmails();
-        });
-    });
-});
-
-// ISSUE: It is sending eventData twice due to some asynchronity issue
-function checkEmails() {
-    imap.search(['UNSEEN'], (err, results) => {
-        if (err || !results.length) return;
-
-        const fetch = imap.fetch(results, { 
-            bodies: ['HEADER.FIELDS (SUBJECT FROM REFERENCES IN-REPLY-TO MESSAGE-ID)', 'TEXT'], 
-            markSeen: true 
-        });
-
-        let processed = false;
-
-        fetch.on('message', (msg) => {
-            let emailData = {
-                inReplyTo: '',
-                messageId: '',
-                fromEmail: '',
-                body: '',
-                references: '',
-                subject: ''
-            };
-
-            msg.on('body', (stream, info) => {
-                if (info.which === 'HEADER.FIELDS (SUBJECT FROM REFERENCES IN-REPLY-TO MESSAGE-ID)') {
-                    let buffer = '';
-                    stream.on('data', (chunk) => {
-                        buffer += chunk.toString('utf8');
-                    });
-                    stream.on('end', () => {
-                        const header = Imap.parseHeader(buffer);
-                        emailData.inReplyTo = header['in-reply-to']?.[0] || '';
-                        emailData.messageId = header['message-id']?.[0] || '';
-                        emailData.references = header['references']?.[0] || '';
-                        emailData.subject = header['subject']?.[0] || '';
-                        emailData.fromEmail = header.from?.[0] || '';
-                        emailData.fromEmail = emailData.fromEmail.match(/<(.+)>/)?.[1] || emailData.fromEmail;
-                        console.log("Header processed");
-                        console.log("From email: ", emailData.fromEmail);
-                    });
-                } 
-                else if (info.which === 'TEXT') {
-                    simpleParser(stream, (err, parsed) => {
-                        if (err) {
-                            console.error('Parsing error:', err);
-                            return;
-                        }
-                        emailData.body = parsed.text || '';
-                        console.log("Email data: ", emailData);
-                        const references = emailData.references;
-                        const terms = references.match(/<([^>]+)>/g);
-                            if (terms) {
-                            for (const term of terms) {
-                                const uid = emailData.messageId
-                                    .replace(/[^a-zA-Z0-9]/g, '') 
-                                    .replace(/mailgmailcom$/, ''); 
-                                console.log("\nUID: ", uid);
-
-                                if (eventExistsInStrapiWithID(uid)) {
-                                const data = getDataFromStrapi(uid);
-                                console.log(`Data for ${uid}:`, data);
-                                // Concatenate strapi data with email Data, ask LLM to come up with updated event details
-                                const compiledData = {
-                                    message: `These are the old event details: ${JSON.stringify(data, null, 2)}\n\nLook for changes in content given to you below and give a response accordingly, following all previously mentioned instructions: ${JSON.stringify(emailData, null, 2)}`
-                                };
-                                processEvent(compiledData, emailData.messageId, emailData.fromEmail);
-                                
-                                }
-                            }
-                            }
-                        if (references != '') // Means it is not a reply email that corresponds to an event
-                        {}
-                        else if (emailData.references == '') // Means it is a standalone email, the first of its kind 
-                        {
-                            console.log("\nHERE!")
-                            processEvent(emailData, emailData.messageId, emailData.fromEmail);
-                            
-                        }
-                    });
-                }
-            });
-
-            msg.once('end', () => {
-                
-            });
-
-            msg.once('end', () => {
-                
-                console.log('Finished processing email');
-            });
-        });
-
-        fetch.once('error', (err) => console.error('Fetch error:', err));
-    });
-}
-
-// The two below functions can be combined into one easily
-async function eventExistsInStrapiWithID(uid) {
-    const headers = {
-        "Authorization": `Bearer ${STRAPI_API_TOKEN}`,
-        "Content-Type": "application/json",
-        "uid": uid
-    };
-
-    const response = await axios.get(STRAPI_URL, { headers });
-    return response.data.data.length > 0; //True if exists, false if otherwise
-}
-
-// Working
-async function getDataFromStrapi(uid) {
-    const headers = {
-        "Authorization": `Bearer ${STRAPI_API_TOKEN}`,
-        "Content-Type": "application/json"
-    };
-
-    const response = await axios.get(`${STRAPI_URL}?filters[uid][$eq]=${uid}`, { headers });
-    //console.log(response.data.data);
-    console.log(response.data.data);
-    const id = getIDfromUID(uid);
-    deleteEvent(id);
-}
-
-// Working
-async function getIDfromUID(uid) {
-    const headers = {
-        "Authorization": `Bearer ${STRAPI_API_TOKEN}`,
-        "Content-Type": "application/json"
-    };
-
-    const response = await axios.get(`${STRAPI_URL}?filters[uid][$eq]=${uid}`, { headers });
-    return response.data.data[0].id;
-}
-
-// Working
-async function deleteEvent(eventID){
-    console.log(eventID);
-    const headers = {
-        "Authorization": `Bearer ${STRAPI_API_TOKEN}`,
-        "Content-Type": "application/json"
-    };
+  
+    if (!eventData["Date, Time, Venue"] || typeof eventData["Date, Time, Venue"] !== 'object') {
+        console.log("Invalid eventData: Missing or incorrect 'Date, Time, Venue' field");
+        return;
+    }
+  
     try {
-    const response = await axios.delete(`${STRAPI_URL}/${eventID}`, { headers });
-    console.log(`Event with UID ${uid} deleted.`);
-    }
-    catch(error) {
-        console.log("Error in deleting strapi event: ", error);
+        // Check if an event with this threadId already exists
+        const existingEvent = await findExistingEvent(threadId);
+        
+        if (existingEvent) {
+            console.log(`Found existing event with threadId: ${threadId}`);
+            
+            // Get the final event object from the LLM
+            const finalEventObject = await checkForEventUpdates(eventData, existingEvent);
+            
+            if (finalEventObject) {
+                // Update the event in Google Calendar
+                const event = {
+                    summary: eventData["Name of the event"] || "Untitled Event",
+                    location: eventData["Date, Time, Venue"].Venue || "",
+                    description: eventData["Descriptive Summary"] || "No description available",
+                    start: {
+                        dateTime: moment(`${eventData["Date, Time, Venue"].Date} ${eventData["Date, Time, Venue"].Time.split(' - ')[0]}`, "YYYY-MM-DD h:mm A").format("YYYY-MM-DDTHH:mm:ssZ"),
+                        timeZone: 'Asia/Kolkata',
+                    },
+                    end: {
+                        dateTime: moment(`${eventData["Date, Time, Venue"].Date} ${eventData["Date, Time, Venue"].Time.split(' - ')[1] || eventData["Date, Time, Venue"].Time.split(' - ')[0]}`, "YYYY-MM-DD h:mm A").format("YYYY-MM-DDTHH:mm:ssZ"),
+                        timeZone: 'Asia/Kolkata',
+                    },
+                    attendees: [{ email: fromEmail }],
+                    extendedProperties: {
+                        private: {
+                            emailSource: fromEmail,
+                            threadId: threadId
+                        },
+                        shared: {
+                            emailSource: fromEmail,
+                            threadId: threadId
+                        }
+                    }
+                };
+                
+                const response = await calendar.events.update({
+                    calendarId: process.env.GOOGLE_CALENDAR_ID,
+                    eventId: existingEvent.id,
+                    resource: event
+                });
+                
+                console.log(`Event updated response:`, response.data);
+                return response;
+            } else {
+                console.log('Failed to get final event object from LLM.');
+            }
+        } else {
+            // Create new event
+            console.log(`Creating new event with threadId: ${threadId}`);
+            const event = {
+                summary: eventData["Name of the event"] || "Untitled Event",
+                location: eventData["Date, Time, Venue"].Venue || "",
+                description: eventData["Descriptive Summary"] || "No description available",
+                start: {
+                    dateTime: moment(`${eventData["Date, Time, Venue"].Date} ${eventData["Date, Time, Venue"].Time.split(' - ')[0]}`, "YYYY-MM-DD h:mm A").format("YYYY-MM-DDTHH:mm:ssZ"),
+                    timeZone: 'Asia/Kolkata',
+                },
+                end: {
+                    dateTime: moment(`${eventData["Date, Time, Venue"].Date} ${eventData["Date, Time, Venue"].Time.split(' - ')[1] || eventData["Date, Time, Venue"].Time.split(' - ')[0]}`, "YYYY-MM-DD h:mm A").format("YYYY-MM-DDTHH:mm:ssZ"),
+                    timeZone: 'Asia/Kolkata',
+                },
+                attendees: [{ email: fromEmail }],
+                extendedProperties: {
+                    private: {
+                        emailSource: fromEmail,
+                        threadId: threadId
+                    },
+                    shared: {
+                        emailSource: fromEmail,
+                        threadId: threadId
+                    }
+                }
+            };
+            const response = await calendar.events.insert({
+                calendarId: process.env.GOOGLE_CALENDAR_ID,
+                resource: event,
+            });
+            console.log(`Event created: ${response.data.htmlLink}`);
+            return response;
+        }
+    } catch (error) {
+        console.log(`Error creating/updating event: ${error}`);
+        console.log(`Response: ${error.response ? error.response.data : 'No response'}`);
     }
 }
 
-//Working
-//Send to LLM -> get response -> sendToStrapi
-async function processEvent(emailData, messageID, fromEmail) {
+async function processEvent(emailData, fromEmail) {
     const prompt = `You are given the body of an email sent out to a college student of Ashoka University. 
                         Your task is to identify whether or not the email is an event email. 
                         An event is defined as the following - 
@@ -277,7 +310,7 @@ async function processEvent(emailData, messageID, fromEmail) {
                         Only extract names of organising bodies from the 'From' part provided to you. No other part of the email should be consulted for this. 
                         Moreover the descriptive summary should not involve you elaborating on any terms mentioned in the email. Simply summarise the email content. Do not elaborate or use your knowledge to explain the event at all. 
                         Moreover, when figuring out the venue, look out for the entire venue. For example if the event is 'in front of the mess' then the venue is 'in front of the mess', not just 'mess'. 
-                        Similarly, if the event is taking place 'in the mess lawns', the venue is 'the mess lawns', not 'lawns'. Be liberal in selecting the venue, it can be a phrase too, not just a location.
+                        Similarly, if the event is taking place 'in the mess lawns', the venue is 'the mess lawns', not 'lawns'. Be liberal in selecting the venue, it can be a phrase too, not just a location. Also, the time should be in the 12 hour H:MM format with AM/PM.
                         Example of a valid JSON object is: 
                         {
                             "Name of the event": "AI and Ethics Symposium",
@@ -290,8 +323,8 @@ async function processEvent(emailData, messageID, fromEmail) {
                             "Descriptive Summary": "The AI and Ethics Symposium brings together leading experts, scholars, and students to explore the ethical implications of artificial intelligence. The event includes keynote speeches and poster presentations."
                         }
                         Make sure you appropriately close the braces in the JSON object and follow all specifications of how a JSON object should be.
-                        Your answer should be ONLY the tuple. No other surrounding words or phrases.
-                        The tuple must NOT be enclosed in brackets and there should be no other surrounding characters or words from you. Just write True/False followed by a comma and then the object. No other characters.
+                        Your answer should be ONLY the tuple. No other surrounding words or phrases. Pick up the date of event based on the date, year, month attached here: ${emailData.date}. Give me the time output in the h:mm AM/PM format.
+                        The tuple must NOT be enclosed in brackets and there must be no other surrounding characters or words from you. Just write True/False followed by a comma and then the object. No other characters.
                         The email is provided to you below: 
                         Subject: ${emailData.subject} From: ${emailData.fromEmail}
                     Body: ${emailData.body}.`;
@@ -307,121 +340,208 @@ async function processEvent(emailData, messageID, fromEmail) {
             let eventObject = match[2];
 
             try {
-            if (typeof eventObject === 'string') {
-                eventObject = JSON.parse(eventObject);
+                if (typeof eventObject === 'string') {
+                    eventObject = JSON.parse(eventObject);
+                }
+
+                const responseTuple = [isEvent, eventObject]; 
+                // console.log("\nResponse tuple cool.");
+                if (isEvent) {
+                    // Check for existing event using thread ID
+                    const existingEvent = await findExistingEvent(emailData.threadId);
+                    if (existingEvent) {
+                        console.log(`Found existing event with threadId: ${emailData.threadId}`);
+                        // Check for updates on the existing event
+                        const finalEventObject = await checkForEventUpdates(emailData, existingEvent);
+                        if (finalEventObject) {
+                            console.log('Detected changes in the event:');
+                            console.log(JSON.stringify(finalEventObject, null, 2));
+                            const updatedEvent = applyUpdatesToEvent(existingEvent, finalEventObject);
+                            responseTuple[1] = updatedEvent;
+                            await sendToGoogleCalendar(responseTuple, fromEmail, emailData.threadId);
+                        } else {
+                            console.log('Failed to get final event object from LLM.');
+                        }
+                    } else {
+                        sendToGoogleCalendar(responseTuple, fromEmail, emailData.threadId);
+                    }
+                } else {
+                    console.log("\nNot an event.");
+                }
+
+            } catch (error) {
+                console.log(`Error parsing event object: ${error}`);
             }
-
-            const responseTuple = [isEvent, eventObject]; 
-            console.log("\nResponse tuple cool.");
-            if (isEvent) 
-                sendToStrapi(responseTuple, messageID, fromEmail);
-            else    
-                console.log("\nNot an event.");
-
-        } catch (error) {
-            console.log(`Error parsing event object: ${error}`);
-        }
         } else {
             console.log("Could not parse LLM response as a tuple");
         }
-        } catch (error) {
-            console.log(`Error getting response from AI model: ${error}`);
-        }
-}
-
-// Send to Strapi function, used by processEvent
-async function sendToStrapi(responseTuple, messageID, fromEmail) {
-    // Extract the event data from the tuple
-    const eventData = responseTuple[1];  // The second element is the JSON content
-    console.log("\nEvent Data: ", eventData);
-  
-    // Validate event_data structure
-    if (typeof eventData !== 'object') {
-      console.log("Invalid eventData: Not an object");
-      return;
-    }
-  
-    if (!eventData["Date, Time, Venue"] || typeof eventData["Date, Time, Venue"] !== 'object') {
-      console.log("Invalid eventData: Missing or incorrect 'Date, Time, Venue' field");
-      return;
-    }
-  
-    // Extract date and time
-    const dateStr = eventData["Date, Time, Venue"].Date || "TBD";
-    const timeStr = eventData["Date, Time, Venue"].Time || "TBD";
-    const venue = eventData["Date, Time, Venue"].Venue || "TBD";  // Default to "TBD" if venue is missing
-  
-    // Handle time (single timestamp or range)
-    let startTimeStr, endTimeStr;
-    if (timeStr.includes(" - ")) {
-      [startTimeStr, endTimeStr] = timeStr.split(" - ");
-    } else {
-      startTimeStr = timeStr;
-      endTimeStr = timeStr;  // Use the same time for start and end if no range is provided
-    }
-  
-    // Parse date and time into datetime objects
-    try {
-      // Combine date and time into a single string
-      const startDatetimeStr = `${dateStr} ${startTimeStr}`;
-      const endDatetimeStr = `${dateStr} ${endTimeStr}`;
-  
-      // Parse into datetime objects using moment
-      const startDatetime = moment(`${startDatetimeStr}`, "YYYY-MM-DD h:mm A");
-      const endDatetime = moment(`${endDatetimeStr}`, "YYYY-MM-DD h:mm A");
-  
-      // Check if parsing was successful
-      if (!startDatetime.isValid() || !endDatetime.isValid()) {
-        throw new Error("Invalid date/time format");
-      }
-  
-      // Convert to ISO 8601 format
-      const startIso = startDatetime.toISOString();
-      const endIso = endDatetime.toISOString();
-      // Strapi has constraints on the UID format, so we are following those.
-      const uid = messageID
-        .replace(/[^a-zA-Z0-9]/g, '') // Remove all special characters
-        .replace(/mailgmailcom$/, ''); // Remove "mailgmailcom" if it exists at the end
-
-      // Transform the event data to match Strapi schema
-      const strapiData = {
-        "data": {
-          "title": eventData["Name of the event"] || "Untitled Event",
-          "description": eventData["Descriptive Summary"] || "No description available",
-          "kind": "event",  // You can modify this based on your needs
-          "start": startIso,  // Use ISO 8601 format
-          "end": endIso,  // Use ISO 8601 format
-          "venue": venue,
-          "display": "block",  // You can modify this based on your needs
-          "color": "#4a5568",  // You can modify this based on your needs
-          "allDay": false , // Add the allDay field
-          "uid": uid,
-          "host": fromEmail
-        }
-      };
-  
-      console.log(`Strapi Data: ${util.inspect(strapiData, false, null)}`);
-  
-      // Send data to Strapi
-      const headers = {
-        "Authorization": `Bearer ${STRAPI_API_TOKEN}`,
-        "Content-Type": "application/json"
-      };
-  
-      try {
-        const response = await axios.post(STRAPI_URL, strapiData, { headers });
-        console.log(`Successfully sent event to Strapi: ${eventData["Name of the event"] || "Untitled Event"}`);
-        return response;
-      } catch (error) {
-        console.log(`Error sending to Strapi: ${error}`);
-        console.log(`Response: ${error.response ? error.response.data : 'No response'}`);
-      }
-    } catch (e) {
-      console.log(`Error parsing date or time: ${e}`);
-      return;
+    } catch (error) {
+        console.log(`Error getting response from AI model: ${error}`);
     }
 }
 
 
+// console.log('Starting to check for unread emails in "test" label...');
+  
+// Create IMAP connection
+const imap = new Imap({
+  user: process.env.EMAIL,
+  password: process.env.APP_PASSWORD,
+  host: 'imap.gmail.com',
+  port: 993,
+  tls: true,
+  tlsOptions: { rejectUnauthorized: false }
+});
 
+// Handle connection errors
+imap.once('error', (err) => {
+  console.error('IMAP connection error:', err);
+});
 
+// When connection ends
+imap.once('end', () => {
+  console.log('IMAP connection ended');
+});
+
+// When connection is ready
+imap.once('ready', () => {
+  // Open the "test" label/folder
+  imap.openBox('test', false, (err, box) => {
+    if (err) {
+      console.error('Error opening test label:', err);
+      imap.end();
+      return;
+    }
+    
+    // console.log(`Successfully opened ${box.name} with ${box.messages.total} messages`);
+
+    // Search for unread emails
+    imap.search(['UNSEEN'], (err, results) => {
+      if (err) {
+        console.error('Error searching for unread emails:', err);
+        imap.end();
+        return;
+      }
+
+      if (!results.length) {
+        console.log('No unread emails found in test label');
+        imap.end();
+        return;
+      }
+
+      console.log(`Found ${results.length} unread email(s) in test label`);
+
+      // Fetch the emails
+      const fetch = imap.fetch(results, {
+        bodies: ['HEADER.FIELDS (SUBJECT FROM DATE REFERENCES MESSAGE-ID X-GM-THRID)', 'TEXT'],
+        markSeen: true,
+        struct: true
+      });
+
+      // Store all processed emails
+      const emails = [];
+
+      fetch.on('message', (msg, seqno) => {
+        // console.log(`Processing message #${seqno}`);
+        
+        let emailData = {
+          subject: '',
+          fromEmail: '',
+          body: '',
+          date: '',
+          threadId: ''
+        };
+
+        // Parts counter to track when all parts have been processed
+        let partsProcessed = 0;
+        let totalParts = 2; // We're fetching HEADER and TEXT parts
+
+        msg.on('attributes', (attrs) => {
+          // Extract Gmail thread ID (X-GM-THRID)
+          if (attrs['x-gm-thrid']) {
+            emailData.threadId = attrs['x-gm-thrid'].toString();
+            // console.log(`Thread ID: ${emailData.threadId}`);
+          }
+        });
+
+        msg.on('body', (stream, info) => {
+          let buffer = '';
+          
+          stream.on('data', (chunk) => {
+            buffer += chunk.toString('utf8');
+          });
+
+          stream.on('end', () => {
+            // If this is the header part
+            if (info.which === 'HEADER.FIELDS (SUBJECT FROM DATE REFERENCES MESSAGE-ID X-GM-THRID)') {
+              const header = Imap.parseHeader(buffer);
+              emailData.subject = header.subject?.[0] || '';
+              emailData.date = header.date?.[0] || '';
+              
+              // Extract message ID if we don't have thread ID
+              if (!emailData.threadId && header['message-id']?.[0]) {
+                emailData.threadId = header['message-id'][0].replace(/[<>]/g, '');
+              }
+              
+              const fromField = header.from?.[0] || '';
+              // Extract email from "Name <email@example.com>" format
+              emailData.fromEmail = fromField.match(/<(.+)>/)?.[1] || fromField;
+              // console.log(`From: ${emailData.fromEmail}, Subject: ${emailData.subject}`);
+              partsProcessed++;
+            } 
+            // If this is the body part
+            else if (info.which === 'TEXT') {
+              // Set raw body as default
+              emailData.body = buffer;
+              
+              // Try to parse it more cleanly
+              simpleParser(buffer, (err, parsed) => {
+                if (!err && parsed.text) {
+                  emailData.body = parsed.text;
+                }
+                partsProcessed++;
+                
+                // If all parts processed, add to emails array
+                if (partsProcessed === totalParts) {
+                  if (emailData.fromEmail && emailData.body && emailData.threadId) {
+                    emails.push(emailData);
+                  } else {
+                    console.log('Missing required email data for message #' + seqno);
+                  }
+                }
+              });
+            }
+          });
+        });
+
+        // When all parts of the message have been processed
+        msg.once('end', () => {
+          console.log(`Finished fetching message #${seqno}`);
+        });
+      });
+
+      fetch.once('error', (err) => {
+        console.error('Error fetching emails:', err);
+      });
+
+      fetch.once('end', () => {
+        console.log('Done fetching all messages');
+        
+        // Process all collected emails
+        if (emails.length > 0) {
+          console.log(`Processing ${emails.length} valid emails`);
+          emails.forEach(email => {
+            processEvent(email, email.fromEmail);
+          });
+        } else {
+          console.log('No valid emails to process');
+        }
+        
+        imap.end();
+      });
+    });
+  });
+});
+
+// Connect to the IMAP server
+imap.connect();

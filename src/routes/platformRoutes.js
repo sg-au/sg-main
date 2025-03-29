@@ -1358,66 +1358,100 @@ router.get("/events", (req, res) => {
 
 router.get("/event", async (req, res) => {
   try {
-    const response = await axios.get(
-      `${apiUrl}/calendar-events`,
+    // Get user's preferences
+    const userResponse = await axios.get(
+      `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=*`,
       axiosConfig
     );
 
-    const colorMap = {};
-    
-    // Make sure we handle potential null or undefined values
-    const events = response.data.data.map(item => ({
-      title: item.attributes.title || '',
-      // start: item.attributes.start || '',
-      start: item.attributes.allDay?'All Day' : (item.start || ''),
-      // end: item.attributes.end || '', //make dynamic
-      end: item.attributes.allDay?'All Day':(item.attributes.end || ''),
-      // color: item.attributes.color || '',//make dynamic based on kind
-      color: colorMap[item.attributes.kind] || 'blue',
-      textColor: 'white', //make dynamic based on kind
-      description: item.attributes.description || '',
-      kind: item.attributes.kind || 'holiday',
-      display: 'block',
-      venue: item.attributes.venue || '',
-      allDay: item.attributes.allDay || false
+    const orgsResponse = await axios.get(
+      `${apiUrl}/organisations?populate[profile][fields]=email&fields[0]=name&fields[1]=type`,
+      axiosConfig
+    );
+
+    const orgsList = orgsResponse.data.data.map(item => ({
+      name: item.attributes.name || '',
+      type: item.attributes.type || '',
+      email: item.attributes.profile.data[0]?.attributes.email || ''
     }));
+    
+    // Get existing preferences (or empty array if none exist)
+    const userPreferences = userResponse.data[0]?.calendar_preferences || [];
 
-
-
-    // Safely stringify the events
-    const safeEvents = JSON.stringify(events)
-      .replace(/\\/g, '\\\\')  // Escape backslashes
-      .replace(/</g, '\\u003c') // Escape < to prevent XSS
-      .replace(/>/g, '\\u003e'); // Escape > to prevent XSS
-
-    res.render("platform/pages/events", { 
-      events: safeEvents
+    res.render("platform/pages/events", { // Make sure this matches your actual template name
+      userPreferences: userPreferences, // Don't stringify here
+      orgsList: orgsList // Don't stringify here
     });
   } catch (error) {
-    console.error('Error fetching events:', error);
-    res.render("platform/pages/events", { events: '[]' });
+    console.error('Error fetching user preferences:', error);
+    res.render("platform/pages/events", { // Make sure this matches your actual template name
+      userPreferences: [],
+      orgsList: [] // Provide empty array for orgsList too
+    });
   }
 });
 
 router.get("/event/save-preferences", async (req, res) => {
   try {
-    const response = await axios.get(
+    // Get organizations list
+    const orgsResponse = await axios.get(
       `${apiUrl}/organisations?populate[profile][fields]=email&fields[0]=name&fields[1]=type`,
       axiosConfig
     );
 
-    // Map the API response to the required format
-    const orgsList = response.data.data.map(item => ({
+    // Get user's existing preferences
+    const userResponse = await axios.get(
+      `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=*`,
+      axiosConfig
+    );
+
+    const orgsList = orgsResponse.data.data.map(item => ({
       name: item.attributes.name,
-      type: item.attributes.type
+      type: item.attributes.type,
+      email: item.attributes.profile.data[0].attributes.email
     }));
 
+    // Get existing preferences (or empty array if none exist)
+    const existingPreferences = userResponse.data[0].calendar_preferences || [];
 
-    res.render("platform/pages/events-user-preferences", { orgsList:orgsList });
+    res.render("platform/pages/events-user-preferences", { 
+      orgsList: orgsList,
+      existingPreferences: existingPreferences 
+    });
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.render("platform/pages/events-user-preferences", { 
+      orgsList: [],
+      existingPreferences: [] 
+    });
   }
-  catch (error) {
-    console.error('Error fetching organizations:', error);
-    res.render("platform/pages/events-user-preferences", { orgsList: [] });
+});
+
+router.post("/event/save-preferences", async (req, res) => {
+  try {
+    // Get the user
+    const userResponse = await axios.get(
+      `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`,
+      axiosConfig
+    );
+    
+    const userId = userResponse.data[0].id;
+    
+    // Update user with new preferences
+    await axios.put(
+      `${apiUrl}/users/${userId}`,
+      {
+        data: {
+          events_calendar_filter_preferences: req.body.preferences
+        }
+      },
+      axiosConfig
+    );
+
+    res.status(200).json({ message: "Preferences saved successfully" });
+  } catch (error) {
+    console.error("Error saving preferences:", error);
+    res.status(500).json({ error: "Failed to save preferences" });
   }
 });
 
