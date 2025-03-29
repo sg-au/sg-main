@@ -69,7 +69,7 @@ async function checkForEventUpdates(emailData, existingEventDetails) {
                        "Venue": "Updated venue"
                      },
                      "Descriptive Summary": "Updated description"
-                   }`;
+                   }. Return ONLY this object as a valid JSON such that it can be parsed without error. Do not add any true/false boolean here. ONLY the valid JSON.`;
     
     try {
         const result = await model.generateContent(prompt);
@@ -322,6 +322,7 @@ async function processEvent(emailData, fromEmail) {
                             },
                             "Descriptive Summary": "The AI and Ethics Symposium brings together leading experts, scholars, and students to explore the ethical implications of artificial intelligence. The event includes keynote speeches and poster presentations."
                         }
+                        While determining "Time", make sure you NEVER enter any words except time in 12-hour format. Do not use words like "onwards". Only numbers separated by ':' and followed by 'AM' or 'PM' are permissible.
                         Make sure you appropriately close the braces in the JSON object and follow all specifications of how a JSON object should be.
                         Your answer should be ONLY the tuple. No other surrounding words or phrases. Pick up the date of event based on the date, year, month attached here: ${emailData.date}. Give me the time output in the h:mm AM/PM format.
                         The tuple must NOT be enclosed in brackets and there must be no other surrounding characters or words from you. Just write True/False followed by a comma and then the object. No other characters.
@@ -357,7 +358,7 @@ async function processEvent(emailData, fromEmail) {
                             console.log('Detected changes in the event:');
                             console.log(JSON.stringify(finalEventObject, null, 2));
                             const updatedEvent = applyUpdatesToEvent(existingEvent, finalEventObject);
-                            responseTuple[1] = updatedEvent;
+                            responseTuple[1] = finalEventObject;
                             await sendToGoogleCalendar(responseTuple, fromEmail, emailData.threadId);
                         } else {
                             console.log('Failed to get final event object from LLM.');
