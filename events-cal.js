@@ -121,6 +121,54 @@ function openInbox(cb) {
   imap.openBox(labelName, false, cb);
 }
 
+async function isEventCancelled(emailData) {
+  const prompt = `Analyze the following email to determine if it's cancelling an event. 
+                 Respond with ONLY "true" or "false" (lowercase, no quotes) based on whether 
+                 the email is cancelling an event mentioned in a previous email.
+                 
+                 Email Subject: ${emailData.subject}
+                 Email Body: ${emailData.body}
+                 
+                 Look for keywords like (not exhaustively):
+                 - "cancelled"
+                 - "called off"
+                 - "will not take place"
+                 - "is cancelled"
+                 - "we regret to inform"
+                 - "unfortunately" combined with cancellation context
+                 
+                 Only respond with "true" or "false". No other text.`;
+  
+  try {
+      const result = await model.generateContent(prompt);
+      const response = result.response.text().trim().toLowerCase();
+      return response === 'true';
+  } catch (error) {
+      console.log(`Error checking for cancellation: ${error}`);
+      return false;
+  }
+}
+
+// Add this function to remove cancelled events
+async function removeCancelledEvent(threadId) {
+  try {
+      const existingEvent = await findExistingEvent(threadId);
+      if (existingEvent) {
+          await calendar.events.delete({
+              calendarId: process.env.GOOGLE_CALENDAR_ID,
+              eventId: existingEvent.id
+          });
+          console.log(`Successfully deleted cancelled event with threadId: ${threadId}`);
+          return true;
+      }
+      return false;
+  } catch (error) {
+      console.log(`Error deleting cancelled event: ${error}`);
+      return false;
+  }
+}
+
+
 // Check for new emails
 function checkEmails() {
   imap.search(['UNSEEN'], (err, results) => {
@@ -219,9 +267,16 @@ function checkEmails() {
       
       if (emails.length > 0) {
         console.log(`Processing ${emails.length} valid emails`);
-        emails.forEach(email => {
-          processEvent(email, email.fromEmail);
-        });
+        async for (const email of emails) {
+          // Fix: use 'email' instead of 'emailData'
+          const isCancelled = isEventCancelled(email); 
+          if (isCancelled) {
+            console.log(`Detected cancellation email for thread ${email.threadId}`);
+            await removeCancelledEvent(email.threadId);
+            continue; // Skip to next email
+          }
+          await processEvent(email, email.fromEmail);
+        }
       }
     });
   });
@@ -293,6 +348,8 @@ async function checkForEventUpdates(emailData, existingEventDetails) {
 }
 
 function applyUpdatesToEvent(existingEvent, updates) {
+
+
     const updatedEvent = {...existingEvent};
     
     // Check if there are venue updates
@@ -487,6 +544,7 @@ async function sendToGoogleCalendar(responseTuple, fromEmail, threadId) {
 }
 
 async function processEvent(emailData, fromEmail) {
+
     const prompt = `You are given the body of an email sent out to a college student of Ashoka University. 
                         Your task is to identify whether or not the email is an event email. 
                         An event is defined as the following - 
