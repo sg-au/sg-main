@@ -152,19 +152,31 @@ async function isEventCancelled(emailData) {
 // Add this function to remove cancelled events
 async function removeCancelledEvent(threadId) {
   try {
-      const existingEvent = await findExistingEvent(threadId);
-      if (existingEvent) {
-          await calendar.events.delete({
-              calendarId: process.env.GOOGLE_CALENDAR_ID,
-              eventId: existingEvent.id
-          });
-          console.log(`Successfully deleted cancelled event with threadId: ${threadId}`);
-          return true;
+    const existingEvent = await findExistingEvent(threadId);
+    if (existingEvent) {
+      const response = await calendar.events.delete({
+        calendarId: process.env.GOOGLE_CALENDAR_ID,
+        eventId: existingEvent.id
+      });
+      
+      // Check if deletion was successful
+      if (response.status === 204) { // 204 is the success status for deletions
+        console.log(`Successfully deleted cancelled event with threadId: ${threadId}`);
+        return true;
+      } else {
+        console.log(`Unexpected response status when deleting event: ${response.status}`);
+        return false;
       }
-      return false;
+    }
+    console.log(`No existing event found with threadId: ${threadId}`);
+    return false;
   } catch (error) {
-      console.log(`Error deleting cancelled event: ${error}`);
-      return false;
+    if (error.code === 404) {
+      console.log(`Event not found (may have been already deleted)`);
+    } else {
+      console.log(`Error deleting cancelled event: ${error.message}`);
+    }
+    return false;
   }
 }
 
@@ -262,20 +274,26 @@ function checkEmails() {
       console.error('Error fetching emails:', err);
     });
 
-    fetch.once('end', () => {
+    fetch.once('end', async () => {
       console.log('Done fetching all messages');
       
       if (emails.length > 0) {
         console.log(`Processing ${emails.length} valid emails`);
-        async for (const email of emails) {
-          // Fix: use 'email' instead of 'emailData'
-          const isCancelled = isEventCancelled(email); 
-          if (isCancelled) {
-            console.log(`Detected cancellation email for thread ${email.threadId}`);
-            await removeCancelledEvent(email.threadId);
-            continue; // Skip to next email
+        for (const email of emails) {
+          try {
+            const isCancelled = await isEventCancelled(email); 
+            if (isCancelled) {
+              console.log(`Detected cancellation email for thread ${email.threadId}`);
+              const deletionResult = await removeCancelledEvent(email.threadId);
+              if (!deletionResult) {
+                console.log(`Failed to delete event for thread ${email.threadId}`);
+              }
+              continue;
+            }
+            await processEvent(email, email.fromEmail);
+          } catch (error) {
+            console.error(`Error processing email: ${error.message}`);
           }
-          await processEvent(email, email.fromEmail);
         }
       }
     });
@@ -636,8 +654,6 @@ async function processEvent(emailData, fromEmail) {
         console.log(`Error getting response from AI model: ${error}`);
     }
 }
-
-
 
 // Connect to the IMAP server
 imap.connect();
