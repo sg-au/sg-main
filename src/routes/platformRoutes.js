@@ -1363,7 +1363,6 @@ router.get("/event", async (req, res) => {
       `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=*`,
       axiosConfig
     );
-
     const orgsResponse = await axios.get(
       `${apiUrl}/organisations?populate[profile][fields]=email&fields[0]=name&fields[1]=type`,
       axiosConfig
@@ -1410,6 +1409,7 @@ router.get("/event/save-preferences", async (req, res) => {
       type: item.attributes.type,
       email: item.attributes.profile.data[0].attributes.email
     }));
+
 
     // Get existing preferences (or empty array if none exist)
     const existingPreferences = userResponse.data[0].calendar_preferences || [];

@@ -1,7 +1,6 @@
 const Imap = require('imap');
 const { simpleParser } = require('mailparser');
 const dotenv = require('dotenv');
-const axios = require('axios');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const moment = require('moment');
 const { google } = require('googleapis');
@@ -11,22 +10,222 @@ const { default: fetch, Headers } = require('node-fetch');
 globalThis.fetch = fetch;
 globalThis.Headers = Headers;
 
-const genAI = new GoogleGenerativeAI('AIzaSyDizK_MmGhXjOSBleHy2rI-sbV20l2j1_A');
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+// IMAP reconnection settings
+const MAX_RECONNECT_ATTEMPTS = 5;
+const RECONNECT_DELAY = 10000; // 10 seconds
+const CHECK_INTERVAL = 60000; // 60 seconds
+let imapReconnectAttempts = 0;
 
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
 // Set up Google Calendar auth
 const oauth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    process.env.GOOGLE_REDIRECT_URI
-  );
-  
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  process.env.GOOGLE_REDIRECT_URI
+);
+
 oauth2Client.setCredentials({
-    refresh_token: process.env.GOOGLE_REFRESH_TOKEN
-  });
-  
+  refresh_token: process.env.GOOGLE_REFRESH_TOKEN
+});
+
 const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+
+// IMAP configuration
+const imapConfig = {
+  user: process.env.EMAIL,
+  password: process.env.APP_PASSWORD,
+  host: 'imap.gmail.com',
+  port: 993,
+  tls: true,
+  tlsOptions: { rejectUnauthorized: false },
+  keepalive: true,
+  authTimeout: 30000
+};
+
+// Create IMAP connection
+const imap = new Imap(imapConfig);
+
+// Error handling with reconnection
+function handleImapError(error) {
+  console.error(`IMAP Error: ${error}`);
+  
+  if (imapReconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+    imapReconnectAttempts++;
+    console.log(`Connection lost. Attempting to reconnect (attempt ${imapReconnectAttempts} of ${MAX_RECONNECT_ATTEMPTS})...`);
+    
+    try {
+      if (imap && imap.state !== 'disconnected') {
+        imap.end();
+      }
+    } catch (e) {
+      console.log(`Error ending existing connection: ${e.message}`);
+    }
+    
+    setTimeout(() => {
+      console.log(`Reconnecting to IMAP server...`);
+      imap.connect();
+    }, RECONNECT_DELAY);
+  } else {
+    console.log(`Maximum reconnection attempts (${MAX_RECONNECT_ATTEMPTS}) reached. Giving up.`);
+    setTimeout(() => {
+      imapReconnectAttempts = 0;
+    }, 60000); // Reset after 1 minute
+  }
+}
+
+// Event handlers for IMAP connection
+imap.once('error', (err) => {
+  console.error('IMAP Error:', err);
+  if (err.source === 'timeout') {
+    console.log('Reconnecting in 10 seconds...');
+    setTimeout(() => imap.connect(), 10000);
+  } else {
+    handleImapError(err);
+  }
+});
+
+imap.once('end', () => {
+  console.log('IMAP Connection closed. Reconnecting...');
+  setTimeout(() => imap.connect(), 5000);
+});
+
+// When connection is ready
+imap.once('ready', function() {
+  openInbox((err, box) => {
+    if (err) {
+      console.error('Error opening inbox:', err);
+      return;
+    }
+    
+    console.log(`Listening for new emails in ${box.name}...`);
+    
+    // Set up periodic checking
+    setInterval(() => {
+      console.log('Periodically checking for new emails...');
+      checkEmails();
+    }, CHECK_INTERVAL);
+    
+    // Listen for new emails
+    imap.on('mail', function() {
+      console.log('New email detected...');
+      checkEmails();
+    });
+  });
+});
+
+// Open the inbox/label
+function openInbox(cb) {
+  const labelName = 'test'; // Change this to your desired label
+  imap.openBox(labelName, false, cb);
+}
+
+// Check for new emails
+function checkEmails() {
+  imap.search(['UNSEEN'], (err, results) => {
+    if (err) {
+      console.error('Error searching for unread emails:', err);
+      return;
+    }
+
+    if (!results.length) {
+      console.log('No unread emails found');
+      return;
+    }
+
+    console.log(`Found ${results.length} unread email(s)`);
+
+    const fetch = imap.fetch(results, {
+      bodies: ['HEADER.FIELDS (SUBJECT FROM DATE REFERENCES MESSAGE-ID X-GM-THRID)', 'TEXT'],
+      markSeen: true,
+      struct: true
+    });
+
+    const emails = [];
+    let partsProcessed = 0;
+    let totalParts = 2;
+
+    fetch.on('message', (msg, seqno) => {
+      console.log(`Processing message #${seqno}`);
+      
+      let emailData = {
+        subject: '',
+        fromEmail: '',
+        body: '',
+        date: '',
+        threadId: ''
+      };
+
+      msg.on('attributes', (attrs) => {
+        if (attrs['x-gm-thrid']) {
+          emailData.threadId = attrs['x-gm-thrid'].toString();
+        }
+      });
+
+      msg.on('body', (stream, info) => {
+        let buffer = '';
+        
+        stream.on('data', (chunk) => {
+          buffer += chunk.toString('utf8');
+        });
+
+        stream.on('end', () => {
+          if (info.which === 'HEADER.FIELDS (SUBJECT FROM DATE REFERENCES MESSAGE-ID X-GM-THRID)') {
+            const header = Imap.parseHeader(buffer);
+            emailData.subject = header.subject?.[0] || '';
+            emailData.date = header.date?.[0] || '';
+            
+            if (!emailData.threadId && header['message-id']?.[0]) {
+              emailData.threadId = header['message-id'][0].replace(/[<>]/g, '');
+            }
+            
+            const fromField = header.from?.[0] || '';
+            emailData.fromEmail = fromField.match(/<(.+)>/)?.[1] || fromField;
+            partsProcessed++;
+          } 
+          else if (info.which === 'TEXT') {
+            emailData.body = buffer;
+            
+            simpleParser(buffer, (err, parsed) => {
+              if (!err && parsed.text) {
+                emailData.body = parsed.text;
+              }
+              partsProcessed++;
+              
+              if (partsProcessed === totalParts) {
+                if (emailData.fromEmail && emailData.body && emailData.threadId) {
+                  emails.push(emailData);
+                } else {
+                  console.log('Missing required email data for message #' + seqno);
+                }
+              }
+            });
+          }
+        });
+      });
+
+      msg.once('end', () => {
+        console.log(`Finished fetching message #${seqno}`);
+      });
+    });
+
+    fetch.once('error', (err) => {
+      console.error('Error fetching emails:', err);
+    });
+
+    fetch.once('end', () => {
+      console.log('Done fetching all messages');
+      
+      if (emails.length > 0) {
+        console.log(`Processing ${emails.length} valid emails`);
+        emails.forEach(email => {
+          processEvent(email, email.fromEmail);
+        });
+      }
+    });
+  });
+}
 
 // Check if an event with the given threadId already exists
 async function findExistingEvent(threadId) {
@@ -93,7 +292,6 @@ async function checkForEventUpdates(emailData, existingEventDetails) {
     }
 }
 
-// Apply updates to existing event
 function applyUpdatesToEvent(existingEvent, updates) {
     const updatedEvent = {...existingEvent};
     
@@ -382,167 +580,6 @@ async function processEvent(emailData, fromEmail) {
 }
 
 
-// console.log('Starting to check for unread emails in "test" label...');
-  
-// Create IMAP connection
-const imap = new Imap({
-  user: process.env.EMAIL,
-  password: process.env.APP_PASSWORD,
-  host: 'imap.gmail.com',
-  port: 993,
-  tls: true,
-  tlsOptions: { rejectUnauthorized: false }
-});
-
-// Handle connection errors
-imap.once('error', (err) => {
-  console.error('IMAP connection error:', err);
-});
-
-// When connection ends
-imap.once('end', () => {
-  console.log('IMAP connection ended');
-});
-
-// When connection is ready
-imap.once('ready', () => {
-  // Open the "test" label/folder
-  imap.openBox('test', false, (err, box) => {
-    if (err) {
-      console.error('Error opening test label:', err);
-      imap.end();
-      return;
-    }
-    
-    // console.log(`Successfully opened ${box.name} with ${box.messages.total} messages`);
-
-    // Search for unread emails
-    imap.search(['UNSEEN'], (err, results) => {
-      if (err) {
-        console.error('Error searching for unread emails:', err);
-        imap.end();
-        return;
-      }
-
-      if (!results.length) {
-        console.log('No unread emails found in test label');
-        imap.end();
-        return;
-      }
-
-      console.log(`Found ${results.length} unread email(s) in test label`);
-
-      // Fetch the emails
-      const fetch = imap.fetch(results, {
-        bodies: ['HEADER.FIELDS (SUBJECT FROM DATE REFERENCES MESSAGE-ID X-GM-THRID)', 'TEXT'],
-        markSeen: true,
-        struct: true
-      });
-
-      // Store all processed emails
-      const emails = [];
-
-      fetch.on('message', (msg, seqno) => {
-        // console.log(`Processing message #${seqno}`);
-        
-        let emailData = {
-          subject: '',
-          fromEmail: '',
-          body: '',
-          date: '',
-          threadId: ''
-        };
-
-        // Parts counter to track when all parts have been processed
-        let partsProcessed = 0;
-        let totalParts = 2; // We're fetching HEADER and TEXT parts
-
-        msg.on('attributes', (attrs) => {
-          // Extract Gmail thread ID (X-GM-THRID)
-          if (attrs['x-gm-thrid']) {
-            emailData.threadId = attrs['x-gm-thrid'].toString();
-            // console.log(`Thread ID: ${emailData.threadId}`);
-          }
-        });
-
-        msg.on('body', (stream, info) => {
-          let buffer = '';
-          
-          stream.on('data', (chunk) => {
-            buffer += chunk.toString('utf8');
-          });
-
-          stream.on('end', () => {
-            // If this is the header part
-            if (info.which === 'HEADER.FIELDS (SUBJECT FROM DATE REFERENCES MESSAGE-ID X-GM-THRID)') {
-              const header = Imap.parseHeader(buffer);
-              emailData.subject = header.subject?.[0] || '';
-              emailData.date = header.date?.[0] || '';
-              
-              // Extract message ID if we don't have thread ID
-              if (!emailData.threadId && header['message-id']?.[0]) {
-                emailData.threadId = header['message-id'][0].replace(/[<>]/g, '');
-              }
-              
-              const fromField = header.from?.[0] || '';
-              // Extract email from "Name <email@example.com>" format
-              emailData.fromEmail = fromField.match(/<(.+)>/)?.[1] || fromField;
-              // console.log(`From: ${emailData.fromEmail}, Subject: ${emailData.subject}`);
-              partsProcessed++;
-            } 
-            // If this is the body part
-            else if (info.which === 'TEXT') {
-              // Set raw body as default
-              emailData.body = buffer;
-              
-              // Try to parse it more cleanly
-              simpleParser(buffer, (err, parsed) => {
-                if (!err && parsed.text) {
-                  emailData.body = parsed.text;
-                }
-                partsProcessed++;
-                
-                // If all parts processed, add to emails array
-                if (partsProcessed === totalParts) {
-                  if (emailData.fromEmail && emailData.body && emailData.threadId) {
-                    emails.push(emailData);
-                  } else {
-                    console.log('Missing required email data for message #' + seqno);
-                  }
-                }
-              });
-            }
-          });
-        });
-
-        // When all parts of the message have been processed
-        msg.once('end', () => {
-          console.log(`Finished fetching message #${seqno}`);
-        });
-      });
-
-      fetch.once('error', (err) => {
-        console.error('Error fetching emails:', err);
-      });
-
-      fetch.once('end', () => {
-        console.log('Done fetching all messages');
-        
-        // Process all collected emails
-        if (emails.length > 0) {
-          console.log(`Processing ${emails.length} valid emails`);
-          emails.forEach(email => {
-            processEvent(email, email.fromEmail);
-          });
-        } else {
-          console.log('No valid emails to process');
-        }
-        
-        imap.end();
-      });
-    });
-  });
-});
 
 // Connect to the IMAP server
 imap.connect();
