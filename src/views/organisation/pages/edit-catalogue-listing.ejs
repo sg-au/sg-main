@@ -168,7 +168,29 @@
                                                                     <!-- Hidden input to store the actual value -->
                                                                     <input type="hidden" name="circle1_humans" id="circle1_humans" value="">
                                                                 </div>
-                                                            </div>                                                            
+                                                            </div>
+                                                            
+                                                            <!-- Circle 2 Humans -->
+                                                            <div class="row mb-3">
+                                                                <label for="circle2_humans" class="form-label">Circle 2 Humans</label>
+                                                                <div class="col-12">
+                                                                    <!-- Search input -->
+                                                                    <div class="input-group mb-3">
+                                                                        <input type="text" class="form-control" id="userSearchInput2" placeholder="Start typing to search users...">                                                                        
+                                                                    </div>
+                                                                    
+                                                                    <!-- Search results dropdown -->
+                                                                    <div id="searchResults2" class="dropdown-menu" style="max-height: 200px; width: 90%; display: none;"></div>
+                                                                    
+                                                                    <!-- Selected users chips container -->
+                                                                    <div id="selectedUsers2" class="d-flex flex-wrap gap-2 mb-3">
+                                                                        <!-- Chips will be displayed here -->
+                                                                    </div>
+                                                                    
+                                                                    <!-- Hidden input to store the actual value -->
+                                                                    <input type="hidden" name="circle2_humans" id="circle2_humans" value="">
+                                                                </div>
+                                                            </div>
 
                                                             <!-- Website/Blog -->
                                                             <div class="row mb-3">
@@ -241,28 +263,40 @@
             <script>
                 // Initialize the selected users array from existing data
                 let selectedUsers = [];
+                let selectedUsers2 = [];
                 let listing = JSON.parse('<%- JSON.stringify(listing) %>');                
                 
                 // Parse the existing circle1_humans data if it exists
                 if (listing.attributes.circle1_humans && listing.attributes.circle1_humans.data) {
                     selectedUsers = listing.attributes.circle1_humans.data;
                 }
+
+                // Parse the existing circle2_humans data if it exists
+                if (listing.attributes.circle2_humans && listing.attributes.circle2_humans.data) {
+                    selectedUsers2 = listing.attributes.circle2_humans.data;
+                }
                 
                 // Available users from the database
                 const allUsers = JSON.parse(`<%- JSON.stringify(users) %>` || []);                
                 let circle1_humans = document.getElementById('circle1_humans');
+                let circle2_humans = document.getElementById('circle2_humans');
 
                 // Initialize chips when the page loads
                 document.addEventListener('DOMContentLoaded', function() {
                     renderSelectedUsers();
+                    renderSelectedUsers2();
                     circle1_humans.value = JSON.stringify(selectedUsers);
+                    circle2_humans.value = JSON.stringify(selectedUsers2);
                     // Set up event listeners
                     document.getElementById('userSearchInput').addEventListener('input', handleSearchInput);                    
-                    
+                    document.getElementById('userSearchInput2').addEventListener('input', handleSearchInput2);
                     // Close search results when clicking outside
                     document.addEventListener('click', function(event) {
                         if (!event.target.closest('#userSearchInput') && !event.target.closest('#searchResults')) {
                             document.getElementById('searchResults').style.display = 'none';
+                        }
+                        if (!event.target.closest('#userSearchInput2') && !event.target.closest('#searchResults2')) {
+                            document.getElementById('searchResults2').style.display = 'none';
                         }
                     });
                 });                
@@ -339,6 +373,84 @@
                         chip.innerHTML = `                 
                             ${(user.attributes)? user.attributes.username : user.username}
                             <span class="ms-1" role="button" onclick="removeUser(${user.id})">&times;</span>
+                        `;
+                        container.appendChild(chip);
+                    });
+                }
+
+                // Circle 2 functions
+                function handleSearchInput2(event) {
+                    const searchTerm = event.target.value.trim().toLowerCase();
+                    if (searchTerm.length >= 2) {
+                        showSearchResults2();
+                    } else {
+                        document.getElementById('searchResults2').style.display = 'none';
+                    }
+                }
+
+                function showSearchResults2() {
+                    const searchTerm = document.getElementById('userSearchInput2').value.trim().toLowerCase();
+                    const resultsContainer = document.getElementById('searchResults2');
+                    
+                    // Clear previous results
+                    resultsContainer.innerHTML = '';
+                    
+                    if (searchTerm.length < 2) return;
+                    
+                    // Filter users based on search term
+                    const filteredUsers = allUsers.filter(user => {
+                        // Modify this according to your user object structure
+                        return user.username.toLowerCase().includes(searchTerm) && 
+                               !selectedUsers2.some(selected => selected.id === user.id);
+                    });
+                    
+                    if (filteredUsers.length === 0) {
+                        resultsContainer.innerHTML = '<div class="dropdown-item">No users found</div>';
+                    } else {
+                        filteredUsers.forEach(user => {
+                            const item = document.createElement('a');
+                            item.classList.add('dropdown-item');
+                            item.classList.remove('w-100');
+                            item.style.cursor = 'pointer';                            
+                            item.href = '#';
+                            item.textContent = user.username;
+                            item.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                addUser2(user);
+                                resultsContainer.style.display = 'none';
+                                document.getElementById('userSearchInput2').value = '';
+                            });
+                            resultsContainer.appendChild(item);                            
+                        });
+                    }
+                    
+                    resultsContainer.style.display = 'block';
+                }
+
+                function addUser2(user) {
+                    if (!selectedUsers2.some(selected => selected.id === user.id)) {
+                        selectedUsers2.push(user);
+                        circle2_humans.value = JSON.stringify(selectedUsers2);                        
+                        renderSelectedUsers2();
+                    }
+                }
+
+                function removeUser2(userId) {                    
+                    selectedUsers2 = selectedUsers2.filter(user => user.id !== userId);
+                    circle2_humans.value = JSON.stringify(selectedUsers2);
+                    renderSelectedUsers2();
+                }
+
+                function renderSelectedUsers2() {
+                    const container = document.getElementById('selectedUsers2');
+                    container.innerHTML = '';
+                    
+                    selectedUsers2.forEach(user => {                        
+                        const chip = document.createElement('div');
+                        chip.classList.add('badge', 'bg-primary', 'text-wrap', 'p-2');
+                        chip.innerHTML = `                 
+                            ${(user.attributes)? user.attributes.username : user.username}
+                            <span class="ms-1" role="button" onclick="removeUser2(${user.id})">&times;</span>
                         `;
                         container.appendChild(chip);
                     });

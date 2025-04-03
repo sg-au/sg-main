@@ -11,7 +11,6 @@ const passport = require("./config/passport-config"); // Import the Passport con
 dotenv.config({ path: "../.env" }); // Load environment variables from a .env file
 const axios=require("axios");
 const fs = require('fs');
-const organisations = ["technology.ministry@ashoka.edu.in"];
 // const organisations = JSON.parse(fs.readFileSync('../organisations.json'));
 
 // Require MongoDB configuration
@@ -178,17 +177,76 @@ function ensureIsStudent(req, res, next) {
   }
 }
 
+// function ensureIsOrganisation(req, res, next) {
+//   // Assuming you have a user object or user data available after authentication
+//   if (req.user) {
+//     const userEmail = req.user._json.email;    
+//     if(organisations.includes(userEmail)){
+//       next();
+//     }else{
+//       res.render("organisation/pages/not-organisation")
+//     }
+//   } else {
+//     // User is not authenticated, so you may want to handle that case as well
+//     res.status(401).send("User is not authenticated");
+//   }
+// }
+
 function ensureIsOrganisation(req, res, next) {
-  // Assuming you have a user object or user data available after authentication
+  // Check if user is authenticated
   if (req.user) {
-    const userEmail = req.user._json.email;    
-    if(organisations.includes(userEmail)){
-      next();
-    }else{
-      res.render("organisation/pages/not-organisation")
-    }
+    const userEmail = req.user._json.email;
+    
+    // Make API request to check if this email is associated with any organization
+    axios.get(`${apiUrl}/organisations?populate=profile`, axiosConfig)
+      .then(response => {
+        if (!response.data || !response.data.data) {
+          console.error("No data returned from organizations API");
+          return res.render("organisation/pages/not-organisation");
+        }
+        
+        const orgs = response.data.data;
+        let hasAccess = false;
+        
+        // Check if the user's email matches any organization's profile email
+        for (const org of orgs) {
+          if (org.attributes.profile && 
+              org.attributes.profile.data && 
+              org.attributes.profile.data.length > 0) {
+            
+            for (const profile of org.attributes.profile.data) {
+              if (profile.attributes.email === userEmail) {
+                hasAccess = true;
+                break;
+              }
+            }
+            
+            if (hasAccess) break;
+          }
+        }
+        
+        // If user's email is in the list of organization emails, allow access
+        if (hasAccess) {
+          // Optionally cache the organizations in an array to reduce API calls
+          if (!global.organisations) {
+            global.organisations = [];
+          }
+          if (!global.organisations.includes(userEmail)) {
+            global.organisations.push(userEmail);
+          }
+          
+          next();
+        } else {
+          // If user's email is not in the list, deny access
+          res.render("organisation/pages/not-organisation");
+        }
+      })
+      .catch(error => {
+        console.error('Error checking organization access:', error);
+        res.status(500).send("Internal server error checking organization credentials");
+      });
   } else {
-    // User is not authenticated, so you may want to handle that case as well
+    // User is not authenticated
     res.status(401).send("User is not authenticated");
   }
 }

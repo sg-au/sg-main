@@ -80,7 +80,8 @@ router.get("/edit-catalogue-listing/:id", async (req, res) => {
 router.post("/update-catalogue-listing", async (req, res) => {  
   try {
       const listingId = req.body.id;
-      req.body.circle1_humans = JSON.parse(req.body.circle1_humans);        
+      req.body.circle1_humans = JSON.parse(req.body.circle1_humans);
+      req.body.circle2_humans = JSON.parse(req.body.circle2_humans);        
 
       const { data: existingListing } = await axios.get(`${apiUrl}/organisations/${listingId}`, axiosConfig);
       const updatedListing = {
@@ -89,6 +90,7 @@ router.post("/update-catalogue-listing", async (req, res) => {
               short_description: req.body.short_description,
               description: req.body.description,
               circle1_humans: req.body.circle1_humans,
+              circle2_humans: req.body.circle2_humans,
               induction: req.body.induction === 'on' ? true : false,
               induction_end: req.body.induction_end,
               induction_description: req.body.induction_description,
@@ -100,7 +102,6 @@ router.post("/update-catalogue-listing", async (req, res) => {
           }
       };
       await axios.put(`${apiUrl}/organisations/${listingId}`, updatedListing, axiosConfig);
-
       res.redirect("/organisation/organisation-catalogue");
   } catch (err) {
       console.error("Error updating listing:", err.response?.data || err.message);
