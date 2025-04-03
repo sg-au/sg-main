@@ -93,7 +93,7 @@
                                                             <div class="row mb-3">
                                                                 <div class="col-12">
                                                                     <div class="form-check form-switch">
-                                                                        <input class="form-check-input" style="border-color: #444444;" type="checkbox" id="inductionToggle" name="has_induction" 
+                                                                        <input class="form-check-input" style="border-color: #444444;" type="checkbox" id="inductionToggle" name="induction" 
                                                                             <%= listing.attributes.induction ? 'checked' : '' %>>
                                                                         <label class="form-label" for="inductionToggle">Inductions Open</label>
                                                                     </div>
@@ -101,13 +101,13 @@
                                                             </div>
 
                                                             <!-- Induction Details (initially hidden) -->
-                                                            <div id="inductionDetails" class="<%= listing.attributes.has_induction ? '' : 'd-none' %>">
+                                                            <div id="inductionDetails" class="<%= listing.attributes.induction ? '' : 'd-none' %>">
                                                                 <!-- Induction Deadline -->
                                                                 <div class="row mb-3">
                                                                     <label for="induction_end" class="form-label">Induction Deadline</label>
                                                                     <div class="col-12">
                                                                         <input type="datetime-local" class="form-control" id="induction_end" name="induction_end" 
-                                                                            value="<%= listing.attributes.induction_end ? new Date(listing.attributes.induction_end).toISOString().slice(0, 16) : '' %>">
+                                                                            value="<%= listing.attributes.induction_end ? new Date(listing.attributes.induction_end).toLocaleString('en-GB', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+)/, '$3-$2-$1T$4:$5') : '' %>">
                                                                     </div>
                                                                 </div>
                                                                 
@@ -250,11 +250,12 @@
                 
                 // Available users from the database
                 const allUsers = JSON.parse(`<%- JSON.stringify(users) %>` || []);                
-                
+                let circle1_humans = document.getElementById('circle1_humans');
+
                 // Initialize chips when the page loads
                 document.addEventListener('DOMContentLoaded', function() {
                     renderSelectedUsers();
-                    
+                    circle1_humans.value = JSON.stringify(selectedUsers);
                     // Set up event listeners
                     document.getElementById('userSearchInput').addEventListener('input', handleSearchInput);                    
                     
@@ -264,9 +265,7 @@
                             document.getElementById('searchResults').style.display = 'none';
                         }
                     });
-                });
-
-                let circle1_humans = document.getElementById('circle1_humans');
+                });                
                 
                 function handleSearchInput(event) {
                     const searchTerm = event.target.value.trim().toLowerCase();
@@ -326,7 +325,7 @@
                 
                 function removeUser(userId) {                    
                     selectedUsers = selectedUsers.filter(user => user.id !== userId);
-                    circle1_humans.value = selectedUsers;
+                    circle1_humans.value = JSON.stringify(selectedUsers);
                     renderSelectedUsers();
                 }
                 

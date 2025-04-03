@@ -77,32 +77,35 @@ router.get("/edit-catalogue-listing/:id", async (req, res) => {
   }
 });
 
-router.post("/update-catalogue-listing", async (req, res) => {
-    try {
-        const listingId = req.body.id;
-        req.body.circle1_humans = JSON.parse(req.body.circle1_humans);        
+router.post("/update-catalogue-listing", async (req, res) => {  
+  try {
+      const listingId = req.body.id;
+      req.body.circle1_humans = JSON.parse(req.body.circle1_humans);        
 
-        const { data: existingListing } = await axios.get(`${apiUrl}/organisations/${listingId}`, axiosConfig);
-        const updatedListing = {
-            data: {
-                name: req.body.name,
-                short_description: req.body.short_description,
-                description: req.body.description,
-                circle1_humans: req.body.circle1_humans,
-                website_blog: req.body.website_blog,
-                instagram: req.body.instagram,
-                linkedin: req.body.linkedin,
-                twitter: req.body.twitter,
-                youtube: req.body.youtube,
-            }
-        };
-        await axios.put(`${apiUrl}/organisations/${listingId}`, updatedListing, axiosConfig);
+      const { data: existingListing } = await axios.get(`${apiUrl}/organisations/${listingId}`, axiosConfig);
+      const updatedListing = {
+          data: {
+              name: req.body.name,
+              short_description: req.body.short_description,
+              description: req.body.description,
+              circle1_humans: req.body.circle1_humans,
+              induction: req.body.induction === 'on' ? true : false,
+              induction_end: req.body.induction_end,
+              induction_description: req.body.induction_description,
+              website_blog: req.body.website_blog,
+              instagram: req.body.instagram,
+              linkedin: req.body.linkedin,
+              twitter: req.body.twitter,
+              youtube: req.body.youtube,
+          }
+      };
+      await axios.put(`${apiUrl}/organisations/${listingId}`, updatedListing, axiosConfig);
 
-        res.redirect("/organisation/organisation-catalogue");
-    } catch (err) {
-        console.error("Error updating listing:", err.response?.data || err.message);
-        res.status(500).send("Failed to update listing.");
-    }
+      res.redirect("/organisation/organisation-catalogue");
+  } catch (err) {
+      console.error("Error updating listing:", err.response?.data || err.message);
+      res.status(500).send("Failed to update listing.");
+  }
 });
 
 module.exports = router;
