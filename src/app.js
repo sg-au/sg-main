@@ -11,6 +11,7 @@ const passport = require("./config/passport-config"); // Import the Passport con
 dotenv.config({ path: "../.env" }); // Load environment variables from a .env file
 const axios=require("axios");
 const fs = require('fs');
+// const organisations = JSON.parse(fs.readFileSync('../organisations.json'));
 
 // Require MongoDB configuration
 const connectToMongoDB = require("./config/mongodb-config.js");
@@ -43,6 +44,7 @@ const threeDays = 3 * 1000 * 60 * 60 * 24; // Define a three-day duration in mil
 // Import route handlers for different parts of the application
 const websiteRoutes = require("./routes/websiteRoutes.js");
 const platformRoutes = require("./routes/platformRoutes.js");
+const organisationRoutes = require("./routes/organisationRoutes.js");
 const tempRoutes = require("./routes/tempRoutes.js");
 
 // Configure application settings and middleware
@@ -96,6 +98,7 @@ var returnTo="/platform";
 // Use route handlers for website and platform routes
 app.use("/", websiteRoutes);
 app.use("/platform", ensureAuthenticated, putImage, ensureIsStudent, ensureIsNotBlocked, platformRoutes);
+app.use("/organisation", ensureAuthenticated, putImage, ensureIsOrganisation, ensureIsNotBlocked, organisationRoutes);
 app.use("/temp", ensureAuthenticated, putImage, ensureIsStudent, ensureIsNotBlocked, tempRoutes);
 
 // Middleware to ensure the user is authenticated before accessing platform routes
@@ -170,6 +173,80 @@ function ensureIsStudent(req, res, next) {
     }
   } else {
     // User is not authenticated, so you may want to handle that case as well
+    res.status(401).send("User is not authenticated");
+  }
+}
+
+// function ensureIsOrganisation(req, res, next) {
+//   // Assuming you have a user object or user data available after authentication
+//   if (req.user) {
+//     const userEmail = req.user._json.email;    
+//     if(organisations.includes(userEmail)){
+//       next();
+//     }else{
+//       res.render("organisation/pages/not-organisation")
+//     }
+//   } else {
+//     // User is not authenticated, so you may want to handle that case as well
+//     res.status(401).send("User is not authenticated");
+//   }
+// }
+
+function ensureIsOrganisation(req, res, next) {
+  // Check if user is authenticated
+  if (req.user) {
+    const userEmail = req.user._json.email;
+    
+    // Make API request to check if this email is associated with any organization
+    axios.get(`${apiUrl}/organisations?populate=profile`, axiosConfig)
+      .then(response => {
+        if (!response.data || !response.data.data) {
+          console.error("No data returned from organizations API");
+          return res.render("organisation/pages/not-organisation");
+        }
+        
+        const orgs = response.data.data;
+        let hasAccess = false;
+        
+        // Check if the user's email matches any organization's profile email
+        for (const org of orgs) {
+          if (org.attributes.profile && 
+              org.attributes.profile.data && 
+              org.attributes.profile.data.length > 0) {
+            
+            for (const profile of org.attributes.profile.data) {
+              if (profile.attributes.email === userEmail) {
+                hasAccess = true;
+                break;
+              }
+            }
+            
+            if (hasAccess) break;
+          }
+        }
+        
+        // If user's email is in the list of organization emails, allow access
+        if (hasAccess) {
+          // Optionally cache the organizations in an array to reduce API calls
+          if (!global.organisations) {
+            global.organisations = [];
+          }
+          if (!global.organisations.includes(userEmail)) {
+            global.organisations.push(userEmail);
+          }
+          
+          next();
+        } else {
+          // If user's email is not in the list, deny access
+          res.render("organisation/pages/not-organisation");
+        }
+      })
+      .catch(error => {
+        console.error('Error checking organization access:', error);
+        res.status(500).send("Internal server error checking organization credentials");
+      });
+  } else {
+    // User is not authenticated
     res.status(401).send("User is not authenticated");
   }
 }

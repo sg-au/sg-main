@@ -1,0 +1,170 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<!--  Header Start -->
+<header class="app-header">
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <ul class="navbar-nav">
+        <li class="nav-item d-block d-xl-none">
+          <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+            <i class="ti ti-menu-2"></i>
+          </a>
+        </li>
+      </ul>
+      <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">          
+          <li class="nav-item dropdown">
+            <a class="nav-link nav-icon-hover" href="#" id="drop2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" data-bs-placement="bottom" title="Drop a Feedback!">
+              <svg fill="#000000" height="20px" width="20px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                viewBox="0 0 282.837 282.837" xml:space="preserve">
+                <g>
+                  <path d="M19.539,246.006c-1.412-1.413-2.995-2.159-4.576-2.159c-2.361,0-4.33,1.676-5.266,4.482l-9.24,27.723
+                    c-0.701,2.103-0.591,3.95,0.309,5.201c0.736,1.021,1.959,1.584,3.443,1.584c0.79,0,1.655-0.155,2.571-0.461l27.722-9.241
+                    c2.36-0.786,3.907-2.267,4.355-4.167c0.448-1.9-0.273-3.916-2.032-5.675L19.539,246.006z"/>
+                  <path d="M280.205,48.279L234.553,2.627C232.86,0.934,230.599,0,228.189,0c-2.41,0-4.67,0.934-6.363,2.627L51.892,172.561
+                    c-3.212,3.212-6.993,9.33-8.429,13.638l-7.417,22.252c-1.503,4.508,0.008,10.909,3.368,14.27l20.697,20.697
+                    c2.403,2.403,6.48,3.957,10.388,3.957c0,0,0,0,0.001,0c1.404,0,2.71-0.198,3.881-0.589l22.253-7.417
+                    c4.309-1.436,10.426-5.217,13.637-8.428L280.205,61.007C283.714,57.498,283.714,51.788,280.205,48.279z M252.535,70.896
+                    L166.8,156.631c-2.929,2.929-6.768,4.393-10.607,4.393s-7.678-1.465-10.606-4.393c-5.858-5.857-5.858-15.355,0-21.213
+                    l85.735-85.735c5.857-5.857,15.355-5.857,21.213,0C258.393,55.54,258.393,65.038,252.535,70.896z"/>
+                </g>
+              </svg>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <img src="<%-encodeURI(imageUrl)-%>" alt="" width="35" height="35" class="rounded-circle">
+            </a>
+            <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+              <div class="message-body">
+                <a href="/platform/profile" class="d-flex align-items-center gap-2 dropdown-item">
+                  <i class="ti ti-user fs-6"></i>
+                  <p class="mb-0 fs-3">My Profile</p>
+                </a>
+                <a href="https://mail.google.com" target="_blank" class="d-flex align-items-center gap-2 dropdown-item">
+                  <i class="ti ti-mail fs-6"></i>
+                  <p class="mb-0 fs-3">My Email</p>
+                </a>
+                <a href="/logout" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <div style="height:40%" class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+    <div class="offcanvas-header">
+      <h5 style="width:100%" class="offcanvas-title" id="feedbackFormLabel">Your Feedback / Bug Report for page 
+        <span id="feedback-page" style="display: inline-block; padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; color: #6c757d; background-color: #e9ecef; border: 1px solid #ced4da; border-radius: 0.25rem; cursor: not-allowed;">
+      </span>
+      </h5>
+      <button id="close-feedback" type="button" class="btn-close" data-bs-dismiss="offcanvas" onclick="tt();" aria-label="Close"></button>
+  </div>
+
+  <div class="offcanvas-body">
+      <form id="feedback-form">
+          <div class="mb-3">
+            <p style="font-size:small;font-weight: 800;margin-top:-20px">Please raise the request from the same page that you wish to provide feedback for.</p>
+            <input name="feedback-page" id="feedback-page-hidden" type="hidden" value="">
+            <textarea id="feedbackTextarea" required class="form-control" rows="3" placeholder="Describe the issue or provide your feedback here..."></textarea>
+            <div id="feedbackError" style="color: red; display: none;">Please enter at least 20 characters.</div>
+
+          </div>
+          <button id="feedback-submit-button" type="submit" class="btn btn-primary">Submit</button>
+      </form>
+  </div>
+  </div>
+  <!-- JavaScript to dynamically set the input value -->
+  <script>
+    
+    const tooltipTrigger = document.getElementById('drop2');
+    const tooltip = new bootstrap.Tooltip(tooltipTrigger);
+
+    // Show tooltip for 5 seconds on page load
+    // setTimeout(function() {
+    //   tooltip.show(); // Show tooltip initially
+    //   setTimeout(function() {
+    //     tooltip.hide(); // Hide tooltip after 5 seconds
+    //   }, 2000);
+    // }, 500); 
+    // Small delay to allow DOM rendering
+    
+    // Set tooltip to show on hover after the initial show
+    // tooltipTrigger.addEventListener('mouseenter', function() {
+    //   tooltip.show();
+    // });
+    // tooltipTrigger.addEventListener('mouseleave', function() {
+    //   tooltip.hide();
+    // });
+    function tt(){
+      const tooltip = bootstrap.Tooltip(tooltipTrigger);
+      tooltip.hide();
+    }
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the current page URL path
+        var currentPage = window.location.pathname;
+        
+        // Set the value of the input field
+        document.getElementById("feedback-page").innerText = currentPage;
+        document.getElementById("feedback-page-hidden").value = currentPage;
+    });
+
+    document.getElementById("feedback-form").addEventListener("submit", function(event) {    event.preventDefault();
+          var textarea = document.getElementById("feedbackTextarea");
+          var errorDiv = document.getElementById("feedbackError");
+          
+          if (textarea.value.length < 20) {
+              event.preventDefault(); // Prevent form submission
+              errorDiv.style.display = 'block'; // Show error message
+          } else {
+              errorDiv.style.display = 'none'; // Hide error message
+              // Proceed with form submission or further logic here
+              document.getElementById("feedback-submit-button").classList.remove("btn-primary");
+              document.getElementById("feedback-submit-button").classList.add("btn-success");
+              document.getElementById("feedback-submit-button").innerText="Submitting";
+              var feedbackPage = document.getElementById("feedback-page-hidden").value;
+              var feedbackMessage = document.getElementById("feedbackTextarea").value;
+              // send to server
+              data={
+                feedbackPage,
+                feedbackMessage
+              }
+
+              // Send the data using fetch
+              fetch('/platform/feedback', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(data)
+              })
+              .then(response => {
+                if (response.status === 202) {
+                    // The server responded with 202 Accepted
+                    console.log('Request accepted successfully!');
+                    // You can show a success message to the user or perform other actions
+                } else {
+                    // Handle other statuses if needed
+                    alert("Error occurred in submitting the feedback/bug form.")
+                    console.log('Server responded with status:', response.status);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert("Error occurred in submitting the feedback/bug form.")
+                // Handle any errors that occur during the fetch operation
+            });
+              setTimeout(function() {
+                  document.getElementById("close-feedback").click();
+                  document.getElementById("feedback-form").reset();
+                  document.getElementById("feedback-submit-button").innerText="Submit"
+                  document.getElementById("feedback-submit-button").classList.remove("btn-success");
+                  document.getElementById("feedback-submit-button").classList.add("btn-primary");
+              }, 1500);
+          }
+    });
+  </script>
+  <!--  Header End -->
