@@ -1520,7 +1520,7 @@ router.post("/update-pool", async (req, res) => {
 });
 
 router.get("/resources", async (req, res) => {
-  var resources = await axios.get(`${apiUrl}/resources`, axiosConfig);
+  var resources = await axios.get(`${apiUrl}/resources?pagination[pageSize]=200`, axiosConfig);
   res.render("platform/pages/resources", { cards: resources.data.data });
 });
 
