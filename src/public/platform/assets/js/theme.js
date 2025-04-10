@@ -1,10 +1,15 @@
-// Load the current mode from localStorage and apply on page load
-var currentMode = localStorage.getItem('darkMode');
-if (currentMode === 'true') {
-    darkMode();
-} else if (currentMode === null) {
-    localStorage.setItem('darkMode', 'false');
-}
+document.addEventListener('DOMContentLoaded', function() {
+    const currentMode = localStorage.getItem('darkMode');
+    console.log("[Theme] Current mode from localStorage:", currentMode); // Debug log
+
+    if (currentMode === 'true') {
+        console.log("[Theme] Applying dark mode"); // Debug log
+        darkMode();
+    } else if (currentMode === null) {
+        console.log("[Theme] Initializing darkMode to false"); // Debug log
+        localStorage.setItem('darkMode', 'false');
+    }
+});
 
 function changeTheme() {
     const cMode = localStorage.getItem('darkMode');

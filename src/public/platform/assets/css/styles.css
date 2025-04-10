@@ -15,7 +15,7 @@
   --bs-purple: #6f42c1;
   --bs-pink: #d63384;
   --bs-red: #fa896b;
-  --icon-color: black !important; /* Color for dark mode */
+  --icon-color: black !important; 
   --bs-orange: #fd7e14;
   --bs-yellow: #ffae1f;
   --bs-green: #13deb9;
@@ -159,6 +159,8 @@
   --bs-breakpoint-xl: 1200px;
   --bs-breakpoint-xxl: 1400px;
 }
+
+
 /* Dark Mode Customization */
 [data-bs-theme="dark"] {
   --bs-blue: #3778c2; /* Softer blue for dark mode */
@@ -17257,4 +17259,8 @@ ul {
       }
     }
   }
+}
+
+.body {
+  background-color: black;
 }
