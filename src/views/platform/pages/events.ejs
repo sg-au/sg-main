@@ -105,6 +105,10 @@
       width: 100%;
     }
 
+    .modal{
+      top: 30%;
+    }
+
     .fc {
       height: 100% !important;
     }
@@ -349,7 +353,7 @@
   }
 
   .card {
-    height: 100vh !important;
+    height: 105vh !important;
     margin-bottom: 0 !important;
     overflow: visible;
   }
@@ -462,6 +466,7 @@
 
       var calendarEl = document.getElementById('calendar');
       const orgsList = JSON.parse(document.getElementById('orgsList').value || []);
+      const userEmail = JSON.parse(document.getElementById('userEmail').value || '');
       var currentEvent = null; // Store the currently selected event
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -744,13 +749,14 @@
           $(this).html('<i class="fa fa-spinner fa-spin"></i> Adding...');
           
           // Send request to your backend to add the user as an attendee
-          fetch('/events/add-attendee', {
+          fetch('/platform/event/add-attendee', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              eventId: currentEvent.id
+              eventId: currentEvent.id,
+              email: userEmail
             })
           })
           .then(response => response.json())
@@ -844,5 +850,6 @@
 <!-- Hidden input fields for data from server -->
 <input type="hidden" id="orgsList" value='<%= JSON.stringify(orgsList) %>' />
 <input type="hidden" id="userPreferences" value='<%= JSON.stringify(userPreferences) %>' />
+<input type="hidden" id="userEmail" value='<%= JSON.stringify(userEmail) %>' />
 
 </html>

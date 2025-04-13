@@ -16,6 +16,26 @@ var pdf = require("pdf-creator-node");
 const { google } = require("googleapis");
 const multer = require("multer");
 require("dotenv").config();
+
+// Initialize Google Calendar API with OAuth2
+const calendarOAuth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  process.env.GOOGLE_REDIRECT_URI
+);
+
+// Set the refresh token if you have one
+if (process.env.GOOGLE_REFRESH_TOKEN) {
+  calendarOAuth2Client.setCredentials({
+    refresh_token: process.env.GOOGLE_REFRESH_TOKEN
+  });
+}
+
+const calendar = google.calendar({
+  version: 'v3',
+  auth: calendarOAuth2Client
+});
+
 // Read HTML Template
 var undertakingTemplate = fs.readFileSync(
   "./data/undertaking-template.html",
@@ -1380,19 +1400,23 @@ router.get("/event", async (req, res) => {
       userResponse.data[0]?.events_calendar_filter_preferences || [];
     // console.log(userPreferences);
 
+    console.log(userResponse.data[0].email);
+
     if(userPreferences.length === 0) {
       res.redirect("/platform/event/save-preferences");
     }
 
     res.render("platform/pages/events", { // Make sure this matches your actual template name
       userPreferences: userPreferences, // Don't stringify here
-      orgsList: orgsList // Don't stringify here
+      orgsList: orgsList,
+      userEmail:  userResponse.data[0].email // Don't stringify here
     });
   } catch (error) {
     console.error('Error fetching user preferences:', error);
     res.render("platform/pages/events", { // Make sure this matches your actual template name
       userPreferences: [],
-      orgsList: [] // Provide empty array for orgsList too
+      orgsList: [],
+      userEmail:  userResponse.data[0].email// Provide empty array for orgsList too
     });
   }
 });
@@ -1438,37 +1462,40 @@ router.get("/event/save-preferences", async (req, res) => {
 
 router.post("/event/save-preferences", async (req, res) => {
   try {
-    
     // Get the user
     const userResponse = await axios.get(
       `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`,
       axiosConfig
     );
-    
+
     const userId = userResponse.data[0].id;
     console.log("User ID:", userId);
     console.log("Preferences to save:", req.body.preferences);
+    const preferences = req.body.preferences;
 
     // Update user preferences in Strapi
     const strapiResponse = await axios.put(
       `${apiUrl}/users/${userId}`,
       {
-        data: {
-          events_calendar_filter_preferences: req.body.preferences
-        }
+        events_calendar_filter_preferences: preferences,
       },
       axiosConfig
     );
-    
+
     console.log("Response status:", strapiResponse.status);
     console.log("Response data:", strapiResponse.data);
 
-    res.status(200).json({ success: true, message: "Preferences saved successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Preferences saved successfully" });
   } catch (error) {
     console.error("Error saving preferences:", error);
     console.error("Error details:", error.response?.data);
-    res.status(500).json({ success: false, error: "Failed to save preferences" });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to save preferences" });
   }
+
 });
 
 
@@ -1486,6 +1513,8 @@ router.post('/event/add-attendee', async (req, res) => {
       calendarId: process.env.GOOGLE_CALENDAR_ID,
       eventId: eventId
     });
+
+    console.log(event);
     
     // Create a copy of the event data
     const updatedEvent = { ...event.data };
