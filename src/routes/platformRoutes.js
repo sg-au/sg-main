@@ -15,6 +15,7 @@ const axios = require("axios");
 var pdf = require("pdf-creator-node");
 const { google } = require("googleapis");
 const multer = require("multer");
+require("dotenv").config();
 // Read HTML Template
 var undertakingTemplate = fs.readFileSync(
   "./data/undertaking-template.html",
@@ -1375,7 +1376,13 @@ router.get("/event", async (req, res) => {
     }));
     
     // Get existing preferences (or empty array if none exist)
-    const userPreferences = userResponse.data[0]?.calendar_preferences || [];
+    const userPreferences =
+      userResponse.data[0]?.events_calendar_filter_preferences || [];
+    // console.log(userPreferences);
+
+    if(userPreferences.length === 0) {
+      res.redirect("/platform/event/save-preferences");
+    }
 
     res.render("platform/pages/events", { // Make sure this matches your actual template name
       userPreferences: userPreferences, // Don't stringify here
@@ -1412,7 +1419,9 @@ router.get("/event/save-preferences", async (req, res) => {
 
 
     // Get existing preferences (or empty array if none exist)
-    const existingPreferences = userResponse.data[0].calendar_preferences || [];
+    const existingPreferences =
+      userResponse.data[0].events_calendar_filter_preferences || [];
+    console.log(existingPreferences);
 
     res.render("platform/pages/events-user-preferences", { 
       orgsList: orgsList,
@@ -1429,6 +1438,7 @@ router.get("/event/save-preferences", async (req, res) => {
 
 router.post("/event/save-preferences", async (req, res) => {
   try {
+    
     // Get the user
     const userResponse = await axios.get(
       `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`,
@@ -1436,9 +1446,11 @@ router.post("/event/save-preferences", async (req, res) => {
     );
     
     const userId = userResponse.data[0].id;
-    
-    // Update user with new preferences
-    await axios.put(
+    console.log("User ID:", userId);
+    console.log("Preferences to save:", req.body.preferences);
+
+    // Update user preferences in Strapi
+    const strapiResponse = await axios.put(
       `${apiUrl}/users/${userId}`,
       {
         data: {
@@ -1447,13 +1459,72 @@ router.post("/event/save-preferences", async (req, res) => {
       },
       axiosConfig
     );
+    
+    console.log("Response status:", strapiResponse.status);
+    console.log("Response data:", strapiResponse.data);
 
-    res.status(200).json({ message: "Preferences saved successfully" });
+    res.status(200).json({ success: true, message: "Preferences saved successfully" });
   } catch (error) {
     console.error("Error saving preferences:", error);
-    res.status(500).json({ error: "Failed to save preferences" });
+    console.error("Error details:", error.response?.data);
+    res.status(500).json({ success: false, error: "Failed to save preferences" });
   }
 });
+
+
+// In your routes file (e.g., platformRoutes.js)
+router.post('/event/add-attendee', async (req, res) => {
+  try {
+    const { eventId, email } = req.body;
+    
+    if (!eventId || !email) {
+      return res.status(400).json({ success: false, message: 'Event ID and email are required' });
+    }
+    
+    // First get the current event to preserve all its properties
+    const event = await calendar.events.get({
+      calendarId: process.env.GOOGLE_CALENDAR_ID,
+      eventId: eventId
+    });
+    
+    // Create a copy of the event data
+    const updatedEvent = { ...event.data };
+    
+    // Add the new attendee
+    if (!updatedEvent.attendees) {
+      updatedEvent.attendees = [];
+    }
+    
+    // Check if attendee already exists
+    const attendeeExists = updatedEvent.attendees.some(attendee => attendee.email === email);
+    
+    if (!attendeeExists) {
+      updatedEvent.attendees.push({
+        email: email,
+        responseStatus: 'needsAction'
+      });
+      
+      // Update the event
+      await calendar.events.patch({
+        calendarId: process.env.GOOGLE_CALENDAR_ID,
+        eventId: eventId,
+        resource: {
+          attendees: updatedEvent.attendees
+        },
+        sendUpdates: 'all' // This will send email notifications to attendees
+      });
+      
+      return res.json({ success: true });
+    } else {
+      return res.json({ success: true, message: 'You are already added to this event' });
+    }
+  } catch (error) {
+    console.error('Error adding attendee:', error);
+    return res.status(500).json({ success: false, message: 'An error occurred while adding you to the event' });
+  }
+});
+
+
 
 router.get("/pool-cab", async (req, res) => {
   try {

@@ -136,17 +136,30 @@
     }
 
     .close{
-      top:-10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      vertical-align: middle;
-      background-color: rgb(73, 108, 204);
-      width:20px;
-      height: 20px;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      width: 30px;
+      height: 30px;
+      background-color: transparent;
       border: none;
-      color: white;
-      border-radius: 50%;
+      color: #6c757d;
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1;
+      opacity: 0.5;
+      padding: 0;
+      cursor: pointer;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .close:hover {
+      opacity: 0.75;
+      color: #000;
+    }
+
+    .close:focus {
+      outline: none;
     }
 
     /* Responsive adjustments */
@@ -444,9 +457,11 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Parse user preferences from hidden input
+      const userPreferences = JSON.parse(document.getElementById('userPreferences').value || '[]');
+
       var calendarEl = document.getElementById('calendar');
-      const orgsList = JSON.parse(document.getElementById('orgsList').value);
-      const userPreferences = JSON.parse(document.getElementById('userPreferences').value);
+      const orgsList = JSON.parse(document.getElementById('orgsList').value || []);
       var currentEvent = null; // Store the currently selected event
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -531,10 +546,15 @@
             modalContent += '<p><strong>Description:</strong> ' + info.event.extendedProps.description + '</p>';
           }
 
-          // Add kind information to the modal
-          if (info.event.extendedProps.kind || info.event.extendedProps.extendedProperties?.shared?.kind) {
-            const kind = info.event.extendedProps.kind || info.event.extendedProps.extendedProperties.shared.kind;
-            modalContent += '<p><strong>Type:</strong> ' + kind + '</p>';
+          // Get the email source from the event
+          const emailSource = info.event.extendedProperties?.shared?.emailSource;
+          
+          // Find the matching organization in orgsList
+          if (emailSource) {
+            const matchingOrg = orgsList.find(org => org.email === emailSource);
+            if (matchingOrg) {
+              modalContent += '<p><strong>Organized By:</strong> ' + matchingOrg.name + '</p>';
+            }
           }
           
           $('.modal-body-text').html(modalContent);
@@ -547,59 +567,75 @@
           
           // Collect checked filters
           $("input[name='event_filter_sel']:checked").each(function () {
-            if ($(this).data('type') === 'state') {
-              states.push($(this).val());
-            }
-            else if ($(this).data('type') === 'kind') {
+            // if ($(this).data('type') === 'state') {
+            //   states.push($(this).val());
+            // }
+            if ($(this).data('type') === 'kind') {
               kinds.push($(this).val());
             }
           });
           
-          // Filter by state
-          if (states.length) {
-            result = result && states.indexOf(info.event.extendedProps.state) >= 0;
-          }
+          // // Filter by state
+          // if (states.length) {
+          //   result = result && states.indexOf(info.event.extendedProps.state) >= 0;
+          // }
 
           // Filter by kind (holidays always displayed)
           if (kinds.length) {
             // First try to get kind from extendedProps.kind
-            const eventKind = info.event.extendedProps.kind || 
-                             (info.event.extendedProps.extendedProperties && 
-                              info.event.extendedProps.extendedProperties.shared && 
-                              info.event.extendedProps.extendedProperties.shared.kind) || 
-                             'event';
+            // const eventKind = info.event.extendedProps.kind || 
+            //                  (info.event.extendedProps.extendedProperties && 
+            //                   info.event.extendedProps.extendedProperties.shared && 
+            //                   info.event.extendedProps.extendedProperties.shared.kind) || 
+            //                  'event';
             
-            result = result && (kinds.indexOf(eventKind) >= 0 || eventKind === 'holiday');
+            // result = result && (kinds.indexOf(eventKind) >= 0 || eventKind === 'holiday');
+
+            result = result && kinds.indexOf(info.event.extendedProps.kind) >= 0;
           }
           
           // Add extra classes based on kind
-          let kindClass = '';
-          const eventKind = info.event.extendedProps.kind || 
-                           (info.event.extendedProperties && 
-                            info.event.extendedProperties.shared && 
-                            info.event.extendedProperties.shared.kind) || 
-                           'event';
+          // let kindClass = '';
+          // const eventKind = info.event.extendedProps.kind || 
+          //                  (info.event.extendedProperties && 
+          //                   info.event.extendedProperties.shared && 
+          //                   info.event.extendedProperties.shared.kind) || 
+          //                  'event';
           
-          kindClass = 'event-kind-' + eventKind;
+          // kindClass = 'event-kind-' + eventKind;
           
           if (!result) {
             return "hidden";
           }
+          return result;
           
-          return [kindClass];
+          // return [kindClass];
         },
         eventDidMount: function(info) {
           // Get kind from extended properties
-          const kind = info.event.extendedProps.kind || 
-                      (info.event.extendedProperties?.shared?.kind) || 'default';
+          const kind = info.event.extendedProps.kind || 'other';
           
           // Check if event source matches user preferences
-          const emailSource = info.event.extendedProperties?.private?.emailSource;
-          if (emailSource && userPreferences.includes(emailSource)) {
-            info.el.classList.add('user-preference-event');
+          const emailSource = info.event.extendedProps.emailSource;
+
+          const userPrefEmails = userPreferences.map(pref => pref.email);
+
+          if (emailSource && userPrefEmails.includes(emailSource)) {
+            // Change the event's kind to userPreference
+            info.event.setExtendedProp('kind', 'userPreference');
+            // console.log(info.event.extendedProps.kind);
           }
 
-          info.el.classList.add(`event-kind-${kind}`);
+          const orgsEmails = orgsList.map(org => org.email);
+          // console.log(orgsEmails);
+          if (emailSource && orgsEmails.includes(emailSource)&& !userPrefEmails.includes(emailSource)) {
+            // Change the event's kind to the corresponding org type
+            info.event.setExtendedProp('kind', orgsList.find(org => org.email === emailSource).type.toLowerCase());
+            // console.log(info.event.extendedProps.kind);
+          }
+
+          // Add CSS class based on the final kind
+          info.el.classList.add(`event-kind-${info.event.extendedProps.kind}`);
         },
         windowResize: function(view) {
           const width = window.innerWidth;
@@ -623,7 +659,6 @@
 
       // Create filter buttons after calendar is loaded
       createFilterButtons();
-      calendar.render();
 
       function createFilterButtons() {
         const filterContainer = document.getElementById('calendar-filters');
@@ -635,7 +670,7 @@
           
           const checkbox = document.createElement('input');
           checkbox.type = 'checkbox';
-          checkbox.id = `filter-${kind}`;
+          checkbox.id = kind;
           checkbox.className = 'event_filter';
           checkbox.name = 'event_filter_sel';
           checkbox.value = kind;
@@ -643,7 +678,7 @@
           checkbox.checked = false;
           
           const label = document.createElement('label');
-          label.htmlFor = `filter-${kind}`;
+          label.htmlFor = kind;
           label.textContent = kind === 'club' ? 'Clubs' :  kind === 'society' ? 'Societies' :  kind === 'ministry' ? 'Ministries' : kind === 'department' ? 'Departments' : 'Preferences';
           
           wrapper.appendChild(checkbox);
@@ -652,68 +687,91 @@
         });
       }
 
-      function updateFilters() {
-        const events = calendar.getEvents();
-        events.forEach(event => {
-          const kind = event.extendedProps.kind || 
-                      (event.extendedProperties?.shared?.kind) || 'default';
-          const emailSource = event.extendedProperties?.private?.emailSource;
-          
-          // Check if this event should be shown based on filters
-          const kindFilter = document.getElementById(`filter-${kind}`).checked;
-          const userPrefFilter = document.getElementById('filter-userPreference').checked;
-          
-          let shouldShow = kindFilter;
-          
-          // If it's a user preference event, also check that filter
-          if (emailSource && userPreferences.includes(emailSource)) {
-            shouldShow = shouldShow || userPrefFilter;
-          }
-          
-          event.setProp('display', shouldShow ? 'auto' : 'none');
-        });
-      }
+      // let isUpdatingFilters = false;
 
-      // Add event listener for the "Add to Calendar" button
-      document.getElementById('addToCalendar').addEventListener('click', function() {
-        if (currentEvent) {
-          // Create Google Calendar URL with event details
-          const event = {
-            text: currentEvent.title,
-            dates: {
-              start: currentEvent.start.toISOString(),
-              end: currentEvent.end ? currentEvent.end.toISOString() : currentEvent.start.toISOString()
-            },
-            details: currentEvent.extendedProps.description || '',
-            location: currentEvent.extendedProps.location || '',
-          };
+      // function updateFilters() {
+      //   if (isUpdatingFilters) return;
+      //   isUpdatingFilters = true;
 
-          // Create Google Calendar URL
-          const googleCalendarUrl = new URL('https://www.google.com/calendar/render');
-          googleCalendarUrl.searchParams.append('action', 'TEMPLATE');
-          googleCalendarUrl.searchParams.append('text', event.text);
-          googleCalendarUrl.searchParams.append('dates', event.dates.start.replace(/[-:]/g, '') + '/' + event.dates.end.replace(/[-:]/g, ''));
-          googleCalendarUrl.searchParams.append('details', event.details);
-          if (event.location) {
-            googleCalendarUrl.searchParams.append('location', event.location);
-          }
+      //   try {
+      //     const events = calendar.getEvents();
+      //     events.forEach(event => {
+      //       const kind = event.extendedProps.kind || 'other';
+            
+      //       // Get filter state for this kind
+      //       const kindFilterElement = document.getElementById(`filter-${kind}`);
+      //       const shouldShow = kindFilterElement ? kindFilterElement.checked : false;
+            
+      //       const currentDisplay = event.getProp('display');
+      //       if (currentDisplay !== (shouldShow ? 'auto' : 'none')) {
+      //         event.setProp('display', shouldShow ? 'auto' : 'none');
+      //       }
+      //     });
+      //   } finally {
+      //     isUpdatingFilters = false;
+      //   }
+      // }
 
-          // Open Google Calendar in a new tab
-          window.open(googleCalendarUrl.toString(), '_blank');
-          
-          // Optionally close the modal after opening Google Calendar
-          $('.modal').modal('hide');
-        }
-      });
+      calendar.render();
 
       // Re-render when filters change
       $('input[class=event_filter]').change(function() {
+        // updateFilters();
         calendar.render();
       });
       
       // Add a refresh button if needed
       $('#refresh-calendar').click(function() {
         calendar.refetchEvents();
+        // Don't call updateFilters here as it will be called by eventsSet
+      });
+
+      // // Call updateFilters when calendar view changes
+      // calendar.on('datesSet', function() {
+      //   updateFilters();
+      // });
+
+      // // Call updateFilters when calendar is first loaded
+      // calendar.on('eventsSet', function() {
+      //   updateFilters();
+      // });
+
+      // Add event listener for the "Add to Calendar" button
+      document.getElementById('addToCalendar').addEventListener('click', function() {
+        if (currentEvent) {
+          // Show loading indicator
+          $(this).prop('disabled', true);
+          $(this).html('<i class="fa fa-spinner fa-spin"></i> Adding...');
+          
+          // Send request to your backend to add the user as an attendee
+          fetch('/events/add-attendee', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              eventId: currentEvent.id
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert('You have been added to this event! You will receive updates if the event details change.');
+              $('.modal').modal('hide');
+            } else {
+              alert('Error: ' + data.message);
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again later.');
+          })
+          .finally(() => {
+            // Reset button
+            $(this).prop('disabled', false);
+            $(this).html('<i class="fa fa-calendar-plus-o"></i> Add to My Calendar');
+          });
+        }
       });
     });
   </script>
@@ -732,7 +790,12 @@
               <!-- Filter + Calendar Wrapper -->
               <div class="wrapper">
                 <div class="filter">
-                  <h3>Filters</h3>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3 style="margin: 0;">Filters</h3>
+                    <a href="/platform/event/save-preferences" class="btn btn-primary" style="padding: 8px 16px;">
+                      <i class="fa fa-cog"></i> Select Preferences
+                    </a>
+                  </div>
                   <div class="filters-container" id="calendar-filters">
                     <!-- Filters will be added here dynamically -->
                   </div>
