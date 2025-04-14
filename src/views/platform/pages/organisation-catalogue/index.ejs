@@ -19,6 +19,8 @@
       href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
     <%-include("../../partials/preloader-css")%>
     <style>
 
@@ -48,8 +50,49 @@
       .search-bar:focus::placeholder {
         font-size: 12px; /* Adjust the font size when moved to the top */
       }
-      
-        </style>
+
+      .laptop {
+          width: 500px; /* Adjust height as needed */
+          background-color: #f0f0f0;
+      }
+
+      .offcanvas-body::-webkit-scrollbar {
+        width: 8px; /* Adjust width as needed */
+      }
+
+      .offcanvas-body::-webkit-scrollbar-track {
+        background-color: #f1f1f1; 
+      }
+
+      .offcanvas-body::-webkit-scrollbar-thumb {
+        background-color: #8ca5e9; 
+      }
+
+      #read-more-btn {
+        padding: 0;
+        margin-top: 10px;
+        text-decoration: none;
+        color: #5d87ff;
+      }
+
+      #read-more-btn:hover {
+        text-decoration: underline;
+      }
+
+      #description-container {
+        margin-bottom: 20px;
+      }
+
+      .form-check-input:checked + .form-check-label {
+        background-color: #5d87ff !important;
+        color: white;
+        border-color: #5d87ff !important;
+      }
+
+      .form-check-label:hover {
+        background-color: #e9ecef;
+      }
+    </style>
   </head>
 
   <%-include("../../partials/post-head")%>
@@ -80,8 +123,17 @@
                 - Vibha: <a href=mailto:vibha.rawat_ug2023@ashoka.edu.in>vibha.rawat_ug2023@ashoka.edu.in</a> &nbsp;&nbsp;|&nbsp;&nbsp; 9667764435  <br />
                 - Guntaas: <a href="mailto:guntaas.kaur_ug2023@ashoka.edu.in">guntaas.kaur_ug2023@ashoka.edu.in</a> &nbsp;&nbsp;|&nbsp;&nbsp; +91 98118 06032
               </p> -->
-              <span class="fs-4">Find and connect with all student organizations through our catalog—featuring clubs, societies, fests, collectives, ISOs, leagues, and more!</span>
+                <span class="fs-4">Find and connect with all <%= organisations.length %> student organizations through our catalog—featuring clubs, societies, fests, collectives, ISOs, leagues, and more! </span>
               <br /><br />
+            </div>
+            
+            <div style="width:500px" class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel"></h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div id="clubDetails" class="offcanvas-body">
+              </div>
             </div>
             <!-- <h1 class="mb-4 mt-4">Organisations Catalogue</h1> -->
 
@@ -94,22 +146,62 @@
                 placeholder="Type to search..."
               />
 
-              <div class="form-inline d-flex gap-3 mt-2">
-                <% types.forEach(type => { %>
-                <div>
-                  <input
-                    type="checkbox"
-                    name="types"
-                    value="<%= type %>"
-                    checked
-                  />
-                  <label class="text-capitalize"> <%= type %> </label>
+              <div class="mt-3">
+                <div class="d-flex flex-wrap gap-3 justify-content-center">
+                  <div class="form-check custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      id="select-all"
+                      checked
+                      style="cursor: pointer;display: none;"
+                    />
+                    <label 
+                      class="form-check-label text-capitalize px-2 py-1 rounded-pill" 
+                      for="select-all"
+                      style="
+                        cursor: pointer;
+                        background-color: #f0f2f5;
+                        transition: all 0.3s ease;
+                        font-size: 0.9rem;
+                        border: 1px solid #dee2e6;
+                      "
+                    >
+                      Select All
+                    </label>
+                  </div>
+                  <% types.forEach(type => { %>
+                    <div class="form-check custom-checkbox">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        id="type-<%= type %>"
+                        name="types"
+                        value="<%= type %>"
+                        checked
+                        style="cursor: pointer; display:none;"
+                      />
+                      <label 
+                        class="form-check-label text-capitalize px-2 py-1 rounded-pill" 
+                        for="type-<%= type %>"
+                        style="
+                          cursor: pointer;
+                          background-color: #f0f2f5;
+                          transition: all 0.3s ease;
+                          font-size: 0.9rem;
+                          border: 1px solid #dee2e6;
+                        "
+                      >
+                        <%= type %>
+                      </label>
+                    </div>
+                  <% }); %>
                 </div>
-                <% }); %>
               </div>
             </div>
 
             <div id="results-section">
+
               <div id="results-list" class="row g-4">
                 <% organisations.forEach(org => { %>
                 <div
@@ -121,13 +213,15 @@
                   <div class="card h-100">
                     <% if (true) { %>
                       <img
-                      src="<%=org.profile.data[0].attributes.profile_url%>"
-                      alt="<%= org.name %> Logo"
-                      width="100"
-                      height="100"
-                      style="margin:auto;margin-top:15px"
-                      class="rounded-circle"
-                    />
+                        src="<%= org.profile?.data?.[0]?.attributes?.profile_url 
+                                ? org.profile.data[0].attributes.profile_url.replace(/=s\d+/g, '=s256') 
+                                : '' %>"
+                        width="100"
+                        height="100"
+                        style="margin:auto;margin-top:15px"
+                        class="rounded-circle"
+                      />
+
                     <% } else { %>
                     <div
                       class="card-img-top bg-light d-flex align-items-center justify-content-center"
@@ -137,63 +231,218 @@
                     </div>
                     <% } %>
                     <div style="text-align:center" class="card-body">
-                      <h3 style="margin:auto" class="card-title"><%=org.profile.data[0].attributes.username%></h3><br/>
+                      <h3 style="margin:auto" class="card-title"><%= org.name %></h3><br/>
                       <p class="card-text">
                         <span class="badge bg-primary text-capitalize"
                           ><%= org.type %></span
                         >
                       </p>
                       <% if (org.short_description) { %>
-                      <p class="card-text text-muted">
-                        <%- org.short_description -%>
-                      </p>
+                        <p class="card-text text-muted" style="text-align: justify;">
+                            <%- org.short_description.length > 300 ? 
+                                org.short_description.substring(0, 300) + '...' : 
+                                org.short_description 
+                            %>
+                        </p>
                       <% } %>
-                      <!-- <a
-                        href="/organisations-catalogue/<%= org.id %>"
-                        class="btn btn-primary"
-                        >Learn More</a
-                      > -->
+
+                      <%
+                        function escapeDescription(org) {
+                            let orgCopy = JSON.parse(JSON.stringify(org)); // Deep copy
+                            
+                            // Helper function to escape special characters
+                            function escapeString(str) {
+                                if (typeof str !== 'string') return str;
+                                return str
+                                    .replace(/\\/g, '\\\\')    // Escape backslashes
+                                    .replace(/"/g, '\\"')      // Escape double quotes
+                                    .replace(/\n/g, '\\n')     // Escape newlines
+                                    .replace(/\r/g, '\\r')     // Escape carriage returns
+                                    .replace(/\t/g, '\\t')     // Escape tabs
+                                    .replace(/\f/g, '\\f');    // Escape form feeds
+                            }
+
+                            // Escape description and short_description
+                            if (orgCopy.description) {
+                                orgCopy.description = escapeString(orgCopy.description);
+                            }
+                            if (orgCopy.short_description) {
+                                orgCopy.short_description = escapeString(orgCopy.short_description);
+                            }
+
+                            // Convert to JSON string and escape for HTML
+                            return JSON.stringify(orgCopy);
+                          }
+
+                          let orgEscaped = escapeDescription(org);
+                        %>
+                        <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);">
+                          <button onclick='showClubDetails(`<%= orgEscaped %>`)' class="btn btn-primary" type="button">
+                          Learn More
+                          </button>
+                        </div>
                     </div>
                   </div>
                 </div>
                 <% }) %>
               </div>
             </div>
+            <!-- XL Modal -->
+            <div class="modal fade" id="orgDetailsModal" tabindex="-1" aria-labelledby="orgDetailsModalLabel">
+              <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="orgDetailsModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="container-fluid">
+                      <div class="row">
+                        <!-- Profile Picture & Basic Info -->
+                        <div class="col-md-4 text-center">
+                          <img id="orgProfileImage" src="" alt="Profile Image" class="rounded-circle" style="width: 200px; height: 200px; margin-bottom:15px; object-fit: cover;">
+                        </div>
+                        <div class="col-md-8" style="padding-top: 30px;">
+                          <h4 id="orgName" class="mb-3"></h4>
+                          <p><strong>Type:</strong> <span id="orgType"></span></p>
+                          <p><strong>People:</strong> <span id="orgPeople" style="text-decoration: underline;"></span></p>
+                          <h5 style="display: inline-block; margin-right: 10px;">Social Links:</h5> <span id="orgSocials"></span>
+                        </div>
+                        
+                        <!-- Description -->
+                        <div class="col-md-12">                          
+                          <div id="orgDescription" class="p-3" style="padding: 10px; text-align: justify; max-height: 300px; overflow-y: scroll;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
-
           <script>
-            document.addEventListener("DOMContentLoaded", () => {
-              const organisationItems =
-                document.querySelectorAll(".organisation-item");
-              const searchBar = document.getElementById("search-bar");
-              const typeCheckboxes = document.querySelectorAll(
-                'input[name="types"]'
-              );
+            function showClubDetails(org) {
+              // console.log(org);
+              let clubData = JSON.parse(org);
 
-              function filterOrganizations() {
-                const searchQuery = searchBar.value.toLowerCase();
-                const selectedTypes = Array.from(
-                  document.querySelectorAll('input[name="types"]:checked')
-                ).map((input) => input.value);
+              // Set modal title
+              document.getElementById("orgDetailsModalLabel").innerText = clubData.name;
 
-                organisationItems.forEach((item) => {
-                  const itemName = item.getAttribute("data-name").toLowerCase();
-                  const itemType = item.getAttribute("data-type");
+              // Set profile image
+              let profileImg = document.getElementById("orgProfileImage");
+              profileImg.src = clubData.profile.data[0].attributes.profile_url.replace(/=s\d+/g, "=s256"); 
+              profileImg.alt = clubData.name;
 
-                  const matchesSearch = itemName.includes(searchQuery);
-                  const matchesType = selectedTypes.includes(itemType);
+              // Set basic details
+              document.getElementById("orgName").innerText = clubData.name;
+              document.getElementById("orgType").innerText = clubData.type;
+              const peopleList = clubData.circle1_humans.data
+                .map(person => person.attributes.username)
+                .join(", ");
+              document.getElementById("orgPeople").innerText = peopleList || "N/A";
 
-                  item.style.display =
-                    matchesSearch && matchesType ? "" : "none";
-                });
+              // Set social links
+              const socialIcons = {
+                Instagram: '<i class="fab fa-instagram"></i>',
+                Twitter: '<i class="fab fa-twitter"></i>',
+                LinkedIn: '<i class="fab fa-linkedin"></i>',
+                YouTube: '<i class="fab fa-youtube"></i>',
+                WhatsApp: '<i class="fab fa-whatsapp"></i>',
+                Website: '<i class="fas fa-globe"></i>',
+              };
+
+              const socialLinks = {
+                Instagram: clubData.instagram,
+                Twitter: clubData.twitter,
+                LinkedIn: clubData.linkedin,
+                YouTube: clubData.youtube,
+                WhatsApp: clubData.whatsapp,
+                Website: clubData.website_blog,
+              };
+
+              let socialsHTML = "";
+              for (const [platform, link] of Object.entries(socialLinks)) {
+                if (link) {
+                  socialsHTML += `<a href="${link}" target="_blank" style="margin-right: 15px; font-size: 24px; color: inherit;">
+                                    ${socialIcons[platform]}
+                                  </a>`;
+                }
               }
+              document.getElementById("orgSocials").innerHTML = socialsHTML || "No links available.";
+              // console.log(clubData.description)
+              // Set description
+              (document.getElementById("orgDescription")).innerHTML = clubData.description;
 
-              // Add event listeners
-              searchBar.addEventListener("input", filterOrganizations);
-              typeCheckboxes.forEach((checkbox) => {
-                checkbox.addEventListener("change", filterOrganizations);
+              // Show the modal
+              let orgDetailsModal = new bootstrap.Modal(document.getElementById("orgDetailsModal"));
+              orgDetailsModal.show();
+            }
+
+            // function toggleDescription() {
+            //   const shortDesc = document.getElementById('short-description');
+            //   const fullDesc = document.getElementById('full-description');
+            //   const readMoreBtn = document.getElementById('read-more-btn');
+
+            //   if (fullDesc.style.display === 'none') {
+            //     shortDesc.style.display = 'none';
+            //     fullDesc.style.display = 'block';
+            //     readMoreBtn.textContent = 'Show Less';
+            //   } else {
+            //     shortDesc.style.display = 'block';
+            //     fullDesc.style.display = 'none';
+            //     readMoreBtn.textContent = 'Read More';
+            //   }
+            // }
+
+            document.addEventListener("DOMContentLoaded", () => {
+            const organisationItems = document.querySelectorAll(".organisation-item");
+            const searchBar = document.getElementById("search-bar");
+            const typeCheckboxes = document.querySelectorAll('input[name="types"]');
+            const selectAllCheckbox = document.getElementById("select-all");
+
+            function filterOrganizations() {
+              const searchQuery = searchBar.value.toLowerCase();
+              const selectedTypes = Array.from(
+                document.querySelectorAll('input[name="types"]:checked')
+              ).map((input) => input.value);
+
+              organisationItems.forEach((item) => {
+                const itemName = item.getAttribute("data-name").toLowerCase();
+                const itemType = item.getAttribute("data-type");
+
+                const matchesSearch = itemName.includes(searchQuery);
+                const matchesType = selectedTypes.length === 0 || selectedTypes.includes(itemType);
+
+                item.style.display = matchesSearch && matchesType ? "" : "none";
+              });
+            }
+
+            function updateSelectAllState() {
+              const allChecked = [...typeCheckboxes].every(checkbox => checkbox.checked);
+              selectAllCheckbox.checked = allChecked;
+            }
+
+            // "Select All" checkbox behavior
+            selectAllCheckbox.addEventListener("change", () => {
+              const isChecked = selectAllCheckbox.checked;
+              typeCheckboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+              });
+              filterOrganizations(); // Re-filter when toggling "Select All"
+            });
+
+            // Update "Select All" state when any individual checkbox is toggled
+            typeCheckboxes.forEach((checkbox) => {
+              checkbox.addEventListener("change", () => {
+                updateSelectAllState();
+                filterOrganizations();
               });
             });
+
+            // Add event listener for search bar
+            searchBar.addEventListener("input", filterOrganizations);
+          });
           </script>
         </div>
       </div>
@@ -206,7 +455,7 @@
     <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
     <script src="/platform/assets/js/dashboard.js"></script>
-    <script src="/platform/assets/js/darkmode.js"></script>
+    <script src="/platform/assets/js/theme.js"></script>
     <script src="/platform/assets/js/copytext.js"></script>
 
     <%-include("../../partials/preloader-js")%>

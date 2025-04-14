@@ -1,23 +1,32 @@
-// function darkMode() {
-//     var darkBtn = document.getElementById("darkbtn");
-//     var lightBtn = document.getElementById("lightbtn");
+function darkMode() {
+    var x = document.getElementById("darkbtn");
+    x.style.display = "none"; //hides the Dark Mode button
 
-//     // Toggle visibility of buttons
-//     darkBtn.style.display = "none";
-//     lightBtn.style.display = "block";
+    var y = document.getElementById("lightbtn");
+    y.style.display = "block"; //shows the Light Mode button
 
-//     // Apply dark mode theme
-//     document.documentElement.setAttribute("data-bs-theme", "dark");
-// }
+    document.querySelector("html", "c-wiz").style.filter = "invert(1) hue-rotate(180deg)";
 
-// function lightMode() {
-//     var darkBtn = document.getElementById("darkbtn");
-//     var lightBtn = document.getElementById("lightbtn");
+    let media = document.querySelectorAll("img, picture, video");
 
-//     // Toggle visibility of buttons
-//     darkBtn.style.display = "block";
-//     lightBtn.style.display = "none";
+    media.forEach((mediaItem) => {
+        mediaItem.style.filter = "invert(1) hue-rotate(180deg)";
+    });
+    //document.getElementById("demo").innerHTML = "Hello World";
+}
 
-//     // Revert to light mode theme
-//     document.documentElement.setAttribute("data-bs-theme", "light");
-// }
+function lightMode() {
+    var x = document.getElementById("darkbtn");
+    x.style.display = "block"; //hides the Dark Mode button
+
+    var y = document.getElementById("lightbtn");
+    y.style.display = "none"; //shows the Light Mode button
+
+    document.querySelector("html").style.filter = "invert(0) hue-rotate(0deg)";
+
+    let media = document.querySelectorAll("img, picture, video");
+
+    media.forEach((mediaItem) => {
+        mediaItem.style.filter = "invert(0) hue-rotate(0deg)";
+    });
+}

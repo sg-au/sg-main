@@ -10,6 +10,7 @@ const publicTicketCategories = JSON.parse(
 );
 const jsonfile = require("jsonfile");
 const file = "./data/tickets.jsonl";
+const wifiTicket_file = "./data/wifi-tickets.jsonl";
 const helpers = require("../config/helperFunctions.js");
 const axios = require("axios");
 var pdf = require("pdf-creator-node");
@@ -736,6 +737,7 @@ router.get("/public-forum", async (req, res) => {
       `${apiUrl}${endpoint}?populate=comments,signatures,department`,
       axiosConfig
     );
+    console.log(response.data);
     res.render("platform/pages/public-forum", { petitions: response.data });
   } catch (error) {
     console.error("An error occurred:", error);
@@ -752,9 +754,10 @@ router.get("/public-forum/:id", async (req, res) => {
       axiosConfig
     );
     var comments = await axios.get(
-      `${apiUrl}${com_endpoint}?populate=author,forum&pagination[pageSize]=1000`,
+      `${apiUrl}${com_endpoint}?populate=author,forum&pagination[pageSize]=1000&filters[forum][id][$eq]=${petitionID}`,
       axiosConfig
     );
+    
     var user_array = [];
     response.data.data.attributes.signatures.data.forEach((userSign) => {
       user_array.push(userSign.attributes.email);
@@ -1061,7 +1064,7 @@ router.post("/sg-compose", upload.array("files"), async (req, res) => {
       axiosConfig
     );
     updateduser = user.data[0];
-    updateduser.phone = req.body.phone;
+    // updateduser.phone = req.body.phone;
 
     if (Array.isArray(req.body.recipients)) {
       req.body.recipients = req.body.recipients.join();
@@ -1069,11 +1072,11 @@ router.post("/sg-compose", upload.array("files"), async (req, res) => {
       req.body.recipients = req.body.recipients;
     }
 
-    await axios.put(
-      `${apiUrl}/users/${user.data[0].id}`,
-      updateduser,
-      axiosConfig
-    );
+    // await axios.put(
+    //   `${apiUrl}/users/${user.data[0].id}`,
+    //   updateduser,
+    //   axiosConfig
+    // );
 
     // Handle file uploads
     const MAX_TOTAL_SIZE = 10 * 1024 * 1024; // 10 MB in bytes
@@ -1133,7 +1136,7 @@ router.post("/sg-compose", upload.array("files"), async (req, res) => {
 
     // Add file links to the request body
     req.body.attachment_path = attachment_path.join(",");
-    delete req.body.phone;
+    // delete req.body.phone;
 
     // console.log(req.body);
     var aliasvalid = options.includes(req.body.alias) ? true : false;
@@ -1432,10 +1435,12 @@ router.get("/pool-cab", async (req, res) => {
       });
     } else {
       var pool_data = await axios.get(
-        `${apiUrl}/pools?populate=pooler&pagination[pageSize]=2000&_where[day_gte]=${dateRange.currentDate}&_where[day_lt]=${dateRange.futureDate}`,
+        `${apiUrl}/pools?populate=pooler&fields[0]=journey&fields[1]=day&fields[2]=time&fields[3]=status&pagination[pageSize]=2000&_where[day_gte]=${dateRange.currentDate}&_where[day_lt]=${dateRange.futureDate}`,
         axiosConfig
       );
+      
       var pools = pool_data.data.data;
+      // console.log(pools);
       // next 5 days only
       let filteredPools = pools.filter((pool) => {
         let poolDate = new Date(pool.attributes.day);
@@ -1444,10 +1449,13 @@ router.get("/pool-cab", async (req, res) => {
         }/${poolDate.getDate()}/${poolDate.getFullYear()}`;
         return acceptableDates.includes(poolDateString);
       });
+
+      // console.log(filteredPools);
       var i = 0;
       while (i < user_detail.length && user_detail[i] != "available") {
         i++;
       }
+      // console.log(user_detail)
       res.render("platform/pages/pool-cab", {
         pools: filteredPools,
         user_detail: user_detail[i - 1],
@@ -1539,6 +1547,144 @@ router.get('/mail-spam-filter3', async(req, res) => {
   res.render("platform/pages/mail-spam-filter3", {data: data, selectedEmails: []});
 });
 
+router.get("/wifi-ticket", async (req, res) => {
+  userEmail = req.user._json.email;
+  axios
+    .get(
+      `${process.env.STRAPI_API_URL}/users?filters[email][$eqi]=${userEmail}`,
+      axiosConfig
+    )
+    .then((response) => {
+      // Assuming you get a single user with the specified email
+      user = response.data[0];
+      res.render("platform/pages/wifi-ticket", { phone: user.phone });
+    })
+    .catch((error) => {
+      console.error("Error fetching user:", error);
+      // Handle error
+    });
+});
+
+router.post("/wifi-ticket", async (req, res) => {
+  // make a put request to update user phone number
+  var user = await axios.get(
+    `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`,
+    axiosConfig
+  );
+  updateduser = user.data[0];
+  updateduser.phone = req.body.phone;
+  await axios.put(
+    `${apiUrl}/users/${user.data[0].id}`,
+    updateduser,
+    axiosConfig
+  );
+  const ticketId = helpers.createTicketId("WIFI", 8);
+  const isOnAshokaWifi = req.body.wifiStatus === "onWifi" ? true : false;
+  const wifi_obj = {
+    ticketId: ticketId,
+    user: req.user._json.email,
+    phone: req.body.phone,
+    networkStatus: isOnAshokaWifi ? "On Ashoka WiFi" : "Not on Ashoka WiFi",
+    downloadSpeed: isOnAshokaWifi ? req.body.downloadSpeed + " Mbps" : "N/A",
+    // uploadSpeed: isOnAshokaWifi ? req.body.uploadSpeed + " Mbps" : "N/A",
+    complaintType: req.body.complaintType,
+    location: req.body.location,
+    specificLocation: req.body.specificLocation,
+    additionalDetails: req.body.message,
+    submissionTimestamp: req.body.submissionTimestamp,
+  };
+
+  jsonfile.writeFile(wifiTicket_file, wifi_obj, { flag: "a+" }, function (err) {
+    if (err) console.error(err);
+  });
+  
+  const mailOptions = {
+    from: `WiFi Tickets <${process.env.TECHMAIL_ID}>`,
+    to: process.env.WIFI_SUPPORT,
+    cc: req.user._json.email,
+    subject: `WiFi Issue Ticket #${ticketId} - ${req.body.complaintType}`,
+    html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+                th { background-color: #f5f5f5; }
+                .warning { color: #dc3545; font-weight: bold; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>New WiFi Issue Ticket</h2>
+                ${!isOnAshokaWifi ? 
+                    '<p class="warning">Note: User was not able to submit this page through Ashoka Wifi, as it was not working for them.</p>' : ''}
+                <table>
+                    <tr>
+                        <th>Ticket ID</th>
+                        <td>${ticketId}</td>
+                    </tr>
+                    <tr>
+                        <th>User</th>
+                        <td>${req.user._json.name} (${req.user._json.email})</td>
+                    </tr>
+                    <tr>
+                        <th>Phone Number</th>
+                        <td>${req.body.phone}</td>
+                    </tr>
+                    <tr>
+                        <th>Network Status</th>
+                        <td>${isOnAshokaWifi ? 'On Ashoka WiFi' : 'Not on Ashoka WiFi'}</td>
+                    </tr>
+                    <tr>
+                        <th>Download Speed</th>
+                        <td>${isOnAshokaWifi ? req.body.downloadSpeed + ' Mbps' : 'N/A'}</td>
+                    </tr>
+                    <tr>
+                        <th>Complaint Type</th>
+                        <td>${req.body.complaintType}</td>
+                    </tr>
+                    <tr>
+                        <th>Location</th>
+                        <td>${req.body.location}</td>
+                    </tr>
+                    <tr>
+                        <th>Room/Floor</th>
+                        <td>${req.body.specificLocation}</td>
+                    </tr>
+                    <tr>
+                        <th>Additional Details</th>
+                        <td>${req.body.message}</td>
+                    </tr>
+                    <tr>
+                        <th>Date Submitted</th>
+                        <td>${req.body.submissionTimestamp}</td>
+                    </tr>
+                </table>
+            </div>
+        </body>
+        </html>
+    `,
+    replyTo: req.user._json.email
+  };
+
+  try {
+      await transporterTECH.sendMail(mailOptions);
+      res.status(200).json({
+          success: true,
+          message: "WiFi ticket submitted successfully! You will receive a confirmation email shortly."
+      });
+  } catch (error) {
+      console.error("Error sending email:", error);
+      res.status(500).json({
+          success: false,
+          message: "Error submitting WiFi ticket. Please try again."
+      });
+  }
+});
+
 router.get("/cancel-cab-pool", async (req, res) => {
   userEmail = req.user._json.email;
   // var pool = (await axios.get(`${apiUrl}/pools?[pooler][email]=${userEmail}&filters[status][$eqi]=available`, axiosConfig));
@@ -1570,6 +1716,10 @@ router.get("/cancel-cab-pool", async (req, res) => {
 
 router.get("/office-hours", async (req, res) => {
   res.render("platform/pages/office-hours");
+});
+
+router.get("/degree-tracker", async (req, res) => {
+  res.render("platform/pages/degree-tracker");
 });
 
 router.get("/cgpa-planner", async (req, res) => {
@@ -1626,12 +1776,12 @@ router.get("/cgpa-planner-reset", async (req, res) => {
 
 router.get("/organisation-catalogue", async (req, res) => {
   const organisationsReq = await axios.get(
-    `${apiUrl}/organisations?populate[0]=profile`,
+    `${apiUrl}/organisations?populate=profile,circle1_humans&pagination[pageSize]=1000`, 
     axiosConfig
   );
   const organisations = organisationsReq.data.data.map((x) => x.attributes);
   // console.log(organisations[0].profile.data[0].attributes.profile_url)
-
+  // console.log(organisations[0].circle1_humans.data);
   res.render("platform/pages/organisation-catalogue", {
     organisations,
     types: [...new Set(organisations.map((org) => org.type))],
@@ -1823,7 +1973,7 @@ router.get("/assets", async (req, res) => {
 router.get("/assets/dashboard", async (req, res) => {
   if (process.env.BORROW_POC.includes(req.user._json.email)) {
     var borrow_data = await axios.get(
-      `${apiUrl}/borrow-requests?populate=user&populate=asset`,
+      `${apiUrl}/borrow-requests?populate=user&populate=asset&pagination[pageSize]=300`,
       axiosConfig
     );
     // console.log(borrow_data.data.data);

@@ -39,7 +39,8 @@ ul li {
   margin:8px 0;
 }
 .card-title{
-  color : #5d87ff
+  color : #5d87ff;
+  font-size: large;
 }
 
 .search-bar {
@@ -94,24 +95,25 @@ ul li {
               </div>
             </div>
             <div class="row" id="myItems">
-              <div class="col-sm-12 mb-3">
-                <%for(var i=0;i<cards.length;i++){%>
-                  <div class="card" style="margin-bottom: 16px;"> <!-- Updated margin-bottom to 16px -->
+              <% for (var i = 0; i < cards.length; i++) { %>
+                <div class="col-lg-4 col-md-6 col-sm-12"> <!-- Bootstrap responsive grid -->
+                  <div class="card"> <!-- Full height for equal-sized cards -->
                     <div class="card-body">
-                      <%if(cards[i].attributes && cards[i].attributes.title){%>
-                      <h5 class="card-title"><%=cards[i].attributes.title%></h5> <!-- Removed anchor tag -->
-                      <%}%>
-                      <%if(cards[i].attributes && cards[i].attributes.tags){%>
-                      <span class="badge bg-primary"><%=cards[i].attributes.tags%></span> <!-- Replaced Tags with Subtitle -->
-                      <%}%>
-                      <%if(cards[i].attributes && cards[i].attributes.content){%>
-                      <p class="card-text"><%-cards[i].attributes.content-%></p>
-                      <%}%>
+                      <% if (cards[i].attributes && cards[i].attributes.title) { %>
+                        <h5 class="card-title"><%= cards[i].attributes.title %></h5>
+                      <% } %>
+                      <% if (cards[i].attributes && cards[i].attributes.tags) { %>
+                        <span class="badge bg-primary"><%= cards[i].attributes.tags %></span>
+                      <% } %>
+                      <% if (cards[i].attributes && cards[i].attributes.content) { %>
+                        <p class="card-text"><%- cards[i].attributes.content -%></p>
+                      <% } %>
                     </div>
                   </div>
-                <%}%>    
-              </div>    
+                </div>
+              <% } %>
             </div>
+            
           </div>
         </div>
       </div>
@@ -125,23 +127,24 @@ ul li {
     <%-include("../partials/preloader-js")%>
   </body>
   <script>
-function myFunction() {
-  input = document.getElementById("myFilter");
-filter = input.value.toUpperCase();
-cardContainer = document.getElementById("myItems");
-cards = cardContainer.getElementsByClassName("card");
+    function myFunction() {
+  let input = document.getElementById("myFilter");
+  let filter = input.value.toUpperCase();
+  let cardContainer = document.getElementById("myItems");
+  let cards = cardContainer.getElementsByClassName("col-lg-4"); // Target the grid column instead of just "card"
 
-for (let i = 0; i < cards.length; i++) {
+  for (let i = 0; i < cards.length; i++) {
     let card = cards[i];
     let textContent = card.innerText || card.textContent;
 
     if (textContent.toUpperCase().indexOf(filter) > -1) {
-        card.style.display = "";
+      card.classList.remove("d-none"); // Show card
     } else {
-        card.style.display = "none";
+      card.classList.add("d-none"); // Hide card properly
     }
+  }
 }
-}
+
 
   </script>
 </html>

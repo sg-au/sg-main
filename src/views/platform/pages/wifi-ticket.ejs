@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SG Platform</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+    <%-include("../partials/preloader-css")%>
+</head>
+<%-include("../partials/post-head")%>
+
+<style>
+    #divLink {
+        cursor: pointer;
+    }
+
+    .form-heading {
+        font-size: 1.75rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-size: 0.9rem;
+        font-weight: normal;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 0.9rem;
+    }
+
+    .btn-submit {
+        font-size: 0.8rem;
+        padding: 5px 15px;
+    }
+
+    .placeholder-box {
+        width: 100%;
+        height: 200px;
+        border: 2px dashed #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        color: #999;
+        margin-bottom: 20px;
+    }
+
+    .help-icon {
+        font-size: 0.8rem;
+        cursor: pointer;
+        margin-left: 5px;
+        color: #007bff;
+    }
+
+    .help-icon:hover {
+        color: #0056b3;
+    }
+
+    .modal-content {
+        font-size: 0.9rem;
+    }
+</style>
+
+<body>
+    <%-include("../partials/preloader")%>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <%-include("../partials/sidebar")%>
+        <div class="body-wrapper">
+            <%-include("../partials/header")%>
+            <div class="container-fluid">
+                <div class="container-fluid">
+                    <div class="row justify-content-between">
+                      <div class="card">
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="form-heading">Raise a ticket for WiFi related issues</div>
+                              <div class="accordion mb-4" id="instructionsAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#instructionsCollapse">
+                                            Instructions & Information
+                                        </button>
+                                    </h2>
+                                    <div id="instructionsCollapse" class="accordion-collapse collapse" data-bs-parent="#instructionsAccordion">
+                                        <div class="accordion-body">
+                                            <h5>Steps to follow if you are on Ashoka Wifi:</h5>
+                                            <ol>
+                                                <li>Run the speed test below by waiting for it to complete</li>
+                                                <li>Enter the Download Speed from the test results
+                                                    <!-- <ul>
+                                                        <li><b>Download Speed:</b> Shown as the main number</li>
+                                                        <li><b>Upload Speed:</b> Right-most under "more info"</li>
+                                                    </ul> -->
+                                                </li>
+                                                <li>Fill out the remaining details in the form</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                <hr>
+                                    <p class="mb-0" style="font-weight: 700;">Your complaint will be sent to IT and used for WiFi analytics to identify recurring issues in specific areas or types of problems, helping improve service for everyone. IT will communicate to you about your complaint over the email.</p>
+                                <hr>
+
+                              <form action="/wifi-ticket" method="post" id="wifiTicketForm">
+                                <!-- Embed Speedtest -->
+                                <div class="row mb-3">
+                                    <label class="col-sm-4 col-form-label form-label">Are you currently on Ashoka WiFi?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                    <div class="col-sm-8">
+                                        <select class="form-select" id="wifiStatus" name="wifiStatus" onchange="toggleSpeedTest()" required>
+                                            <option value="">Select an option</option>
+                                            <option value="onWifi">Yes, I'm on Ashoka WiFi right now</option>
+                                            <option value="notLoading">No, this page is not loading on Ashoka WiFi</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div id="speedTestSection" style="display: none;">
+                                    <!-- <div style="text-align:right;"><div style="max-height:360px;"><div style="width:100%;height:360px;position:relative;"><iframe style="border:none;position:absolute;top:0;left:0;width:100%;height:90%;max-height:360px;border:none;overflow:hidden !important;color: white;" src="//openspeedtest.com/speedtest"></iframe></div></div></div> -->
+                                    <div style="text-align:right;"><div style="max-height:360px;"><div style="width:100%;height:360px;position:relative;"><iframe style="border:none;position:absolute;top:0;left:0;width:100%;height:90%;max-height:360px;border:none;overflow:hidden !important;" src="https://www.metercustom.net/plugin/"></iframe></div></div></div>
+
+                                    <div class="row mb-3">
+                                        <label for="downloadSpeed" class="col-sm-2 col-form-label form-label">Download Speed (Mbps)</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="downloadSpeed" step="0.01" class="form-control" id="downloadSpeed">
+                                        </div>
+                                    </div>
+                                
+                                    <!-- <div class="row mb-3">
+                                        <label for="uploadSpeed" class="col-sm-2 col-form-label form-label">Upload Speed (Mbps) -- (click on show more info)</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="uploadSpeed" step="0.01" class="form-control" id="uploadSpeed">
+                                        </div>
+                                    </div> -->
+                                </div>
+
+                                
+                            
+                                <!-- <div class="row mb-3">
+                                    <label for="ping" class="col-sm-2 col-form-label form-label">Ping (ms)</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" name="ping" step="1" class="form-control" id="ping" required>
+                                    </div>
+                                </div> -->
+
+                                <div class="row mb-3">
+                                    <label for="newTicketTitle" class="col-sm-2 col-form-label form-label">Contact Number<span style="color:rgb(177, 58, 58)">*</span></label>
+                                    <div class="col-sm-10">
+                                        <input required minlength="10" maxlength="14" name="phone" type="tel" class="form-control" id="phoneNumber" pattern="[0-9]{10}" value="<%=phone%>" title="Please enter your phone number for IT to contact you.">                                    
+                                    </div>
+                                </div>
+                            
+                                <div class="row mb-3">
+                                    <label for="complaintType" class="col-sm-2 col-form-label form-label">
+                                        Complaint Type<span style="color:rgb(177, 58, 58)">*</span>
+                                        <!-- <button type="button" class="btn btn-link p-0 help-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Select the type of WiFi issue you are experiencing">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                                            </svg>
+                                        </button> -->
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <select class="form-select" id="complaintType" name="complaintType" required>
+                                            <option value="Speed">Speed</option>
+                                            <option value="Smart Device Configuration">Smart Device Configuration</option>
+                                            <option value="Forgot Password">Forgot Password</option>
+                                            <option value="Unblock Service">Unblock Service</option>
+                                            <option value="Damaged Hardware">Damaged Hardware</option>
+                                            <option value="Low router density">Low router density</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            
+                                <div class="row mb-3">
+                                    <label for="location" class="col-sm-2 col-form-label form-label">
+                                        Location<span style="color:rgb(177, 58, 58)">*</span>
+                                        <!-- <button type="button" class="btn btn-link p-0 help-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter the specific location where you are experiencing the WiFi issue">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                                            </svg>
+                                        </button> -->
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <!-- <input type="text" class="form-control" id="location" name="location" placeholder="Eg. 'RH6, Room 230, Left Side', 'AC02 005'" required> -->
+                                        <select class="form-select" id="location" name="location" required>
+                                            <option value="">Select a location...</option>
+                                            <option value="RH-01">RH-01</option>
+                                            <option value="RH-02">RH-02</option>
+                                            <option value="RH-03">RH-03</option>
+                                            <option value="RH-04">RH-04</option>
+                                            <option value="RH-05">RH-05</option>
+                                            <option value="RH-06">RH-06</option>
+                                            <option value="RH-07">RH-07</option>
+                                            <option value="Admin Block">Admin Block</option>
+                                            <option value="AC-01">AC-01</option>
+                                            <option value="AC-02">AC-02</option>
+                                            <option value="AC-03">AC-03</option>
+                                            <option value="AC-04">AC-04</option>
+                                            <option value="AC-05">AC-05</option>
+                                            <option value="Mess">Mess</option>
+                                            <option value="Fuel Zone">Fuel Zone</option>
+                                            <option value="Sanghvi Library">Sanghvi Library</option>
+                                            <option value="Library">Library</option>
+                                            <option value="Library Cafe">Library Cafe</option>
+                                            <option value="Sports Complex">Sports Complex</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="location" class="col-sm-2 col-form-label form-label">
+                                        Room/Floor<span style="color:rgb(177, 58, 58)">*</span>
+                                        <!-- <button type="button" class="btn btn-link p-0 help-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter the specific location where you are experiencing the WiFi issue">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                                            </svg>
+                                        </button> -->
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="specific-location" name="specific-location" placeholder="Eg. 'Room 230, Left Side', 'Class 005', '2nd Floor'" required>                                        
+                                    </div>
+                                </div>
+                            
+                                <div class="row mb-3">
+                                    <label for="message" class="col-sm-2 col-form-label form-label">
+                                        Additional Details<span style="color:rgb(177, 58, 58)">*</span>
+                                        <!-- <button type="button" class="btn btn-link p-0 help-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Provide any additional information about your WiFi issue">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                                            </svg>
+                                        </button> -->
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+                                    </div>
+                                </div></div>
+                            
+                                <div class="text-center">
+                                    <button type="submit" id="submitWifiTicket" class="btn btn-primary">Submit Ticket</button>
+                                </div>
+
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">What is 2.4GHz WiFi?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>2.4GHz WiFi is a wireless frequency band that slower speeds compared to 5GHz WiFi and is not enabled by default in most routers in Ashoka. Many older devices may not support 5Ghz WiFi, therefore we would request you to check if .</p>
+                    <h6>How to check if your computer supports only 2.4GHz WiFi:</h6>
+                    <ul>
+                        <li><strong>Windows:</strong> Open Command Prompt and run <code>netsh wlan show drivers</code>. Look for "Radio types supported." If you see 802.11a or 802.11ac, your device supports 5GHz.</li>
+                        <li><strong>MacOS:</strong> Hold the Option key and click the WiFi icon in the menu bar. Look for "Channel" in the WiFi details. If the channel is between 1-14, it is 2.4GHz. Higher channels indicate 5GHz.</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSpeedTest() {
+            const wifiStatus = document.getElementById('wifiStatus').value;
+            const speedTestSection = document.getElementById('speedTestSection');
+            const downloadSpeed = document.getElementById('downloadSpeed');
+            const uploadSpeed = document.getElementById('uploadSpeed');
+            
+            if (wifiStatus === 'onWifi') {
+                speedTestSection.style.display = 'block';
+                downloadSpeed.required = true;
+                uploadSpeed.required = true;
+            } else {
+                speedTestSection.style.display = 'none';
+                downloadSpeed.required = false;
+                uploadSpeed.required = false;
+            }
+        }
+    </script>
+
+    <script>
+        function toggle24GHzOption(select) {
+            const optionDiv = document.getElementById("24GHzOption");
+            optionDiv.style.display = select.value === "Speed" ? "block" : "none";
+        }
+
+        function openModal() {
+            const modal = new bootstrap.Modal(document.getElementById('infoModal'));
+            modal.show();
+        }
+    </script>
+    <script>
+        document.getElementById('wifiTicketForm').addEventListener('submit', async (e) => {
+            e.preventDefault();        
+            const submitBtn = document.getElementById('submitWifiTicket');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...`;
+
+            const userDateTime = new Date().toLocaleString('en-US', { 
+                timeZone: 'Asia/Kolkata',  // Use Indian timezone
+                dateStyle: 'full',
+                timeStyle: 'medium'
+            });
+            
+            try {
+                const response = await fetch('/platform/wifi-ticket', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phone: document.getElementById('phoneNumber').value,
+                        wifiStatus: document.getElementById('wifiStatus').value,
+                        downloadSpeed: document.getElementById('downloadSpeed').value,
+                        // uploadSpeed: document.getElementById('uploadSpeed').value,
+                        complaintType: document.getElementById('complaintType').value,
+                        location: document.getElementById('location').value,
+                        specificLocation: document.getElementById('specific-location').value,
+                        message: document.getElementById('message').value,
+                        submissionTimestamp: userDateTime
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(data.message);
+                    window.location.reload();
+                } else {
+                    alert(data.message);
+                    // Re-enable submit button if there's an error
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Submit Ticket';
+                }
+            } catch (error) {
+                alert('Error submitting WiFi ticket. Please try again.');
+                // Re-enable submit button if there's an error
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Submit Ticket';
+            }
+        });
+    </script>
+
+    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/platform/assets/js/dashboard.js"></script>
+    <script src="/platform/assets/js/theme.js"></script>
+    <script src="/platform/assets/js/copytext.js"></script>
+    <%-include("../partials/preloader-js")%>
+</body>
+
+</html>

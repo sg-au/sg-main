@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="/platform/assets/css/styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.gstatic.com" rel="preconnect" />
-  <link rel="stylesheet" href="/platform/assets/css/datatables.css" />
+  <link rel="stylesheet" href="/platform/assets/css/dataTables.css" />
   <link
     href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
     rel="stylesheet">
@@ -80,7 +80,80 @@
           <div class="mb-4">
             <h4 class="my-1 mb-2" style="font-size: 2rem;">Student Government Platform</h4><br />
             <h5 class="my-1 mb-2" style="font-size: 1.5rem;">Welcome <%= name %>!</h5><br />
-            <div class="timeline-desc text-dark fs-4 mt-n1 mb-2">This platform is built to manage internal tickets, greviences and issues related to Ashokan students. We will be bringing to you various features that will help you in your Ashokan life.</div>
+            <!-- <div class="timeline-desc fs-4 text-dark mt-n1 mb-2">This platform is built to manage internal tickets, greviences and issues related to Ashokan students. We will be bringing to you various features that will help you in your Ashokan life.</div> -->
+            <div class="row">
+              <div class="col-12">
+                <h5 class="my-3" style="font-size: 1.3rem;">New Release</h5>
+                <div class="row">
+                  <div style="width: 50%;">
+                    <a href="/platform/wifi-ticket" class="text-decoration-none text-dark">
+                      <div class="card h-80" style="height: 80%;">
+                        <div class="card-body d-flex flex-column">
+                          <div class="d-flex align-items-center flex-column flex-sm-row text-center text-sm-start">
+                            <i class="fa fa-wifi fa-2x mb-2 mb-sm-0 me-sm-3"></i>
+                            <div>
+                              <h5 class="card-title">Wifi Tickets</h5>
+                              <p class="card-text">Submit and track wifi related issues</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                  <div style="width: 50%;">
+                    <a href="/platform/organisation-catalogue" class="text-decoration-none text-dark">
+                      <div class="card h-80" style="height: 80%;">
+                        <div class="card-body d-flex flex-column">
+                          <div class="d-flex align-items-center flex-column flex-sm-row text-center text-sm-start">
+                            <i class="fa fa-users fa-2x mb-2 mb-sm-0 me-sm-3"></i>
+                            <div>
+                              <h5 class="card-title">Organisation Catalogue</h5>
+                              <p class="card-text">Browse and join student organizations</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            
+              <div class="col-12">
+                <h5 class="mt-1 mb-3" style="font-size: 1.3rem;">Most Popular</h5>
+                <div class="row">
+                  <div style="width: 50%;">
+                    <a href="/platform/cgpa-planner" class="text-decoration-none text-dark">
+                      <div class="card h-80">
+                        <div class="card-body d-flex flex-column">
+                          <div class="d-flex align-items-center flex-column flex-sm-row text-center text-sm-start">
+                            <i class="fa fa-graduation-cap fa-2x mb-2 mb-sm-0 me-sm-3"></i>
+                            <div>
+                              <h5 class="card-title">CGPA Planner</h5>
+                              <p class="card-text">Plan and track your academic progress</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                  <div style="width: 50%;">
+                    <a href="/platform/semester-planner" class="text-decoration-none text-dark">
+                      <div class="card h-80">
+                        <div class="card-body d-flex flex-column">
+                          <div class="d-flex align-items-center flex-column flex-sm-row text-center text-sm-start">
+                            <i class="fa fa-calendar fa-2x mb-2 mb-sm-0 me-sm-3"></i>
+                            <div>
+                              <h5 class="card-title">Semester Planner</h5>
+                              <p class="card-text">Organize your semester schedule</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>                        
           </div>
         </div>
 
@@ -140,7 +213,7 @@
   <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
   <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
   <script src="/platform/assets/js/dashboard.js"></script>
-  <script src="/platform/assets/js/darkmode.js"></script>
+  <script src="/platform/assets/js/theme.js"></script>
   <script src="/platform/assets/js/theme.js"></script>
   <%-include("../partials/preloader-js")%>
 </body>

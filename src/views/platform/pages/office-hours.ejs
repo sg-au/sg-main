@@ -23,7 +23,6 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
-
 /* For mobile and tablet devices, set the iframe height to 600px */
 @media only screen and (max-width: 1024px) {
     #no-scroll {
@@ -50,7 +49,7 @@
                                 <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
-                        <iframe onload="onMyFrameLoad(this)" id="no-scroll" src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1SIQZzdua-6OLS2HJvo9IFFj4j-6n_el2zuYOyz76q6P93ITlSNhck2GVwiKMIB2pcFx1B2Mnd?gv=true" style="border: 0; background-color:rgb(136, 136, 246);" width="100%" height="560" frameborder="0"></iframe>
+                        <iframe onload="onMyFrameLoad(this)" id="no-scroll" src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1SIQZzdua-6OLS2HJvo9IFFj4j-6n_el2zuYOyz76q6P93ITlSNhck2GVwiKMIB2pcFx1B2Mnd?gv=true" style="border: 0" width="100%" height="560" frameborder="0"></iframe>
                     </div>
                     <script>
                         function onMyFrameLoad() {
@@ -77,57 +76,15 @@
             </div>
         </div>
     </div>
-    <script src="../../../public/platform/assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="../../../public/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../../public/platform/assets/js/sidebarmenu.js"></script>
-    <script src="../../../public/platform/assets/js/app.min.js"></script>
-    <script src="../../../public/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
-    <script src="/../../../public/platform/assets/libs/simplebar/dist/simplebar.js"></script>
-    <script src="../../../public/platform/assets/js/dashboard.js"></script>
-    <script src="../../../public/platform/assets/js/darkmode.js"></script>
-    <script src="../../../public/platform/assets/js/copytext.js"></script>
-    <script src="../../../public/platform/assets/js/theme.js"></script>
-    <script>
-      // Function to update the Google Calendar theme
-function updateCalendarTheme(theme) {
-    const calendarIframe = document.getElementById('appointment-scheduler');
-    
-    if (!calendarIframe) return; // If calendar iframe doesn't exist
-    
-    // Get the current src
-    let currentSrc = calendarIframe.src;
-    
-    // Remove any existing color parameters
-    currentSrc = currentSrc.replace(/[&?]bgcolor=[^&]+/, '')
-                         .replace(/[&?]color=[^&]+/, '')
-                         .replace(/[&?]showTitle=[^&]+/, '')
-                         .replace(/[&?]showNav=[^&]+/, '')
-                         .replace(/[&?]showPrint=[^&]+/, '');
-    
-    // Add the appropriate color parameters based on theme
-    if (theme === 'dark') {
-        // Dark theme colors - adjust these hex values to match your dark theme
-        const darkParams = 'bgcolor=%23121212&color=%23ffffff&showNav=1&showTitle=0&showPrint=0';
-        
-        // Add parameters to URL
-        if (currentSrc.includes('?')) {
-            calendarIframe.src = `${currentSrc}&${darkParams}`;
-        } else {
-            calendarIframe.src = `${currentSrc}?${darkParams}`;
-        }
-    } else {
-        // Light theme colors - adjust these hex values to match your light theme
-        const lightParams = 'bgcolor=%23ffffff&color=%234285F4&showNav=1&showTitle=0&showPrint=0';
-        
-        // Add parameters to URL
-        if (currentSrc.includes('?')) {
-            calendarIframe.src = `${currentSrc}&${lightParams}`;
-        } else {
-            calendarIframe.src = `${currentSrc}?${lightParams}`;
-        }
-    }
-}
-    </script>
+    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/platform/assets/js/dashboard.js"></script>
+    <script src="/platform/assets/js/theme.js"></script>
+    <script src="/platform/assets/js/copytext.js"></script>
 </body>
 
 </html>
