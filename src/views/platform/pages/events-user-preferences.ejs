@@ -246,12 +246,13 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
+        const existingPrefs = <%- JSON.stringify((existingPreferences || []).map(p => p.email+" "+p.name)) %>
         const orgsList = <%- JSON.stringify(orgsList || []) %>;
         const continueButton = document.getElementById('continueButton');
         const saveButton = document.getElementById('savePreferences');
         let selectedPreferences = [];
         let hasPreferencesSaved = false; // New flag to track if preferences were saved
-        
+        console.log(existingPrefs);
         // Function to populate checkboxes
         function populateCheckboxes() {
           const containers = {
@@ -262,6 +263,8 @@
             other: document.querySelector('#othersCollapse .checkbox-container')
           };
 
+          // const []
+
           // Loop through organizations and create checkboxes
           orgsList.forEach(org => {
             const container = containers[org.type.toLowerCase()];
@@ -270,11 +273,18 @@
               wrapper.className = 'checkbox-wrapper';
               
               const uniqueId = org.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
-              
-              wrapper.innerHTML = `
+              console.log(org);
+              if(existingPrefs.includes(org.email+" "+org.name)){
+                wrapper.innerHTML = `
+                <input type="checkbox" id="${uniqueId}" value="${org.name}" data-type="${org.type}" class="pref-checkbox" checked>
+                <label for="${uniqueId}">${org.name}</label>
+              `;
+              }else{
+                wrapper.innerHTML = `
                 <input type="checkbox" id="${uniqueId}" value="${org.name}" data-type="${org.type}" class="pref-checkbox">
                 <label for="${uniqueId}">${org.name}</label>
               `;
+              }
               container.appendChild(wrapper);
             }
           });
@@ -296,11 +306,21 @@
             continueButton.textContent = 'Skip';
             continueButton.classList.remove('continue-btn');
             continueButton.classList.add('btn-danger');
-          } else {
+
+            // Add onclick redirect to /platform/event?skip=true
+            continueButton.onclick = function () {
+              window.location.href = '/platform/event?skip=true';
+            };
+          }
+          else {
             // If preferences have been saved, show Continue
             continueButton.textContent = 'Continue';
             continueButton.classList.remove('btn-danger');
             continueButton.classList.add('continue-btn');
+             // Add onclick redirect to /platform/event?skip=true
+             continueButton.onclick = function () {
+              window.location.href = '/platform/event';
+            };
           }
         }
 
@@ -366,5 +386,7 @@
     <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
     <script src="/platform/assets/js/dashboard.js"></script>
     <script src="/platform/assets/js/theme.js"></script>
+
+    <input type="hidden" id="existingPrefs" value='<%= JSON.stringify(existingPreferences) %>' />
 </body>
 </html>
