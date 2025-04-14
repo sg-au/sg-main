@@ -1,315 +1,841 @@
+<!-- views/calendar.ejs -->
 <!doctype html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Modernize Free</title>
+  <title>SG Platform</title>
   <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
   <link rel="stylesheet" href="/platform/assets/css/styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" integrity="sha512-SqYaQuhE5QDV46cU4yX/gPe6vXUnqLMxnpa0kBm36BT2rkZ66u5hDq5APKe9pcw/SgTkbXpY4HjOyddisEC4OQ==" crossorigin="anonymous" />
+
   <script type='text/javascript' src='fullcalendar/gcal.js'></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/moment@5.11.3/main.global.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@5.11.3/main.global.min.js"></script>
+  <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.9/index.global.min.js'></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+  <%- include("../partials/post-head") %>
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      headerToolbar: {
-        start: 'prev,today,next',
-        center: 'title',
-        end: 'dayGridMonth,dayGridWeek,listWeek'
-      },
-      timeZone: 'Europe/Berlin',
-      weekNumbers: true,
-      initialView: 'dayGridMonth',
-      eventTimeFormat: {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      },
-      views: {
-        dayGridWeek: {
-          titleFormat: '{DD.{MM.}}YYYY'
-        },
-        listWeek: {
-          titleFormat: '{DD.{MM.}}YYYY'
-        }
-      },
-      events: [
-        {
-          title: "Festival in HH",
-          start: moment().add(1, 'days').format(),
-          end: moment().add(4, 'days').add(3, 'hours').format(),
-          className: 'festival',
-          color: 'orange',
-          textColor: 'black',
-          kind: 'festival',
-          state: 'hh'
-        },
-        {
-          title: "Party in HH",
-          start: moment().subtract(2, 'days').format(),
-          end: moment().subtract(2, 'days').add(3, 'hours').format(),
-          color: 'brightblue',
-          textColor: 'white',
-          kind: 'party',
-          state: 'hh'
-        },
-        {
-          title: "Party in SH",
-          start: moment().format(),
-          end: moment().add(3, 'hours').format(),
-          color: 'brightblue',
-          textColor: 'white',
-          kind: 'party',
-          state: 'sh'
-        },
-        {
-          title: "Concert in SH",
-          start: moment().add(1, 'days').format(),
-          end: moment().add(1, 'days').add(3, 'hours').format(),
-          color: 'red',
-          textColor: 'white',
-          kind: 'concert',
-          state: 'sh'
-        },
-        {
-          title: "Concert in HH",
-          start: moment().subtract(3, 'days').format(),
-          end: moment().subtract(3, 'days').add(3, 'hours').format(),
-          color: 'red',
-          textColor: 'white',
-          kind: 'concert',
-          state: 'hh'
-        },
-        {
-          title: "#1 Background title",
-          start: moment().subtract(6, 'days').format('YYYY-MM-DD'),
-          end: moment().subtract(2, 'days').format('YYYY-MM-DD'),
-          display: 'background',
-          kind: 'holiday',
-        },
-        {
-          title: "#2 title",
-          start: moment().subtract(8, 'days').format('YYYY-MM-DD'),
-          end: moment().subtract(8, 'days').format('YYYY-MM-DD'),
-          display: 'background',
-          color: '#ff9f89',
-          kind: 'holiday',
-        },
-        {
-          // FIX: Two Background events overlap each other
-          title: "#3 Overlap",
-          start: moment().subtract(8, 'days').format('YYYY-MM-DD'),
-          end: moment().subtract(8, 'days').format('YYYY-MM-DD'),
-          display: 'background',
-          kind: 'holiday',
-        }
-      ],
-      eventClassNames: function(info) {
-        
-        var result = true;
-        var states = [];
-        var kinds = [];
-        
-        // Find all checkbox that are event filters and enabled and save the values.
-        $("input[name='event_filter_sel']:checked").each(function () {
-          // Saving each type separately
-          if ($(this).data('type') == 'state') {
-            states.push($(this).val());
-          }
-          else if ($(this).data('type') == 'kind') {
-            kinds.push($(this).val());
-          }
-        });
-        
-        // If there are locations to check
-        if (states.length) {
-          result = result && states.indexOf(info.event.extendedProps.state) >= 0;
-        }
-        // If there are specific types of events
-        if (kinds.length) {
-          result = result && kinds.indexOf(info.event.extendedProps.kind) >= 0 || info.event.extendedProps.kind == 'holiday';
-        }
-        
-        if (!result) {
-          result = "hidden";
-        }
-        
-        return result;
-      },
+  <style>
+    :root {
+      --fc-small-font-size: .85em;
+      --fc-page-bg-color: #fff;
+      --fc-neutral-bg-color: rgba(208, 208, 208, 0.3);
+      --fc-neutral-text-color: #808080;
+      --fc-border-color: #ddd;
 
-      windowResize: function(view) {
-        var current_view = view.type;
-        var expected_view = $(window).width() > 800 ? 'dayGridMonth' : 'listWeek';
-        if (current_view !== expected_view) {
-          calendar.changeView(expected_view);
-        }
-      },
-    });
+      --fc-button-text-color: #fff;
+      --fc-button-bg-color: #5d87ff;
+      /* --fc-button-bg-color: red; */
+      --fc-button-border-color: #5d87ff;
+      --fc-button-hover-bg-color: #1e2b37;
+      /* --fc-button-hover-bg-color: red; */
+      --fc-button-hover-border-color: #1a252f;
+      --fc-button-active-bg-color: #4a6ccc;
+      /* --fc-button-active-bg-color: red; */
+      --fc-button-active-border-color: #4a6ccc;
+      /* --fc-button-active-border-color: red; */
 
-    calendar.render();
+      --fc-event-bg-color: #3788d8;
+      --fc-event-border-color: #3788d8;
+      --fc-event-text-color: #fff;
+      --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
 
-    if ($(window).width() < 800) {
-      calendar.changeView('listWeek');
+      --fc-more-link-bg-color: #d0d0d0;
+      --fc-more-link-text-color: inherit;
+
+      --fc-event-resizer-thickness: 8px;
+      --fc-event-resizer-dot-total-width: 8px;
+      --fc-event-resizer-dot-border-width: 1px;
+
+      --fc-non-business-color: rgba(215, 215, 215, 0.3);
+      --fc-bg-event-color: rgb(143, 223, 130);
+      --fc-bg-event-opacity: 0.3;
+      --fc-highlight-color: rgba(188, 232, 241, 0.3);
+      --fc-today-bg-color: rgba(255, 220, 40, 0.15);
+      --fc-now-indicator-color: red;
+    }
+    /* Wrapper layout for large screens */
+    .wrapper {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
     }
 
-    $('input[class=event_filter]').change(function() {
-      calendar.render();
-    });
-      
-  });
-  </script>
+    .filter {
+      padding: 0.5em 0;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      font-size: 1em;
+      margin-bottom: 20px;
+    }
 
-</head>
-<%-include("../partials/post-head")%>
+    .filter h3 {
+      margin: 0;
+      margin-bottom: 10px;
+    }
 
-<style>
-  :root {
-    --fc-small-font-size: .85em;
-    --fc-page-bg-color: #fff;
-    --fc-neutral-bg-color: rgba(208, 208, 208, 0.3);
-    --fc-neutral-text-color: #808080;
-    --fc-border-color: #ddd;
+    .filters-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: nowrap;
+      gap: 15px;
+    }
 
-    --fc-button-text-color: #fff;
-    --fc-button-bg-color: #5d87ff;
-    --fc-button-border-color: #5d87ff;
-    --fc-button-hover-bg-color: #1e2b37;
-    --fc-button-hover-border-color: #1a252f;
-    --fc-button-active-bg-color: #4a6ccc;
-    --fc-button-active-border-color: #4a6ccc;
+    .event_filter_wrapper {
+      margin: 0;
+      white-space: nowrap;
+      min-width: 150px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-    --fc-event-bg-color: #3788d8;
-    --fc-event-border-color: #3788d8;
-    --fc-event-text-color: #fff;
-    --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
+    #calendar {
+      flex: 1;
+      width: 100%;
+    }
 
-    --fc-more-link-bg-color: #d0d0d0;
-    --fc-more-link-text-color: inherit;
+    .modal{
+      top: 30%;
+    }
 
-    --fc-event-resizer-thickness: 8px;
-    --fc-event-resizer-dot-total-width: 8px;
-    --fc-event-resizer-dot-border-width: 1px;
+    .fc {
+      height: 100% !important;
+    }
 
-    --fc-non-business-color: rgba(215, 215, 215, 0.3);
-    --fc-bg-event-color: rgb(143, 223, 130);
-    --fc-bg-event-opacity: 0.3;
-    --fc-highlight-color: rgba(188, 232, 241, 0.3);
-    --fc-today-bg-color: rgba(255, 220, 40, 0.15);
-    --fc-now-indicator-color: red;
+    .fc .fc-view-harness {
+      height: 100% !important;
+    }
+
+    .fc .fc-daygrid-body {
+      height: 100% !important;
+    }
+
+    .fc .fc-scrollgrid-liquid {
+      height: 100%;
+    }
+
+    .fc-view-harness-active {
+      height: 100% !important;
+    }
+
+    .fc .fc-button{
+      text-transform: capitalize;
+    }
+
+    .fc .fc-today-button:disabled {
+      background-color: rgb(73, 108, 204) !important;
+      opacity: 100%;
+      /* border: none !important; */
+    }
+
+    .close{
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      width: 30px;
+      height: 30px;
+      background-color: transparent;
+      border: none;
+      color: #6c757d;
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1;
+      opacity: 0.5;
+      padding: 0;
+      cursor: pointer;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .close:hover {
+      opacity: 0.75;
+      color: #000;
+    }
+
+    .close:focus {
+      outline: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 800px) {
+      .card {
+        height: calc(100vh - 80px);
+      }
+      .wrapper {
+        padding: 10px;
+      }
+      .filter {
+        overflow-x: auto;
+        padding: 10px 0;
+        flex-wrap: nowrap;
+      }
+      #calendar {
+        flex: 1;
+        min-height: 0;
+        height: 100%;
+      }
+      .fc .fc-toolbar {
+        margin-bottom: 0.5em !important;
+      }
+    }
+
+    .festival .fc-time {
+      display: none;
+    }
+
+    .fc-day-grid-event .fc-content {
+      white-space: normal;
+    }
+
+    a.fc-event-past {
+      background-color: grey !important; 
+      border: none;
+    }
+
+    a.fc-event.hidden {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+    .fc .fc-toolbar {
+      display: flex;
+      /* flex-direction: column; */
+      gap: 0.5em;
+    }
+
+    .fc .fc-toolbar-title {
+      font-size: 1.2em;
+    }
+
+    .fc .fc-button {
+      padding: 0.2em 0.4em;
+      font-size: 0.9em;
+    }
+    
+    .fc-view-harness {
+      font-size: 0.9em;
+    }
+  }
+
+  @media (max-width: 500px){
+    .fc .fc-toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+    }
+  }
+
+  /* Custom scrollbar styling */
+  .filter::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .filter::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+  }
+
+  .filter::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+  }
+
+  .filter::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  /* For Firefox */
+  .filter {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+  }
+
+  /* Calendar cell styling */
+  .fc .fc-daygrid-day-frame {
+    /* height: 100%; */
+    min-height: 90px;
+    height: 100%;
+  }
+
+  .fc .fc-bg-event {
+  opacity: var(--fc-bg-event-opacity);
+  width: 100% !important; /* Force full width */
+  right: 0 !important;
+  left: 0 !important;
+  height: 100% !important; /* Force full height */
+}
+
+
+  .fc .fc-daygrid-day-events {
+    min-height: 1em;
+    margin-bottom: 1px;
+    /* z-index: 2; */
+  }
+
+  /* Week number styling */
+.fc .fc-daygrid-week-number {
+  font-size: 0.9em;
+  padding: 2px 4px;
+  color: var(--fc-neutral-text-color);
+}
+
+  .fc .fc-header-toolbar {
+    margin-bottom: 0.5em !important;
+  }
+
+  .fc .fc-daygrid-body {
+    width: 100% !important;
+  }
+
+  .fc .fc-daygrid-body-balanced .fc-daygrid-day-events {
+    position: relative;
+  }
+
+  /* Ensure responsive behavior */
+  @media (max-width: 768px) {
+    .fc .fc-daygrid-day-frame {
+      min-height: 40px;
+    }
+    .fc .fc-bg-event {
+    opacity: var(--fc-bg-event-opacity) !important;
+      right: 0 !important;
+      left: 0 !important;
+      height: 100% !important;
+  }
+
+  .fc-list-table td {
+      max-width: 150px;
+      font-size: 0.9em;
+      /* margin-right: 20px; */
+    }
+    
+    .fc-list-day-text,
+    .fc-list-day-side-text {
+      font-size: 0.9em;
+    }
+  .fc .fc-daygrid-week-number {
+    font-size: 0.6em;
+    padding: 1px 2px;
+  }
+  
+  /* Adjust the week number column width */
+  .fc .fc-daygrid-body-natural .fc-daygrid-day-number,
+  .fc .fc-daygrid-week-number {
+    min-width: 1.2em;
+  }
+  
+  /* Week number column */
+  .fc-theme-standard td:first-child {
+    max-width: 20px;
+  }
+  }
+
+  /* Full height layout adjustments */
+  .container-fluid {
+    /* height: calc(100vh - 70px); Adjust for header height */
+    height: auto;
+    padding-bottom: 20px;
+    max-height: none;
+  }
+
+  .row {
+    height: 100%;
+  }
+
+  .card {
+    height: 105vh !important;
+    margin-bottom: 0 !important;
+    overflow: visible;
   }
 
   .wrapper {
-    display: grid;
-    grid-template-columns: 1fr 190px;
-    grid-template-rows: 1fr;
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-  }
-
-  .filter {
-    grid-area: 1 / 2 / 2 / 3;
-    margin: 1em 0 0 1em;
-  }
-  .event_filter_wrapper {
-    margin: .5em 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   #calendar {
-    margin: 3em 0 0 0;
-    grid-area: 1 / 1 / 2 / 2;
+    flex: 1;
+    min-height: 0;
   }
 
-  .festival .fc-time {
-    display: none;
+  .fc {
+    height: 100% !important;
   }
 
-
-  .fc-day-grid-event .fc-content {
-    white-space: normal;
+  .fc .fc-view-harness {
+    height: 100% !important;
   }
 
-  a.fc-event-past {
-    background-color: grey !important; 
-    border: none;
+  .fc .fc-daygrid-body {
+    width: 100% !important;
   }
 
-  a.fc-event.hidden {
-    display: none;
+  .fc .fc-daygrid-body-balanced .fc-daygrid-day-events {
+    position: relative;
   }
 
-  /* .fc .fc-button-primary {
-    background-color: #5d87ff; 
-    border-color: #5d87ff; 
-    color: #fff; 
-  } */
+  .fc .fc-scrollgrid-liquid {
+    height: 100%;
+  }
 
-  /* .fc-button .fc-button-active {
-    background-color: #4a6ccc; 
-    border-color: #4a6ccc; 
-    color: #fff;
-  } */
-</style>
+  .fc-view-harness-active {
+    height: 100% !important;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 800px) {
+    .container-fluid {
+      height: calc(100vh - 60px);
+    }
+    
+    .wrapper {
+      height: 100%;
+    }
+    
+    #calendar {
+      flex: 1;
+      min-height: 0;
+    }
+  }
+
+  /* List view responsive styling */
+  .fc-list-table td {
+    white-space: normal !important; /* Allows text to wrap */
+    max-width: 200px; /* Maximum width for content */
+    padding: 8px !important;
+  }
+
+  @media (max-width: 768px) {
+    .fc-list-table td {
+      max-width: 150px;
+      font-size: 0.9em;
+    }
+    
+    .fc-list-day-text,
+    .fc-list-day-side-text {
+      font-size: 0.9em;
+    }
+  }
+
+  .btn-primary {
+    background-color: #5d87ff;
+    border-color: #5d87ff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #4a6ccc;
+    border-color: #4a6ccc;
+  }
+  
+  .modal-footer {
+    justify-content: space-between;
+  }
+  
+  #addToCalendar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  #addToCalendar i {
+    font-size: 1.1em;
+  }
+  </style>
+
+  <script>
+    const GOOGLE_CALENDAR_API_KEY = '<%= process.env.GOOGLE_CALENDAR_API_KEY %>';
+    const GOOGLE_CALENDAR_ID = '<%= process.env.GOOGLE_CALENDAR_ID %>';
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Parse user preferences from hidden input
+      const userPreferences = JSON.parse(document.getElementById('userPreferences').value || '[]');
+
+      var calendarEl = document.getElementById('calendar');
+      const orgsList = JSON.parse(document.getElementById('orgsList').value || []);
+      const userEmail = JSON.parse(document.getElementById('userEmail').value || '');
+      var currentEvent = null; // Store the currently selected event
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+          start: 'prev,today,next',
+          center: 'title',
+          end: 'dayGridMonth,dayGridWeek,timeGridDay,listWeek'
+        },
+        timeZone: 'Asia/Kolkata',
+        weekNumbers: true,
+        initialView: 'dayGridMonth',
+        
+        // Add Google Calendar configuration
+        googleCalendarApiKey: GOOGLE_CALENDAR_API_KEY,
+        eventSources: [
+          {
+            googleCalendarId: GOOGLE_CALENDAR_ID,
+            className: 'gcal-event',
+            // This transformer function processes each event retrieved from Google Calendar
+            eventDataTransform: function(eventData) {
+              if (eventData.extendedProperties && eventData.extendedProperties.shared && eventData.extendedProperties.shared.emailSource) {
+                const emailSource = eventData.extendedProperties.shared.emailSource;
+                
+                // First check if this is a user preference
+                if (userPreferences.some(pref => pref.email === emailSource)) {
+                  eventData.kind = 'userPreference';
+                } 
+                // If not a user preference, check orgsList
+                else {
+                  const matchingOrg = orgsList.find(org => org.email === emailSource);
+                  if (matchingOrg) {
+                    eventData.kind = matchingOrg.type.toLowerCase();
+                  } else {
+                    eventData.kind = 'other';
+                  }
+                }
+              } else {
+                eventData.kind = 'other';
+              }
+              
+              return eventData;
+            }
+          }
+        ],
+        
+        eventTimeFormat: {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        },
+        views: {
+          dayGridMonth: {
+          titleFormat: { year: 'numeric', month: 'long' }
+        },
+        dayGridWeek: {
+          titleFormat: { year: 'numeric', month: 'short', day: '2-digit' },
+          dayHeaderFormat: { weekday: 'short', day: '2-digit' }
+        },
+        timeGridDay: {
+          titleFormat: { year: 'numeric', month: 'short', day: '2-digit' },
+          dayHeaderFormat: { weekday: 'long', day: '2-digit' }
+        },
+        listWeek: {
+          titleFormat: { year: 'numeric', month: 'short', day: '2-digit' },
+          dayHeaderFormat: { weekday: 'long', day: '2-digit' }
+        }
+        },
+        height: '100%',
+        expandRows: true,
+        eventClick: function(info) {
+          info.jsEvent.preventDefault();
+          currentEvent = info.event; // Store the clicked event
+          
+          $('.modal-title').text(info.event.title);
+          let modalContent = '';
+          
+          if (info.event.extendedProps.location) {
+            modalContent += '<p><strong>Venue:</strong> ' + info.event.extendedProps.location + '</p>';
+          }
+          
+          if (info.event.extendedProps.description) {
+            modalContent += '<p><strong>Description:</strong> ' + info.event.extendedProps.description + '</p>';
+          }
+
+          // Get the email source from the event
+          const emailSource = info.event.extendedProperties?.shared?.emailSource;
+          
+          // Find the matching organization in orgsList
+          if (emailSource) {
+            const matchingOrg = orgsList.find(org => org.email === emailSource);
+            if (matchingOrg) {
+              modalContent += '<p><strong>Organized By:</strong> ' + matchingOrg.name + '</p>';
+            }
+          }
+          
+          $('.modal-body-text').html(modalContent);
+          $('.modal').modal('toggle');
+        },
+        eventClassNames: function(info) {
+          var result = true;
+          var states = [];
+          var kinds = [];
+          
+          // Collect checked filters
+          $("input[name='event_filter_sel']:checked").each(function () {
+            // if ($(this).data('type') === 'state') {
+            //   states.push($(this).val());
+            // }
+            if ($(this).data('type') === 'kind') {
+              kinds.push($(this).val());
+            }
+          });
+          
+          // // Filter by state
+          // if (states.length) {
+          //   result = result && states.indexOf(info.event.extendedProps.state) >= 0;
+          // }
+
+          // Filter by kind (holidays always displayed)
+          if (kinds.length) {
+            // First try to get kind from extendedProps.kind
+            // const eventKind = info.event.extendedProps.kind || 
+            //                  (info.event.extendedProps.extendedProperties && 
+            //                   info.event.extendedProps.extendedProperties.shared && 
+            //                   info.event.extendedProps.extendedProperties.shared.kind) || 
+            //                  'event';
+            
+            // result = result && (kinds.indexOf(eventKind) >= 0 || eventKind === 'holiday');
+
+            result = result && kinds.indexOf(info.event.extendedProps.kind) >= 0;
+          }
+          
+          // Add extra classes based on kind
+          // let kindClass = '';
+          // const eventKind = info.event.extendedProps.kind || 
+          //                  (info.event.extendedProperties && 
+          //                   info.event.extendedProperties.shared && 
+          //                   info.event.extendedProperties.shared.kind) || 
+          //                  'event';
+          
+          // kindClass = 'event-kind-' + eventKind;
+          
+          if (!result) {
+            return "hidden";
+          }
+          return result;
+          
+          // return [kindClass];
+        },
+        eventDidMount: function(info) {
+          // Get kind from extended properties
+          const kind = info.event.extendedProps.kind || 'other';
+          
+          // Check if event source matches user preferences
+          const emailSource = info.event.extendedProps.emailSource;
+
+          const userPrefEmails = userPreferences.map(pref => pref.email);
+
+          if (emailSource && userPrefEmails.includes(emailSource)) {
+            // Change the event's kind to userPreference
+            info.event.setExtendedProp('kind', 'userPreference');
+            // console.log(info.event.extendedProps.kind);
+          }
+
+          const orgsEmails = orgsList.map(org => org.email);
+          // console.log(orgsEmails);
+          if (emailSource && orgsEmails.includes(emailSource)&& !userPrefEmails.includes(emailSource)) {
+            // Change the event's kind to the corresponding org type
+            info.event.setExtendedProp('kind', orgsList.find(org => org.email === emailSource).type.toLowerCase());
+            // console.log(info.event.extendedProps.kind);
+          }
+
+          // Add CSS class based on the final kind
+          info.el.classList.add(`event-kind-${info.event.extendedProps.kind}`);
+        },
+        windowResize: function(view) {
+          const width = window.innerWidth;
+          let newView = view.type;
+          
+          if (width < 576) {
+            newView = 'dayGridMonth';
+          } else if (width < 768) {
+            newView = 'dayGridMonth';
+          } else if (width < 992) {
+            newView = 'dayGridMonth';
+          } else {
+            newView = 'dayGridMonth';
+          }
+          
+          if (calendar.view.type !== newView) {
+            calendar.changeView(newView);
+          }
+        }
+      });
+
+      // Create filter buttons after calendar is loaded
+      createFilterButtons();
+
+      function createFilterButtons() {
+        const filterContainer = document.getElementById('calendar-filters');
+        const kinds = ['club', 'society', 'ministry', 'department', 'userPreference'];
+        
+        kinds.forEach(kind => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'event_filter_wrapper';
+          
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.id = kind;
+          checkbox.className = 'event_filter';
+          checkbox.name = 'event_filter_sel';
+          checkbox.value = kind;
+          checkbox.dataset.type = 'kind';
+          checkbox.checked = false;
+          
+          const label = document.createElement('label');
+          label.htmlFor = kind;
+          label.textContent = kind === 'club' ? 'Clubs' :  kind === 'society' ? 'Societies' :  kind === 'ministry' ? 'Ministries' : kind === 'department' ? 'Departments' : 'Preferences';
+          
+          wrapper.appendChild(checkbox);
+          wrapper.appendChild(label);
+          filterContainer.appendChild(wrapper);
+        });
+      }
+
+      // let isUpdatingFilters = false;
+
+      // function updateFilters() {
+      //   if (isUpdatingFilters) return;
+      //   isUpdatingFilters = true;
+
+      //   try {
+      //     const events = calendar.getEvents();
+      //     events.forEach(event => {
+      //       const kind = event.extendedProps.kind || 'other';
+            
+      //       // Get filter state for this kind
+      //       const kindFilterElement = document.getElementById(`filter-${kind}`);
+      //       const shouldShow = kindFilterElement ? kindFilterElement.checked : false;
+            
+      //       const currentDisplay = event.getProp('display');
+      //       if (currentDisplay !== (shouldShow ? 'auto' : 'none')) {
+      //         event.setProp('display', shouldShow ? 'auto' : 'none');
+      //       }
+      //     });
+      //   } finally {
+      //     isUpdatingFilters = false;
+      //   }
+      // }
+
+      calendar.render();
+
+      // Re-render when filters change
+      $('input[class=event_filter]').change(function() {
+        // updateFilters();
+        calendar.render();
+      });
+      
+      // Add a refresh button if needed
+      $('#refresh-calendar').click(function() {
+        calendar.refetchEvents();
+        // Don't call updateFilters here as it will be called by eventsSet
+      });
+
+      // // Call updateFilters when calendar view changes
+      // calendar.on('datesSet', function() {
+      //   updateFilters();
+      // });
+
+      // // Call updateFilters when calendar is first loaded
+      // calendar.on('eventsSet', function() {
+      //   updateFilters();
+      // });
+
+      // Add event listener for the "Add to Calendar" button
+      document.getElementById('addToCalendar').addEventListener('click', function() {
+        if (currentEvent) {
+          // Show loading indicator
+          $(this).prop('disabled', true);
+          $(this).html('<i class="fa fa-spinner fa-spin"></i> Adding...');
+          
+          // Send request to your backend to add the user as an attendee
+          fetch('/platform/event/add-attendee', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              eventId: currentEvent.id,
+              email: userEmail
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert('You have been added to this event! You will receive updates if the event details change.');
+              $('.modal').modal('hide');
+            } else {
+              alert('Error: ' + data.message);
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again later.');
+          })
+          .finally(() => {
+            // Reset button
+            $(this).prop('disabled', false);
+            $(this).html('<i class="fa fa-calendar-plus-o"></i> Add to My Calendar');
+          });
+        }
+      });
+    });
+  </script>
+</head>
 
 <body>
-  <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
-    <%-include("../partials/sidebar")%>
-    <!--  Main wrapper -->
+    <%- include("../partials/sidebar") %>
     <div class="body-wrapper">
-      <%-include("../partials/header")%>
+      <%- include("../partials/header") %>
       <div class="container-fluid">
-        <!--  Row 1 -->
         <div class="row">
           <div class="col-lg-8 d-flex align-items-stretch card">
             <div class="card-body p-4">
-              <div class="filter">
-                <h3>Filter</h3>
-                <div class="event_filter_wrapper">
-                  <input id="hh" class="event_filter" name="event_filter_sel" type="checkbox" value="hh" data-type="state" />
-                  <label for="hh">Hamburg (HH)</label>
+              <!-- Filter + Calendar Wrapper -->
+              <div class="wrapper">
+                <div class="filter">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3 style="margin: 0;">Filters</h3>
+                    <a href="/platform/event/save-preferences" class="btn btn-primary" style="padding: 8px 16px;">
+                      <i class="fa fa-cog"></i> Select Preferences
+                    </a>
+                  </div>
+                  <div class="filters-container" id="calendar-filters">
+                    <!-- Filters will be added here dynamically -->
+                  </div>
                 </div>
-                <div class="event_filter_wrapper">
-                  <input id="sh" class="event_filter" name="event_filter_sel" type="checkbox" value="sh" data-type="state" />
-                  <label for="sh">Schleswig-Holstein (SH)</label>
-                </div>
-                <div class="event_filter_wrapper">
-                  <input id="party" class="event_filter" name="event_filter_sel"  type="checkbox" value="party" data-type="kind" checked="true" />
-                  <label for="party">Party</label>
-                </div>
-                <div class="event_filter_wrapper">
-                  <input id="concert" class="event_filter" name="event_filter_sel" type="checkbox" value="concert" data-type="kind" checked="true" />
-                  <label for="concert">Concert</label>
-                </div>
-                <div class="event_filter_wrapper">
-                  <input id="festival" class="event_filter" name="event_filter_sel" type="checkbox" value="festival" data-type="kind" checked="true" />
-                  <label for="festival">Festival</label>
-                </div>
+                <div id="calendar"></div>
               </div>
-            
-              <div id="calendar"></div>
-              
-            </div>
             </div>
           </div>
-        </div>
-        <div class="py-6 px-6 text-center">
-          <p class="mb-0 fs-4">Design and Developed by <a href="https://adminmart.com/" target="_blank" class="pe-1 text-primary text-decoration-underline">AdminMart.com</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a></p>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="{$('.modal').modal('toggle');}">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-body-text">Modal body text goes here.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="addToCalendar">
+            <i class="fa fa-calendar-plus-o"></i> Add to My Calendar
+          </button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="{$('.modal').modal('toggle');}">Close</button>
+        </div>
+      </div>
+    </div>
+ </div>
   <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/platform/assets/js/sidebarmenu.js"></script>
@@ -318,6 +844,12 @@
   <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
   <script src="/platform/assets/js/dashboard.js"></script>
   <script src="/platform/assets/js/theme.js"></script>
+ 
 </body>
+
+<!-- Hidden input fields for data from server -->
+<input type="hidden" id="orgsList" value='<%= JSON.stringify(orgsList) %>' />
+<input type="hidden" id="userPreferences" value='<%= JSON.stringify(userPreferences) %>' />
+<input type="hidden" id="userEmail" value='<%= JSON.stringify(userEmail) %>' />
 
 </html>

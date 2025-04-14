@@ -16,6 +16,27 @@ const axios = require("axios");
 var pdf = require("pdf-creator-node");
 const { google } = require("googleapis");
 const multer = require("multer");
+require("dotenv").config();
+
+// Initialize Google Calendar API with OAuth2
+const calendarOAuth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  process.env.GOOGLE_REDIRECT_URI
+);
+
+// Set the refresh token if you have one
+if (process.env.GOOGLE_REFRESH_TOKEN) {
+  calendarOAuth2Client.setCredentials({
+    refresh_token: process.env.GOOGLE_REFRESH_TOKEN
+  });
+}
+
+const calendar = google.calendar({
+  version: 'v3',
+  auth: calendarOAuth2Client
+});
+
 // Read HTML Template
 var undertakingTemplate = fs.readFileSync(
   "./data/undertaking-template.html",
@@ -1355,13 +1376,189 @@ router.get("/grade-planner", (req, res) => {
   res.render("platform/pages/grade-planner");
 });
 
-router.get("/events", (req, res) => {
-  res.render("platform/pages/events-2");
+// router.get("/events", (req, res) => {
+//   res.render("platform/pages/events-2");
+// });
+
+router.get("/event", async (req, res) => {
+  try {
+    // Get user's preferences
+    const userResponse = await axios.get(
+      `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=*`,
+      axiosConfig
+    );
+    const orgsResponse = await axios.get(
+  `${apiUrl}/organisations?populate[profile][fields]=email&fields[0]=name&fields[1]=type&filters[profile][id][$notNull]=true&pagination[pageSize]=2000`,
+        axiosConfig
+      );
+
+    const orgsList = orgsResponse.data.data.map(item => ({
+      name: item.attributes.name || '',
+      type: item.attributes.type || '',
+      email: item.attributes.profile.data[0]?.attributes.email || ''
+    }));
+    
+    // Get existing preferences (or empty array if none exist)
+    const userPreferences =
+      userResponse.data[0]?.events_calendar_filter_preferences || [];
+    // console.log(userPreferences);
+
+    // console.log(userResponse.data[0].email);
+
+    if(userPreferences.length === 0 && req.query.skip!="true") {
+      res.redirect("/platform/event/save-preferences");
+    }else{
+      res.render("platform/pages/events", { // Make sure this matches your actual template name
+        userPreferences: userPreferences, // Don't stringify here
+        orgsList: orgsList,
+        userEmail:  userResponse.data[0].email // Don't stringify here
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching user preferences:', error);
+    res.render("platform/pages/events", { // Make sure this matches your actual template name
+      userPreferences: [],
+      orgsList: [],
+      userEmail:  userResponse.data[0].email// Provide empty array for orgsList too
+    });
+  }
 });
 
-router.get("/event", (req, res) => {
-  res.render("platform/pages/events");
+router.get("/event/save-preferences", async (req, res) => {
+  try {
+    // Get organizations list
+    const orgsResponse = await axios.get(
+`${apiUrl}/organisations?populate[profile][fields]=email&fields[0]=name&fields[1]=type&filters[profile][id][$notNull]=true&pagination[pageSize]=2000`,
+      axiosConfig
+    );
+
+    // Get user's existing preferences
+    const userResponse = await axios.get(
+      `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=*`,
+      axiosConfig
+    );
+    // console.log(orgsResponse.data.data);
+    // console.log(orgsResponse.data.data);
+
+
+    const orgsList = orgsResponse.data.data.map(item => ({
+      name: item.attributes.name,
+      type: item.attributes.type,
+      email: item.attributes.profile.data[0].attributes.email || ""
+    }));
+
+    // Get existing preferences (or empty array if none exist)
+    const existingPreferences =
+      userResponse.data[0].events_calendar_filter_preferences || [];
+    // console.log(existingPreferences);
+
+    res.render("platform/pages/events-user-preferences", { 
+      orgsList: orgsList,
+      existingPreferences: existingPreferences 
+    });
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.render("platform/pages/events-user-preferences", { 
+      orgsList: [],
+      existingPreferences: [] 
+    });
+  }
 });
+
+router.post("/event/save-preferences", async (req, res) => {
+  try {
+    // Get the user
+    const userResponse = await axios.get(
+      `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`,
+      axiosConfig
+    );
+
+    const userId = userResponse.data[0].id;
+    console.log("User ID:", userId);
+    console.log("Preferences to save:", req.body.preferences);
+    const preferences = req.body.preferences;
+
+    // Update user preferences in Strapi
+    const strapiResponse = await axios.put(
+      `${apiUrl}/users/${userId}`,
+      {
+        events_calendar_filter_preferences: preferences,
+      },
+      axiosConfig
+    );
+
+    console.log("Response status:", strapiResponse.status);
+    console.log("Response data:", strapiResponse.data);
+
+    res
+      .status(200)
+      .json({ success: true, message: "Preferences saved successfully" });
+  } catch (error) {
+    console.error("Error saving preferences:", error);
+    console.error("Error details:", error.response?.data);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to save preferences" });
+  }
+
+});
+
+
+// In your routes file (e.g., platformRoutes.js)
+router.post('/event/add-attendee', async (req, res) => {
+  try {
+    const { eventId, email } = req.body;
+    
+    if (!eventId || !email) {
+      return res.status(400).json({ success: false, message: 'Event ID and email are required' });
+    }
+    
+    // First get the current event to preserve all its properties
+    const event = await calendar.events.get({
+      calendarId: process.env.GOOGLE_CALENDAR_ID,
+      eventId: eventId
+    });
+
+    console.log(event);
+    
+    // Create a copy of the event data
+    const updatedEvent = { ...event.data };
+    
+    // Add the new attendee
+    if (!updatedEvent.attendees) {
+      updatedEvent.attendees = [];
+    }
+    
+    // Check if attendee already exists
+    const attendeeExists = updatedEvent.attendees.some(attendee => attendee.email === email);
+    
+    if (!attendeeExists) {
+      updatedEvent.attendees.push({
+        email: email,
+        responseStatus: 'needsAction'
+      });
+      
+      // Update the event
+      await calendar.events.patch({
+        calendarId: process.env.GOOGLE_CALENDAR_ID,
+        eventId: eventId,
+        resource: {
+          attendees: updatedEvent.attendees
+        },
+        sendUpdates: 'all' // This will send email notifications to attendees
+      });
+      
+      return res.json({ success: true });
+    } else {
+      return res.json({ success: true, message: 'You are already added to this event' });
+    }
+  } catch (error) {
+    console.error('Error adding attendee:', error);
+    return res.status(500).json({ success: false, message: 'An error occurred while adding you to the event' });
+  }
+});
+
+
 
 router.get("/pool-cab", async (req, res) => {
   try {
@@ -1520,7 +1717,7 @@ router.post("/update-pool", async (req, res) => {
 });
 
 router.get("/resources", async (req, res) => {
-  var resources = await axios.get(`${apiUrl}/resources`, axiosConfig);
+  var resources = await axios.get(`${apiUrl}/resources?pagination[pageSize]=200`, axiosConfig);
   res.render("platform/pages/resources", { cards: resources.data.data });
 });
 
@@ -2482,7 +2679,7 @@ router.post("/assets", async (req, res) => {
                               <h3>Acknowledgment of Responsibility:</h3>
                               <p>I understand that failure to return the device on time, or returning it in a damaged condition, may result in penalties, including the suspension of borrowing privileges and additional disciplinary actions as deemed appropriate by the university.</p>
 
-                              <h3>Borrower’s Details:</h3>
+                              <h3>Borrower's Details:</h3>
                               <p><strong>Full Name:</strong> ${
                                 req.user._json.name
                               }</p>

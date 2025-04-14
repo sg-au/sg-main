@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SG Platform</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" integrity="sha512-SqYaQuhE5QDV46cU4yX/gPe6vXUnqLMxnpa0kBm36BT2rkZ66u5hDq5APKe9pcw/SgTkbXpY4HjOyddisEC4OQ==" crossorigin="anonymous" />
+  
+    <script type='text/javascript' src='fullcalendar/gcal.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/moment@5.11.3/main.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@5.11.3/main.global.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+    <%- include("../partials/post-head") %>
+
+    <style>
+      .wrapper {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+      }
+
+      .preferences-title {
+        margin-bottom: 2rem;
+        color: #5d87ff;
+        font-weight: 600;
+      }
+
+      .accordion-button:not(.collapsed) {
+        background-color: #5d87ff15;
+        color: #5d87ff;
+      }
+
+      .accordion-button:focus {
+        border-color: #5d87ff40;
+        box-shadow: 0 0 0 0.25rem #5d87ff20;
+      }
+
+      .checkbox-container {
+        padding: 1rem;
+      }
+
+      .checkbox-wrapper {
+        margin-bottom: 0.5rem;
+      }
+
+      .checkbox-wrapper input[type="checkbox"] {
+        margin-right: 0.5rem;
+      }
+
+      .button-container {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+      }
+
+      .save-btn {
+        background-color: #5d87ff;
+        color: white;
+        border: none;
+      }
+
+      .save-btn:hover {
+        background-color: #4a6ccc;
+        color: white;
+      }
+
+      .continue-btn {
+        background-color: #2e8b57;
+        color: white;
+        border: none;
+      }
+
+      .continue-btn:hover {
+        background-color: #236b43;
+        color: white;
+      }
+
+      .container-fluid {
+        min-height: calc(100vh - 70px); /* Adjust for header height */
+        padding-bottom: 20px;
+      }
+
+      .row {
+        height: 100%;
+      }
+
+      .card {
+        height: calc(100vh - 100px) !important; /* Adjust for header + padding */
+        margin-bottom: 0 !important;
+        overflow: auto;
+      }
+
+      .card-body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .accordion {
+        flex: 1;
+        overflow-y: auto;
+      }
+
+      @media (max-width: 768px) {
+        .container-fluid {
+          min-height: calc(100vh - 60px);
+        }
+        
+        .card {
+          height: calc(100vh - 80px) !important;
+        }
+      }
+
+      .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+      }
+
+      .btn-danger:hover {
+        background-color: #bb2d3b;
+        color: white;
+      }
+
+      .continue-btn, .btn-danger {
+        transition: all 0.3s ease;
+      }
+
+      .pref-checkbox {
+        transform: scale(1);
+        transition: transform 0.2s ease;
+      }
+
+      .pref-checkbox:checked {
+        transform: scale(1.1);
+      }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+      data-sidebar-position="fixed" data-header-position="fixed">
+      <%- include("../partials/sidebar") %>
+      <div class="body-wrapper">
+        <%- include("../partials/header") %>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-12 d-flex align-items-stretch">
+              <div class="card w-100">
+                <div class="card-body p-4">
+                  <h2 class="preferences-title">Save Your Preferences</h2>
+                  <div class="accordion" id="preferencesAccordion">
+                    <!-- Clubs Section -->
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#clubsCollapse">
+                          Clubs
+                        </button>
+                      </h2>
+                      <div id="clubsCollapse" class="accordion-collapse collapse" data-bs-parent="#preferencesAccordion">
+                        <div class="checkbox-container">
+                          <!-- Dynamically populated checkboxes will go here -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Societies Section -->
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#societiesCollapse">
+                          Societies
+                        </button>
+                      </h2>
+                      <div id="societiesCollapse" class="accordion-collapse collapse" data-bs-parent="#preferencesAccordion">
+                        <div class="checkbox-container">
+                          <!-- Dynamically populated checkboxes will go here -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Departments Section -->
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#departmentsCollapse">
+                          Departments
+                        </button>
+                      </h2>
+                      <div id="departmentsCollapse" class="accordion-collapse collapse" data-bs-parent="#preferencesAccordion">
+                        <div class="checkbox-container">
+                          <!-- Dynamically populated checkboxes will go here -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Ministries Section -->
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ministriesCollapse">
+                          Ministries
+                        </button>
+                      </h2>
+                      <div id="ministriesCollapse" class="accordion-collapse collapse" data-bs-parent="#preferencesAccordion">
+                        <div class="checkbox-container">
+                          <!-- Dynamically populated checkboxes will go here -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Others Section -->
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#othersCollapse">
+                          Others
+                        </button>
+                      </h2>
+                      <div id="othersCollapse" class="accordion-collapse collapse" data-bs-parent="#preferencesAccordion">
+                        <div class="checkbox-container">
+                          <!-- Dynamically populated checkboxes will go here -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="button-container">
+                    <button type="button" class="btn save-btn" id="savePreferences">Save Preferences</button>
+                    <button type="button" class="btn continue-btn" id="continueButton">Continue</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const existingPrefs = <%- JSON.stringify((existingPreferences || []).map(p => p.email+" "+p.name)) %>
+        const orgsList = <%- JSON.stringify(orgsList || []) %>;
+        const continueButton = document.getElementById('continueButton');
+        const saveButton = document.getElementById('savePreferences');
+        let selectedPreferences = [];
+        let hasPreferencesSaved = false; // New flag to track if preferences were saved
+        console.log(existingPrefs);
+        // Function to populate checkboxes
+        function populateCheckboxes() {
+          const containers = {
+            ministry: document.querySelector('#ministriesCollapse .checkbox-container'),
+            club: document.querySelector('#clubsCollapse .checkbox-container'),
+            society: document.querySelector('#societiesCollapse .checkbox-container'),
+            department: document.querySelector('#departmentsCollapse .checkbox-container'),
+            other: document.querySelector('#othersCollapse .checkbox-container')
+          };
+
+          // const []
+
+          // Loop through organizations and create checkboxes
+          orgsList.forEach(org => {
+            const container = containers[org.type.toLowerCase()];
+            if (container) {
+              const wrapper = document.createElement('div');
+              wrapper.className = 'checkbox-wrapper';
+              
+              const uniqueId = org.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+              console.log(org);
+              if(existingPrefs.includes(org.email+" "+org.name)){
+                wrapper.innerHTML = `
+                <input type="checkbox" id="${uniqueId}" value="${org.name}" data-type="${org.type}" class="pref-checkbox" checked>
+                <label for="${uniqueId}">${org.name}</label>
+              `;
+              }else{
+                wrapper.innerHTML = `
+                <input type="checkbox" id="${uniqueId}" value="${org.name}" data-type="${org.type}" class="pref-checkbox">
+                <label for="${uniqueId}">${org.name}</label>
+              `;
+              }
+              container.appendChild(wrapper);
+            }
+          });
+
+          // Add event listeners to all checkboxes
+          document.querySelectorAll('.pref-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+              // Reset saved state when checkboxes change
+              hasPreferencesSaved = false;
+              updateContinueButton();
+            });
+          });
+        }
+
+        // Function to update continue button appearance
+        function updateContinueButton() {
+          if (!hasPreferencesSaved) {
+            // If preferences haven't been saved, show Skip
+            continueButton.textContent = 'Skip';
+            continueButton.classList.remove('continue-btn');
+            continueButton.classList.add('btn-danger');
+
+            // Add onclick redirect to /platform/event?skip=true
+            continueButton.onclick = function () {
+              window.location.href = '/platform/event?skip=true';
+            };
+          }
+          else {
+            // If preferences have been saved, show Continue
+            continueButton.textContent = 'Continue';
+            continueButton.classList.remove('btn-danger');
+            continueButton.classList.add('continue-btn');
+             // Add onclick redirect to /platform/event?skip=true
+             continueButton.onclick = function () {
+              window.location.href = '/platform/event';
+            };
+          }
+        }
+
+        // Function to save selected preferences
+        function savePreferences() {
+          selectedPreferences = [];
+          document.querySelectorAll('.pref-checkbox:checked').forEach(checkbox => {
+            // Find the corresponding organization in orgsList to get its email
+            const org = orgsList.find(org => org.name === checkbox.value);
+            selectedPreferences.push({
+              name: checkbox.value,
+              type: checkbox.dataset.type,
+              email: org.email // Include the email
+            });
+          });
+
+          // Set the saved flag to true
+          hasPreferencesSaved = true;
+          updateContinueButton();
+
+          // Make POST request to save preferences
+          fetch('/platform/event/save-preferences', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ preferences: selectedPreferences })
+          })
+          .then(response => {
+            if (response.ok) {
+              hasPreferencesSaved = true;
+              updateContinueButton();
+              alert(`Saved ${selectedPreferences.length} preferences!`);
+            } else {
+              throw new Error('Failed to save preferences');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to save preferences. Please try again.');
+          });
+        }
+
+        // Add click event listener to save button
+        saveButton.addEventListener('click', savePreferences);
+
+        // Add click event listener to continue button
+        continueButton.addEventListener('click', () => {
+          window.location.href = '/platform/event';
+        });
+
+        // Initialize the page
+        populateCheckboxes();
+        updateContinueButton(); // Set initial button state
+      });
+    </script>
+
+    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/platform/assets/js/dashboard.js"></script>
+    <script src="/platform/assets/js/theme.js"></script>
+
+    <input type="hidden" id="existingPrefs" value='<%= JSON.stringify(existingPreferences) %>' />
+</body>
+</html>
