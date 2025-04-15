@@ -35,7 +35,7 @@ function darkMode() {
         heroElement.style.filter = "invert(1) hue-rotate(180deg)";
     }
     if (iframeElement) {
-        iframeElement.style.filter = "invert(1) hue-rotate(180deg)";
+        iframeElement.style.backgroundColor= "#EAEFF4";
     }
     // if(memberImages){
     //     memberImages.forEach((image)=>{
@@ -81,7 +81,7 @@ function lightMode() {
         heroElement.style.filter = "invert(0) hue-rotate(0deg)";
     }
     if (iframeElement) {
-        iframeElement.style.filter = "invert(0) hue-rotate(0deg)";
+        iframeElement.style.backgroundColor= "transparent";
     }
 
     if (imageElement) {
