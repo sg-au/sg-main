@@ -21,6 +21,7 @@ function changeTheme() {
 }
 
 function darkMode() {
+    document.documentElement.classList.add('dark');
     var icon = document.getElementById("icon");
     var htmlElement = document.querySelector("html");
     var heroElement = document.querySelector("#hero");
@@ -67,6 +68,7 @@ function darkMode() {
 }
 
 function lightMode() {
+    document.documentElement.classList.remove('dark');
     var icon = document.getElementById("icon");
     var htmlElement = document.querySelector("html");
     var heroElement = document.querySelector("#hero");

@@ -640,14 +640,13 @@ html.dark .dataTables_wrapper .dataTables_length select {
 }
 html.dark .dataTables_wrapper .dataTables_paginate .paginate_button.current, html.dark .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
   border: 1px solid rgb(89, 91, 94);
-  background: rgba(255, 255, 255, 0.15);
+  background-color: #5d87ff;
 }
 html.dark .dataTables_wrapper .dataTables_paginate .paginate_button.disabled, html.dark .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, html.dark .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
   color: #666 !important;
 }
 html.dark .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
   border: 1px solid rgb(53, 53, 53);
-  background: rgb(53, 53, 53);
 }
 html.dark .dataTables_wrapper .dataTables_paginate .paginate_button:active {
   background: #3a3a3a;
