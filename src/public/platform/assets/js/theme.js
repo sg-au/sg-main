@@ -69,7 +69,10 @@ function darkMode() {
     imgs.forEach((item) => {
         item.style.filter = "invert(1) hue-rotate(180deg)";
     });
-
+    let primaryElems = document.querySelectorAll(".btn-primary, .active");
+    primaryElems.forEach((elem) => {
+        elem.style.filter = "invert(1) hue-rotate(170deg)";
+    });
 }
 
 function lightMode() {
@@ -116,5 +119,9 @@ function lightMode() {
     let imgs = document.querySelectorAll(".bg-image");
     imgs.forEach((item) => {
         item.style.filter = "invert(0)";
+    });
+    let primaryElems = document.querySelectorAll(".btn-primary, .active");
+    primaryElems.forEach((elem) => {
+        elem.style.filter = "none";
     });
 }
