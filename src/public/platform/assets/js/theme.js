@@ -71,7 +71,9 @@ function darkMode() {
     });
     let primaryElems = document.querySelectorAll(".btn-primary, .active");
     primaryElems.forEach((elem) => {
-        elem.style.filter = "invert(1) hue-rotate(170deg)";
+        /* Color: #5d87ff */
+        elem.style.filter = "invert(1) hue-rotate(180deg)";
+        elem.style.backgroundColor = "#5d87ff";
     });
 }
 
@@ -123,5 +125,6 @@ function lightMode() {
     let primaryElems = document.querySelectorAll(".btn-primary, .active");
     primaryElems.forEach((elem) => {
         elem.style.filter = "none";
+        elem.style.backgroundColor = "#5d87ff";
     });
 }
