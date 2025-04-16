@@ -61,10 +61,15 @@ function darkMode() {
             }
         }
     });
-    let media = document.querySelectorAll("img, picture, video");
-    media.forEach((mediaItem) => {
-        mediaItem.style.filter = "invert(1) hue-rotate(180deg)";
+    // let media = document.querySelectorAll("img, picture, video");
+    // media.forEach((mediaItem) => {
+    //     mediaItem.style.filter = "invert(0.5) hue-rotate(180deg)";
+    // });
+    let imgs = document.querySelectorAll(".bg-image");
+    imgs.forEach((item) => {
+        item.style.filter = "invert(1) hue-rotate(180deg)";
     });
+
 }
 
 function lightMode() {
@@ -89,10 +94,10 @@ function lightMode() {
     if (imageElement) {
         imageElement.style.filter = "invert(0) hue-rotate(0deg)";
     }
-    let media = document.querySelectorAll("img, picture, video");
-    media.forEach((mediaItem) => {
-        mediaItem.style.filter = "invert(0) hue-rotate(0deg)";
-    });
+    // let media = document.querySelectorAll("img, picture, video");
+    // media.forEach((mediaItem) => {
+    //     mediaItem.style.filter = "invert(0) hue-rotate(0deg)";
+    // });
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
         // Check the background image URL (assuming it's set via inline style)
@@ -107,5 +112,9 @@ function lightMode() {
                 cardBody.style.filter = "invert(0) hue-rotate(0deg)";
             }
         }
+    });
+    let imgs = document.querySelectorAll(".bg-image");
+    imgs.forEach((item) => {
+        item.style.filter = "invert(0)";
     });
 }
