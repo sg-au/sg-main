@@ -75,6 +75,13 @@ function darkMode() {
         elem.style.filter = "invert(1) hue-rotate(180deg)";
         elem.style.backgroundColor = "#5d87ff";
     });
+    let borrowAssetsBtns = document.querySelectorAll(".badge-pill, .btn-success");
+    borrowAssetsBtns.forEach((elem) => {
+        /* Color: #5d87ff */
+        elem.style.filter = "invert(1) hue-rotate(180deg)";
+        elem.style.color = "black";
+    });
+    
 }
 
 function lightMode() {
@@ -126,5 +133,10 @@ function lightMode() {
     primaryElems.forEach((elem) => {
         elem.style.filter = "none";
         elem.style.backgroundColor = "#5d87ff";
+    });
+    let borrowAssetsBtns = document.querySelectorAll(".badge-pill, .btn-success");
+    borrowAssetsBtns.forEach((elem) => {
+        /* Color: #5d87ff */
+        elem.style.filter = "none";
     });
 }
