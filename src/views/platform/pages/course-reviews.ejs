@@ -86,6 +86,37 @@
     height: 100%;
   }
   </style>
+  <style>
+
+    .search-bar {
+      width: 100%;
+      padding: 14px;
+      border-radius: 30px;
+      font-size: 14px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease-in-out;
+      color: red;
+    }
+    
+    .search-bar:focus {
+      outline: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border-color: #5d87ff; /* Change the border color on focus */
+    
+    }
+    
+    /* Style the placeholder text */
+    .search-bar::placeholder {
+      color: #888; /* Adjust the color to your preference */
+      transition: font-size 0.3s ease-out;
+    }
+    
+    /* Move the placeholder text on focus */
+    .search-bar:focus::placeholder {
+      font-size: 12px; /* Adjust the font size when moved to the top */
+    }
+    
+      </style>
   <%-include("../partials/preloader-css")%>
   <%-include("../partials/preloader-js")%>
 
@@ -334,9 +365,15 @@
     
     const table = new DataTable('#example');
 
+    /*
+    <div class="col-sm-12 mb-3">
+                  <input autofocus type="text" id="myFilter" class="form-control search-bar" onkeyup="myFunction()" placeholder="Search here..">
+                </div>
+                */
+
     
     // Set the placeholder for the search input
-    $('#example_filter label').innerHTML=`<input type="search" class="" placeholder="" aria-controls="example">`;
+    $('#example_filter label').innerHTML=`<input type="search" class="form-control search-bar" placeholder="" aria-controls="example">`;
     $('#example_filter label input').attr('placeholder', 'Search Course or Professor');
 
     // Changes to the inputs will trigger a redraw to update the table
