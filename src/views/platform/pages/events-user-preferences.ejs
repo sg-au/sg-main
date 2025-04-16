@@ -234,7 +234,7 @@
 
                   <div class="button-container">
                     <button type="button" class="btn save-btn" id="savePreferences">Save Preferences</button>
-                    <button type="button" class="btn continue-btn" id="continueButton">Continue</button>
+                    <button type="button" class="btn btn-danger" id="skipButton">Skip</button>
                   </div>
                 </div>
               </div>
@@ -244,15 +244,36 @@
       </div>
     </div>
 
+    <!-- Toast Notification (might delete)-->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+      <div id="saveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <i class="fa fa-check-circle text-success me-2"></i>
+          <strong class="me-auto">Success</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          <span id="toastMessage"></span>
+        </div>
+      </div>
+    </div>
+
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        const existingPrefs = <%- JSON.stringify((existingPreferences || []).map(p => p.email+" "+p.name)) %>
+        const existingPrefs = <%- JSON.stringify((existingPreferences || []).map(p => p.email+" "+p.name)) %>;
         const orgsList = <%- JSON.stringify(orgsList || []) %>;
-        const continueButton = document.getElementById('continueButton');
+        const skipButton = document.getElementById('skipButton');
         const saveButton = document.getElementById('savePreferences');
+        const saveToast = new bootstrap.Toast(document.getElementById('saveToast')); //NOTIF, MIGHT DELETE
         let selectedPreferences = [];
-        let hasPreferencesSaved = false; // New flag to track if preferences were saved
-        console.log(existingPrefs);
+        let hasPreferencesSaved = existingPrefs.length > 0; // NOTIF, MIGHT DELETE
+
+        // Function to show toast notification MIGHT DELETE
+        function showToast(message) {
+          document.getElementById('toastMessage').textContent = message;
+          saveToast.show();
+        }
+
         // Function to populate checkboxes
         function populateCheckboxes() {
           const containers = {
@@ -262,8 +283,6 @@
             department: document.querySelector('#departmentsCollapse .checkbox-container'),
             other: document.querySelector('#othersCollapse .checkbox-container')
           };
-
-          // const []
 
           // Loop through organizations and create checkboxes
           orgsList.forEach(org => {
@@ -294,38 +313,26 @@
             checkbox.addEventListener('change', () => {
               // Reset saved state when checkboxes change
               hasPreferencesSaved = false;
-              updateContinueButton();
+              updateSkipButton();
             });
           });
         }
 
-        // Function to update continue button appearance
-        function updateContinueButton() {
+        // Function to update skip button appearance
+        function updateSkipButton() {
           if (!hasPreferencesSaved) {
-            // If preferences haven't been saved, show Skip
-            continueButton.textContent = 'Skip';
-            continueButton.classList.remove('continue-btn');
-            continueButton.classList.add('btn-danger');
-
-            // Add onclick redirect to /platform/event?skip=true
-            continueButton.onclick = function () {
-              window.location.href = '/platform/event?skip=true';
-            };
-          }
-          else {
-            // If preferences have been saved, show Continue
-            continueButton.textContent = 'Continue';
-            continueButton.classList.remove('btn-danger');
-            continueButton.classList.add('continue-btn');
-             // Add onclick redirect to /platform/event?skip=true
-             continueButton.onclick = function () {
-              window.location.href = '/platform/event';
-            };
+            skipButton.textContent = 'Skip';
+          } else {
+            skipButton.textContent = 'Close';
           }
         }
 
         // Function to save selected preferences
         function savePreferences() {
+          // Show loading state
+          saveButton.disabled = true;
+          saveButton.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving...';
+
           selectedPreferences = [];
           document.querySelectorAll('.pref-checkbox:checked').forEach(checkbox => {
             // Find the corresponding organization in orgsList to get its email
@@ -339,7 +346,7 @@
 
           // Set the saved flag to true
           hasPreferencesSaved = true;
-          updateContinueButton();
+          updateSkipButton();
 
           // Make POST request to save preferences
           fetch('/platform/event/save-preferences', {
@@ -352,29 +359,36 @@
           .then(response => {
             if (response.ok) {
               hasPreferencesSaved = true;
-              updateContinueButton();
-              alert(`Saved ${selectedPreferences.length} preferences!`);
+              updateSkipButton();
+              showToast(`${selectedPreferences.length} preferences saved successfully!`); // NOTIF, MIGHT DELETE
+              // Add minimum 1s delay before redirecting
+              setTimeout(() => {
+                window.location.href = '/platform/event';
+              }, 3500);
             } else {
               throw new Error('Failed to save preferences');
             }
           })
           .catch(error => {
             console.error('Error:', error);
-            alert('Failed to save preferences. Please try again.');
+            showToast('Failed to save preferences. Please try again.'); // NOTIF, MIGHT DELETE
+            // Reset button state on error
+            saveButton.disabled = false;
+            saveButton.innerHTML = 'Save Preferences';
           });
         }
 
         // Add click event listener to save button
         saveButton.addEventListener('click', savePreferences);
 
-        // Add click event listener to continue button
-        continueButton.addEventListener('click', () => {
-          window.location.href = '/platform/event';
+        // Add click event listener to skip button
+        skipButton.addEventListener('click', () => {
+          window.location.href = '/platform/event?skip=true';
         });
 
         // Initialize the page
         populateCheckboxes();
-        updateContinueButton(); // Set initial button state
+        updateSkipButton(); // Set initial button state
       });
     </script>
 
