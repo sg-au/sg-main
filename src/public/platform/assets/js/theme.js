@@ -69,7 +69,7 @@ function darkMode() {
     imgs.forEach((item) => {
         item.style.filter = "invert(1) hue-rotate(180deg)";
     });
-    let primaryElems = document.querySelectorAll(".btn-primary, .active");
+    let primaryElems = document.querySelectorAll(".btn-primary, .sidebar-link.active");
     primaryElems.forEach((elem) => {
         /* Color: #5d87ff */
         elem.style.filter = "invert(1) hue-rotate(180deg)";
@@ -122,7 +122,7 @@ function lightMode() {
     imgs.forEach((item) => {
         item.style.filter = "invert(0)";
     });
-    let primaryElems = document.querySelectorAll(".btn-primary, .active");
+    let primaryElems = document.querySelectorAll(".btn-primary, .sidebar-link.active");
     primaryElems.forEach((elem) => {
         elem.style.filter = "none";
         elem.style.backgroundColor = "#5d87ff";
