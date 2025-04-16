@@ -391,6 +391,25 @@
         }
         
           </style>
+          <style>
+            html.dark .time {
+                filter: hue-rotate(172deg) invert(1);
+            }
+            html.dark .table-container th {
+                background-color: var(--navy);
+                filter: hue-rotate(172deg) invert(1);
+            }
+            html.dark .table-container .bg {
+                background-color: #47066245;
+            }
+            html.dark .lunch {
+                background-color: #4e985a;
+            }
+            /* html.dark .time {
+                background-color: #5d87ff;
+                filter: invert(0);
+            } */
+          </style>
     <%-include("../partials/preloader-css")%>
     <%-include("../partials/preloader-js")%>
 
