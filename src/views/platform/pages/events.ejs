@@ -2,6 +2,8 @@
 <!doctype html>
 <html lang="en">
 
+<!--Remove alert, remove continue button, save preferences btn redirects directly, skip button changes to 'close' if there are any saved preferences, color coding of events -->
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,9 +37,9 @@
       --fc-button-bg-color: #5d87ff;
       /* --fc-button-bg-color: red; */
       --fc-button-border-color: #5d87ff;
-      --fc-button-hover-bg-color: #1e2b37;
+      --fc-button-hover-bg-color: #4a6ccc;
       /* --fc-button-hover-bg-color: red; */
-      --fc-button-hover-border-color: #1a252f;
+      --fc-button-hover-border-color: #4a6ccc;
       --fc-button-active-bg-color: #4a6ccc;
       /* --fc-button-active-bg-color: red; */
       --fc-button-active-border-color: #4a6ccc;
@@ -106,7 +108,7 @@
     }
 
     .modal{
-      top: 30%;
+      top: 20%;
     }
 
     .fc {
@@ -198,8 +200,11 @@
     }
 
     a.fc-event-past {
-      background-color: grey !important; 
-      border: none;
+      background-color: #82868a !important; 
+      border-color: #82868a !important;
+      opacity: 0.6;
+      color: blue !important;
+      text-decoration: line-through;
     }
 
     a.fc-event.hidden {
@@ -353,7 +358,7 @@
   }
 
   .card {
-    height: 105vh !important;
+    height: 110vh !important;
     margin-bottom: 0 !important;
     overflow: visible;
   }
@@ -493,18 +498,38 @@
                 // First check if this is a user preference
                 if (userPreferences.some(pref => pref.email === emailSource)) {
                   eventData.kind = 'userPreference';
+                  eventData.color = '#5d87ff'; // Blue color for user preferences
                 } 
                 // If not a user preference, check orgsList
                 else {
                   const matchingOrg = orgsList.find(org => org.email === emailSource);
                   if (matchingOrg) {
                     eventData.kind = matchingOrg.type.toLowerCase();
+                    // Set different colors based on organization type
+                    switch(matchingOrg.type.toLowerCase()) {
+                      case 'club':
+                        eventData.color = '#0cc0df'; // Cyan for clubs
+                        break;
+                      case 'society':
+                        eventData.color = '#8c52ff'; // Purple for societies
+                        break;
+                      case 'ministry':
+                        eventData.color = '#871829'; // TechMin Red for Ministries
+                        break;
+                      case 'department':
+                        eventData.color = '#ff914d'; // Yellow for departments
+                        break;
+                      default:
+                        eventData.color = '#5b52ff'; // Default Blue for others
+                    }
                   } else {
                     eventData.kind = 'other';
+                    eventData.color = '#5b52ff'; // Default Blue for others
                   }
                 }
               } else {
                 eventData.kind = 'other';
+                eventData.color = '#5b52ff'; // Default Blue for others
               }
               
               return eventData;
@@ -684,38 +709,13 @@
           
           const label = document.createElement('label');
           label.htmlFor = kind;
-          label.textContent = kind === 'club' ? 'Clubs' :  kind === 'society' ? 'Societies' :  kind === 'ministry' ? 'Ministries' : kind === 'department' ? 'Departments' : 'Preferences';
+          label.textContent = kind === 'club' ? 'Clubs' :  kind === 'society' ? 'Societies' :  kind === 'ministry' ? 'Ministries' : kind === 'department' ? 'Departments' : 'My Preferences';
           
           wrapper.appendChild(checkbox);
           wrapper.appendChild(label);
           filterContainer.appendChild(wrapper);
         });
       }
-
-      // let isUpdatingFilters = false;
-
-      // function updateFilters() {
-      //   if (isUpdatingFilters) return;
-      //   isUpdatingFilters = true;
-
-      //   try {
-      //     const events = calendar.getEvents();
-      //     events.forEach(event => {
-      //       const kind = event.extendedProps.kind || 'other';
-            
-      //       // Get filter state for this kind
-      //       const kindFilterElement = document.getElementById(`filter-${kind}`);
-      //       const shouldShow = kindFilterElement ? kindFilterElement.checked : false;
-            
-      //       const currentDisplay = event.getProp('display');
-      //       if (currentDisplay !== (shouldShow ? 'auto' : 'none')) {
-      //         event.setProp('display', shouldShow ? 'auto' : 'none');
-      //       }
-      //     });
-      //   } finally {
-      //     isUpdatingFilters = false;
-      //   }
-      // }
 
       calendar.render();
 
@@ -731,15 +731,6 @@
         // Don't call updateFilters here as it will be called by eventsSet
       });
 
-      // // Call updateFilters when calendar view changes
-      // calendar.on('datesSet', function() {
-      //   updateFilters();
-      // });
-
-      // // Call updateFilters when calendar is first loaded
-      // calendar.on('eventsSet', function() {
-      //   updateFilters();
-      // });
 
       // Add event listener for the "Add to Calendar" button
       document.getElementById('addToCalendar').addEventListener('click', function() {
@@ -799,7 +790,7 @@
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     <h3 style="margin: 0;">Filters</h3>
                     <a href="/platform/event/save-preferences" class="btn btn-primary" style="padding: 8px 16px;">
-                      <i class="fa fa-cog"></i> Select Preferences
+                      <i class="fa fa-cog"></i> Edit my Preferences
                     </a>
                   </div>
                   <div class="filters-container" id="calendar-filters">
