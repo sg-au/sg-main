@@ -55,6 +55,19 @@ router.get("/edit-catalogue-listing/:id", async (req, res) => {
       axiosConfig
     );
     listing = listing.data.data;
+    function escapeString(str) {
+      if (typeof str !== 'string') return str;
+      return str
+        .replace(/\\/g, '\\\\')    // Escape backslashes
+        .replace(/"/g, '\\"')      // Escape double quotes
+        .replace(/\n/g, '\\n')     // Escape newlines
+        .replace(/\r/g, '\\r')     // Escape carriage returns
+        .replace(/\t/g, '\\t')     // Escape tabs
+        .replace(/\f/g, '\\f');    // Escape form feeds
+    }
+    listing.attributes.description = escapeString(listing.attributes.description);
+    listing.attributes.short_description = escapeString(listing.attributes.short_description);
+    listing.attributes.induction_description = escapeString(listing.attributes.induction_description);
     linkedOrganisations = listing.attributes.profile.data;    
     const hasAccess = linkedOrganisations.some(org => 
       org.attributes.email === req.user._json.email
@@ -64,10 +77,18 @@ router.get("/edit-catalogue-listing/:id", async (req, res) => {
       let users = await axios.get(
         `${apiUrl}/users?pagination[pageSize]=4000`,
         axiosConfig
-      );            
+      );
+      
+      // Extract only the required user data
+      const simplifiedUsers = users.data.map(user => ({
+        id: user.id,
+        email: user.email,
+        username: user.username
+      }));
+      
       res.render("organisation/pages/edit-catalogue-listing", {            
         listing: listing,
-        users: users.data,
+        users: simplifiedUsers,
       });
     } else {
       res.send("error 404");
@@ -80,8 +101,29 @@ router.get("/edit-catalogue-listing/:id", async (req, res) => {
 router.post("/update-catalogue-listing", async (req, res) => {  
   try {
       const listingId = req.body.id;
-      req.body.circle1_humans = JSON.parse(req.body.circle1_humans);
-      req.body.circle2_humans = JSON.parse(req.body.circle2_humans);        
+      let circle1HumansData = [];
+      let circle2HumansData = [];
+      let circle1UserIds = [];
+      
+      try {
+          if (req.body.circle1_humans) {
+            circle1HumansData = JSON.parse(req.body.circle1_humans);
+            circle1UserIds = circle1HumansData.map(user => user.id);
+          }
+          
+          if (req.body.circle2_humans) {
+            circle2HumansData = JSON.parse(req.body.circle2_humans);
+          }
+      } catch (jsonError) {
+          console.error("Error parsing JSON data:", jsonError);
+          return res.status(400).send("Failed to parse user data");
+      } 
+      
+      let induction_end = null;
+      if (req.body.induction === 'on' && req.body.induction_end) {
+          // Use the date string directly from the input - it will be in ISO format from datetime-local input
+          induction_end = req.body.induction_end;
+      }
 
       const { data: existingListing } = await axios.get(`${apiUrl}/organisations/${listingId}`, axiosConfig);
       const updatedListing = {
@@ -89,10 +131,10 @@ router.post("/update-catalogue-listing", async (req, res) => {
               name: req.body.name,
               short_description: req.body.short_description,
               description: req.body.description,
-              circle1_humans: req.body.circle1_humans,
-              circle2_humans: req.body.circle2_humans,
+              circle1_humans: circle1HumansData,
+              circle2_humans: circle2HumansData,
               induction: req.body.induction === 'on' ? true : false,
-              induction_end: req.body.induction_end,
+              induction_end: induction_end,
               induction_description: req.body.induction_description,
               website_blog: req.body.website_blog,
               instagram: req.body.instagram,

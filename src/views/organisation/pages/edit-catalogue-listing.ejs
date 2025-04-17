@@ -180,7 +180,7 @@
                                                                     </div>
                                                                     
                                                                     <!-- Search results dropdown -->
-                                                                    <div id="searchResults2" class="dropdown-menu" style="max-height: 200px; width: 90%; display: none;"></div>
+                                                                    <div id="searchResults2" class="dropdown-menu" style="max-height: 200px; width: 90%; display: none; overflow-x: auto;"></div>
                                                                     
                                                                     <!-- Selected users chips container -->
                                                                     <div id="selectedUsers2" class="d-flex flex-wrap gap-2 mb-3">
@@ -264,7 +264,7 @@
                 // Initialize the selected users array from existing data
                 let selectedUsers = [];
                 let selectedUsers2 = [];
-                let listing = JSON.parse('<%- JSON.stringify(listing) %>');                
+                let listing = JSON.parse(`<%- JSON.stringify(listing) %>`);
                 
                 // Parse the existing circle1_humans data if it exists
                 if (listing.attributes.circle1_humans && listing.attributes.circle1_humans.data) {

@@ -198,7 +198,7 @@ function ensureIsOrganisation(req, res, next) {
     const userEmail = req.user._json.email;
     
     // Make API request to check if this email is associated with any organization
-    axios.get(`${apiUrl}/organisations?populate=profile`, axiosConfig)
+    axios.get(`${apiUrl}/organisations?populate=profile&pagination[pageSize]=200`, axiosConfig)
       .then(response => {
         if (!response.data || !response.data.data) {
           console.error("No data returned from organizations API");
@@ -209,19 +209,19 @@ function ensureIsOrganisation(req, res, next) {
         let hasAccess = false;
         
         // Check if the user's email matches any organization's profile email
-        for (const org of orgs) {
+        for (const org of orgs) {          
           if (org.attributes.profile && 
               org.attributes.profile.data && 
               org.attributes.profile.data.length > 0) {
             
-            for (const profile of org.attributes.profile.data) {
-              if (profile.attributes.email === userEmail) {
-                hasAccess = true;
-                break;
+              for (const profile of org.attributes.profile.data) {
+                if (profile.attributes.email === userEmail) {
+                  hasAccess = true;
+                  break;
+                }
               }
-            }
             
-            if (hasAccess) break;
+              if (hasAccess) break;
           }
         }
         
