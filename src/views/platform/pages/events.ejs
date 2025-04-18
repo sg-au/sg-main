@@ -19,6 +19,7 @@
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/moment@5.11.3/main.global.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.40/moment-timezone-with-data.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@5.11.3/main.global.min.js"></script>
   <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.9/index.global.min.js'></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -64,6 +65,15 @@
       --fc-today-bg-color: rgba(255, 220, 40, 0.15);
       --fc-now-indicator-color: red;
     }
+    .fc .fc-scroller-liquid-absolute::webkit-scrollbar-track {
+      background: red;
+    }
+    .fc .fc-scroller-liquid-absolute::webkit-scrollbar-thumb {
+      /* background: transparent;
+       */
+       width: 2px;
+    }
+
     /* Wrapper layout for large screens */
     .wrapper {
       height: 100%;
@@ -72,27 +82,60 @@
       padding: 20px;
     }
 
+    /* Update the filter styles */
     .filter {
       padding: 0.5em 0;
       display: flex;
       flex-direction: column;
-      gap: 15px;
       font-size: 1em;
       margin-bottom: 20px;
+      gap: 15px;
     }
 
-    .filter h3 {
-      margin: 0;
+    /* Style for the fixed header section */
+    .filter-header {
+      position: sticky;
+      left: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 10px;
+      background-color: #fff; /* Match your background color */
+      z-index: 1;
+      padding-right: 15px;
     }
 
+    /* Container for scrollable filters */
     .filters-container {
       display: flex;
       justify-content: space-around;
-      flex-wrap: nowrap;
       gap: 15px;
+      overflow-x: auto;
+      padding-bottom: 5px; /* Add some padding for the scrollbar */
+      scrollbar-width: thin;
+      scrollbar-color: #888 #f1f1f1;
     }
 
+    /* Scrollbar styling for the filters container */
+    .filters-container::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .filters-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 2px;
+    }
+
+    .filters-container::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 2px;
+    }
+
+    .filters-container::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+    /* Style for individual filter items */
     .event_filter_wrapper {
       margin: 0;
       white-space: nowrap;
@@ -100,10 +143,40 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-shrink: 0; /* Prevent filters from shrinking */
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 800px) {
+      .filter {
+        padding: 10px 0;
+      }
+      
+      .filter-header {
+        padding-right: 10px;
+      }
+      
+      .filters-container {
+        gap: 10px;
+      }
+    }
+
+    /* For very small screens */
+    @media (max-width: 480px) {
+      .filter-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .filter-header .btn {
+        width: 100%;
+      }
     }
 
     #calendar {
       flex: 1;
+      min-height: 0;
       width: 100%;
     }
 
@@ -125,6 +198,7 @@
 
     .fc .fc-scrollgrid-liquid {
       height: 100%;
+      /* width: thin; */
     }
 
     .fc-view-harness-active {
@@ -367,12 +441,11 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: scroll;
   }
 
-  #calendar {
-    flex: 1;
-    min-height: 0;
+  .wrapper #calendar{
+    overflow-y: hidden;
   }
 
   .fc {
@@ -457,6 +530,131 @@
   #addToCalendar i {
     font-size: 1.1em;
   }
+
+  /* FullCalendar scrollbar styling */
+  .fc-scroller {
+    overflow: auto !important;
+  }
+
+  /* For Webkit browsers (Chrome, Safari) */
+  .fc-scroller::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .fc-scroller::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .fc-scroller::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+
+  /* Show scrollbar when hovering/scrolling */
+  .fc-scroller:hover::-webkit-scrollbar-thumb,
+  .fc-scroller:active::-webkit-scrollbar-thumb {
+    background-color: rgba(136, 136, 136, 0.5);
+  }
+
+  /* For Firefox */
+  .fc-scroller {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .fc-scroller:hover,
+  .fc-scroller:active {
+    scrollbar-color: rgba(136, 136, 136, 0.5) transparent;
+  }
+
+  /* Event time text responsiveness */
+.fc-event-time {
+  font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+  .fc-event-time {
+    font-size: 0.8em;
+  }
+  
+  .fc-event-title {
+    font-size: 0.8em;
+  }
+  
+  .fc-daygrid-event {
+    padding: 2px 4px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .fc-event-time {
+    font-size: 0.6em;
+  }
+  
+  .fc-event-title {
+    font-size: 0.6em;
+  }
+  
+  .fc-daygrid-event {
+    padding: 1px 3px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .fc-event-time {
+    font-size: 0.55em;
+  }
+  
+  .fc-event-title {
+    font-size: 0.55em;
+  }
+  
+  .fc-daygrid-event {
+    padding: 1px 2px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .fc-event-time {
+    font-size: 0.65em;
+  }
+  
+  .fc-event-title {
+    font-size: 0.65em;
+  }
+  
+  .fc-daygrid-event {
+    padding: 1px 2px !important;
+  }
+}
+
+/* Update modal styling */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-dialog {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%) !important;
+  margin: 0 auto;
+  max-width: 500px;
+}
+
+/* For smaller screens */
+@media (max-width: 576px) {
+  .modal-dialog {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+}
   </style>
 
   <script>
@@ -563,28 +761,34 @@
         expandRows: true,
         eventClick: function(info) {
           info.jsEvent.preventDefault();
-          currentEvent = info.event; // Store the clicked event
-          
-          $('.modal-title').text(info.event.title);
+          currentEvent = info.event;
+
+          $('.modal-title').text(currentEvent.title);
           let modalContent = '';
-          
-          if (info.event.extendedProps.location) {
-            modalContent += '<p><strong>Venue:</strong> ' + info.event.extendedProps.location + '</p>';
-          }
-          
-          if (info.event.extendedProps.description) {
-            modalContent += '<p><strong>Description:</strong> ' + info.event.extendedProps.description + '</p>';
+
+          // Format and add event time with timezone
+          if (currentEvent.start || currentEvent.end) {
+            const startTime = currentEvent.start ? moment(currentEvent.start).tz('Asia/Kolkata').format('h:mma') : '';
+            const endTime = currentEvent.end ? moment(currentEvent.end).tz('Asia/Kolkata').format('h:mma') : '';
+            if (startTime && endTime) {
+              modalContent += `<p><strong>Time:</strong> ${startTime.toLowerCase()} - ${endTime.toLowerCase()}</p>`;
+            }
           }
 
           // Get the email source from the event
-          const emailSource = info.event.extendedProperties?.shared?.emailSource;
-          
+          const emailSource = currentEvent.extendedProps?.emailSource;
+
           // Find the matching organization in orgsList
-          if (emailSource) {
-            const matchingOrg = orgsList.find(org => org.email === emailSource);
-            if (matchingOrg) {
-              modalContent += '<p><strong>Organized By:</strong> ' + matchingOrg.name + '</p>';
-            }
+          const matchingOrg = orgsList.find(org => org.email === emailSource);
+          matchingName = matchingOrg ? matchingOrg.name : '';
+          modalContent += '<p><strong>Organized By:</strong> ' + matchingName + '</p>';
+          
+          if (currentEvent.extendedProps.location) {
+            modalContent += '<p><strong>Venue:</strong> ' + currentEvent.extendedProps.location + '</p>';
+          }
+          
+          if (currentEvent.extendedProps.description) {
+            modalContent += '<p><strong>Description:</strong> ' + currentEvent.extendedProps.description + '</p>';
           }
           
           $('.modal-body-text').html(modalContent);
@@ -604,42 +808,16 @@
               kinds.push($(this).val());
             }
           });
-          
-          // // Filter by state
-          // if (states.length) {
-          //   result = result && states.indexOf(info.event.extendedProps.state) >= 0;
-          // }
-
-          // Filter by kind (holidays always displayed)
           if (kinds.length) {
-            // First try to get kind from extendedProps.kind
-            // const eventKind = info.event.extendedProps.kind || 
-            //                  (info.event.extendedProps.extendedProperties && 
-            //                   info.event.extendedProps.extendedProperties.shared && 
-            //                   info.event.extendedProps.extendedProperties.shared.kind) || 
-            //                  'event';
-            
-            // result = result && (kinds.indexOf(eventKind) >= 0 || eventKind === 'holiday');
-
             result = result && kinds.indexOf(info.event.extendedProps.kind) >= 0;
           }
           
-          // Add extra classes based on kind
-          // let kindClass = '';
-          // const eventKind = info.event.extendedProps.kind || 
-          //                  (info.event.extendedProperties && 
-          //                   info.event.extendedProperties.shared && 
-          //                   info.event.extendedProperties.shared.kind) || 
-          //                  'event';
-          
-          // kindClass = 'event-kind-' + eventKind;
           
           if (!result) {
             return "hidden";
           }
           return result;
           
-          // return [kindClass];
         },
         eventDidMount: function(info) {
           // Get kind from extended properties
@@ -787,8 +965,8 @@
               <!-- Filter + Calendar Wrapper -->
               <div class="wrapper">
                 <div class="filter">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <h3 style="margin: 0;">Filters</h3>
+                  <div class="filter-header">
+                    <h3>Filters</h3>
                     <a href="/platform/event/save-preferences" class="btn btn-primary" style="padding: 8px 16px;">
                       <i class="fa fa-cog"></i> Edit my Preferences
                     </a>
