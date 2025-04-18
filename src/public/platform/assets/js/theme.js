@@ -27,7 +27,7 @@ function darkMode() {
     var heroElement = document.querySelector("#hero");
     var iframeElement = document.querySelector("iframe");
     var memberImages = document.querySelectorAll(".member-img");
-    var imageElement = document.querySelector(".card img");
+    var imageElement = document.querySelectorAll(".card img");
 
     document.getElementById('drkMdIcon').className = "ti ti-sun";
 
@@ -44,7 +44,9 @@ function darkMode() {
     //     });
     // }
     if (imageElement) {
-        imageElement.style.filter = "invert(1) hue-rotate(180deg)";
+        imageElement.forEach((image) => {
+            image.style.filter = "invert(1) hue-rotate(180deg)";
+        });        
     }
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
@@ -91,7 +93,7 @@ function lightMode() {
     var heroElement = document.querySelector("#hero");
     var iframeElement = document.querySelector("iframe");
     var memberImages = document.querySelectorAll(".member-img");
-    var imageElement = document.querySelector(".card img");
+    var imageElement = document.querySelectorAll(".card img");
 
     document.getElementById('drkMdIcon').className = "ti ti-moon";
 
@@ -104,7 +106,9 @@ function lightMode() {
     }
 
     if (imageElement) {
-        imageElement.style.filter = "invert(0) hue-rotate(0deg)";
+        imageElement.forEach((image) => {
+            image.style.filter = "invert(0) hue-rotate(0deg)";
+        });        
     }
     // let media = document.querySelectorAll("img, picture, video");
     // media.forEach((mediaItem) => {
