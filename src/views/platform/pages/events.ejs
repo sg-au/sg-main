@@ -618,6 +618,10 @@
   .fc-daygrid-event {
     padding: 1px 2px !important;
   }
+
+  .card-event-wrapper{
+    width: 55vw;
+  }
 }
 
 @media (max-width: 380px) {
@@ -657,6 +661,9 @@
   .modal-dialog {
     max-width: 90%;
     margin: 0 auto;
+  }
+  .card-event-wrapper{
+    width: 100% !important;
   }
 }
 
@@ -726,26 +733,26 @@
   background: white !important;
   padding: 0 !important;
   cursor: pointer;
-  /* width: 68vw; */
-  /* background: red !important; */
+  width: 95% !important; /* Fixed width percentage of container */
+  max-width: none !important; /* Remove max-width constraint */
 }
 
 .fc-list-event:hover {
   transform: translateY(-2px);
+  background: #f5f5f5 !important;
   box-shadow: 0 4px 8px rgba(0,0,0,0.12) !important;
 }
 
 .fc-list-event-dot {
   display: none !important; /* Hide the default dot */
 }
-
 .fc-list-event-title {
   padding: 10px 15px !important;
   font-weight: 500 !important;
   color: #333 !important;
-  /* color: red !important; */
-  /* display: none; */
+  width: 100% !important; /* Make title cell full width */
   border-top: none !important;
+  flex-wrap: wrap;
 }
 
 .fc-list-event-time {
@@ -754,7 +761,8 @@
   color: #666 !important;
   border-top: none !important;
   border-bottom: none !important;
-  font-size: 0.9em !important;
+  /* font-size: 0.9em !important; */
+  font-size: 20px;
 }
 
 .fc-list-event-graphic {
@@ -765,11 +773,12 @@
 .card-event-wrapper {
   display: flex;
   flex-direction: column;
-  width: 40vw;
+  flex-wrap: wrap;
   border-left: 5px solid; /* This will be colored based on event type */
   background-color: white;
   border-radius: 6px;
   padding: 10px 15px;
+  /* background-color: red; */
 }
 
 /* Custom coloring for different event types */
@@ -802,13 +811,14 @@
   display: flex;
   flex-direction: column;
   /* background-color: red !important; */
-  width: 40vw;
+  width: 100%; /* Use full width of container */
 }
 
 .event-card-title {
   font-weight: 600;
   color: #222;
-  font-size: 1em;
+  /* font-size: 1em; */
+  font-size: 18px;
   margin-bottom: 6px;
   /* background-color: red !important; */
 }
@@ -819,8 +829,11 @@
   text-wrap: normal;
   /* justify-content: space-between; */
   flex-direction: column;
-  font-size: 0.85em;
+  /* font-size: 0.85em; */
+  font-size: 15px;
   color: #666;
+  padding-right: 15px; /* Add some padding on the right */
+  width: 100%; /* Full width of parent */
 }
 
 /* .event-card-time, .event-card-organizer {
@@ -837,6 +850,13 @@
   height: 100%;
   overflow-y: auto !important;
   padding-top: 10px;
+  width: 100% !important;
+}
+
+/* Fix the FC container width issues */
+.fc-scroller-liquid-absolute {
+  width: 100% !important;
+  overflow-x: hidden !important;
 }
 
   </style>
@@ -854,6 +874,15 @@
       const userEmail = JSON.parse(document.getElementById('userEmail').value || '');
       var currentEvent = null; // Store the currently selected event
 
+      // Set initial view based on screen width
+      const width = window.innerWidth;
+      let initialCalendarView = 'dayGridMonth';
+      
+      // Choose view based on screen width
+      if (width < 768) {
+        initialCalendarView = 'cardListWeek';
+      }
+      
       var calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
           start: 'prev,today,next',
@@ -862,7 +891,7 @@
         },
         timeZone: 'Asia/Kolkata',
         weekNumbers: true,
-        initialView: 'dayGridMonth',
+        initialView: initialCalendarView, // Use our responsive initialView
         
         // Add custom view for card list
         views: {
@@ -879,7 +908,7 @@
           },
           cardListWeek: {
             type: 'listWeek',
-            duration: { weeks: 1 },
+            duration: { days: 10 },
             buttonText: 'List',
             listDayFormat: { weekday: 'long', month: 'short', day: 'numeric', omitCommas: true },
             listDaySideFormat: { month: 'short', day: 'numeric', year: 'numeric' }
@@ -957,8 +986,8 @@
           let modalContent = '';
           // Format and add event time with timezone
           if (currentEvent.start || currentEvent.end) {
-            const startTime = currentEvent.start ? moment(currentEvent.start).tz('Asia/Kolkata').format('h:mma') : '';
-            const endTime = currentEvent.end ? moment(currentEvent.end).tz('Asia/Kolkata').format('h:mma') : '';
+            const startTime = currentEvent.start ? moment(currentEvent.start).subtract(5.5, 'hours').tz('Asia/Kolkata').format('h:mma') : '';
+            const endTime = currentEvent.end ? moment(currentEvent.end).subtract(5.5, 'hours').tz('Asia/Kolkata').format('h:mma') : '';
             if (startTime && endTime) {
               modalContent += `<p><strong>Time:</strong> ${startTime.toLowerCase()} - ${endTime.toLowerCase()}</p>`;
             }
@@ -1039,23 +1068,18 @@
               const emailSource = info.event.extendedProps.emailSource;
               const matchingOrg = orgsList.find(org => org.email === emailSource);
               const orgBodies = info.event.extendedProps.orgBody || matchingOrg || 'N/A';
-              console.log(orgBodies);
-
-              // const orgName = matchingOrg ? matchingOrg.name : 'Other';
               
-              // Clear the title cell first to prevent duplicate titles
-              // titleCell.innerHTML = '';
-              // Clear any existing content inside the title cell (including FullCalendar's auto-rendered <a>)
+              // Clear any existing content inside the title cell
               while (titleCell.firstChild) {
                 titleCell.removeChild(titleCell.firstChild);
               }
-
               
               // Create a wrapper for the card styling
               const cardWrapper = document.createElement('div');
               cardWrapper.className = 'card-event-wrapper';
+              cardWrapper.style.width = '80vw'; /* Make card wider */
               
-              // Create the content with simplified layout - eliminating duplicate title
+              // Create the content with simplified layout
               cardWrapper.innerHTML = `
                 <div class="event-card-content">
                   <div class="event-card-title">${titleText}</div>
@@ -1072,6 +1096,22 @@
               
               // Hide the time cell
               timeCell.style.display = 'none';
+              
+              // Make the entire list event clickable to properly trigger the modal
+              info.el.style.cursor = 'pointer';
+              info.el.addEventListener('click', function(e) {
+                // Prevent the default action
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Manually trigger the event click handler
+                calendar.trigger('eventClick', {
+                  el: info.el,
+                  event: info.event,
+                  jsEvent: e,
+                  view: calendar.view
+                });
+              });
             }
           }
           // Add a scroll event listener to detect when day headers reach the top
