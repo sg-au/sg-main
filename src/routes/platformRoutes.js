@@ -1376,8 +1376,48 @@ router.get("/grade-planner", (req, res) => {
   res.render("platform/pages/grade-planner");
 });
 
-// router.get("/events", (req, res) => {
-//   res.render("platform/pages/events-2");
+// router.get("/events", async (req, res) => {
+//   try {
+//     // Get user's preferences
+//     const userResponse = await axios.get(
+//       `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=*`,
+//       axiosConfig
+//     );
+//     const orgsResponse = await axios.get(
+//   `${apiUrl}/organisations?populate[profile][fields]=email&fields[0]=name&fields[1]=type&filters[profile][id][$notNull]=true&pagination[pageSize]=2000`,
+//         axiosConfig
+//       );
+
+//     const orgsList = orgsResponse.data.data.map(item => ({
+//       name: item.attributes.name || '',
+//       type: item.attributes.type || '',
+//       email: item.attributes.profile.data[0]?.attributes.email || ''
+//     }));
+    
+//     // Get existing preferences (or empty array if none exist)
+//     const userPreferences =
+//       userResponse.data[0]?.events_calendar_filter_preferences || [];
+//     // console.log(userPreferences);
+
+//     // console.log(userResponse.data[0].email);
+
+//     if(userPreferences.length === 0 && req.query.skip!="true") {
+//       res.redirect("/platform/event/save-preferences");
+//     }else{
+//       res.render("platform/pages/events-2", { // Make sure this matches your actual template name
+//         userPreferences: userPreferences, // Don't stringify here
+//         orgsList: orgsList,
+//         userEmail:  userResponse.data[0].email // Don't stringify here
+//       });
+//     }
+//   } catch (error) {
+//     console.error('Error fetching user preferences:', error);
+//     res.render("platform/pages/events-2", { // Make sure this matches your actual template name
+//       userPreferences: [],
+//       orgsList: [],
+//       userEmail:  userResponse.data[0].email// Provide empty array for orgsList too
+//     });
+//   }
 // });
 
 router.get("/event", async (req, res) => {
