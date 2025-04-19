@@ -108,12 +108,13 @@
     /* Container for scrollable filters */
     .filters-container {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-around; 
       gap: 15px;
       overflow-x: auto;
       padding-bottom: 5px; /* Add some padding for the scrollbar */
       scrollbar-width: thin;
       scrollbar-color: #888 #f1f1f1;
+      flex-wrap: nowrap; /* Prevent wrapping */
     }
 
     /* Scrollbar styling for the filters container */
@@ -157,6 +158,8 @@
       }
       
       .filters-container {
+        justify-content: space-evenly;
+        flex-wrap: wrap;
         gap: 10px;
       }
     }
@@ -293,6 +296,7 @@
     }
 
     .fc .fc-toolbar-title {
+      text-align: center;
       font-size: 1.2em;
     }
 
@@ -655,13 +659,191 @@
     margin: 0 auto;
   }
 }
-  </style>
 
+/* Custom Card List View Styling */
+.fc-list-view {
+  border: none !important;
+  background: transparent !important;
+  /* background-color: red !important; */
+  position: relative; /* Added for sticky positioning */
+}
+
+.fc .fc-list-empty {
+  background-color: rgba(208, 208, 208, 0.1);
+  padding: 2em;
+  text-align: center;
+  border-radius: 8px;
+}
+
+/* Day Header Styling as Section Dividers - Make them sticky */
+.fc .fc-list-day {
+  background: #f8f9fa;
+  /* background: #5d87ff; */
+  /* color: white; */
+  margin: 10px 0;
+  border-radius: 6px;
+  border-left: 4px solid #5d87ff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  position: relative;
+  z-index: 5;
+}
+
+/* Sticky day headers */
+.fc .fc-list-day.fc-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin-top: 0;
+  /* background-color: red !important; */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.fc .fc-list-day-text {
+  font-weight: 600;
+  color: white !important;
+}
+
+.fc .fc-list-day-cushion {
+  padding: 12px 15px !important;
+  background: transparent !important;
+  display: flex;
+  color: white !important;
+  justify-content: space-between;
+}
+
+.fc-theme-standard .fc-list-day-cushion {
+  background-color:  #5d87ff !important;
+  /* color: white !important; */
+}
+
+/* Card Styling for Events */
+.fc-list-event {
+  display: block !important;
+  margin: 8px 10px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08) !important;
+  transition: transform 0.2s, box-shadow 0.2s !important;
+  background: white !important;
+  padding: 0 !important;
+  cursor: pointer;
+  /* width: 68vw; */
+  /* background: red !important; */
+}
+
+.fc-list-event:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12) !important;
+}
+
+.fc-list-event-dot {
+  display: none !important; /* Hide the default dot */
+}
+
+.fc-list-event-title {
+  padding: 10px 15px !important;
+  font-weight: 500 !important;
+  color: #333 !important;
+  /* color: red !important; */
+  /* display: none; */
+  border-top: none !important;
+}
+
+.fc-list-event-time {
+  padding: 10px 15px !important;
+  /* background-color: red !important; */
+  color: #666 !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  font-size: 0.9em !important;
+}
+
+.fc-list-event-graphic {
+  display: none !important; /* Hide the graphic cell */
+}
+
+/* Custom card wrapper for each event */
+.card-event-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 40vw;
+  border-left: 5px solid; /* This will be colored based on event type */
+  background-color: white;
+  border-radius: 6px;
+  padding: 10px 15px;
+}
+
+/* Custom coloring for different event types */
+.event-kind-club .card-event-wrapper {
+  border-left-color: #0cc0df;
+}
+
+.event-kind-society .card-event-wrapper {
+  border-left-color: #8c52ff;
+}
+
+.event-kind-ministry .card-event-wrapper {
+  border-left-color: #871829;
+}
+
+.event-kind-department .card-event-wrapper {
+  border-left-color: #ff914d;
+}
+
+.event-kind-userPreference .card-event-wrapper {
+  border-left-color: #5d87ff;
+}
+
+.event-kind-other .card-event-wrapper {
+  border-left-color: #5b52ff;
+}
+
+/* Card content layout - Updated for cleaner design */
+.event-card-content {
+  display: flex;
+  flex-direction: column;
+  /* background-color: red !important; */
+  width: 40vw;
+}
+
+.event-card-title {
+  font-weight: 600;
+  color: #222;
+  font-size: 1em;
+  margin-bottom: 6px;
+  /* background-color: red !important; */
+}
+
+.event-card-details {
+  display: flex;
+  align-items: flex-start;
+  text-wrap: normal;
+  /* justify-content: space-between; */
+  flex-direction: column;
+  font-size: 0.85em;
+  color: #666;
+}
+
+/* .event-card-time, .event-card-organizer {
+  display: inline-block;
+} */
+
+/* Hidden events in list view */
+.fc-list-event.hidden {
+  display: none !important;
+}
+
+/* Container for the card view */
+.fc-cardList-view {
+  height: 100%;
+  overflow-y: auto !important;
+  padding-top: 10px;
+}
+
+  </style>
   <script>
     const GOOGLE_CALENDAR_API_KEY = '<%= process.env.CALENDAR_API_TOKEN_READONLY %>';
     const GOOGLE_CALENDAR_ID = '<%= process.env.GOOGLE_CALENDAR_ID %>';
   </script>
-
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Parse user preferences from hidden input
@@ -676,12 +858,34 @@
         headerToolbar: {
           start: 'prev,today,next',
           center: 'title',
-          end: 'dayGridMonth,dayGridWeek,timeGridDay,listWeek'
+          end: 'dayGridMonth,dayGridWeek,timeGridDay,cardListWeek'
         },
         timeZone: 'Asia/Kolkata',
         weekNumbers: true,
         initialView: 'dayGridMonth',
         
+        // Add custom view for card list
+        views: {
+          dayGridMonth: {
+            titleFormat: { year: 'numeric', month: 'long' }
+          },
+          dayGridWeek: {
+            titleFormat: { year: 'numeric', month: 'short', day: '2-digit' },
+            dayHeaderFormat: { weekday: 'short', day: '2-digit' }
+          },
+          timeGridDay: {
+            titleFormat: { year: 'numeric', month: 'short', day: '2-digit' },
+            dayHeaderFormat: { weekday: 'long', day: '2-digit' }
+          },
+          cardListWeek: {
+            type: 'listWeek',
+            duration: { weeks: 1 },
+            buttonText: 'List',
+            listDayFormat: { weekday: 'long', month: 'short', day: 'numeric', omitCommas: true },
+            listDaySideFormat: { month: 'short', day: 'numeric', year: 'numeric' }
+          }
+        },
+
         // Add Google Calendar configuration
         googleCalendarApiKey: GOOGLE_CALENDAR_API_KEY,
         eventSources: [
@@ -701,6 +905,12 @@
                 // If not a user preference, check orgsList
                 else {
                   const matchingOrg = orgsList.find(org => org.email === emailSource);
+                  const colors = {
+                    club: '#0cc0df', // Cyan for clubs
+                    society: '#8c52ff', // Purple for societies
+                    ministry: '#871829', // TechMin Red for Ministries
+                    department: '#ff914d' // Yellow for departments
+                  };
                   if (matchingOrg) {
                     eventData.kind = matchingOrg.type.toLowerCase();
                     // Set different colors based on organization type
@@ -721,51 +931,30 @@
                         eventData.color = '#5b52ff'; // Default Blue for others
                     }
                   } else {
-                    eventData.kind = 'other';
-                    eventData.color = '#5b52ff'; // Default Blue for others
+                    eventData.kind = org.type.toLowerCase() || '';
+                    eventData.color = colors[eventData.kind] || '#5b52ff'; // Default Blue for others
                   }
                 }
               } else {
                 eventData.kind = 'other';
                 eventData.color = '#5b52ff'; // Default Blue for others
               }
-              
               return eventData;
             }
           }
         ],
-        
         eventTimeFormat: {
           hour: '2-digit',
           minute: '2-digit',
           hour12: false
-        },
-        views: {
-          dayGridMonth: {
-          titleFormat: { year: 'numeric', month: 'long' }
-        },
-        dayGridWeek: {
-          titleFormat: { year: 'numeric', month: 'short', day: '2-digit' },
-          dayHeaderFormat: { weekday: 'short', day: '2-digit' }
-        },
-        timeGridDay: {
-          titleFormat: { year: 'numeric', month: 'short', day: '2-digit' },
-          dayHeaderFormat: { weekday: 'long', day: '2-digit' }
-        },
-        listWeek: {
-          titleFormat: { year: 'numeric', month: 'short', day: '2-digit' },
-          dayHeaderFormat: { weekday: 'long', day: '2-digit' }
-        }
         },
         height: '100%',
         expandRows: true,
         eventClick: function(info) {
           info.jsEvent.preventDefault();
           currentEvent = info.event;
-
           $('.modal-title').text(currentEvent.title);
           let modalContent = '';
-
           // Format and add event time with timezone
           if (currentEvent.start || currentEvent.end) {
             const startTime = currentEvent.start ? moment(currentEvent.start).tz('Asia/Kolkata').format('h:mma') : '';
@@ -774,23 +963,21 @@
               modalContent += `<p><strong>Time:</strong> ${startTime.toLowerCase()} - ${endTime.toLowerCase()}</p>`;
             }
           }
-
+              
           // Get the email source from the event
           const emailSource = currentEvent.extendedProps?.emailSource;
-
           // Find the matching organization in orgsList
           const matchingOrg = orgsList.find(org => org.email === emailSource);
           matchingName = matchingOrg ? matchingOrg.name : '';
-          modalContent += '<p><strong>Organized By:</strong> ' + matchingName + '</p>';
+          const orgBodies = currentEvent.extendedProps?.orgBody || matchingName || 'N/A';
+          modalContent += '<p><strong>Organized By:</strong> ' + orgBodies + '</p>';
           
           if (currentEvent.extendedProps.location) {
             modalContent += '<p><strong>Venue:</strong> ' + currentEvent.extendedProps.location + '</p>';
           }
-          
           if (currentEvent.extendedProps.description) {
             modalContent += '<p><strong>Description:</strong> ' + currentEvent.extendedProps.description + '</p>';
           }
-          
           $('.modal-body-text').html(modalContent);
           $('.modal').modal('toggle');
         },
@@ -798,7 +985,6 @@
           var result = true;
           var states = [];
           var kinds = [];
-          
           // Collect checked filters
           $("input[name='event_filter_sel']:checked").each(function () {
             // if ($(this).data('type') === 'state') {
@@ -811,29 +997,22 @@
           if (kinds.length) {
             result = result && kinds.indexOf(info.event.extendedProps.kind) >= 0;
           }
-          
-          
           if (!result) {
             return "hidden";
           }
           return result;
-          
         },
         eventDidMount: function(info) {
           // Get kind from extended properties
           const kind = info.event.extendedProps.kind || 'other';
-          
           // Check if event source matches user preferences
           const emailSource = info.event.extendedProps.emailSource;
-
           const userPrefEmails = userPreferences.map(pref => pref.email);
-
           if (emailSource && userPrefEmails.includes(emailSource)) {
             // Change the event's kind to userPreference
             info.event.setExtendedProp('kind', 'userPreference');
             // console.log(info.event.extendedProps.kind);
           }
-
           const orgsEmails = orgsList.map(org => org.email);
           // console.log(orgsEmails);
           if (emailSource && orgsEmails.includes(emailSource)&& !userPrefEmails.includes(emailSource)) {
@@ -841,18 +1020,90 @@
             info.event.setExtendedProp('kind', orgsList.find(org => org.email === emailSource).type.toLowerCase());
             // console.log(info.event.extendedProps.kind);
           }
-
           // Add CSS class based on the final kind
           info.el.classList.add(`event-kind-${info.event.extendedProps.kind}`);
+          // Custom rendering for list view events
+          if (calendar.view.type === 'cardListWeek') {
+            // Find the time and title cells
+            const timeCell = info.el.querySelector('.fc-list-event-time');
+            const titleCell = info.el.querySelector('.fc-list-event-title');
+            
+            if (timeCell && titleCell) {
+              // Get the original content
+              const timeText = timeCell.textContent || '';
+              // Get title directly from event object instead of the DOM
+              const titleText = info.event.title;
+              const venue = info.event.extendedProps.location || '';
+              
+              // Get the matching organization if any
+              const emailSource = info.event.extendedProps.emailSource;
+              const matchingOrg = orgsList.find(org => org.email === emailSource);
+              const orgBodies = info.event.extendedProps.orgBody || matchingOrg || 'N/A';
+              console.log(orgBodies);
+
+              // const orgName = matchingOrg ? matchingOrg.name : 'Other';
+              
+              // Clear the title cell first to prevent duplicate titles
+              // titleCell.innerHTML = '';
+              // Clear any existing content inside the title cell (including FullCalendar's auto-rendered <a>)
+              while (titleCell.firstChild) {
+                titleCell.removeChild(titleCell.firstChild);
+              }
+
+              
+              // Create a wrapper for the card styling
+              const cardWrapper = document.createElement('div');
+              cardWrapper.className = 'card-event-wrapper';
+              
+              // Create the content with simplified layout - eliminating duplicate title
+              cardWrapper.innerHTML = `
+                <div class="event-card-content">
+                  <div class="event-card-title">${titleText}</div>
+                  <div class="event-card-details">
+                    <span class="event-card-time">${timeText}</span>
+                    <span class="event-card-time">${venue}</span>
+                    <span class="event-card-organizer">By: ${orgBodies}</span>
+                  </div>
+                </div>
+              `;
+              
+              // Replace the title cell content
+              titleCell.appendChild(cardWrapper);
+              
+              // Hide the time cell
+              timeCell.style.display = 'none';
+            }
+          }
+          // Add a scroll event listener to detect when day headers reach the top
+          if (calendar.view.type === 'cardListWeek' && !window.listScrollHandlerAdded) {
+            const listContainer = document.querySelector('.fc-list-view .fc-scroller');
+            if (listContainer) {
+              listContainer.addEventListener('scroll', function() {
+                const dayHeaders = document.querySelectorAll('.fc-list-day');
+                dayHeaders.forEach(header => {
+                  const rect = header.getBoundingClientRect();
+                  const topOffset = rect.top;
+                  const containerTop = listContainer.getBoundingClientRect().top;
+                  if (topOffset <= containerTop + 2) {
+                    header.classList.add('fc-sticky');
+                  } else {
+                    header.classList.remove('fc-sticky');
+                  }
+                });
+              });
+              window.listScrollHandlerAdded = true;
+            }
+          }
         },
+
         windowResize: function(view) {
           const width = window.innerWidth;
           let newView = view.type;
           
           if (width < 576) {
-            newView = 'dayGridMonth';
+            newView = 'cardListWeek';
           } else if (width < 768) {
-            newView = 'dayGridMonth';
+            newView = 'cardListWeek';
           } else if (width < 992) {
             newView = 'dayGridMonth';
           } else {
@@ -902,13 +1153,12 @@
         // updateFilters();
         calendar.render();
       });
-      
+
       // Add a refresh button if needed
       $('#refresh-calendar').click(function() {
         calendar.refetchEvents();
         // Don't call updateFilters here as it will be called by eventsSet
       });
-
 
       // Add event listener for the "Add to Calendar" button
       document.getElementById('addToCalendar').addEventListener('click', function() {
@@ -916,7 +1166,6 @@
           // Show loading indicator
           $(this).prop('disabled', true);
           $(this).html('<i class="fa fa-spinner fa-spin"></i> Adding...');
-          
           // Send request to your backend to add the user as an attendee
           fetch('/platform/event/add-attendee', {
             method: 'POST',
