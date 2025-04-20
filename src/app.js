@@ -166,11 +166,14 @@ function ensureIsStudent(req, res, next) {
   // Assuming you have a user object or user data available after authentication
   if (req.user) {
     const userEmail = req.user._json.email;
-    if((userEmail && userEmail.includes('_')) || userEmail.includes("ministry") || userEmail.includes("campus.life") ||   whitelist.includes(userEmail)){
-      next();
-    }else{
-      res.render("platform/pages/not-student")
-    }
+
+    next();
+
+    // if((userEmail && userEmail.includes('_')) || userEmail.includes("ministry") || userEmail.includes("campus.life") ||   whitelist.includes(userEmail)){
+    //   next();
+    // }else{
+    //   res.render("platform/pages/not-student")
+    // }
   } else {
     // User is not authenticated, so you may want to handle that case as well
     res.status(401).send("User is not authenticated");
