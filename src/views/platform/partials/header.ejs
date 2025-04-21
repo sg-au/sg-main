@@ -1,4 +1,10 @@
+<style>
+  html.dark .profile-img {
+    filter: invert(1) hue-rotate(180deg)
+  }
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/platform/assets/js/theme.js"></script>
 <!-- Latest compiled and minified JavaScript -->
 <!--  Header Start -->
 <header class="app-header">
@@ -12,9 +18,11 @@
       </ul>
       <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+          <button id="darkModeToggle" onclick="changeTheme()" class="btn btn-primary">
+            <i id="drkMdIcon" class="ti ti-moon"></i>
+        </button>
           <!-- <a href="https://adminmart.com/product/modernize-free-bootstrap-admin-dashboard/" target="_blank" class="btn btn-primary">Download Free</a> -->
-          <!-- <button type="button" id="darkbtn" class="btn btn-light"
-            onclick="changeTheme()"><i id="drkMdIcon" class="ti ti-moon"></i></button>
+          <!-- 
           <li class="nav-item dropdown">
             <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
               aria-expanded="false">
@@ -72,7 +80,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
               aria-expanded="false">
-              <img src="<%-encodeURI(imageUrl)-%>" alt="" width="35" height="35" class="rounded-circle">
+              <img src="<%-encodeURI(imageUrl)-%>" alt="" width="35" height="35" class="rounded-circle profile-img">
             </a>
             <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
               <div class="message-body">

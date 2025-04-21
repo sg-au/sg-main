@@ -21,6 +21,8 @@ function changeTheme() {
 }
 
 function darkMode() {
+    console.log("Here")
+    document.documentElement.classList.add("dark");
     var icon = document.getElementById("icon");
     var htmlElement = document.querySelector("html");
     var heroElement = document.querySelector("#hero");
@@ -32,10 +34,10 @@ function darkMode() {
 
     document.querySelector("html", "c-wiz").style.filter = "invert(1) hue-rotate(180deg)";
     if (heroElement) {
-        heroElement.style.filter = "invert(1) hue-rotate(180deg)";
+        heroElement.style.filter = "invert(1) hue-rotate(180deg) brightness(2.0)";
     }
     if (iframeElement) {
-        iframeElement.style.filter = "invert(1) hue-rotate(180deg)";
+        iframeElement.style.filter = "invert(1) hue-rotate(180deg) brightness(2.0)";
     }
     // if(memberImages){
     //     memberImages.forEach((image)=>{
@@ -43,7 +45,7 @@ function darkMode() {
     //     });
     // }
     if (imageElement) {
-        imageElement.style.filter = "invert(1) hue-rotate(180deg)";
+        imageElement.style.filter = "invert(1) hue-rotate(180deg) brightness(2.0)";
     }
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
@@ -56,17 +58,18 @@ function darkMode() {
             const cardBody = card.querySelector('.card-body');
             // Check if the 'card-body' div was found
             if (cardBody) {
-                cardBody.style.filter = "invert(1) hue-rotate(180deg)";
+                cardBody.style.filter = "invert(1) hue-rotate(180deg) brightness(2.0)";
             }
         }
     });
-    let media = document.querySelectorAll("img, picture, video");
-    media.forEach((mediaItem) => {
-        mediaItem.style.filter = "invert(1) hue-rotate(180deg)";
-    });
+    // let media = document.querySelectorAll("img, picture, video");
+    // media.forEach((mediaItem) => {
+    //     mediaItem.style.filter = "invert(1) hue-rotate(180deg) brightness(2.0)";
+    // });
 }
 
 function lightMode() {
+    document.documentElement.classList.remove("dark");
     var icon = document.getElementById("icon");
     var htmlElement = document.querySelector("html");
     var heroElement = document.querySelector("#hero");

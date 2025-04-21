@@ -17197,3 +17197,7 @@ ul {
     }
   }
 }
+
+* {
+  overscroll-behavior: none;
+}

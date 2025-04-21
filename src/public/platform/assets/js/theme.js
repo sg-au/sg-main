@@ -21,12 +21,13 @@ function changeTheme() {
 }
 
 function darkMode() {
+    document.documentElement.classList.add('dark');
     var icon = document.getElementById("icon");
     var htmlElement = document.querySelector("html");
     var heroElement = document.querySelector("#hero");
     var iframeElement = document.querySelector("iframe");
     var memberImages = document.querySelectorAll(".member-img");
-    var imageElement = document.querySelector(".card img");
+    var imageElement = document.querySelectorAll(".card img");
 
     document.getElementById('drkMdIcon').className = "ti ti-sun";
 
@@ -35,7 +36,7 @@ function darkMode() {
         heroElement.style.filter = "invert(1) hue-rotate(180deg)";
     }
     if (iframeElement) {
-        iframeElement.style.filter = "invert(1) hue-rotate(180deg)";
+        iframeElement.style.backgroundColor= "#EAEFF4";
     }
     // if(memberImages){
     //     memberImages.forEach((image)=>{
@@ -43,7 +44,9 @@ function darkMode() {
     //     });
     // }
     if (imageElement) {
-        imageElement.style.filter = "invert(1) hue-rotate(180deg)";
+        imageElement.forEach((image) => {
+            image.style.filter = "invert(1) hue-rotate(180deg)";
+        });        
     }
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
@@ -60,19 +63,37 @@ function darkMode() {
             }
         }
     });
-    let media = document.querySelectorAll("img, picture, video");
-    media.forEach((mediaItem) => {
-        mediaItem.style.filter = "invert(1) hue-rotate(180deg)";
+    // let media = document.querySelectorAll("img, picture, video");
+    // media.forEach((mediaItem) => {
+    //     mediaItem.style.filter = "invert(0.5) hue-rotate(180deg)";
+    // });
+    let imgs = document.querySelectorAll(".bg-image");
+    imgs.forEach((item) => {
+        item.style.filter = "invert(1) hue-rotate(180deg)";
     });
+    let primaryElems = document.querySelectorAll(".btn-primary, .sidebar-link.active");
+    primaryElems.forEach((elem) => {
+        /* Color: #5d87ff */
+        elem.style.filter = "invert(1) hue-rotate(180deg)";
+        elem.style.backgroundColor = "#5d87ff";
+    });
+    let borrowAssetsBtns = document.querySelectorAll(".badge-pill, .btn-success");
+    borrowAssetsBtns.forEach((elem) => {
+        /* Color: #5d87ff */
+        elem.style.filter = "invert(1) hue-rotate(180deg)";
+        elem.style.color = "black";
+    });
+    
 }
 
 function lightMode() {
+    document.documentElement.classList.remove('dark');
     var icon = document.getElementById("icon");
     var htmlElement = document.querySelector("html");
     var heroElement = document.querySelector("#hero");
     var iframeElement = document.querySelector("iframe");
     var memberImages = document.querySelectorAll(".member-img");
-    var imageElement = document.querySelector(".card img");
+    var imageElement = document.querySelectorAll(".card img");
 
     document.getElementById('drkMdIcon').className = "ti ti-moon";
 
@@ -81,16 +102,18 @@ function lightMode() {
         heroElement.style.filter = "invert(0) hue-rotate(0deg)";
     }
     if (iframeElement) {
-        iframeElement.style.filter = "invert(0) hue-rotate(0deg)";
+        iframeElement.style.backgroundColor= "transparent";
     }
 
     if (imageElement) {
-        imageElement.style.filter = "invert(0) hue-rotate(0deg)";
+        imageElement.forEach((image) => {
+            image.style.filter = "invert(0) hue-rotate(0deg)";
+        });        
     }
-    let media = document.querySelectorAll("img, picture, video");
-    media.forEach((mediaItem) => {
-        mediaItem.style.filter = "invert(0) hue-rotate(0deg)";
-    });
+    // let media = document.querySelectorAll("img, picture, video");
+    // media.forEach((mediaItem) => {
+    //     mediaItem.style.filter = "invert(0) hue-rotate(0deg)";
+    // });
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
         // Check the background image URL (assuming it's set via inline style)
@@ -105,5 +128,19 @@ function lightMode() {
                 cardBody.style.filter = "invert(0) hue-rotate(0deg)";
             }
         }
+    });
+    let imgs = document.querySelectorAll(".bg-image");
+    imgs.forEach((item) => {
+        item.style.filter = "invert(0)";
+    });
+    let primaryElems = document.querySelectorAll(".btn-primary, .sidebar-link.active");
+    primaryElems.forEach((elem) => {
+        elem.style.filter = "none";
+        elem.style.backgroundColor = "#5d87ff";
+    });
+    let borrowAssetsBtns = document.querySelectorAll(".badge-pill, .btn-success");
+    borrowAssetsBtns.forEach((elem) => {
+        /* Color: #5d87ff */
+        elem.style.filter = "none";
     });
 }
