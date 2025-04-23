@@ -317,7 +317,7 @@
             </div>
             <!-- XL Modal -->
             <div class="modal fade" id="orgDetailsModal" tabindex="-1" aria-labelledby="orgDetailsModalLabel">
-              <div class="modal-dialog modal-xl modal-dialog-centered">
+              <div class="modal-dialog modal-xl modal-dialog-centered" style="max-height: 80vh;">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="orgDetailsModalLabel"></h5>
@@ -343,6 +343,21 @@
                         <div class="col-md-12">                          
                           <div class="p-3" style="text-align: justify; max-height: 350px; overflow-y: scroll;">                            
                             <div class="accordion" id="inductionAccordion">
+                              <div class="accordion" id="circle2Accordion">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="circle2Heading">
+                                    <button class="accordion-button collapsed" style="background-color: #e6e3e3;" type="button" data-bs-toggle="collapse" data-bs-target="#circle2Collapse" aria-expanded="false" aria-controls="circle2Collapse">
+                                      <strong>Core Team Members</strong>
+                                    </button>
+                                  </h2>
+                                  <div id="circle2Collapse" class="accordion-collapse collapse" aria-labelledby="circle2Heading" data-bs-parent="#circle2Accordion">
+                                    <div class="accordion-body">
+                                      <div id="orgCircle2Humans" style="text-align: justify; overflow-y: auto;"></div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <br />
                               <div class="accordion-item">
                                 <h2 class="accordion-header" id="inductionHeading">
                                   <button class="accordion-button collapsed" style="background-color: #e6e3e3;" type="button" data-bs-toggle="collapse" data-bs-target="#inductionCollapse" aria-expanded="false" aria-controls="inductionCollapse">
@@ -412,6 +427,20 @@
                 .join(", ");
               document.getElementById("orgPeople").innerText = peopleList || "N/A";
               document.getElementById("orgInduction").innerText = clubData.induction ? "Open" : "Closed";
+              // Handle Circle 2 Humans
+              // console.log(clubData);
+              if (clubData.circle2_humans && clubData.circle2_humans.data && clubData.circle2_humans.data.length > 0) {
+                // Format the circle2 humans list
+                const circle2List = clubData.circle2_humans.data
+                  .map(person => person.attributes.username)
+                  .join(", ");
+                
+                document.getElementById("orgCircle2Humans").innerHTML = circle2List;
+                document.getElementById("circle2Accordion").style.display = "block";
+              } else {
+                // Hide the accordion if no circle2 humans exist
+                document.getElementById("circle2Accordion").style.display = "none";
+              }
               // Format the induction deadline date
               let deadlineText = "N/A";
               if (clubData.induction_end) {
@@ -464,7 +493,7 @@
               document.getElementById("orgSocials").innerHTML = socialsHTML || "No links available.";
               // console.log(clubData.description)
               // Set inductions description
-              console.log(clubData.induction_description);
+              // console.log(clubData.induction_description);
               (document.getElementById("orgInductionDescription")).innerHTML = clubData.induction_description || "";
               // Set description
               (document.getElementById("orgDescription")).innerHTML = clubData.description;
@@ -556,8 +585,7 @@
             });
 
             // Add event listener for search bar
-            searchBar.addEventListener("input", filterOrganizations);
-          });
+            searchBar.addEventListener("input", filterOrganizations);          
           </script>
         </div>
       </div>

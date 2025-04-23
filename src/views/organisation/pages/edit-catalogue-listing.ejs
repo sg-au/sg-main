@@ -93,8 +93,7 @@
                                                             <div class="row mb-3">
                                                                 <div class="col-12">
                                                                     <div class="form-check form-switch">
-                                                                        <input class="form-check-input" style="border-color: #444444;" type="checkbox" id="inductionToggle" name="induction" 
-                                                                            <%= listing.attributes.induction ? 'checked' : '' %>>
+                                                                        <input class="form-check-input" style="border-color: #444444;" type="checkbox" id="inductionToggle" name="induction">
                                                                         <label class="form-label" for="inductionToggle">Inductions Open</label>
                                                                     </div>
                                                                 </div>
@@ -464,8 +463,8 @@
                     
                     // Initialize toggle state based on existing data
                     // Check if inductions are already open
-                    let hasInduction = "<%- listing.attributes.induction %>";
-                    
+                    let hasInduction = "<%- listing.attributes.induction %>" === "true";
+                    console.log(typeof(hasInduction), hasInduction); // Debugging line
                     // Set the initial state of the toggle button and visibility
                     inductionToggle.checked = hasInduction;
                     if (hasInduction) {

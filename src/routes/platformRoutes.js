@@ -2013,7 +2013,7 @@ router.get("/cgpa-planner-reset", async (req, res) => {
 
 router.get("/organisation-catalogue", async (req, res) => {
   const organisationsReq = await axios.get(
-    `${apiUrl}/organisations?populate=profile,circle1_humans&pagination[pageSize]=1000`, 
+    `${apiUrl}/organisations?populate=profile,circle1_humans,circle2_humans&pagination[pageSize]=1000`, 
     axiosConfig
   );
   const organisations = organisationsReq.data.data.map((x) => x.attributes);
