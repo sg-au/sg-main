@@ -8,6 +8,9 @@ lerna-debug.log*
 .pnpm-debug.log*
 
 src/data/anonymous-survey-submissions.json
+src/data/tickets.jsonl
+src/data/wifi-tickets.jsonl
+whitelist.json
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
