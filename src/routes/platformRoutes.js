@@ -17,6 +17,8 @@ var pdf = require("pdf-creator-node");
 const { google } = require("googleapis");
 const multer = require("multer");
 require("dotenv").config();
+const crypto = require('crypto');
+const submissionsFile = "./data/anonymous-survey-submissions.json";
 
 // Initialize Google Calendar API with OAuth2
 const calendarOAuth2Client = new google.auth.OAuth2(
@@ -68,6 +70,7 @@ const oauth2Client = new google.auth.OAuth2(
 oauth2Client.setCredentials({ refresh_token: DRIVE_REFRESH_TOKEN });
 
 const drive = google.drive({ version: "v3", auth: oauth2Client });
+const sheets = google.sheets({ version: "v4", auth: oauth2Client });
 
 const apiUrl = process.env.STRAPI_API_URL;
 
@@ -2786,6 +2789,88 @@ router.post("/assets", async (req, res) => {
 //     res.render("platform/pages/pool-cab");
 //   }
 // });
+
+// Anonymous Survey Routes
+
+router.get("/anonymous-survey", async (req, res) => {
+  try {
+    // Hash the user's email
+    const hashedEmail = helpers.hash(req.user._json.email);
+    
+    // Check if user has already submitted
+    let submissions = [];
+    try {
+      submissions = JSON.parse(fs.readFileSync(submissionsFile, "utf8"));
+    } catch (err) {
+      // File doesn't exist yet, create empty array
+      submissions = [];
+    }
+    
+    if (submissions.includes(hashedEmail)) {
+      // User has already submitted
+      res.render("platform/pages/anonymous-survey-submitted");
+    } else {
+      // Show the survey form
+      res.render("platform/pages/anonymous-survey");
+    }
+  } catch (error) {
+    console.error("Error in anonymous survey GET:", error);
+    res.status(500).send("An error occurred");
+  }
+});
+
+router.post("/anonymous-survey", async (req, res) => {
+  try {
+    // Hash the user's email
+    const hashedEmail = helpers.hash(req.user._json.email);
+    
+    // Check if user has already submitted
+    let submissions = [];
+    try {
+      submissions = JSON.parse(fs.readFileSync(submissionsFile, "utf8"));
+    } catch (err) {
+      submissions = [];
+    }
+    
+    if (submissions.includes(hashedEmail)) {
+      return res.status(400).json({ error: "You have already submitted this survey" });
+    }
+
+    // Prepare the row data (excluding any user identifiers)
+    const values = [
+      [
+        new Date().toISOString(),
+        req.body.question1 || '',
+        req.body.question2 || '',
+        req.body.question3 || '',
+        req.body.question4 || '',
+        req.body.question5 || '',
+        req.body.question6 || '',
+        req.body.additionalComments || ''
+      ]
+    ];
+    
+    // Add row to Google Sheet using the existing sheets client
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: process.env.GOOGLE_SHEET_ID,
+      range: 'Sheet1!A:H', // Updated range to include question6
+      valueInputOption: 'USER_ENTERED',
+      resource: {
+        values: values
+      }
+    });
+    
+    // Add hashed email to submissions file
+    submissions.push(hashedEmail);
+    fs.writeFileSync(submissionsFile, JSON.stringify(submissions, null, 2));
+    
+    res.json({ success: true, message: "Survey submitted successfully" });
+    
+  } catch (error) {
+    console.error("Error submitting anonymous survey:", error);
+    res.status(500).json({ error: "An error occurred while submitting the survey" });
+  }
+});
 
 // Export the router
 module.exports = router;

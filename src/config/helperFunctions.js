@@ -43,5 +43,10 @@ function createTicketId(prefix, length) {
     adjustedHours = adjustedHours === 0 ? 12 : adjustedHours;
     return `${days[date.getDay()]}, ${day} ${months[monthIndex]} ${year}`;
   }
-  
-  module.exports = { createTicketId, formatDate, borrowDate };
+
+  function hash(input) {
+    const crypto = require('crypto');
+    return crypto.createHash('sha256').update(input).digest('hex');
+  }
+
+  module.exports = { createTicketId, formatDate, borrowDate, hash };
