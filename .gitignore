@@ -135,3 +135,4 @@ out
 .pnp.*
 
 src/data/anonymous-survey-submissions.json
+src/data/baggage-scanner-survey-submissions.json

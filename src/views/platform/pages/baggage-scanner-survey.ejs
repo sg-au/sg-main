@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Baggage Scanner Survey</title>
+    <link rel="shortcut icon" type="image/png" href="/platform/assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+    <%-include("../partials/preloader-css")%>
+</head>
+<%-include("../partials/post-head")%>
+
+<body>
+    <%-include("../partials/preloader")%>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <%-include("../partials/sidebar")%>
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <%-include("../partials/header")%>
+            <div class="container-fluid">
+                <div class="container-fluid">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title fw-semibold mb-4">Campus Baggage Scanners Survey</h5>
+                            <div class="alert alert-warning" role="alert">
+                                <strong>Important:</strong> This form is only for students that are <strong>not currently participating in the Summer Semester</strong> at Ashoka.<br>
+                                If you are part of the summer semester, please fill <a href="/platform/anonymous-survey" style="text-decoration: underline;" class="alert-link">this form instead</a>.
+                            </div>
+                            <div class="alert alert-info" role="alert">
+                                <strong>Note:</strong> This survey is completely anonymous. Your responses will be submitted without any identifying information.
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <form id="anonymousSurveyForm" method="POST">
+                                        <div class="mb-3">
+                                            <label for="question1" class="form-label">1. Are you aware of the re-introduction of baggage scanners on campus during the summer semester?</label>
+                                            <select required name="question1" id="question1" class="form-select">
+                                                <option disabled selected>Select your response</option>
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="question2" class="form-label">2. Have you personally experienced this process during the academic year (Monsoon and Spring Semesters) thus far?</label>
+                                            <select required name="question2" id="question2" class="form-select">
+                                                <option disabled selected>Select your response</option>
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="question3" class="form-label">3. If yes, please describe your experience and list out anything that you would change about it (if at all).</label>
+                                            <textarea name="question3" class="form-control" id="question3" rows="4" placeholder="Please describe your experience..."></textarea>
+                                        </div>
+
+                                        <div class="alert alert-secondary mb-3" role="alert">
+                                            <strong>Note:</strong> To answer the following questions, consider the potential re-implementation of the scanners all year round. (Note: There is no indication / confirmation of the reimplementation yet. We merely wish to record student opinions).
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="question4" class="form-label">4. To what degree do you agree with their potential re-implementation? Consider the policies that this university campus abides by with regard to substances.</label>
+                                            <select required name="question4" id="question4" class="form-select">
+                                                <option disabled selected>Select your response</option>
+                                                <option value="Strongly Disagree">1: Strongly Disagree</option>
+                                                <option value="Disagree">2: Disagree</option>
+                                                <option value="Neutral">3: Neutral</option>
+                                                <option value="Agree">4: Agree</option>
+                                                <option value="Strongly Agree">5: Strongly Agree</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="question5" class="form-label">5. Please explain the rating above. You're welcome to include specific incidents, experiences, or general thoughts that helped you arrive at your opinion.</label>
+                                            <textarea name="question5" class="form-control" id="question5" rows="4" placeholder="Please explain your rating..."></textarea>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="question6" class="form-label">6. If not via baggage scanners, do you have any other suggestions for mechanisms through which we could ensure that Ashoka remains a dry and substance free campus?</label>
+                                            <textarea name="question6" class="form-control" id="question6" rows="4" placeholder="Please share your suggestions..."></textarea>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="additionalComments" class="form-label">7. Is there anything else you would like to share about the scanners, the policy, or campus safety in general?</label>
+                                            <textarea name="additionalComments" class="form-control" id="additionalComments" rows="4" placeholder="Share any additional thoughts or comments..."></textarea>
+                                        </div>
+
+                                        <button id="submit-button" type="submit" class="btn btn-primary">Submit Survey</button>
+                                        <br /><br />
+                                        <div class="text-muted">
+                                            <small>Your responses are completely anonymous and will help us understand student perspectives on campus safety measures. Thank you for your feedback!</small>
+                                        </div>
+                                    </form>
+                                    <div id="form-spinner" style="display:none;" class="spinner-border text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <div id="successMessage" style="display:none;" class="alert alert-success" role="alert">
+                                        Thank you! Your feedback has been submitted successfully.
+                                    </div>
+                                    <div id="errorMessage" style="display:none;" class="alert alert-danger" role="alert">
+                                        An error occurred while submitting your response. Please try again.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <%-include("../partials/preloader-js")%>
+
+    <script>
+        $(document).ready(function() {
+            $('#anonymousSurveyForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                $('#submit-button').prop('disabled', true);
+                $('#form-spinner').show();
+                $('#successMessage').hide();
+                $('#errorMessage').hide();
+                
+                const formData = {
+                    question1: $('#question1').val(),
+                    question2: $('#question2').val(),
+                    question3: $('#question3').val(),
+                    question4: $('#question4').val(),
+                    question5: $('#question5').val(),
+                    question6: $('#question6').val(),
+                    additionalComments: $('#additionalComments').val()
+                };
+                
+                $.ajax({
+                    url: '/platform/baggage-scanner-survey',
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        $('#form-spinner').hide();
+                        $('#successMessage').show();
+                        $('#anonymousSurveyForm').hide();
+                    },
+                    error: function(xhr, status, error) {
+                        $('#form-spinner').hide();
+                        $('#submit-button').prop('disabled', false);
+                        let errorMsg = 'An error occurred while submitting your response.';
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            errorMsg = xhr.responseJSON.error;
+                        }
+                        $('#errorMessage').text(errorMsg).show();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
