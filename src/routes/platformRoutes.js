@@ -2793,85 +2793,85 @@ router.post("/assets", async (req, res) => {
 
 // Anonymous Survey Routes
 
-router.get("/anonymous-survey", async (req, res) => {
-  try {
-    // Hash the user's email
-    const hashedEmail = helpers.hash(req.user._json.email);
+// router.get("/anonymous-survey", async (req, res) => {
+//   try {
+//     // Hash the user's email
+//     const hashedEmail = helpers.hash(req.user._json.email);
     
-    // Check if user has already submitted
-    let submissions = [];
-    try {
-      submissions = JSON.parse(fs.readFileSync(submissionsFile, "utf8"));
-    } catch (err) {
-      // File doesn't exist yet, create empty array
-      submissions = [];
-    }
+//     // Check if user has already submitted
+//     let submissions = [];
+//     try {
+//       submissions = JSON.parse(fs.readFileSync(submissionsFile, "utf8"));
+//     } catch (err) {
+//       // File doesn't exist yet, create empty array
+//       submissions = [];
+//     }
     
-    if (submissions.includes(hashedEmail)) {
-      // User has already submitted
-      res.render("platform/pages/anonymous-survey-submitted");
-    } else {
-      // Show the survey form
-      res.render("platform/pages/anonymous-survey");
-    }
-  } catch (error) {
-    console.error("Error in anonymous survey GET:", error);
-    res.status(500).send("An error occurred");
-  }
-});
+//     if (submissions.includes(hashedEmail)) {
+//       // User has already submitted
+//       res.render("platform/pages/anonymous-survey-submitted");
+//     } else {
+//       // Show the survey form
+//       res.render("platform/pages/anonymous-survey");
+//     }
+//   } catch (error) {
+//     console.error("Error in anonymous survey GET:", error);
+//     res.status(500).send("An error occurred");
+//   }
+// });
 
-router.post("/anonymous-survey", async (req, res) => {
-  try {
-    // Hash the user's email
-    const hashedEmail = helpers.hash(req.user._json.email);
+// router.post("/anonymous-survey", async (req, res) => {
+//   try {
+//     // Hash the user's email
+//     const hashedEmail = helpers.hash(req.user._json.email);
     
-    // Check if user has already submitted
-    let submissions = [];
-    try {
-      submissions = JSON.parse(fs.readFileSync(submissionsFile, "utf8"));
-    } catch (err) {
-      submissions = [];
-    }
+//     // Check if user has already submitted
+//     let submissions = [];
+//     try {
+//       submissions = JSON.parse(fs.readFileSync(submissionsFile, "utf8"));
+//     } catch (err) {
+//       submissions = [];
+//     }
     
-    if (submissions.includes(hashedEmail)) {
-      return res.status(400).json({ error: "You have already submitted this survey" });
-    }
+//     if (submissions.includes(hashedEmail)) {
+//       return res.status(400).json({ error: "You have already submitted this survey" });
+//     }
 
-    // Prepare the row data (excluding any user identifiers)
-    const values = [
-      [
-        new Date().toISOString(),
-        req.body.question1 || '',
-        req.body.question2 || '',
-        req.body.question3 || '',
-        req.body.question4 || '',
-        req.body.question5 || '',
-        req.body.question6 || '',
-        req.body.additionalComments || ''
-      ]
-    ];
+//     // Prepare the row data (excluding any user identifiers)
+//     const values = [
+//       [
+//         new Date().toISOString(),
+//         req.body.question1 || '',
+//         req.body.question2 || '',
+//         req.body.question3 || '',
+//         req.body.question4 || '',
+//         req.body.question5 || '',
+//         req.body.question6 || '',
+//         req.body.additionalComments || ''
+//       ]
+//     ];
     
-    // Add row to Google Sheet using the existing sheets client
-    await sheets.spreadsheets.values.append({
-      spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: 'Sheet1!A:H', // Updated range to include question6
-      valueInputOption: 'USER_ENTERED',
-      resource: {
-        values: values
-      }
-    });
+//     // Add row to Google Sheet using the existing sheets client
+//     await sheets.spreadsheets.values.append({
+//       spreadsheetId: process.env.GOOGLE_SHEET_ID,
+//       range: 'Sheet1!A:H', // Updated range to include question6
+//       valueInputOption: 'USER_ENTERED',
+//       resource: {
+//         values: values
+//       }
+//     });
     
-    // Add hashed email to submissions file
-    submissions.push(hashedEmail);
-    fs.writeFileSync(submissionsFile, JSON.stringify(submissions, null, 2));
+//     // Add hashed email to submissions file
+//     submissions.push(hashedEmail);
+//     fs.writeFileSync(submissionsFile, JSON.stringify(submissions, null, 2));
     
-    res.json({ success: true, message: "Survey submitted successfully" });
+//     res.json({ success: true, message: "Survey submitted successfully" });
     
-  } catch (error) {
-    console.error("Error submitting anonymous survey:", error);
-    res.status(500).json({ error: "An error occurred while submitting the survey" });
-  }
-});
+//   } catch (error) {
+//     console.error("Error submitting anonymous survey:", error);
+//     res.status(500).json({ error: "An error occurred while submitting the survey" });
+//   }
+// });
 
 // Baggage Scanner Survey Routes
 router.get("/baggage-scanner-survey", async (req, res) => {
