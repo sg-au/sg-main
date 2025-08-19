@@ -25,9 +25,9 @@
     </script>
     <!-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/balloon-classic/ckeditor.js"></script> -->
 
-    <%-include("../partials/preloader-css")%>
+    <%-include(".. /partials/preloader-css")%>
 </head>
-<%-include("../partials/post-head")%>
+<%-include(".. /partials/post-head")%>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,14 +61,14 @@
     </style>
 
     <body>
-        <%-include("../partials/preloader")%>
+        <%-include(".. /partials/preloader")%>
             <!--  Body Wrapper -->
             <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6"
                 data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
-                <%-include("../partials/sidebar")%>
+                <%-include(".. /partials/sidebar")%>
                     <!--  Main wrapper -->
                     <div class="body-wrapper">
-                        <%-include("../partials/header")%>
+                        <%-include(".. /partials/header")%>
                             <div class="container-fluid">
                                 <div class="container">
                                     <div class="row" id="myItems">
@@ -118,6 +118,7 @@
                                                     <option value="ug2022@ashoka.edu.in">UG26</option>
                                                     <option value="ug2023@ashoka.edu.in">UG2023</option>
                                                     <option value="ug2024@ashoka.edu.in">UG2024</option>
+                                                    <option value="ug2025@ashoka.edu.in">UG2025</option>
                                                 </select>
                                                 <p style="font-size:14px;color:rgb(192, 58, 58);">hold the ctrl/cmd key
                                                     to select multiple options</p>
@@ -140,8 +141,7 @@
                                                     class="form-control" id="file">
                                                 <br />
                                                 <label for="notes" class="form-label">Additional Notes (if any)</label>
-                                                <input name="notes" type="title" class="form-control"
-                                                    id="notes"
+                                                <input name="notes" type="title" class="form-control" id="notes"
                                                     placeholder="Use this space for any additional notes as requests to the approver">
                                                 <br />
                                                 <button class="btn btn-primary" type="submit" id="requestEmailBtn">
@@ -159,11 +159,11 @@
                                             <script>
                                                 document.getElementById("myForm").addEventListener("submit", function (event) {
                                                     event.preventDefault(); // Prevent form submission for validation
-                                              
+
                                                     var fileInput = document.getElementById('file');
                                                     var files = fileInput.files;
                                                     var fileSizeSum = 0
-                                                    for(var i=0;i<files.length;i++){
+                                                    for (var i = 0; i < files.length; i++) {
                                                         fileSizeSum += files[i].size
                                                     }
                                                     var maxSize = 10 * 1024 * 1024; // 5MB in bytes 
@@ -180,7 +180,7 @@
                                                     document.getElementById('requestEmailBtn').disabled = true;
                                                     document.getElementById('requestEmailText').style.display = "none";
                                                     document.getElementById('requestEmailSpinner').style.display = "block";
-                                                    
+
                                                     setTimeout(() => {
                                                         alert("Hold tight while we send your request to the SG!")
                                                     }, 2000);  // 2000 ms = 2 second
@@ -384,7 +384,7 @@
                     <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
                     <script src="/platform/assets/js/dashboard.js"></script>
                     <script src="/platform/assets/js/theme.js"></script>
-                    <%-include("../partials/preloader-js")%>
+                    <%-include(".. /partials/preloader-js")%>
     </body>
 
 </html>
