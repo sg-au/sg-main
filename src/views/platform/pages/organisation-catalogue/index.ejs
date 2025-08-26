@@ -550,10 +550,6 @@
                   item.style.display = matchesSearch && matchesType && matchesInduction ? "" : "none";
                 });
               }
-              document.getElementById("orgSocials").innerHTML = socialsHTML || "No links available.";
-              // console.log(clubData.description)
-              // Set description
-              (document.getElementById("orgDescription")).innerHTML = clubData.description;
 
               function updateSelectAllState() {
                 const allChecked = [...typeCheckboxes].every(checkbox => checkbox.checked);
@@ -561,13 +557,15 @@
               }
 
               // "Select All" checkbox behavior
-              selectAllCheckbox.addEventListener("change", () => {
-                const isChecked = selectAllCheckbox.checked;
-                typeCheckboxes.forEach(checkbox => {
-                  checkbox.checked = isChecked;
+              if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener("change", () => {
+                  const isChecked = selectAllCheckbox.checked;
+                  typeCheckboxes.forEach(checkbox => {
+                    checkbox.checked = isChecked;
+                  });
+                  filterOrganizations();
                 });
-                filterOrganizations(); // Re-filter when toggling "Select All"
-              });
+              }
 
               // Update "Select All" state when any individual checkbox is toggled
               typeCheckboxes.forEach((checkbox) => {
@@ -578,14 +576,21 @@
               });
 
               // Add event listener for inductions checkbox
-              inductionsCheckbox.addEventListener("change", filterOrganizations);
+              if (inductionsCheckbox) {
+                inductionsCheckbox.addEventListener("change", filterOrganizations);
+              }
 
               // Add event listener for search bar
-              searchBar.addEventListener("input", filterOrganizations);
-            });
+              if (searchBar) {
+                searchBar.addEventListener("input", filterOrganizations);
+              }
 
-            // Add event listener for search bar
-            searchBar.addEventListener("input", filterOrganizations);          
+              // Initial filter call to ensure proper state
+              setTimeout(() => {
+                filterOrganizations();
+              }, 100);
+            });
+   
           </script>
         </div>
       </div>
