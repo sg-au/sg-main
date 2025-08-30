@@ -59,7 +59,7 @@ async function createInductionCalendarEvent(organisationName, inductionEnd, orga
     // Add induction description if available
     if (orgData && orgData.induction_description) {
       // Strip HTML tags for plain text calendar description
-      const plainDescription = orgData.induction_description.replace(/<[^>]*>/g, '').trim();
+      const plainDescription = orgData.induction_description;
       if (plainDescription) {
         description += `📋 Induction Information:\n${plainDescription}\n\n`;
       }
