@@ -536,6 +536,8 @@
               if (clubData.induction_end) {
                 try {
                   const deadline = new Date(clubData.induction_end);
+                  // Adjust for IST conversion by subtracting 5:30 hours (330 minutes)
+                  deadline.setMinutes(deadline.getMinutes() - 330);
                   // Format: "March 30, 2025 at 6:30 PM"
                   deadlineText = deadline.toLocaleDateString('en-US', { 
                     year: 'numeric', 
@@ -746,7 +748,7 @@
                   button.innerHTML = '<i class="fas fa-bell"></i> Tracking';
                 } else {
                   button.className = "btn btn-sm track-inductions-btn btn-outline-warning";
-                  button.innerHTML = '<i class="fas fa-bell-slash"></i> Track';
+                  button.innerHTML = '<i class="fas fa-bell-slash"></i> Track Inductions';
                 }
               }
               
@@ -829,6 +831,8 @@
                       if (hasDeadline) {
                         try {
                           const deadline = new Date(org.induction_end);
+                          // Adjust for IST conversion by subtracting 5:30 hours (330 minutes)
+                          deadline.setMinutes(deadline.getMinutes() - 330);
                           const now = new Date();
                           const timeDiff = deadline - now;
                           const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));

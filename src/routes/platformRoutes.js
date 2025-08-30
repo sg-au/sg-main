@@ -2017,7 +2017,7 @@ router.get("/cgpa-planner-reset", async (req, res) => {
 
 router.get("/organisation-catalogue", async (req, res) => {
   const organisationsReq = await axios.get(
-    `${apiUrl}/organisations?populate=profile,circle1_humans,circle2_humans,interested_applicants&pagination[pageSize]=1000`, 
+    `${apiUrl}/organisations?populate[profile][fields][0]=profile_url&populate[circle1_humans][fields][0]=id&populate[circle1_humans][fields][1]=username&populate[circle1_humans][fields][2]=email&populate[circle2_humans][fields][0]=id&populate[circle2_humans][fields][1]=username&populate[circle2_humans][fields][2]=email&populate[interested_applicants][fields][0]=id&populate[interested_applicants][fields][1]=username&populate[interested_applicants][fields][2]=email&pagination[pageSize]=1000`, 
     axiosConfig
   );
   const userEmail = req.user._json.email;
@@ -2202,7 +2202,7 @@ router.get("/inductions-tracker", async (req, res) => {
     
     // Fetch all organisations with induction data
     const organisationsReq = await axios.get(
-      `${apiUrl}/organisations?populate=profile,interested_applicants&pagination[pageSize]=1000&sort[0]=name:asc`, 
+      `${apiUrl}/organisations?populate[profile][fields][0]=profile_url&populate[interested_applicants][fields][0]=id&populate[interested_applicants][fields][1]=username&populate[interested_applicants][fields][2]=email&pagination[pageSize]=1000&sort[0]=name:asc`, 
       axiosConfig
     );
     
