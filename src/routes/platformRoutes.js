@@ -2017,17 +2017,163 @@ router.get("/cgpa-planner-reset", async (req, res) => {
 
 router.get("/organisation-catalogue", async (req, res) => {
   const organisationsReq = await axios.get(
-    `${apiUrl}/organisations?populate=profile,circle1_humans,circle2_humans&pagination[pageSize]=1000`, 
+    `${apiUrl}/organisations?populate=profile,circle1_humans,circle2_humans,interested_applicants&pagination[pageSize]=1000`, 
     axiosConfig
   );
-  const organisations = organisationsReq.data.data.map((x) => x.attributes);
+  const userEmail = req.user._json.email;
+  
+  // Get the user's Strapi ID
+  const userResponse = await axios.get(
+    `${apiUrl}/users?filters[email][$eqi]=${userEmail}`,
+    axiosConfig
+  );
+  const userId = userResponse.data.length > 0 ? userResponse.data[0].id : null;
+  
+  const organisations = organisationsReq.data.data.map((x) => ({
+    ...x.attributes,
+    id: x.id // Include the actual ID from Strapi
+  }));
   // console.log(organisations[0].profile.data[0].attributes.profile_url)
   // console.log(organisations[0].circle1_humans.data);
   res.render("platform/pages/organisation-catalogue", {
     organisations,
     types: [...new Set(organisations.map((org) => org.type))],
+    userEmail: userEmail,
+    userId: userId
   });
 });
+
+router.post("/track-inductions", async (req, res) => {
+  try {
+    const userEmail = req.user._json.email;
+    const { organisationIds } = req.body; // Array of organisation IDs to track
+    
+    // Get the user's Strapi ID
+    const userResponse = await axios.get(
+      `${apiUrl}/users?filters[email][$eqi]=${userEmail}`,
+      axiosConfig
+    );
+    
+    if (userResponse.data.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    const userId = userResponse.data[0].id;
+    
+    // Process each organisation
+    for (const orgId of organisationIds) {
+      // Get current organisation data
+      const orgResponse = await axios.get(
+        `${apiUrl}/organisations/${orgId}?populate=interested_applicants`,
+        axiosConfig
+      );
+      
+      if (orgResponse.data.data) {
+        const currentApplicants = orgResponse.data.data.attributes.interested_applicants.data || [];
+        const isCurrentlyTracking = currentApplicants.some(applicant => applicant.id === userId);
+        
+        // Toggle tracking status
+        let updatedApplicantIds;
+        let newTrackingStatus;
+        
+        if (isCurrentlyTracking) {
+          // Remove user from tracking
+          updatedApplicantIds = currentApplicants
+            .filter(applicant => applicant.id !== userId)
+            .map(applicant => applicant.id);
+          newTrackingStatus = false;
+        } else {
+          // Add user to tracking
+          updatedApplicantIds = [
+            ...currentApplicants.map(applicant => applicant.id),
+            userId
+          ];
+          newTrackingStatus = true;
+        }
+        
+        // Update the organisation
+        await axios.put(
+          `${apiUrl}/organisations/${orgId}`,
+          {
+            data: {
+              interested_applicants: updatedApplicantIds
+            }
+          },
+          axiosConfig
+        );
+
+        // Update calendar event if it exists and inductions are active
+        const orgData = orgResponse.data.data.attributes;
+        if (orgData.calendar_event_id && orgData.induction && orgData.induction_end) {
+          try {
+            // Only add/remove the current user's email from the calendar event
+            await updateSingleAttendeeInCalendarEvent(
+              orgData.calendar_event_id, 
+              userEmail, 
+              newTrackingStatus
+            );
+          } catch (calendarError) {
+            console.error('Error updating calendar event attendee:', calendarError);
+            // Continue even if calendar update fails
+          }
+        }
+      }
+    }
+    
+    res.json({ success: true, message: "Tracking preferences updated successfully" });
+  } catch (error) {
+    console.error("Error updating track inductions:", error);
+    res.status(500).json({ error: "An error occurred while updating tracking preferences" });
+  }
+});
+
+// Helper function to add/remove single attendee from calendar event
+async function updateSingleAttendeeInCalendarEvent(eventId, userEmail, isTracking) {
+  try {
+    // Get the current event
+    const existingEvent = await calendar.events.get({
+      calendarId: process.env.INDUCTIONS_CALENDAR_ID,
+      eventId: eventId
+    });
+
+    const now = new Date();
+    const eventStart = new Date(existingEvent.data.start.dateTime);
+
+    // Only update if the event hasn't passed yet
+    if (eventStart > now) {
+      let currentAttendees = existingEvent.data.attendees || [];
+      
+      if (isTracking) {
+        // Add user if not already present
+        const isAlreadyAttendee = currentAttendees.some(attendee => attendee.email === userEmail);
+        if (!isAlreadyAttendee) {
+          currentAttendees.push({ email: userEmail, responseStatus: 'needsAction' });
+        }
+      } else {
+        // Remove user from attendees
+        currentAttendees = currentAttendees.filter(attendee => attendee.email !== userEmail);
+      }
+
+      const updatedEvent = {
+        attendees: currentAttendees
+      };
+
+      await calendar.events.patch({
+        calendarId: process.env.INDUCTIONS_CALENDAR_ID,
+        eventId: eventId,
+        resource: updatedEvent,
+        sendUpdates: 'all' // Send notifications to new attendees only
+      });
+
+      return true;
+    }
+    
+    return false;
+  } catch (error) {
+    console.error('Error updating single attendee in calendar event:', error);
+    return false;
+  }
+}
 
 router.get("/clubs-socs-catalogue/:id", async (req, res) => {
   const organisation = await axios.get(
@@ -2035,6 +2181,48 @@ router.get("/clubs-socs-catalogue/:id", async (req, res) => {
     axiosConfig
   );
   res.render("platform/pages/organisation", { club: organisation.data });
+});
+
+router.get("/inductions-tracker", async (req, res) => {
+  try {
+    const userEmail = req.user._json.email;
+    
+    // Check if user has access (Cultural Ministry or Technology Ministry)
+    const authorizedEmails = [
+      'cultural.ministry@ashoka.edu.in',
+      'vansh.bothra_ug25@ashoka.edu.in',      
+      'technology.ministry@ashoka.edu.in'
+    ];
+    
+    if (!authorizedEmails.includes(userEmail)) {
+      return res.status(403).render("platform/pages/no-access", {
+        message: "Access denied. This page is only accessible to Cultural Ministry and Technology Ministry."
+      });
+    }
+    
+    // Fetch all organisations with induction data
+    const organisationsReq = await axios.get(
+      `${apiUrl}/organisations?populate=profile,interested_applicants&pagination[pageSize]=1000&sort[0]=name:asc`, 
+      axiosConfig
+    );
+    
+    const organisations = organisationsReq.data.data.map((x) => ({
+      ...x.attributes,
+      id: x.id,
+      interestedCount: x.attributes.interested_applicants?.data?.length || 0
+    }));        
+    
+    res.render("platform/pages/inductions-tracker", {
+      organisations: organisations,
+      totalOrganisations: organisations.length,
+      inductionsOpen: organisations.filter(org => org.induction).length,
+      userEmail: userEmail
+    });
+    
+  } catch (error) {
+    console.error("Error fetching inductions tracker data:", error);
+    res.status(500).send("An error occurred while loading the inductions tracker");
+  }
 });
 
 router.get("/pool-service", async (req, res) => {

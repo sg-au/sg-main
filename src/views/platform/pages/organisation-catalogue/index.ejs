@@ -92,6 +92,25 @@
       .form-check-label:hover {
         background-color: #e9ecef;
       }
+
+      .track-inductions-btn {
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+
+      .track-inductions-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      }
     </style>
   </head>
 
@@ -222,16 +241,60 @@
                   <% }); %>
                 </div>
               </div>
+
+              <!-- Tracked Clubs Button -->
+              <div class="mt-3 d-flex justify-content-center">
+                <button 
+                  class="btn btn-outline-primary" 
+                  type="button" 
+                  data-bs-toggle="offcanvas" 
+                  data-bs-target="#trackedClubsOffcanvas" 
+                  aria-controls="trackedClubsOffcanvas"
+                >
+                  <i class="fas fa-list-check"></i> My Tracked Clubs (<span id="tracked-count">0</span>)
+                </button>
+              </div>
+            </div>
+
+            <!-- Tracked Clubs Off-canvas -->
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="trackedClubsOffcanvas" aria-labelledby="trackedClubsOffcanvasLabel">
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="trackedClubsOffcanvasLabel">
+                  <i class="fas fa-bell text-warning"></i> My Tracked Clubs
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div class="offcanvas-body">
+                <div id="tracked-clubs-loading" class="text-center" style="display: none;">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <p class="mt-2">Updating tracked clubs...</p>
+                </div>
+                
+                <div id="tracked-clubs-content">
+                  <div id="tracked-clubs-empty" class="text-center text-muted" style="display: none;">
+                    <i class="fas fa-bell-slash fa-3x mb-3"></i>
+                    <h6>No clubs tracked yet</h6>
+                    <p>Start tracking clubs to see their induction deadlines here!</p>
+                  </div>
+                  
+                  <div id="tracked-clubs-list">
+                    <!-- Tracked clubs will be populated here -->
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div id="results-section">
 
               <div id="results-list" class="row g-4">
-                <% organisations.forEach(org => { %>
+                <% organisations.forEach((org) => { %>
                 <div
                   class="col-12 col-md-6 col-lg-4 organisation-item"
                   data-name="<%= org.name %>"
                   data-type="<%= org.type %>"
+                  data-org-id="<%= org.id %>"
                 >
               
                     <div class="card h-100">
@@ -303,11 +366,28 @@
                         }
 
                         let orgEscaped = escapeDescription(org);
+
+                        // Check if user is tracking this organisation
+                        const isTracking = org.interested_applicants?.data?.some(applicant => 
+                          applicant.id === userId
+                        ) || false;
                       %>
-                      <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);">
-                        <button onclick='showClubDetails(`<%= orgEscaped %>`)' class="btn btn-primary" type="button">
-                        Learn More
-                        </button>
+                      <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%;">
+                        <div class="d-flex gap-2 justify-content-center">
+                          <button 
+                            class="btn btn-sm track-inductions-btn <%= isTracking ? 'btn-warning' : 'btn-outline-warning' %>" 
+                            data-org-id="<%= org.id %>"
+                            data-tracking="<%= isTracking %>"
+                            type="button"
+                            style="font-size: 0.75rem; padding: 4px 8px; flex: 1; white-space: nowrap;"
+                          >
+                            <i class="fas fa-bell<%= isTracking ? '' : '-slash' %>"></i>
+                            <%= isTracking ? 'Tracking Inductions' : 'Track Inductions' %>
+                          </button>
+                          <button onclick='showClubDetails(`<%= orgEscaped %>`)' class="btn btn-primary btn-sm" type="button" style="flex: 1;">
+                            Learn More
+                          </button>
+                        </div>
                       </div>
                     </div>
                     </div>
@@ -383,7 +463,17 @@
             </div>
 
           </div>
+          <script type="application/json" id="organisations-data"><%- JSON.stringify(organisations) %></script>
           <script>
+            window.organisationsData = JSON.parse(
+              document.getElementById('organisations-data').textContent
+            );
+          </script>
+
+          <script>
+            // Make organisations data available globally for JavaScript
+            // window.organisationsData = <%- JSON.stringify(organisations) %>;
+            
             document.addEventListener("DOMContentLoaded", function() {
               // Select all induction badges (there might be multiple)
               const inductionBadges = document.querySelectorAll("#inductionBadge");
@@ -589,6 +679,245 @@
               setTimeout(() => {
                 filterOrganizations();
               }, 100);
+            });
+
+            // Track inductions functionality
+            document.addEventListener("DOMContentLoaded", function() {
+              const trackButtons = document.querySelectorAll(".track-inductions-btn");
+              
+              trackButtons.forEach((button, index) => {                
+                button.addEventListener("click", function() {                  
+                  const orgId = this.getAttribute("data-org-id");
+                  const isCurrentlyTracking = this.getAttribute("data-tracking") === "true";
+                  
+                  // Disable button and show loading state
+                  this.disabled = true;
+                  const originalContent = this.innerHTML;
+                  this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                  
+                  // Send the request to the server
+                  fetch("/platform/track-inductions", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      organisationIds: [orgId]
+                    })
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.success) {
+                      // Update the data attribute for future clicks
+                      this.setAttribute("data-tracking", !isCurrentlyTracking);
+                      // Toggle the button state
+                      toggleButtonState(this, !isCurrentlyTracking);
+                      
+                      // Update tracked clubs list
+                      updateTrackedClubsList();
+                      
+                      // Show success message (optional)
+                      // showToast(data.message, "success");
+                    } else {
+                      // Restore original content if request failed
+                      this.innerHTML = originalContent;
+                      console.error("Error:", data.error);
+                      // showToast("Error updating tracking preferences", "error");
+                    }
+                  })
+                  .catch(error => {
+                    // Restore original content if request failed
+                    this.innerHTML = originalContent;
+                    console.error("Error:", error);
+                    // showToast("Network error. Please try again.", "error");
+                  })
+                  .finally(() => {
+                    // Re-enable button
+                    this.disabled = false;
+                  });
+                });
+              });
+              
+              function toggleButtonState(button, isTracking) {
+                const icon = button.querySelector("i");
+                
+                if (isTracking) {
+                  button.className = "btn btn-sm track-inductions-btn btn-warning";
+                  button.innerHTML = '<i class="fas fa-bell"></i> Tracking';
+                } else {
+                  button.className = "btn btn-sm track-inductions-btn btn-outline-warning";
+                  button.innerHTML = '<i class="fas fa-bell-slash"></i> Track';
+                }
+              }
+              
+              // Optional: Toast notification function
+              // function showToast(message, type) {
+              //   // Implementation depends on your toast library
+              //   console.log(type + ": " + message);
+              // }
+
+              // Tracked clubs functionality
+              function updateTrackedClubsList() {
+                const trackedClubsList = document.getElementById('tracked-clubs-list');
+                const trackedCount = document.getElementById('tracked-count');
+                const emptyState = document.getElementById('tracked-clubs-empty');
+                const loadingState = document.getElementById('tracked-clubs-loading');
+                
+                // Show loading state
+                loadingState.style.display = 'block';
+                emptyState.style.display = 'none';
+                trackedClubsList.innerHTML = '';
+                
+                // Get all currently tracked organizations from DOM
+                const trackedOrgs = [];
+                const orgElements = document.querySelectorAll('.organisation-item');
+                
+                orgElements.forEach(orgElement => {
+                  const trackButton = orgElement.querySelector('.track-inductions-btn');
+                  if (trackButton && trackButton.getAttribute('data-tracking') === 'true') {
+                    const orgId = trackButton.getAttribute('data-org-id');
+                    const orgName = orgElement.getAttribute('data-name');
+                    const orgType = orgElement.getAttribute('data-type');
+                    
+                    // Find the organisation data from the global organisations array
+                    const organisations = window.organisationsData || [];
+                    const orgData = organisations.find(org => org.id.toString() === orgId);
+                    
+                    if (orgData) {
+                      trackedOrgs.push(orgData);
+                    } else {
+                      // Fallback if organisation data not found
+                      trackedOrgs.push({
+                        id: orgId,
+                        name: orgName,
+                        type: orgType,
+                        induction: false,
+                        induction_end: null,
+                        profile: { data: [{ attributes: { profile_url: '' } }] }
+                      });
+                    }
+                  }
+                });
+                
+                // Hide loading state
+                setTimeout(() => {
+                  loadingState.style.display = 'none';
+                  
+                  // Update count
+                  trackedCount.textContent = trackedOrgs.length;
+                  
+                  if (trackedOrgs.length === 0) {
+                    emptyState.style.display = 'block';
+                  } else {
+                    emptyState.style.display = 'none';
+                    
+                    // Sort by induction deadline (soonest first)
+                    trackedOrgs.sort((a, b) => {
+                      if (!a.induction_end && !b.induction_end) return 0;
+                      if (!a.induction_end) return 1;
+                      if (!b.induction_end) return -1;
+                      return new Date(a.induction_end) - new Date(b.induction_end);
+                    });
+                    
+                    // Generate HTML for tracked clubs
+                    trackedClubsList.innerHTML = trackedOrgs.map(org => {
+                      const hasDeadline = org.induction_end;
+                      const isInductionOpen = org.induction;
+                      let deadlineText = 'No deadline set';
+                      let deadlineClass = 'text-muted';
+                      
+                      if (hasDeadline) {
+                        try {
+                          const deadline = new Date(org.induction_end);
+                          const now = new Date();
+                          const timeDiff = deadline - now;
+                          const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                          
+                          deadlineText = deadline.toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric'
+                          });
+                          
+                          if (daysDiff < 0) {
+                            deadlineClass = 'text-danger';
+                            deadlineText += ' (Expired)';
+                          } else if (daysDiff <= 3) {
+                            deadlineClass = 'text-danger';
+                            deadlineText += ` (${daysDiff} days left)`;
+                          } else if (daysDiff <= 7) {
+                            deadlineClass = 'text-warning';
+                            deadlineText += ` (${daysDiff} days left)`;
+                          } else {
+                            deadlineClass = 'text-success';
+                            deadlineText += ` (${daysDiff} days left)`;
+                          }
+                        } catch (e) {
+                          deadlineText = 'Invalid date';
+                          deadlineClass = 'text-muted';
+                        }
+                      }
+                      
+                      const profileUrl = org.profile?.data?.[0]?.attributes?.profile_url?.replace(/=s\d+/g, '=s32') || '';
+                      
+                      return `
+                        <div class="card mb-3 border-start border-3 ${isInductionOpen ? 'border-success' : 'border-secondary'}">
+                          <div class="card-body p-3">
+                            <div class="d-flex align-items-start justify-content-between">
+                              <div class="flex-grow-1">
+                                <h6 class="card-title mb-1 d-flex align-items-center">
+                                  <img src="${profileUrl}" 
+                                       class="rounded-circle me-2" width="24" height="24" style="object-fit: cover;" 
+                                       onerror="this.style.display='none'">
+                                  ${org.name}
+                                </h6>
+                                <small class="text-muted text-capitalize">${org.type}</small>
+                                <div class="mt-2">
+                                  <div class="d-flex align-items-center mb-1">
+                                    <i class="fas fa-calendar-alt text-primary me-2" style="width: 12px;"></i>
+                                    <small class="${deadlineClass} fw-bold">${deadlineText}</small>
+                                  </div>
+                                  <div class="d-flex align-items-center">
+                                    <i class="fas fa-door-${isInductionOpen ? 'open text-success' : 'closed text-secondary'} me-2" style="width: 12px;"></i>
+                                    <small class="${isInductionOpen ? 'text-success' : 'text-muted'}">
+                                      Inductions ${isInductionOpen ? 'Open' : 'Closed'}
+                                    </small>
+                                  </div>
+                                </div>
+                              </div>
+                              <button 
+                                class="btn btn-outline-danger btn-sm ms-2" 
+                                onclick="untrackClub(${org.id})"
+                                title="Stop tracking this club"
+                              >
+                                <i class="fas fa-bell-slash"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      `;
+                    }).join('');
+                  }
+                }, 500); // Small delay for better UX
+              }
+              
+              // Function to untrack a club from the off-canvas
+              window.untrackClub = function(orgId) {
+                // Find the corresponding track button and trigger its click
+                const trackButton = document.querySelector(`.track-inductions-btn[data-org-id="${orgId}"]`);                
+                if (trackButton && trackButton.getAttribute('data-tracking') === 'true') {
+                  trackButton.click();
+                }
+              }
+              
+              // Initialize tracked clubs list when page loads
+              updateTrackedClubsList();
+            });
+
+            // Initialize the tracked count on page load
+            document.addEventListener("DOMContentLoaded", function() {
+              const trackButtons = document.querySelectorAll('.track-inductions-btn[data-tracking="true"]');
+              document.getElementById('tracked-count').textContent = trackButtons.length;
             });
    
           </script>

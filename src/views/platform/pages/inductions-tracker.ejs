@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Inductions Tracker - SG Platform</title>
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="/platform/assets/images/logos/favicon.png"
+    />
+    <link rel="stylesheet" href="/platform/assets/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+
+    <%-include("../partials/preloader-css")%>
+    <style>
+      .status-badge {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+      }
+      
+      .deadline-urgent {
+        color: #dc3545 !important;
+        font-weight: bold;
+      }
+      
+      .deadline-warning {
+        color: #fd7e14 !important;
+        font-weight: bold;
+      }
+      
+      .deadline-safe {
+        color: #198754 !important;
+      }
+      
+      .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+      }
+      
+      .org-logo {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+      }
+      
+      .search-box {
+        border-radius: 20px;
+        border: 2px solid #e9ecef;
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+      
+      .search-box:focus {
+        border-color: #5d87ff;
+        box-shadow: 0 0 0 0.2rem rgba(93, 135, 255, 0.25);
+      }
+    </style>
+  </head>
+
+  <%-include("../partials/post-head")%>
+
+  <%-include("../partials/post-head")%>
+
+  <body>
+    <!--  Body Wrapper -->
+    <%-include("../partials/preloader")%>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+      <%-include("../partials/sidebar")%>
+      <!--  Main wrapper -->
+      <div class="body-wrapper">
+        <%-include("../partials/header")%>
+        <div class="container-fluid">
+          <div class="container-fluid">
+            <div class="row justify-content-between">
+              <div class="card">
+                <div class="card-header">
+                  <h2 class="card-title mb-0">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Inductions Tracker
+                  </h2>
+                </div>
+                <div class="card-body">
+
+                  <!-- Statistics Summary -->
+                  <div class="row mb-4">
+                    <div class="col-md-3">
+                      <div class="text-center">
+                        <h4 class="text-primary"><%= totalOrganisations %></h4>
+                        <p class="mb-0">Total Organisations</p>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="text-center">
+                        <h4 class="text-success"><%= inductionsOpen %></h4>
+                        <p class="mb-0">Inductions Currently Open</p>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="text-center">
+                        <h4 class="text-info"><%= Math.round((inductionsOpen / totalOrganisations) * 100) %>%</h4>
+                        <p class="mb-0">Organisations with Open Inductions</p>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="text-center">
+                        <h4 class="text-warning">
+                          <%= organisations.reduce((total, org) => total + org.interestedCount, 0) %>
+                        </h4>
+                        <p class="mb-0">Total Interest</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Search and Filters -->
+                  <div class="row mb-4">
+                    <div class="col-md-6">
+                      <input
+                        type="text"
+                        id="searchInput"
+                        class="form-control search-box"
+                        placeholder="Search organisations..."
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <div class="d-flex gap-2">
+                        <select id="statusFilter" class="form-select">
+                          <option value="">All Status</option>
+                          <option value="open">Inductions Open</option>
+                          <option value="closed">Inductions Closed</option>
+                        </select>
+                        <select id="typeFilter" class="form-select">
+                          <option value="">All Types</option>
+                          <option value="club">Clubs</option>
+                          <option value="society">Societies</option>
+                          <option value="collective">Collectives</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Table -->
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="inductionsTable">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Organisation</th>
+                          <th>Type</th>
+                          <th>Induction Status</th>
+                          <th>Deadline</th>
+                          <th>Days Left</th>
+                          <th>Interested Students</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% organisations.forEach(org => { %>
+                          <%
+                            // Calculate deadline info
+                            let deadlineText = 'Not Set';
+                            let daysLeft = '-';
+                            let deadlineClass = '';
+                            let daysDiff = null;
+                            
+                            if (org.induction_end) {
+                              try {
+                                const deadline = new Date(org.induction_end);
+                                const now = new Date();
+                                daysDiff = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
+                                
+                                deadlineText = deadline.toLocaleDateString('en-US', { 
+                                  year: 'numeric', 
+                                  month: 'short', 
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                });
+                                
+                                if (daysDiff < 0) {
+                                  daysLeft = 'Expired';
+                                  deadlineClass = 'deadline-urgent';
+                                } else if (daysDiff <= 3) {
+                                  daysLeft = daysDiff + ' days';
+                                  deadlineClass = 'deadline-urgent';
+                                } else if (daysDiff <= 7) {
+                                  daysLeft = daysDiff + ' days';
+                                  deadlineClass = 'deadline-warning';
+                                } else {
+                                  daysLeft = daysDiff + ' days';
+                                  deadlineClass = 'deadline-safe';
+                                }
+                              } catch (e) {
+                                deadlineText = 'Invalid Date';
+                                daysLeft = 'Error';
+                              }
+                            }
+                          %>
+                          <tr data-org-name="<%= org.name.toLowerCase() %>" 
+                              data-org-type="<%= org.type.toLowerCase() %>" 
+                              data-org-status="<%= org.induction ? 'open' : 'closed' %>">
+                            <td>
+                              <div class="d-flex align-items-center">
+                                <img 
+                                  src="<%= org.profile?.data?.[0]?.attributes?.profile_url?.replace(/=s\d+/g, '=s64') || '' %>"
+                                  alt="<%= org.name %>"
+                                  class="rounded-circle org-logo me-3"
+                                  onerror="this.style.display='none'"
+                                />
+                                <div>
+                                  <h6 class="mb-0"><%= org.name %></h6>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <span class="badge bg-secondary text-capitalize"><%= org.type %></span>
+                            </td>
+                            <td>
+                              <% if (org.induction) { %>
+                                <span class="badge bg-success status-badge">
+                                  <i class="fas fa-door-open me-1"></i>Open
+                                </span>
+                              <% } else { %>
+                                <span class="badge bg-danger status-badge">
+                                  <i class="fas fa-door-closed me-1"></i>Closed
+                                </span>
+                              <% } %>
+                            </td>
+                            <td class="<%= deadlineClass %>"><%= deadlineText %></td>
+                            <td class="<%= deadlineClass %>">
+                              <% if (daysDiff !== null && daysDiff < 0) { %>
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                              <% } else if (daysDiff !== null && daysDiff <= 3) { %>
+                                <i class="fas fa-clock me-1"></i>
+                              <% } %>
+                              <%= daysLeft %>
+                            </td>
+                            <td>
+                              <span class="badge bg-info">
+                                <i class="fas fa-users me-1"></i><%= org.interestedCount %>
+                              </span>
+                            </td>
+                          </tr>
+                        <% }); %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Scripts -->
+    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const statusFilter = document.getElementById('statusFilter');
+        const typeFilter = document.getElementById('typeFilter');
+        const tableRows = document.querySelectorAll('#inductionsTable tbody tr');
+
+        function filterTable() {
+          const searchTerm = searchInput.value.toLowerCase();
+          const statusValue = statusFilter.value;
+          const typeValue = typeFilter.value;
+
+          tableRows.forEach(row => {
+            const orgName = row.getAttribute('data-org-name');
+            const orgType = row.getAttribute('data-org-type');
+            const orgStatus = row.getAttribute('data-org-status');
+
+            const matchesSearch = orgName.includes(searchTerm);
+            const matchesStatus = !statusValue || orgStatus === statusValue;
+            const matchesType = !typeValue || orgType === typeValue;
+
+            if (matchesSearch && matchesStatus && matchesType) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        }
+
+        searchInput.addEventListener('input', filterTable);
+        statusFilter.addEventListener('change', filterTable);
+        typeFilter.addEventListener('change', filterTable);
+      });
+    </script>
+
+    <%-include("../partials/preloader-js")%>
+  </body>
+</html>

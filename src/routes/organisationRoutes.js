@@ -6,6 +6,25 @@ const axios = require("axios");
 const { google } = require("googleapis");
 const { youtube } = require("googleapis/build/src/apis/youtube/index.js");
 
+// Initialize Google Calendar API with OAuth2
+const calendarOAuth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  process.env.GOOGLE_REDIRECT_URI
+);
+
+// Set the refresh token if you have one
+if (process.env.GOOGLE_REFRESH_TOKEN) {
+  calendarOAuth2Client.setCredentials({
+    refresh_token: process.env.GOOGLE_REFRESH_TOKEN
+  });
+}
+
+const calendar = google.calendar({
+  version: 'v3',
+  auth: calendarOAuth2Client
+});
+
 const axiosConfig = {
   headers: {
     "Content-Type": "application/json",
@@ -15,6 +34,129 @@ const axiosConfig = {
 };
 
 const apiUrl = process.env.STRAPI_API_URL;
+
+// Helper function to create Google Calendar event for induction deadline
+async function createInductionCalendarEvent(organisationName, inductionEnd, organisationId) {
+  try {
+    const event = {
+      summary: `${organisationName} - Induction Deadline`,
+      description: `Induction deadline for ${organisationName}. All applications must be submitted by this time.`,
+      start: {
+        dateTime: new Date(new Date(inductionEnd).getTime() - 60 * 60 * 1000).toISOString(), // 1 hour before deadline
+        timeZone: 'Asia/Kolkata',
+      },
+      end: {
+        dateTime: new Date(inductionEnd).toISOString(), // End at deadline
+        timeZone: 'Asia/Kolkata',
+      },
+      attendees: [], // Will be populated with interested students
+      reminders: {
+        useDefault: false,
+        overrides: [
+          {'method': 'email', 'minutes': 24 * 60}, // 1 day before
+          {'method': 'email', 'minutes': 60}, // 1 hour before
+        ],
+      },
+      extendedProperties: {
+        private: {
+          organisationId: organisationId.toString(),
+          type: 'induction_deadline'
+        }
+      }
+    };
+
+    const response = await calendar.events.insert({
+      calendarId: process.env.INDUCTIONS_CALENDAR_ID,
+      resource: event,
+    });
+
+    return response.data.id;
+  } catch (error) {
+    console.error('Error creating calendar event:', error);
+    throw error;
+  }
+}
+
+// Helper function to update existing calendar event
+async function updateInductionCalendarEvent(eventId, organisationName, inductionEnd, interestedEmails = []) {
+  try {
+    // Get the current event to check if it's still in the future
+    const existingEvent = await calendar.events.get({
+      calendarId: process.env.INDUCTIONS_CALENDAR_ID,
+      eventId: eventId
+    });
+
+    const now = new Date();
+    const eventStart = new Date(existingEvent.data.start.dateTime);
+
+    // Only update if the event hasn't passed yet
+    if (eventStart > now) {
+      const updatedEvent = {
+        summary: `${organisationName} - Induction Deadline`,
+        description: `Induction deadline for ${organisationName}. All applications must be submitted by this time.`,
+        start: {
+          dateTime: new Date(new Date(inductionEnd).getTime() - 60 * 60 * 1000).toISOString(), // 1 hour before deadline
+          timeZone: 'Asia/Kolkata',
+        },
+        end: {
+          dateTime: new Date(inductionEnd).toISOString(), // End at deadline
+          timeZone: 'Asia/Kolkata',
+        },
+        attendees: interestedEmails.map(email => ({ email: email })),
+        reminders: {
+          useDefault: false,
+          overrides: [
+            {'method': 'email', 'minutes': 24 * 60},
+            {'method': 'email', 'minutes': 60},
+          ],
+        }
+      };
+
+      await calendar.events.update({
+        calendarId: process.env.INDUCTIONS_CALENDAR_ID,
+        eventId: eventId,
+        resource: updatedEvent,
+        sendUpdates: 'all' // Send notifications to all attendees
+      });
+
+      return true;
+    } else {
+      console.log('Event has already passed, creating new event instead');
+      return false;
+    }
+  } catch (error) {
+    console.error('Error updating calendar event:', error);
+    return false;
+  }
+}
+
+// Helper function to get interested students' emails
+async function getInterestedStudentsEmails(organisationId) {
+  try {
+    const orgResponse = await axios.get(
+      `${apiUrl}/organisations/${organisationId}?populate=interested_applicants`,
+      axiosConfig
+    );
+
+    if (orgResponse.data.data && orgResponse.data.data.attributes.interested_applicants.data) {
+      const userIds = orgResponse.data.data.attributes.interested_applicants.data.map(user => user.id);
+      
+      if (userIds.length > 0) {
+        const usersResponse = await axios.get(
+          `${apiUrl}/users?filters[id][$in]=${userIds.join(',')}&fields[0]=email`,
+          axiosConfig
+        );
+        
+        return usersResponse.data.map(user => user.email);
+      }
+    }
+    
+    return [];
+  } catch (error) {
+    console.error('Error getting interested students emails:', error);
+    return [];
+  }
+}
 
 router.get("/", async (req, res) => {
   try {
@@ -125,7 +267,10 @@ router.post("/update-catalogue-listing", async (req, res) => {
           induction_end = req.body.induction_end;
       }
 
+      // Get existing listing to check for calendar event
       const { data: existingListing } = await axios.get(`${apiUrl}/organisations/${listingId}`, axiosConfig);
+      
+      // Prepare updated listing data
       const updatedListing = {
           data: {
               name: req.body.name,
@@ -143,11 +288,91 @@ router.post("/update-catalogue-listing", async (req, res) => {
               youtube: req.body.youtube,
           }
       };
+
+      // Handle calendar event creation/update for inductions
+      if (req.body.induction === 'on' && induction_end) {
+          try {
+              // Get interested students' emails
+              const interestedEmails = await getInterestedStudentsEmails(listingId);
+              
+              const existingCalendarEventId = existingListing.data.attributes.calendar_event_id;
+              
+              if (existingCalendarEventId) {
+                  // Try to update existing event
+                  const updateSuccess = await updateInductionCalendarEvent(
+                      existingCalendarEventId, 
+                      req.body.name, 
+                      induction_end, 
+                      interestedEmails
+                  );
+                  
+                  if (!updateSuccess) {
+                      // Event has passed, create new one
+                      const newEventId = await createInductionCalendarEvent(
+                          req.body.name, 
+                          induction_end, 
+                          listingId
+                      );
+                      updatedListing.data.calendar_event_id = newEventId;
+                      
+                      // Update the event with interested students
+                      if (interestedEmails.length > 0) {
+                          await updateInductionCalendarEvent(newEventId, req.body.name, induction_end, interestedEmails);
+                      }
+                  }
+              } else {
+                  // Create new calendar event
+                  const eventId = await createInductionCalendarEvent(
+                      req.body.name, 
+                      induction_end, 
+                      listingId
+                  );
+                  updatedListing.data.calendar_event_id = eventId;
+                  
+                  // Update the event with interested students
+                  if (interestedEmails.length > 0) {
+                      await updateInductionCalendarEvent(eventId, req.body.name, induction_end, interestedEmails);
+                  }
+              }
+          } catch (calendarError) {
+              console.error("Error handling calendar event:", calendarError);
+              // Continue with the update even if calendar fails
+          }
+      } else if (existingListing.data.attributes.calendar_event_id && req.body.induction !== 'on') {
+          // If inductions are turned off, we could optionally delete the calendar event
+          // For now, we'll just remove the reference from the database
+          updatedListing.data.calendar_event_id = null;
+      }
+
+      // Update the organisation
       await axios.put(`${apiUrl}/organisations/${listingId}`, updatedListing, axiosConfig);
       res.redirect("/organisation/organisation-catalogue");
   } catch (err) {
       console.error("Error updating listing:", err.response?.data || err.message);
       res.status(500).send("Failed to update listing.");
+  }
+});
+
+// Test route for calendar integration (remove in production)
+router.get("/test-calendar", async (req, res) => {
+  try {
+    // Test creating a calendar event
+    const testEvent = await createInductionCalendarEvent(
+      "Test Organisation", 
+      new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
+      "123"
+    );
+    
+    res.json({ 
+      success: true, 
+      message: "Test calendar event created", 
+      eventId: testEvent 
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      error: "Failed to create test event", 
+      details: error.message 
+    });
   }
 });
 
