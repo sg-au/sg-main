@@ -39,16 +39,9 @@ const apiUrl = process.env.STRAPI_API_URL;
 function toISTDateTime(dateString) {
   // Parse the date string and ensure it's treated as IST
   const date = new Date(dateString);
-  
-  // If the date doesn't have timezone info, treat it as IST
-  if (!dateString.includes('Z') && !dateString.includes('+') && !dateString.includes('-')) {
-    // Add IST offset (+05:30) to the date
-    const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
-    const utcTime = date.getTime() - istOffset;
-    return new Date(utcTime);
-  }
-  
-  return date;
+  const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
+  const utcTime = date.getTime() - istOffset;
+  return new Date(utcTime);
 }
 
 // Helper function to create Google Calendar event for induction deadline
