@@ -1,6 +1,7 @@
 const axios = require('axios');
 const { google } = require('googleapis');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 /**
  * One-off script to create calendar events for existing organizations with open inductions
@@ -34,18 +35,54 @@ const axiosConfig = {
 
 const apiUrl = process.env.STRAPI_API_URL;
 
+// Helper function to convert date to IST and format for Google Calendar
+function toISTDateTime(dateString) {
+  // Parse the date string and ensure it's treated as IST
+  const date = new Date(dateString);
+  
+  // If the date doesn't have timezone info, treat it as IST
+  if (!dateString.includes('Z') && !dateString.includes('+') && !dateString.includes('-')) {
+    // Add IST offset (+05:30) to the date
+    const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
+    const utcTime = date.getTime() - istOffset;
+    return new Date(utcTime);
+  }
+  
+  return date;
+}
+
 // Helper function to create Google Calendar event for induction deadline
-async function createInductionCalendarEvent(organisationName, inductionEnd, organisationId) {
+async function createInductionCalendarEvent(organisationName, inductionEnd, organisationId, orgData = null) {
   try {
+    // Convert to proper IST date
+    const deadline = toISTDateTime(inductionEnd);
+    const eventStart = new Date(deadline.getTime() - 60 * 60 * 1000); // 1 hour before deadline
+    
+    // Build enhanced description with additional induction info
+    let description = `🎯 Induction deadline for ${organisationName}\n\n`;
+    description += `📅 Deadline: ${deadline.toLocaleDateString('en-IN', {timeZone: 'Asia/Kolkata', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})} at ${deadline.toLocaleTimeString('en-IN', {timeZone: 'Asia/Kolkata'})} IST\n\n`;
+    description += `⚠️ All applications must be submitted by this time.\n\n`;
+    
+    // Add induction description if available
+    if (orgData && orgData.induction_description) {
+      // Strip HTML tags for plain text calendar description
+      const plainDescription = orgData.induction_description.replace(/<[^>]*>/g, '').trim();
+      if (plainDescription) {
+        description += `📋 Induction Information:\n${plainDescription}\n\n`;
+      }
+    }
+    
+    description += `💡 This event was created automatically by Ministry of Technology to help you track induction deadlines.`;
+    
     const event = {
       summary: `${organisationName} - Induction Deadline`,
-      description: `Induction deadline for ${organisationName}. All applications must be submitted by this time.`,
+      description: description,
       start: {
-        dateTime: new Date(new Date(inductionEnd).getTime() - 60 * 60 * 1000).toISOString(), // 1 hour before deadline
+        dateTime: eventStart.toISOString(),
         timeZone: 'Asia/Kolkata',
       },
       end: {
-        dateTime: new Date(inductionEnd).toISOString(), // End at deadline
+        dateTime: deadline.toISOString(),
         timeZone: 'Asia/Kolkata',
       },
       attendees: [], // Will be populated later
@@ -164,23 +201,28 @@ async function setupExistingInductionEvents() {
         continue;
       }
       
-      // Check if deadline is in the future
-      const deadline = new Date(orgData.induction_end);
+      // Check if deadline is in the future (using IST)
+      const deadline = toISTDateTime(orgData.induction_end);
       const now = new Date();
       
       if (deadline <= now) {
-        console.log(`  ⏭️  Deadline has passed (${deadline.toLocaleDateString()}), skipping`);
+        // Format deadline in IST for display
+        const istDeadline = new Date(deadline.getTime() + (5.5 * 60 * 60 * 1000));
+        console.log(`  ⏭️  Deadline has passed (${istDeadline.toLocaleDateString('en-IN', {timeZone: 'Asia/Kolkata'})} ${istDeadline.toLocaleTimeString('en-IN', {timeZone: 'Asia/Kolkata'})}), skipping`);
         skippedCount++;
         continue;
       }
       
       try {
         // Create calendar event
-        console.log(`  📅 Creating calendar event for deadline: ${deadline.toLocaleDateString()} ${deadline.toLocaleTimeString()}`);
+        // Format deadline in IST for display
+        const istDeadline = new Date(deadline.getTime() + (5.5 * 60 * 60 * 1000));
+        console.log(`  📅 Creating calendar event for deadline: ${istDeadline.toLocaleDateString('en-IN', {timeZone: 'Asia/Kolkata'})} ${istDeadline.toLocaleTimeString('en-IN', {timeZone: 'Asia/Kolkata'})} IST`);
         const eventId = await createInductionCalendarEvent(
           orgData.name,
           orgData.induction_end,
-          orgId
+          orgId,
+          orgData // Pass the full organization data
         );
         
         console.log(`  ✓ Calendar event created (ID: ${eventId})`);

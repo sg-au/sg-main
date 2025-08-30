@@ -35,18 +35,54 @@ const axiosConfig = {
 
 const apiUrl = process.env.STRAPI_API_URL;
 
+// Helper function to convert date to IST and format for Google Calendar
+function toISTDateTime(dateString) {
+  // Parse the date string and ensure it's treated as IST
+  const date = new Date(dateString);
+  
+  // If the date doesn't have timezone info, treat it as IST
+  if (!dateString.includes('Z') && !dateString.includes('+') && !dateString.includes('-')) {
+    // Add IST offset (+05:30) to the date
+    const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
+    const utcTime = date.getTime() - istOffset;
+    return new Date(utcTime);
+  }
+  
+  return date;
+}
+
 // Helper function to create Google Calendar event for induction deadline
-async function createInductionCalendarEvent(organisationName, inductionEnd, organisationId) {
+async function createInductionCalendarEvent(organisationName, inductionEnd, organisationId, orgData = null) {
   try {
+    // Convert to proper IST date
+    const deadline = toISTDateTime(inductionEnd);
+    const eventStart = new Date(deadline.getTime() - 60 * 60 * 1000); // 1 hour before deadline
+    
+    // Build enhanced description with additional induction info
+    let description = `🎯 Induction deadline for ${organisationName}\n\n`;
+    description += `📅 Deadline: ${deadline.toLocaleDateString('en-IN', {timeZone: 'Asia/Kolkata', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})} at ${deadline.toLocaleTimeString('en-IN', {timeZone: 'Asia/Kolkata'})} IST\n\n`;
+    description += `⚠️ All applications must be submitted by this time.\n\n`;
+    
+    // Add induction description if available
+    if (orgData && orgData.induction_description) {
+      // Strip HTML tags for plain text calendar description
+      const plainDescription = orgData.induction_description.replace(/<[^>]*>/g, '').trim();
+      if (plainDescription) {
+        description += `📋 Induction Information:\n${plainDescription}\n\n`;
+      }
+    }
+    
+    description += `💡 This event was created automatically by Ministry of Technology to help you track induction deadlines.`;
+    
     const event = {
       summary: `${organisationName} - Induction Deadline`,
-      description: `Induction deadline for ${organisationName}. All applications must be submitted by this time.`,
+      description: description,
       start: {
-        dateTime: new Date(new Date(inductionEnd).getTime() - 60 * 60 * 1000).toISOString(), // 1 hour before deadline
+        dateTime: eventStart.toISOString(),
         timeZone: 'Asia/Kolkata',
       },
       end: {
-        dateTime: new Date(inductionEnd).toISOString(), // End at deadline
+        dateTime: deadline.toISOString(),
         timeZone: 'Asia/Kolkata',
       },
       attendees: [], // Will be populated with interested students
@@ -91,15 +127,19 @@ async function updateInductionCalendarEvent(eventId, organisationName, induction
 
     // Only update if the event hasn't passed yet
     if (eventStart > now) {
+      // Convert to proper IST date
+      const deadline = toISTDateTime(inductionEnd);
+      const newEventStart = new Date(deadline.getTime() - 60 * 60 * 1000); // 1 hour before deadline
+      
       const updatedEvent = {
         summary: `${organisationName} - Induction Deadline`,
         description: `Induction deadline for ${organisationName}. All applications must be submitted by this time.`,
         start: {
-          dateTime: new Date(new Date(inductionEnd).getTime() - 60 * 60 * 1000).toISOString(), // 1 hour before deadline
+          dateTime: newEventStart.toISOString(),
           timeZone: 'Asia/Kolkata',
         },
         end: {
-          dateTime: new Date(inductionEnd).toISOString(), // End at deadline
+          dateTime: deadline.toISOString(),
           timeZone: 'Asia/Kolkata',
         },
         attendees: interestedEmails.map(email => ({ email: email })),
@@ -295,6 +335,12 @@ router.post("/update-catalogue-listing", async (req, res) => {
               // Get interested students' emails
               const interestedEmails = await getInterestedStudentsEmails(listingId);
               
+              // Prepare organization data for calendar event
+              const orgDataForCalendar = {
+                  name: req.body.name,
+                  induction_description: req.body.induction_description
+              };
+              
               const existingCalendarEventId = existingListing.data.attributes.calendar_event_id;
               
               if (existingCalendarEventId) {
@@ -311,7 +357,8 @@ router.post("/update-catalogue-listing", async (req, res) => {
                       const newEventId = await createInductionCalendarEvent(
                           req.body.name, 
                           induction_end, 
-                          listingId
+                          listingId,
+                          orgDataForCalendar
                       );
                       updatedListing.data.calendar_event_id = newEventId;
                       
@@ -325,7 +372,8 @@ router.post("/update-catalogue-listing", async (req, res) => {
                   const eventId = await createInductionCalendarEvent(
                       req.body.name, 
                       induction_end, 
-                      listingId
+                      listingId,
+                      orgDataForCalendar
                   );
                   updatedListing.data.calendar_event_id = eventId;
                   
@@ -357,10 +405,16 @@ router.post("/update-catalogue-listing", async (req, res) => {
 router.get("/test-calendar", async (req, res) => {
   try {
     // Test creating a calendar event
+    const testOrgData = {
+      name: "Test Organisation",
+      induction_description: "Test induction description with <strong>HTML</strong> tags. Apply through this link: https://example.com/form"
+    };
+    
     const testEvent = await createInductionCalendarEvent(
       "Test Organisation", 
       new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
-      "123"
+      "123",
+      testOrgData
     );
     
     res.json({ 
