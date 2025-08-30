@@ -2189,7 +2189,7 @@ router.get("/inductions-tracker", async (req, res) => {
     
     // Check if user has access (Cultural Ministry or Technology Ministry)
     const authorizedEmails = [
-      'cultural.ministry@ashoka.edu.in',
+      'sia.sarin_ug2023@ashoka.edu.in',
       'vansh.bothra_ug25@ashoka.edu.in',      
       'technology.ministry@ashoka.edu.in'
     ];
