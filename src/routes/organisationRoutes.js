@@ -183,21 +183,12 @@ async function updateInductionCalendarEvent(eventId, organisationName, induction
 async function getInterestedStudentsEmails(organisationId) {
   try {
     const orgResponse = await axios.get(
-      `${apiUrl}/organisations/${organisationId}?populate=interested_applicants`,
+      `${apiUrl}/organisations/${organisationId}?populate[interested_applicants][fields][0]=email`,
       axiosConfig
     );
 
     if (orgResponse.data.data && orgResponse.data.data.attributes.interested_applicants.data) {
-      const userIds = orgResponse.data.data.attributes.interested_applicants.data.map(user => user.id);
-      
-      if (userIds.length > 0) {
-        const usersResponse = await axios.get(
-          `${apiUrl}/users?filters[id][$in]=${userIds.join(',')}&fields[0]=email`,
-          axiosConfig
-        );
-        
-        return usersResponse.data.map(user => user.email);
-      }
+      return orgResponse.data.data.attributes.interested_applicants.data.map(user => user.attributes.email);
     }
     
     return [];
