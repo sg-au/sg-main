@@ -107,7 +107,7 @@ async function createInductionCalendarEvent(organisationName, inductionEnd, orga
 }
 
 // Helper function to update existing calendar event
-async function updateInductionCalendarEvent(eventId, organisationName, inductionEnd, interestedEmails = []) {
+async function updateInductionCalendarEvent(eventId, organisationName, inductionEnd, interestedEmails = [], orgData = null) {
   try {
     // Get the current event to check if it's still in the future
     const existingEvent = await calendar.events.get({
@@ -124,9 +124,25 @@ async function updateInductionCalendarEvent(eventId, organisationName, induction
       const deadline = toISTDateTime(inductionEnd);
       const newEventStart = new Date(deadline.getTime() - 60 * 60 * 1000); // 1 hour before deadline
       
+      // Build enhanced description with additional induction info
+      let description = `🎯 Induction deadline for ${organisationName}\n\n`;
+      description += `📅 Deadline: ${deadline.toLocaleDateString('en-IN', {timeZone: 'Asia/Kolkata', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})} at ${deadline.toLocaleTimeString('en-IN', {timeZone: 'Asia/Kolkata'})} IST\n\n`;
+      description += `⚠️ All applications must be submitted by this time.\n\n`;
+      
+      // Add induction description if available
+      if (orgData && orgData.induction_description) {
+        // Strip HTML tags for plain text calendar description
+        const plainDescription = orgData.induction_description;
+        if (plainDescription) {
+          description += `📋 Induction Information:\n${plainDescription}\n\n`;
+        }
+      }
+      
+      description += `💡 This event was created automatically by Ministry of Technology to help you track induction deadlines.`;
+      
       const updatedEvent = {
         summary: `${organisationName} - Induction Deadline`,
-        description: `Induction deadline for ${organisationName}. All applications must be submitted by this time.`,
+        description: description,
         start: {
           dateTime: newEventStart.toISOString(),
           timeZone: 'Asia/Kolkata',
@@ -342,7 +358,8 @@ router.post("/update-catalogue-listing", async (req, res) => {
                       existingCalendarEventId, 
                       req.body.name, 
                       induction_end, 
-                      interestedEmails
+                      interestedEmails,
+                      orgDataForCalendar
                   );
                   
                   if (!updateSuccess) {
@@ -357,7 +374,7 @@ router.post("/update-catalogue-listing", async (req, res) => {
                       
                       // Update the event with interested students
                       if (interestedEmails.length > 0) {
-                          await updateInductionCalendarEvent(newEventId, req.body.name, induction_end, interestedEmails);
+                          await updateInductionCalendarEvent(newEventId, req.body.name, induction_end, interestedEmails, orgDataForCalendar);
                       }
                   }
               } else {
@@ -372,7 +389,7 @@ router.post("/update-catalogue-listing", async (req, res) => {
                   
                   // Update the event with interested students
                   if (interestedEmails.length > 0) {
-                      await updateInductionCalendarEvent(eventId, req.body.name, induction_end, interestedEmails);
+                      await updateInductionCalendarEvent(eventId, req.body.name, induction_end, interestedEmails, orgDataForCalendar);
                   }
               }
           } catch (calendarError) {
