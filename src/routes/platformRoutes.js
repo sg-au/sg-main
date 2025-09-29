@@ -5,6 +5,7 @@ const {
   transporterTECH,
 } = require("../config/nodemailer-config"); // Import the Nodemailer configuration module
 const fs = require("fs");
+const path = require("path");
 const publicTicketCategories = JSON.parse(
   fs.readFileSync("./data/category-subcategory-map.json", "utf8")
 );
@@ -40,12 +41,6 @@ const calendar = google.calendar({
   auth: calendarOAuth2Client
 });
 
-// Read HTML Template
-var undertakingTemplate = fs.readFileSync(
-  "./data/undertaking-template.html",
-  "utf8"
-);
-
 const axiosConfig = {
   headers: {
     "Content-Type": "application/json",
@@ -78,7 +73,6 @@ const apiUrl = process.env.STRAPI_API_URL;
 // Parse incoming request bodies as JSON
 // app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
-
 // Define routes here
 router.get("/", async (req, res) => {
   var usersCount = (await axios.get(`${apiUrl}/users/count`, axiosConfig)).data;
@@ -1380,50 +1374,6 @@ router.get("/grade-planner", (req, res) => {
   res.render("platform/pages/grade-planner");
 });
 
-// router.get("/events", async (req, res) => {
-//   try {
-//     // Get user's preferences
-//     const userResponse = await axios.get(
-//       `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=*`,
-//       axiosConfig
-//     );
-//     const orgsResponse = await axios.get(
-//   `${apiUrl}/organisations?populate[profile][fields]=email&fields[0]=name&fields[1]=type&filters[profile][id][$notNull]=true&pagination[pageSize]=2000`,
-//         axiosConfig
-//       );
-
-//     const orgsList = orgsResponse.data.data.map(item => ({
-//       name: item.attributes.name || '',
-//       type: item.attributes.type || '',
-//       email: item.attributes.profile.data[0]?.attributes.email || ''
-//     }));
-    
-//     // Get existing preferences (or empty array if none exist)
-//     const userPreferences =
-//       userResponse.data[0]?.events_calendar_filter_preferences || [];
-//     // console.log(userPreferences);
-
-//     // console.log(userResponse.data[0].email);
-
-//     if(userPreferences.length === 0 && req.query.skip!="true") {
-//       res.redirect("/platform/event/save-preferences");
-//     }else{
-//       res.render("platform/pages/events-2", { // Make sure this matches your actual template name
-//         userPreferences: userPreferences, // Don't stringify here
-//         orgsList: orgsList,
-//         userEmail:  userResponse.data[0].email // Don't stringify here
-//       });
-//     }
-//   } catch (error) {
-//     console.error('Error fetching user preferences:', error);
-//     res.render("platform/pages/events-2", { // Make sure this matches your actual template name
-//       userPreferences: [],
-//       orgsList: [],
-//       userEmail:  userResponse.data[0].email// Provide empty array for orgsList too
-//     });
-//   }
-// });
-
 router.get("/event", async (req, res) => {
   try {
     // Get user's preferences
@@ -2489,184 +2439,6 @@ router.get("/assets/returned/:id", async (req, res) => {
   }
 });
 
-// router.get('/treasure-hunt', async(req, res) => {
-//   var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=hunt_team`, axiosConfig);
-//   var user = user_data.data[0];
-//   if(user.hunt_team==null){
-//     res.render("platform/pages/hunt-error",{message:"You are not registered for the hunt. Please contact the body conducting your event."});
-//   }else{
-//     res.redirect("/platform/treasure-hunt/"+user.hunt_team.id)
-//   }
-// });
-
-// router.get('/treasure-hunt/:team', async(req, res) => {
-//   var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=hunt_team`, axiosConfig);
-//   var user = user_data.data[0];
-//   if(user.hunt_team!=null && req.params.team==user.hunt_team.id){
-//     // console.log(user);
-//     var team_data = await axios.get(`${apiUrl}/hunt-teams/${req.params.team}?populate[0]=members&populate[1]=treasure_hunt&populate[2]=hints_claimed_by&populate[3]=hints_claimed_for`, axiosConfig);
-//     var rank_data = await axios.get(`${apiUrl}/hunt-teams?filters[treasure_hunt][id][$eqi]=${team_data.data.data.attributes.treasure_hunt.data.id}&populate[0]=members&populate[1]=treasure_hunt&populate[2]=hints_claimed_by&populate[3]=hints_claimed_for`, axiosConfig);
-//     var memberString="";
-//     var hintsClaimedByString="";
-
-//     teamsArray=rank_data.data.data;
-
-//         // Assuming teamsArray is the array containing the team objects
-//     const rankedTeams = teamsArray.sort((a, b) => {
-//       // First, compare by clues solved (descending)
-//       if (b.attributes.clues_solved !== a.attributes.clues_solved) {
-//         return b.attributes.clues_solved - a.attributes.clues_solved;
-//       }
-//       // If clues solved are the same, compare by updatedAt (ascending)
-//       return new Date(a.attributes.updatedAt) - new Date(b.attributes.updatedAt);
-//     });
-
-//     var team_id=team_data.data.data.id;
-//     var team_users=team_data.data.data.attributes.members.data;
-//     var hint_takers=team_data.data.data.attributes.hints_claimed_by.data;
-//     // prepare the list of members in a string
-//     for(var i=0;i<team_users.length;i++){
-//       if(i==team_users.length-1){
-//         memberString+=team_users[i].attributes.username;
-//       }else{
-//         memberString+=team_users[i].attributes.username+", ";
-//       }
-//     }
-
-//     for(var i=0;i<hint_takers.length;i++){
-//       if(i==hint_takers.length-1){
-//         hintsClaimedByString+=hint_takers[i].attributes.username;
-//       }else{
-//         hintsClaimedByString+=hint_takers[i].attributes.username+", ";
-//       }
-//     }
-//     // prepare the list of members in a string
-//     teamName = team_data.data.data.attributes.name;
-//     clues_solved = team_data.data.data.attributes.clues_solved;
-//     // console.log(team_data.data.data.attributes.treasure_hunt.data.attributes.name);
-//     hunt_name=team_data.data.data.attributes.treasure_hunt.data.attributes.name;
-//     hunt_id=team_data.data.data.attributes.treasure_hunt.data.id;
-//     hunt_start_time=new Date(team_data.data.data.attributes.treasure_hunt.data.attributes.start_time);
-//     hunt_start_time=hunt_start_time.toLocaleDateString()+" | "+hunt_start_time.toLocaleTimeString();
-//     hunt_end_time=new Date(team_data.data.data.attributes.treasure_hunt.data.attributes.end_time);
-//     hunt_end_time=hunt_end_time.toLocaleDateString()+" | "+hunt_end_time.toLocaleTimeString();
-//     hints_claimed=team_data.data.data.attributes.hints_claimed;
-
-//     var hintsTakenFor=[];
-//     team_data.data.data.attributes.hints_claimed_for.data.forEach(function(hint){
-//       hintsTakenFor.push(hint.id)
-//     })
-
-//     var hunt = {
-//       hunt_id,
-//       hunt_name,
-//       hunt_start_time,
-//       hunt_end_time,
-//       rankedTeams
-//     }
-//     var rank=1;
-//     for(var i=0;i<rankedTeams.length;i++){
-//       if(rankedTeams[i].id==team_id){
-//         break;
-//       }
-//       rank++;
-//     }
-//     // console.log(rankedTeams)
-//     var team = {
-//       rank:rank,
-//       teamName,
-//       memberString,
-//       hints_claimed,
-//       hintsClaimedByString,
-//       hintsTakenFor,
-//       clues_solved
-//     }
-//     var clues_data = await axios.get(`${apiUrl}/hunt-clues?filters[treasure_hunt][id][$eqi]=${team_data.data.data.attributes.treasure_hunt.data.id}`, axiosConfig);
-//     clues_data = clues_data.data.data;
-//     var totalClues=clues_data.length;
-//     clues_data = clues_data.filter(function(obj){
-//        return obj.attributes.clue_number  <= clues_solved+1;
-//     });
-
-//     // get clues, where treasure_hunt = id,
-//     // & filter out first clues_solved+1 clues using clue_number.
-//     var completed=false;
-//     if(clues_solved==totalClues){
-//       completed=true;
-//     }
-//     // console.log("hints taken for",hintsTakenFor);
-//     // console.log("clues",clues_data);
-//     // for(var i=clues_data.length-1;i>=0;i--){
-//     //   if(hintsTakenFor.includes(clues_data[i].id)){
-//     //     console.log("i",i,"clue id",clues_data[i].id)
-//     //   }
-//     // }
-//     res.render("platform/pages/hunt-team",{team:team,hunt:hunt,clues:clues_data,completed:completed});
-//   }else{
-//     res.redirect("/platform/treasure-hunt");
-//   }
-// });
-
-// router.get('/claim-hints/:hunt/:clue', async(req, res) => {
-//   var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate[hunt_team][populate][hints_claimed_by]=*&populate[hunt_team][populate][hints_claimed_for]=*`, axiosConfig);
-//   user_data=user_data.data[0];
-//   // console.log(user_data.hunt_team.hints_claimed_for);
-//   var hintsTakenFor=[];
-//   user_data.hunt_team.hints_claimed_for.forEach(function(clue){
-//     hintsTakenFor.push(clue.id)
-//   })
-
-//   if(user_data.hunt_team.hints_claimed<2 && !hintsTakenFor.includes(req.params.clue)){
-//     // update it to +1
-//     var obj=user_data.hunt_team;
-//     obj.hints_claimed=obj.hints_claimed+1;
-//     obj.hints_claimed_for.push(parseInt(req.params.clue));
-//     obj.hints_claimed_by.push(parseInt(user_data.id));
-//     // console.log(obj)
-//     await axios.put(`${apiUrl}/hunt-teams/${user_data.hunt_team.id}`, {data:obj}, axiosConfig);
-//     res.redirect("/platform/treasure-hunt");
-//   }else{
-//     res.redirect("/platform/treasure-hunt");
-//   }
-// });
-
-// router.get('/location/:hunt/:number', async(req, res) => {
-//   // console.log(req.params.number,req.query.code);
-//   var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate[hunt_team][populate][treasure_hunt]=*`, axiosConfig);
-//   var user = user_data.data[0];
-//   // console.log(user);
-//   if(user.hunt_team.treasure_hunt.id!=parseInt(req.params.hunt)){
-//     res.redirect("/platform/location/"+user.hunt_team.treasure_hunt.id+"/"+req.params.number);
-//   }else{
-//       if(req.params.number<=user.hunt_team.clues_solved){
-//         res.render("platform/pages/hunt-error",{message:"You've already solved this clue."});
-//       }else if(req.params.number==user.hunt_team.clues_solved+1){
-//         var clues_data = await axios.get(`${apiUrl}/hunt-clues?filters[treasure_hunt][id][$eqi]=${req.params.hunt}&filters[clue_number][$eqi]=${req.params.number}`, axiosConfig);
-//         // console.log(clues_data.data.data)
-
-//         if(clues_data.data.data.length==1){
-//           var clue=clues_data.data.data[0];
-//           // console.log(clues_data.data.data)
-//           if(req.query.code==clue.attributes.clue_code){
-//             var obj=await axios.get(`${apiUrl}/hunt-teams/${user.hunt_team.id}`, axiosConfig);
-//             obj = obj.data.data;
-//             obj.attributes.clues_solved=obj.attributes.clues_solved+1;
-//             obj.attributes.id =obj.id;
-//             obj=obj.attributes;
-//             // obj.clues_solved=obj.clues_solved+1;
-//             lol =await axios.put(`${apiUrl}/hunt-teams/${user.hunt_team.id}`, {data:obj}, axiosConfig);
-//             // console.log(lol);
-//             res.redirect("/platform/treasure-hunt");
-//           }else{
-//             res.render("platform/pages/hunt-error",{message:"The QR Code is not rightly scanned. The clue code is missing/incorrect. Only scanning the QR code will allow you to pass."});
-//           }
-//         }
-//       }else{
-//         res.render("platform/pages/hunt-error",{message:"You'll need to solve the previous clues first."});
-//       }
-//   }
-// });
-
 router.post("/assets", async (req, res) => {
   var user = await axios.get(
     `${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}`,
@@ -2970,97 +2742,6 @@ router.post("/assets", async (req, res) => {
   // also email the student with the undertaking and a ministry member attached
 });
 
-// router.get('/shuttle-service', async (req, res) => {
-//   var user_filled = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=bids`, axiosConfig);
-//   if (user_filled.data[0].bids.length == 0) {
-//     res.render("platform/pages/shuttle-service")
-//   }else{
-//     res.render("platform/pages/pool-cab");
-//   }
-// });
-
-// Anonymous Survey Routes
-
-// router.get("/anonymous-survey", async (req, res) => {
-//   try {
-//     // Hash the user's email
-//     const hashedEmail = helpers.hash(req.user._json.email);
-    
-//     // Check if user has already submitted
-//     let submissions = [];
-//     try {
-//       submissions = JSON.parse(fs.readFileSync(submissionsFile, "utf8"));
-//     } catch (err) {
-//       // File doesn't exist yet, create empty array
-//       submissions = [];
-//     }
-    
-//     if (submissions.includes(hashedEmail)) {
-//       // User has already submitted
-//       res.render("platform/pages/anonymous-survey-submitted");
-//     } else {
-//       // Show the survey form
-//       res.render("platform/pages/anonymous-survey");
-//     }
-//   } catch (error) {
-//     console.error("Error in anonymous survey GET:", error);
-//     res.status(500).send("An error occurred");
-//   }
-// });
-
-// router.post("/anonymous-survey", async (req, res) => {
-//   try {
-//     // Hash the user's email
-//     const hashedEmail = helpers.hash(req.user._json.email);
-    
-//     // Check if user has already submitted
-//     let submissions = [];
-//     try {
-//       submissions = JSON.parse(fs.readFileSync(submissionsFile, "utf8"));
-//     } catch (err) {
-//       submissions = [];
-//     }
-    
-//     if (submissions.includes(hashedEmail)) {
-//       return res.status(400).json({ error: "You have already submitted this survey" });
-//     }
-
-//     // Prepare the row data (excluding any user identifiers)
-//     const values = [
-//       [
-//         new Date().toISOString(),
-//         req.body.question1 || '',
-//         req.body.question2 || '',
-//         req.body.question3 || '',
-//         req.body.question4 || '',
-//         req.body.question5 || '',
-//         req.body.question6 || '',
-//         req.body.additionalComments || ''
-//       ]
-//     ];
-    
-//     // Add row to Google Sheet using the existing sheets client
-//     await sheets.spreadsheets.values.append({
-//       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-//       range: 'Sheet1!A:H', // Updated range to include question6
-//       valueInputOption: 'USER_ENTERED',
-//       resource: {
-//         values: values
-//       }
-//     });
-    
-//     // Add hashed email to submissions file
-//     submissions.push(hashedEmail);
-//     fs.writeFileSync(submissionsFile, JSON.stringify(submissions, null, 2));
-    
-//     res.json({ success: true, message: "Survey submitted successfully" });
-    
-//   } catch (error) {
-//     console.error("Error submitting anonymous survey:", error);
-//     res.status(500).json({ error: "An error occurred while submitting the survey" });
-//   }
-// });
-
 // Baggage Scanner Survey Routes
 router.get("/baggage-scanner-survey", async (req, res) => {
   try {
@@ -3142,5 +2823,350 @@ router.post("/baggage-scanner-survey", async (req, res) => {
   }
 });
 
+
+
+// ****************** CASH SURVEY *********************
+
+// JSON file paths
+const cashSurveyResponsesFile = path.join(__dirname, '../data/cash-survey-responses.json');
+const cashSurveySubmissionsFile = path.join(__dirname, '../data/cash-survey-submissions.json');
+
+// Hashing utility function
+function hashUserEmail(email) {
+    // We'll use SHA256 for strong one-way hashing
+    return crypto.createHash('sha256').update(email).digest('hex');
+}
+
+/**
+ * Checks if a user has already submitted the CASH survey.
+ * @param {string} hashedUser - The SHA256 hash of the user's email.
+ * @returns {boolean} True if the hash is found, false otherwise.
+ */
+function checkIfUserSubmitted(hashedUser) {
+    try {
+        // Check if submissions tracking file exists
+        if (!fs.existsSync(cashSurveySubmissionsFile)) {
+            return false;
+        }
+        
+        // Read existing submissions
+        const submissions = JSON.parse(fs.readFileSync(cashSurveySubmissionsFile, 'utf8'));
+        return submissions.includes(hashedUser);
+        
+    } catch (error) {
+        console.error("Error checking for existing submission:", error.message);
+        return false;
+    }
+}
+
+/**
+ * Writes survey data to JSON file and tracks submission.
+ * @param {Object} surveyData - The complete survey response data object.
+ * @param {string} hashedUser - The hashed user ID for tracking submissions.
+ */
+function writeToCashSurveyJSON(surveyData, hashedUser) {
+    try {
+        // Ensure data directory exists
+        const dataDir = path.dirname(cashSurveyResponsesFile);
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
+        }
+        
+        // Read existing responses or create empty array
+        let responses = [];
+        if (fs.existsSync(cashSurveyResponsesFile)) {
+            try {
+                responses = JSON.parse(fs.readFileSync(cashSurveyResponsesFile, 'utf8'));
+            } catch (parseError) {
+                console.warn("Could not parse existing responses file, starting fresh:", parseError.message);
+                responses = [];
+            }
+        }
+        
+        // Add the new response
+        responses.push(surveyData);
+        
+        // Write back to file
+        fs.writeFileSync(cashSurveyResponsesFile, JSON.stringify(responses, null, 2));
+        
+        // Track the submission to prevent duplicates
+        let submissions = [];
+        if (fs.existsSync(cashSurveySubmissionsFile)) {
+            submissions = JSON.parse(fs.readFileSync(cashSurveySubmissionsFile, 'utf8'));
+        }
+        
+        if (!submissions.includes(hashedUser)) {
+            submissions.push(hashedUser);
+            fs.writeFileSync(cashSurveySubmissionsFile, JSON.stringify(submissions, null, 2));
+        }
+        
+        console.log(`Successfully wrote CASH survey response to JSON file.`);
+        
+    } catch (error) {
+        console.error("Error writing to JSON:", error);
+        throw error;
+    }
+}
+
+
+// --- ROUTING LOGIC ---
+
+// GET Route for displaying the survey form
+router.get("/cash-survey", (req, res) => {
+    try {
+        // 1. Authenticate and Hash User
+        const userEmail = req.user && req.user._json && req.user._json.email ? req.user._json.email : 'anonymous@ashoka.edu.in';
+        const hashedUser = hashUserEmail(userEmail);
+
+        // 2. Check for Resubmission by checking CSV submissions
+        const alreadySubmitted = checkIfUserSubmitted(hashedUser);
+
+        if (alreadySubmitted) {
+            // Render the survey page with submitted flag to show alert
+            return res.render("platform/pages/cash-survey-2", { 
+                submitted: true, 
+                message: "Thank you for participating. You have already submitted this survey."
+            });
+        }
+
+        // Render the survey page
+        res.render("platform/pages/cash-survey-2", { 
+            submitted: false 
+        });
+    } catch (error) {
+        console.error("Error in CASH survey GET route:", error);
+        res.status(500).send("An error occurred while loading the survey.");
+    }
+});
+
+// POST Route for handling survey submission
+router.post("/cash-survey", (req, res) => {
+    try {
+        // 1. Authenticate and Hash User
+        const userEmail = req.user && req.user._json && req.user._json.email ? req.user._json.email : 'anonymous@ashoka.edu.in';
+        const hashedUser = hashUserEmail(userEmail);
+
+        // 2. Check for Resubmission by checking CSV submissions
+        const alreadySubmitted = checkIfUserSubmitted(hashedUser);
+        if (alreadySubmitted) {
+            return res.status(403).json({
+                success: false,
+                message: "A submission for this user has already been recorded."
+            });
+        }
+        
+        // 3. Process Data for JSON storage
+        const formData = req.body;
+        const submissionTimestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+
+        // Create the complete survey response object
+        const surveyResponse = {
+            submission_timestamp: submissionTimestamp,
+            hashed_user_id: hashedUser,
+            ...formData // Include all form data as-is
+        };
+        
+        // 4. Write to JSON file (This also ensures the hash is saved for future checks)
+        writeToCashSurveyJSON(surveyResponse, hashedUser);
+
+        // 5. Send Success Response
+        res.status(200).json({
+            success: true,
+            message: "Survey submitted successfully! Your response has been securely recorded."
+        });
+
+    } catch (error) {
+        console.error("Error processing survey submission:", error);
+        
+        res.status(500).json({
+            success: false,
+            message: "An internal error occurred while submitting the survey. Please try again."
+        });
+    }
+});
+
 // Export the router
 module.exports = router;
+
+
+
+
+// ************** SOPAAN ********************
+
+// router.get('/treasure-hunt', async(req, res) => {
+//   var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=hunt_team`, axiosConfig);
+//   var user = user_data.data[0];
+//   if(user.hunt_team==null){
+//     res.render("platform/pages/hunt-error",{message:"You are not registered for the hunt. Please contact the body conducting your event."});
+//   }else{
+//     res.redirect("/platform/treasure-hunt/"+user.hunt_team.id)
+//   }
+// });
+
+// router.get('/treasure-hunt/:team', async(req, res) => {
+//   var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate=hunt_team`, axiosConfig);
+//   var user = user_data.data[0];
+//   if(user.hunt_team!=null && req.params.team==user.hunt_team.id){
+//     // console.log(user);
+//     var team_data = await axios.get(`${apiUrl}/hunt-teams/${req.params.team}?populate[0]=members&populate[1]=treasure_hunt&populate[2]=hints_claimed_by&populate[3]=hints_claimed_for`, axiosConfig);
+//     var rank_data = await axios.get(`${apiUrl}/hunt-teams?filters[treasure_hunt][id][$eqi]=${team_data.data.data.attributes.treasure_hunt.data.id}&populate[0]=members&populate[1]=treasure_hunt&populate[2]=hints_claimed_by&populate[3]=hints_claimed_for`, axiosConfig);
+//     var memberString="";
+//     var hintsClaimedByString="";
+
+//     teamsArray=rank_data.data.data;
+
+//         // Assuming teamsArray is the array containing the team objects
+//     const rankedTeams = teamsArray.sort((a, b) => {
+//       // First, compare by clues solved (descending)
+//       if (b.attributes.clues_solved !== a.attributes.clues_solved) {
+//         return b.attributes.clues_solved - a.attributes.clues_solved;
+//       }
+//       // If clues solved are the same, compare by updatedAt (ascending)
+//       return new Date(a.attributes.updatedAt) - new Date(b.attributes.updatedAt);
+//     });
+
+//     var team_id=team_data.data.data.id;
+//     var team_users=team_data.data.data.attributes.members.data;
+//     var hint_takers=team_data.data.data.attributes.hints_claimed_by.data;
+//     // prepare the list of members in a string
+//     for(var i=0;i<team_users.length;i++){
+//       if(i==team_users.length-1){
+//         memberString+=team_users[i].attributes.username;
+//       }else{
+//         memberString+=team_users[i].attributes.username+", ";
+//       }
+//     }
+
+//     for(var i=0;i<hint_takers.length;i++){
+//       if(i==hint_takers.length-1){
+//         hintsClaimedByString+=hint_takers[i].attributes.username;
+//       }else{
+//         hintsClaimedByString+=hint_takers[i].attributes.username+", ";
+//       }
+//     }
+//     // prepare the list of members in a string
+//     teamName = team_data.data.data.attributes.name;
+//     clues_solved = team_data.data.data.attributes.clues_solved;
+//     // console.log(team_data.data.data.attributes.treasure_hunt.data.attributes.name);
+//     hunt_name=team_data.data.data.attributes.treasure_hunt.data.attributes.name;
+//     hunt_id=team_data.data.data.attributes.treasure_hunt.data.id;
+//     hunt_start_time=new Date(team_data.data.data.attributes.treasure_hunt.data.attributes.start_time);
+//     hunt_start_time=hunt_start_time.toLocaleDateString()+" | "+hunt_start_time.toLocaleTimeString();
+//     hunt_end_time=new Date(team_data.data.data.attributes.treasure_hunt.data.attributes.end_time);
+//     hunt_end_time=hunt_end_time.toLocaleDateString()+" | "+hunt_end_time.toLocaleTimeString();
+//     hints_claimed=team_data.data.data.attributes.hints_claimed;
+
+//     var hintsTakenFor=[];
+//     team_data.data.data.attributes.hints_claimed_for.data.forEach(function(hint){
+//       hintsTakenFor.push(hint.id)
+//     })
+
+//     var hunt = {
+//       hunt_id,
+//       hunt_name,
+//       hunt_start_time,
+//       hunt_end_time,
+//       rankedTeams
+//     }
+//     var rank=1;
+//     for(var i=0;i<rankedTeams.length;i++){
+//       if(rankedTeams[i].id==team_id){
+//         break;
+//       }
+//       rank++;
+//     }
+//     // console.log(rankedTeams)
+//     var team = {
+//       rank:rank,
+//       teamName,
+//       memberString,
+//       hints_claimed,
+//       hintsClaimedByString,
+//       hintsTakenFor,
+//       clues_solved
+//     }
+//     var clues_data = await axios.get(`${apiUrl}/hunt-clues?filters[treasure_hunt][id][$eqi]=${team_data.data.data.attributes.treasure_hunt.data.id}`, axiosConfig);
+//     clues_data = clues_data.data.data;
+//     var totalClues=clues_data.length;
+//     clues_data = clues_data.filter(function(obj){
+//        return obj.attributes.clue_number  <= clues_solved+1;
+//     });
+
+//     // get clues, where treasure_hunt = id,
+//     // & filter out first clues_solved+1 clues using clue_number.
+//     var completed=false;
+//     if(clues_solved==totalClues){
+//       completed=true;
+//     }
+//     // console.log("hints taken for",hintsTakenFor);
+//     // console.log("clues",clues_data);
+//     // for(var i=clues_data.length-1;i>=0;i--){
+//     //   if(hintsTakenFor.includes(clues_data[i].id)){
+//     //     console.log("i",i,"clue id",clues_data[i].id)
+//     //   }
+//     // }
+//     res.render("platform/pages/hunt-team",{team:team,hunt:hunt,clues:clues_data,completed:completed});
+//   }else{
+//     res.redirect("/platform/treasure-hunt");
+//   }
+// });
+
+// router.get('/claim-hints/:hunt/:clue', async(req, res) => {
+//   var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate[hunt_team][populate][hints_claimed_by]=*&populate[hunt_team][populate][hints_claimed_for]=*`, axiosConfig);
+//   user_data=user_data.data[0];
+//   // console.log(user_data.hunt_team.hints_claimed_for);
+//   var hintsTakenFor=[];
+//   user_data.hunt_team.hints_claimed_for.forEach(function(clue){
+//     hintsTakenFor.push(clue.id)
+//   })
+
+//   if(user_data.hunt_team.hints_claimed<2 && !hintsTakenFor.includes(req.params.clue)){
+//     // update it to +1
+//     var obj=user_data.hunt_team;
+//     obj.hints_claimed=obj.hints_claimed+1;
+//     obj.hints_claimed_for.push(parseInt(req.params.clue));
+//     obj.hints_claimed_by.push(parseInt(user_data.id));
+//     // console.log(obj)
+//     await axios.put(`${apiUrl}/hunt-teams/${user_data.hunt_team.id}`, {data:obj}, axiosConfig);
+//     res.redirect("/platform/treasure-hunt");
+//   }else{
+//     res.redirect("/platform/treasure-hunt");
+//   }
+// });
+
+// router.get('/location/:hunt/:number', async(req, res) => {
+//   // console.log(req.params.number,req.query.code);
+//   var user_data = await axios.get(`${apiUrl}/users?filters[email][$eqi]=${req.user._json.email}&populate[hunt_team][populate][treasure_hunt]=*`, axiosConfig);
+//   var user = user_data.data[0];
+//   // console.log(user);
+//   if(user.hunt_team.treasure_hunt.id!=parseInt(req.params.hunt)){
+//     res.redirect("/platform/location/"+user.hunt_team.treasure_hunt.id+"/"+req.params.number);
+//   }else{
+//       if(req.params.number<=user.hunt_team.clues_solved){
+//         res.render("platform/pages/hunt-error",{message:"You've already solved this clue."});
+//       }else if(req.params.number==user.hunt_team.clues_solved+1){
+//         var clues_data = await axios.get(`${apiUrl}/hunt-clues?filters[treasure_hunt][id][$eqi]=${req.params.hunt}&filters[clue_number][$eqi]=${req.params.number}`, axiosConfig);
+//         // console.log(clues_data.data.data)
+
+//         if(clues_data.data.data.length==1){
+//           var clue=clues_data.data.data[0];
+//           // console.log(clues_data.data.data)
+//           if(req.query.code==clue.attributes.clue_code){
+//             var obj=await axios.get(`${apiUrl}/hunt-teams/${user.hunt_team.id}`, axiosConfig);
+//             obj = obj.data.data;
+//             obj.attributes.clues_solved=obj.attributes.clues_solved+1;
+//             obj.attributes.id =obj.id;
+//             obj=obj.attributes;
+//             // obj.clues_solved=obj.clues_solved+1;
+//             lol =await axios.put(`${apiUrl}/hunt-teams/${user.hunt_team.id}`, {data:obj}, axiosConfig);
+//             // console.log(lol);
+//             res.redirect("/platform/treasure-hunt");
+//           }else{
+//             res.render("platform/pages/hunt-error",{message:"The QR Code is not rightly scanned. The clue code is missing/incorrect. Only scanning the QR code will allow you to pass."});
+//           }
+//         }
+//       }else{
+//         res.render("platform/pages/hunt-error",{message:"You'll need to solve the previous clues first."});
+//       }
+//   }
+// });
