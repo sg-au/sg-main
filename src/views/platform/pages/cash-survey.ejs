@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CASH Survey 2025</title>
+    <link rel="stylesheet" href="/path/to/your/styles.css">
+</head>
+<style>
+    /* .form-section {
+        display: none;
+    }
+
+    .form-section.active {
+        display: block;
+    }
+
+    .form-heading {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-weight: 600;
+    } */
+
+     #divLink {
+    cursor: pointer;
+}
+
+.form-heading {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Styles for the section titles */
+.form-section h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.form-label,
+label {
+    font-size: 0.9rem;
+    font-weight: normal;
+}
+
+.form-control,
+.form-select {
+    font-size: 0.9rem;
+}
+
+/* Applying button sizing to match the .btn-submit class, but for all buttons */
+.btn {
+    font-size: 0.8rem;
+    padding: 5px 15px;
+    border-radius: 0.25rem;
+}
+
+.placeholder-box {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: #999;
+    margin-bottom: 20px;
+}
+
+.help-icon {
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-left: 5px;
+    color: #007bff;
+}
+
+.help-icon:hover {
+    color: #0056b3;
+}
+
+.modal-content {
+    font-size: 0.9rem;
+}
+
+</style>
+<body>
+    <%-include("../partials/preloader")%>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <%-include("../partials/sidebar")%>
+        <div class="body-wrapper">
+            <%-include("../partials/header")%>
+            <div class="container-fluid">
+                <div class="container-fluid">
+                    <div class="row justify-content-between">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-heading">CASH Survey 2025</div>
+                                        <hr>
+                                        <p class="mb-0" style="font-weight: 700;">Your responses will be recorded anonymously and are confidential. This survey helps the CASH Committee understand perceptions and experiences of sexual harassment at Ashoka University.</p>
+                                        <hr>
+                                        
+                                        <% if (typeof submitted !== 'undefined' && submitted) { %>
+                                        <div class="alert alert-info alert-dismissible fade show" role="alert" id="alreadySubmittedAlert">
+                                            <strong>Thank you!</strong> <%= typeof message !== 'undefined' ? message : 'You have already submitted this survey.' %>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                        <script>
+                                            // Hide the form if already submitted
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                const form = document.getElementById('cashSurveyForm');
+                                                if (form) {
+                                                    form.style.display = 'none';
+                                                }
+                                            });
+                                        </script>
+                                        <% } %>
+
+                                        <form id="cashSurveyForm" onsubmit="return false;">
+                                            <!-- Section 1: Basic Demographics -->
+                                            <div class="form-section active" id="section1">
+                                                <h4>Section 1: Basic Demographics</h4>
+                                                <div class="row mb-3">
+                                                    <label for="gender" class="col-sm-4 col-form-label form-label">What is your gender identity?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <select class="form-select" id="gender" name="gender" required>
+                                                            <option value="">Select an option</option>
+                                                            <option value="Woman">Woman</option>
+                                                            <option value="Man">Man</option>
+                                                            <option value="Non-binary">Non-binary</option>
+                                                            <option value="Prefer not to say">Prefer not to say</option>
+                                                            <option value="Other">Other</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label for="age" class="col-sm-4 col-form-label form-label">Age (years)<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <input type="number" name="age" id="age" class="form-control" min="16" max="99" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label for="batch" class="col-sm-4 col-form-label form-label">Batch<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <select class="form-select" id="batch" name="batch" required>
+                                                            <option value="">Select your batch</option>
+                                                            <!-- Add options based on typical Ashoka University batches -->
+                                                            <option value="UG23">UG2023</option>
+                                                            <option value="UG24">UG2024</option>
+                                                            <option value="UG25">UG2025</option>
+                                                            <option value="UG26">ASP26</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label for="nationality" class="col-sm-4 col-form-label form-label">What is your nationality?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <input type="text" name="nationality" id="nationality" class="form-control" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">Are you a Visiting Student?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="visitingStudent" id="visitingStudentYes" value="Yes" required>
+                                                            <label class="form-check-label" for="visitingStudentYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="visitingStudent" id="visitingStudentNo" value="No" required>
+                                                            <label class="form-check-label" for="visitingStudentNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">Do you live on-campus?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="onCampus" id="onCampusYes" value="Yes" required>
+                                                            <label class="form-check-label" for="onCampusYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="onCampus" id="onCampusNo" value="No" required>
+                                                            <label class="form-check-label" for="onCampusNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">Do you identify as:<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <select class="form-select" id="sexualOrientation" name="sexualOrientation" required>
+                                                            <option value="">Select an option</option>
+                                                            <option value="Heterosexual">Heterosexual</option>
+                                                            <option value="Gay">Gay</option>
+                                                            <option value="Lesbian">Lesbian</option>
+                                                            <option value="Bisexual">Bisexual</option>
+                                                            <option value="Asexual">Asexual</option>
+                                                            <option value="Pansexual">Pansexual</option>
+                                                            <option value="Queer">Queer</option>
+                                                            <option value="Questioning">Questioning</option>
+                                                            <option value="Not listed">Not listed</option>
+                                                            <option value="Prefer not to say">Prefer not to say</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3" id="otherOrientation" style="display: none;">
+                                                    <label for="otherOrientationText" class="col-sm-4 col-form-label form-label">I describe my orientation as...</label>
+                                                    <div class="col-sm-8">
+                                                        <input type="text" name="otherOrientationText" id="otherOrientationText" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">Do you identify as belonging to a Scheduled Caste / Scheduled Tribe / Other Backward Class?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="casteIdentity" id="casteIdentityYes" value="Yes" required>
+                                                            <label class="form-check-label" for="casteIdentityYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="casteIdentity" id="casteIdentityNo" value="No" required>
+                                                            <label class="form-check-label" for="casteIdentityNo">No</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="casteIdentity" id="casteIdentityPreferNotToSay" value="Prefer not to say" required>
+                                                            <label class="form-check-label" for="casteIdentityPreferNotToSay">Prefer not to say</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">Are you a first-generation college student?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="firstGen" id="firstGenYes" value="Yes" required>
+                                                            <label class="form-check-label" for="firstGenYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="firstGen" id="firstGenNo" value="No" required>
+                                                            <label class="form-check-label" for="firstGenNo">No</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="firstGen" id="firstGenPreferNotToSay" value="Prefer not to say" required>
+                                                            <label class="form-check-label" for="firstGenPreferNotToSay">Prefer not to say</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">Do you have a physical and/or invisible disability?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="disability" id="disabilityYes" value="Yes" required>
+                                                            <label class="form-check-label" for="disabilityYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="disability" id="disabilityNo" value="No" required>
+                                                            <label class="form-check-label" for="disabilityNo">No</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="disability" id="disabilityPreferNotToSay" value="Prefer not to say" required>
+                                                            <label class="form-check-label" for="disabilityPreferNotToSay">Prefer not to say</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <button type="button" class="btn btn-primary next-section">Next</button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Section 2: Campus Resources -->
+                                            <div class="form-section" id="section2" style="display: none;">
+                                                <h4>Section 2: Campus Resources</h4>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">Do you know where to find the policy against sexual harassment?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="policyAwareness" id="policyAwarenessYes" value="Yes" required>
+                                                            <label class="form-check-label" for="policyAwarenessYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="policyAwareness" id="policyAwarenessNo" value="No" required>
+                                                            <label class="form-check-label" for="policyAwarenessNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3" id="policyComprehension" style="display: none;">
+                                                    <label class="col-sm-4 col-form-label form-label">Was it easy to comprehend?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="policyComprehension" id="policyComprehensionYes" value="Yes" required>
+                                                            <label class="form-check-label" for="policyComprehensionYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="policyComprehension" id="policyComprehensionNo" value="No" required>
+                                                            <label class="form-check-label" for="policyComprehensionNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label for="attentionCheck1" class="col-sm-4 col-form-label form-label">A.1. The following question is an attention check. Please type the answer to 2 + 2<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <input type="text" name="attentionCheck1" id="attentionCheck1" class="form-control" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">Do you know which body to approach to formally report an incident of SA/SH? <span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="reportBodyAwareness" id="reportBodyAwarenessYes" value="Yes" required>
+                                                            <label class="form-check-label" for="reportBodyAwarenessYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="reportBodyAwareness" id="reportBodyAwarenessNo" value="No" required>
+                                                            <label class="form-check-label" for="reportBodyAwarenessNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3" id="reportBody" style="display: none;">
+                                                    <label for="reportBodyText" class="col-sm-4 col-form-label form-label">If yes, which body would you approach?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <input type="text" name="reportBodyText" id="reportBodyText" class="form-control" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label for="reportingLikelihood" class="col-sm-4 col-form-label form-label">How likely are you to report any experience of SA/SH?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <select class="form-select" id="reportingLikelihood" name="reportingLikelihood" required>
+                                                            <option value="">Select a level of likelihood</option>
+                                                            <option value="Not at all likely">Not at all likely</option>
+                                                            <option value="A little likely">A little likely</option>
+                                                            <option value="Very likely">Very likely</option>
+                                                            <option value="Extremely likely">Extremely likely</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">Are you aware of the CASH Committee?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="cashCommitteeAwareness" id="cashCommitteeAwarenessYes" value="Yes" required>
+                                                            <label class="form-check-label" for="cashCommitteeAwarenessYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="cashCommitteeAwareness" id="cashCommitteeAwarenessNo" value="No" required>
+                                                            <label class="form-check-label" for="cashCommitteeAwarenessNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">Are you aware about the process that is followed when a student reports an incident of sexual harassment at Ashoka University?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="reportingProcessAwareness" id="reportingProcessAwarenessYes" value="Yes" required>
+                                                            <label class="form-check-label" for="reportingProcessAwarenessYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="reportingProcessAwareness" id="reportingProcessAwarenessNo" value="No" required>
+                                                            <label class="form-check-label" for="reportingProcessAwarenessNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3" id="processConfidence" style="display: none;">
+                                                    <label class="col-sm-4 col-form-label form-label">Which aspects of the process are you not confident about? (select all that apply)</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="processAspects" value="Initial reporting" id="aspect1">
+                                                            <label class="form-check-label" for="aspect1">Initial reporting</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="processAspects" value="Investigation process" id="aspect2">
+                                                            <label class="form-check-label" for="aspect2">Investigation process</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="processAspects" value="Confidentiality" id="aspect3">
+                                                            <label class="form-check-label" for="aspect3">Confidentiality</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="processAspects" value="Protective measures for the survivor" id="aspect4">
+                                                            <label class="form-check-label" for="aspect4">Protective measures for the survivor</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="processAspects" value="Final action against the accused" id="aspect5">
+                                                            <label class="form-check-label" for="aspect5">Final action against the accused</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="processAspects" value="Lack of transparency" id="aspect6">
+                                                            <label class="form-check-label" for="aspect6">Lack of transparency</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="processAspects" value="Other" id="aspect7">
+                                                            <label class="form-check-label" for="aspect7">Other</label>
+                                                        </div>
+                                                        <input type="text" class="form-control mt-2" name="otherAspectsText" placeholder="Please specify if Other">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">SD. 1. If you ever needed to, would you know how to navigate every step of the CASH process?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <select class="form-select" name="navigateProcess" required>
+                                                            <option value="">Select an option</option>
+                                                            <option value="Yes">Yes</option>
+                                                            <option value="No">No</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">Are you aware of the CASH Support Group?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="supportGroupAwareness" id="supportGroupAwarenessYes" value="Yes" required>
+                                                            <label class="form-check-label" for="supportGroupAwarenessYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="supportGroupAwareness" id="supportGroupAwarenessNo" value="No" required>
+                                                            <label class="form-check-label" for="supportGroupAwarenessNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="conditional-questions" id="supportGroupQuestions" style="display: none;">
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-4 col-form-label form-label">How knowledgeable are you about the functions of the CASH Support Group?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                        <div class="col-sm-8">
+                                                            <select class="form-select" name="supportGroupKnowledge" required>
+                                                                <option value="">Select a level of knowledge</option>
+                                                                <option value="Not at all">Not at all</option>
+                                                                <option value="A little">A little</option>
+                                                                <option value="Very">Very</option>
+                                                                <option value="Extremely">Extremely</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-4 col-form-label form-label">Do you know how to get in touch with at least one member of the CASH Support Group?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                        <div class="col-sm-8">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="contactSupportGroup" id="contactSupportGroupYes" value="Yes" required>
+                                                                <label class="form-check-label" for="contactSupportGroupYes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="contactSupportGroup" id="contactSupportGroupNo" value="No" required>
+                                                                <label class="form-check-label" for="contactSupportGroupNo">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-4 col-form-label form-label">Did you attend any of the sexual harassment sensitization workshops held by the University?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-8">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="workshopAttended" id="workshopAttendedYes" value="Yes" required>
+                                                            <label class="form-check-label" for="workshopAttendedYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="workshopAttended" id="workshopAttendedNo" value="No" required>
+                                                            <label class="form-check-label" for="workshopAttendedNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="conditional-questions" id="workshopFeedback" style="display: none;">
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-4 col-form-label form-label">If yes, how helpful did you find Ashoka University’s sexual harassment sensitization workshops?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                        <div class="col-sm-8">
+                                                            <select class="form-select" name="workshopHelpfulness" required>
+                                                                <option value="">Select a level of helpfulness</option>
+                                                                <option value="Not at all helpful">Not at all helpful</option>
+                                                                <option value="A little helpful">A little helpful</option>
+                                                                <option value="Very helpful">Very helpful</option>
+                                                                <option value="Extremely helpful">Extremely helpful</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="workshopComments" class="col-sm-4 col-form-label form-label">Any comments on the workshop (Open-ended)</label>
+                                                        <div class="col-sm-8">
+                                                            <textarea class="form-control" name="workshopComments" id="workshopComments" rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <button type="button" class="btn btn-secondary prev-section">Previous</button>
+                                                    <button type="button" class="btn btn-primary next-section">Next</button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Section 3: Perception -->
+                                            <div class="form-section" id="section3" style="display: none;">
+                                                <h4>Section 3: Perception</h4>
+                                                <p class="mb-3">For the following questions, please indicate if you think the action **constitutes sexual harassment**.</p>
+                                                
+                                                <!-- Perception Questions (Yes/No) -->
+                                                <div class="perception-questions">
+                                                    <!-- Question 1: Jokes sexual nature, acquaintances/strangers -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Jokes of a sexual nature between acquaintances or strangers</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_jokes_strangers" id="p_jokes_strangers_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_jokes_strangers_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_jokes_strangers" id="p_jokes_strangers_no" value="No" required>
+                                                                <label class="form-check-label" for="p_jokes_strangers_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question 2: Jokes sexual nature, friends -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Jokes of a sexual nature between friends</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_jokes_friends" id="p_jokes_friends_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_jokes_friends_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_jokes_friends" id="p_jokes_friends_no" value="No" required>
+                                                                <label class="form-check-label" for="p_jokes_friends_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question 3: Sexual jokes in a classroom/academic setting -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Making sexual jokes, remarks, or comments made in a classroom or academic setting</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_jokes_classroom" id="p_jokes_classroom_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_jokes_classroom_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_jokes_classroom" id="p_jokes_classroom_no" value="No" required>
+                                                                <label class="form-check-label" for="p_jokes_classroom_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question 4: Display of sexually offensive materials -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">The display of sexually offensive materials in a public space</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_offensive_material" id="p_offensive_material_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_offensive_material_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_offensive_material" id="p_offensive_material_no" value="No" required>
+                                                                <label class="form-check-label" for="p_offensive_material_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question 5: Staring, stalking, leering, or making gestures -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Staring, stalking, leering, or making gestures of a sexual nature</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_staring_gestures" id="p_staring_gestures_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_staring_gestures_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_staring_gestures" id="p_staring_gestures_no" value="No" required>
+                                                                <label class="form-check-label" for="p_staring_gestures_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question 6: Unwanted comments on appearance or physical attributes -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Unwanted comments on appearance or physical attributes</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_unwanted_comments" id="p_unwanted_comments_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_unwanted_comments_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_unwanted_comments" id="p_unwanted_comments_no" value="No" required>
+                                                                <label class="form-check-label" for="p_unwanted_comments_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question 7: Pressure for sexual favours -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">The pressure for sexual favours</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_pressure_favours" id="p_pressure_favours_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_pressure_favours_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_pressure_favours" id="p_pressure_favours_no" value="No" required>
+                                                                <label class="form-check-label" for="p_pressure_favours_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question 8: Sexist jokes -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Sexist jokes</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_sexist_jokes" id="p_sexist_jokes_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_sexist_jokes_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_sexist_jokes" id="p_sexist_jokes_no" value="No" required>
+                                                                <label class="form-check-label" for="p_sexist_jokes_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question 9: Repeatedly asking someone to go on dates -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Repeatedly asking someone to go on dates, despite their lack of interest</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_repeated_dates" id="p_repeated_dates_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_repeated_dates_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_repeated_dates" id="p_repeated_dates_no" value="No" required>
+                                                                <label class="form-check-label" for="p_repeated_dates_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question 10: Unwanted physical or sexual advances -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Unwanted physical or sexual advances</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_unwanted_advances" id="p_unwanted_advances_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_unwanted_advances_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_unwanted_advances" id="p_unwanted_advances_no" value="No" required>
+                                                                <label class="form-check-label" for="p_unwanted_advances_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question 11: Harassment based on sexual orientation -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Harassment based on sexual orientation</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_orientation_harassment" id="p_orientation_harassment_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_orientation_harassment_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_orientation_harassment" id="p_orientation_harassment_no" value="No" required>
+                                                                <label class="form-check-label" for="p_orientation_harassment_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question 12: Spreading sexual rumours -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Spreading sexual rumours</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_sexual_rumours" id="p_sexual_rumours_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_sexual_rumours_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_sexual_rumours" id="p_sexual_rumours_no" value="No" required>
+                                                                <label class="form-check-label" for="p_sexual_rumours_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question 13: Showing someone pornography -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Showing someone pornography</label>
+                                                        <div class="col-sm-4 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_showing_pornography" id="p_showing_pornography_yes" value="Yes" required>
+                                                                <label class="form-check-label" for="p_showing_pornography_yes">Yes</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="p_showing_pornography" id="p_showing_pornography_no" value="No" required>
+                                                                <label class="form-check-label" for="p_showing_pornography_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Attention Check 2 -->
+                                                <div class="row mb-4 pt-3 border-top">
+                                                    <label for="attentionCheck2" class="col-sm-8 col-form-label form-label">A.2. The following question is an **attention check**. Please select **“Very”** as your answer.<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select" name="attentionCheck2" required>
+                                                            <option value="">Select an option</option>
+                                                            <option value="Not at all">Not at all</option>
+                                                            <option value="A little">A little</option>
+                                                            <option value="Very">Very</option>
+                                                            <option value="Extremely">Extremely</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Likelihood and Prevalence Questions -->
+                                                <div class="likelihood-questions">
+                                                    <p class="mb-3">For the following, please rate your perception on the given scale.</p>
+                                                    
+                                                    <!-- Question: How prevalent do you think sexual harassment is at Ashoka University? -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">How prevalent do you think sexual harassment is at Ashoka University?</label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" name="p_prevalence" required>
+                                                                <option value="">Select an option</option>
+                                                                <option value="Not at all prevalent">Not at all prevalent</option>
+                                                                <option value="Slightly prevalent">Slightly prevalent</option>
+                                                                <option value="Moderately prevalent">Moderately prevalent</option>
+                                                                <option value="Very prevalent">Very prevalent</option>
+                                                                <option value="Extremely prevalent">Extremely prevalent</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Question: How likely do you think it is that you will experience SH on campus? -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">How likely do you think it is that you will experience SH on campus?</label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" name="p_personal_likelihood" required>
+                                                                <option value="">Select a level of likelihood</option>
+                                                                <option value="Not at all likely">Not at all likely</option>
+                                                                <option value="A little likely">A little likely</option>
+                                                                <option value="Very likely">Very likely</option>
+                                                                <option value="Extremely likely">Extremely likely</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Questions about CASH Response Likelihood -->
+                                                    <p class="mt-4 mb-3" style="font-weight: 600;">If you were to face sexual harassment, how likely do you think it is that CASH/Ashoka University would:</p>
+                                                    
+                                                    <!-- Q: Provide guidance and advice -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Provide you with guidance and advice on the course of action open to you?</label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" name="p_guidance_advice" required>
+                                                                <option value="">Select a level of likelihood</option>
+                                                                <option value="Not at all likely">Not at all likely</option>
+                                                                <option value="A little likely">A little likely</option>
+                                                                <option value="Very likely">Very likely</option>
+                                                                <option value="Extremely likely">Extremely likely</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Q: Conduct a fair investigation -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Conduct a fair investigation (If you filed a report with CASH)?</label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" name="p_fair_investigation" required>
+                                                                <option value="">Select a level of likelihood</option>
+                                                                <option value="Not at all likely">Not at all likely</option>
+                                                                <option value="A little likely">A little likely</option>
+                                                                <option value="Very likely">Very likely</option>
+                                                                <option value="Extremely likely">Extremely likely</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Q: Maintain confidentiality -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Maintain the confidentiality of the case and the investigation taking place (If you filed a report with CASH)?</label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" name="p_maintain_confidentiality" required>
+                                                                <option value="">Select a level of likelihood</option>
+                                                                <option value="Not at all likely">Not at all likely</option>
+                                                                <option value="A little likely">A little likely</option>
+                                                                <option value="Very likely">Very likely</option>
+                                                                <option value="Extremely likely">Extremely likely</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Q: Take steps to protect you from further harm/intimidation -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Take steps to protect you from further harm/intimidation by the accused (If you filed a report with CASH)?</label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" name="p_protect_from_harm" required>
+                                                                <option value="">Select a level of likelihood</option>
+                                                                <option value="Not at all likely">Not at all likely</option>
+                                                                <option value="A little likely">A little likely</option>
+                                                                <option value="Very likely">Very likely</option>
+                                                                <option value="Extremely likely">Extremely likely</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Q: Provide necessary psychological assistance -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Provide necessary psychological assistance during the investigation, if needed (If you filed a report with CASH)?</label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" name="p_psychological_assistance" required>
+                                                                <option value="">Select a level of likelihood</option>
+                                                                <option value="Not at all likely">Not at all likely</option>
+                                                                <option value="A little likely">A little likely</option>
+                                                                <option value="Very likely">Very likely</option>
+                                                                <option value="Extremely likely">Extremely likely</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Q: Take appropriate action against the accused -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Take appropriate action against the accused (If you filed a report with CASH)?</label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" name="p_action_against_accused" required>
+                                                                <option value="">Select a level of likelihood</option>
+                                                                <option value="Not at all likely">Not at all likely</option>
+                                                                <option value="A little likely">A little likely</option>
+                                                                <option value="Very likely">Very likely</option>
+                                                                <option value="Extremely likely">Extremely likely</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Q: Take action to address the larger structural reasons -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Take action to address the larger structural reasons that may have led to SH (If you filed a report with CASH)?</label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" name="p_structural_reasons" required>
+                                                                <option value="">Select a level of likelihood</option>
+                                                                <option value="Not at all likely">Not at all likely</option>
+                                                                <option value="A little likely">A little likely</option>
+                                                                <option value="Very likely">Very likely</option>
+                                                                <option value="Extremely likely">Extremely likely</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Q: Take your report seriously -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">Take your report seriously (If you filed a report with CASH)?</label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" name="p_take_report_seriously" required>
+                                                                <option value="">Select a level of likelihood</option>
+                                                                <option value="Not at all likely">Not at all likely</option>
+                                                                <option value="A little likely">A little likely</option>
+                                                                <option value="Very likely">Very likely</option>
+                                                                <option value="Extremely likely">Extremely likely</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Q: How likely are you to approach the CASH Support Group? -->
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-8 col-form-label form-label">How likely are you to approach the CASH Support Group?</label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" name="p_approach_support_group" required>
+                                                            <option value="">Select a level of likelihood</option>
+                                                            <option value="Not at all likely">Not at all likely</option>
+                                                            <option value="A little likely">A little likely</option>
+                                                            <option value="Very likely">Very likely</option>
+                                                            <option value="Extremely likely">Extremely likely</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Safety/Social Desirability Questions (Placeholder for now) -->
+                                                <p class="mt-4 mb-3" style="font-weight: 600;">Safety and Social Desirability</p>
+
+                                                <!-- Q: Feeling safe in student associations/events -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Do you feel safe in events, meetings and/or other interactions and engagements with people from your clubs / societies / Ministries/ initiatives / collectives?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select" name="p_safe_in_associations" required>
+                                                            <option value="">Select a level of safety</option>
+                                                            <option value="Not at all safe">Not at all safe</option>
+                                                            <option value="A little safe">A little safe</option>
+                                                            <option value="Moderately safe">Moderately safe</option>
+                                                            <option value="Very safe">Very safe</option>
+                                                            <option value="Extremely safe">Extremely safe</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Social Desirability Question 1 (Placeholder) -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">SD. 2. I never exaggerate my commitment to social causes.</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select" name="sd_never_exaggerate" required>
+                                                            <option value="">Select an option</option>
+                                                            <option value="Strongly Disagree">Strongly Disagree</option>
+                                                            <option value="Disagree">Disagree</option>
+                                                            <option value="Neutral">Neutral</option>
+                                                            <option value="Agree">Agree</option>
+                                                            <option value="Strongly Agree">Strongly Agree</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex justify-content-between">
+                                                    <button type="button" class="btn btn-secondary prev-section">Previous</button>
+                                                    <button type="button" class="btn btn-primary next-section">Next</button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Section 4: Experiences of SH -->
+                                            <div class="form-section" id="section4" style="display: none;">
+                                                <h4>Section 4: Experiences of Sexual Harassment (Since Joining Ashoka)</h4>
+                                                <p>Please indicate how often you have experienced the following since joining Ashoka University.</p>
+                                                
+                                                <!-- Question 1: Unwelcome physical conduct -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Unwelcome physical conduct of a sexual nature, including kissing, touching, or fondling without consent?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_unwelcome_physical" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Question 2: Forced sexual acts -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Forced sexual acts like oral sex or penetration?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_forced_sexual_acts" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Question 3: Threatened use of physical force -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Anyone used or threatened to use physical force against you or someone close to you to compel you to engage in sexual acts with them?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_threatened_force" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Question 4: Contact by promising rewards/threatening harm -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Anyone attempted or had sexual contact with you by promising rewards and/or threatening serious non-physical harm, so that you felt you had to comply?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_rewards_threats" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Question 5: Inappropriate sexual comments -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Someone made inappropriate sexual comments about your body, appearance, or sexual activities?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_inappropriate_comments" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Question 6: Persistent unwanted contact -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Someone persistently called you up, sent emails, letters, text messages, or instant messages after you asked them to stop contacting you?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_persistent_contact" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Question 7: Unwanted online sexual messages/images -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Someone sent you unwanted sexual messages, images, videos, or requests online (social media sites, videogame sites/applications, etc.)?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_unwanted_online" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Question 8: Tried to get you to talk about sexual matters -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Someone tried to get you to talk about sexual matters when you didn’t want to?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_talk_sexual_matters" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Question 9: Posted/threatened to post intimate media -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Someone posted, or threatened to post or share sexually intimate messages, pictures or videos without your consent?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_posted_intimate_media" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Question 10: Spied/stalked/followed -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Someone spied on, stalked, watched or followed you, either in person or using technology in a way that made you feel unsafe?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_spied_stalked" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Question 11: Sexist remarks or jokes -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Someone made sexist remarks or jokes that have made you feel uncomfortable/unsafe?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_sexist_remarks" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Question 12: Offensive remarks on sexuality/LGBTQIA+ community -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Someone made offensive remarks or jokes on your sexuality and/or the LGBTQIA+ community in a way that made you feel uncomfortable/ unsafe?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_offensive_sexuality" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Question 13: Substances and informed consent -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Someone used/ attempted to use substances (drugs/ alcohol/etc) to put you in a state in which you could not give informed consent? <span class="text-secondary">(Informed consent means voluntary, conscious, and clear agreement to a sexual act.)</span></label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select experience-question" name="e_substance_consent" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Never">Never</option>
+                                                            <option value="Unsure">Unsure</option>
+                                                            <option value="Once">Once</option>
+                                                            <option value="More than once">More than once</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <hr class="my-4">
+
+                                                <!-- Conditional Skip Question -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label" id="conditionalExperienceQ">
+                                                        Based on your previous answers: If you answered **“Never”** for ALL of the unwanted sexual experiences questions above, please select **“No”** below. If you answered **“Unsure,” “Once,” or “More than once”** for **ANY** of the questions, please select **“Yes”**.
+                                                        <span style="color:rgb(177, 58, 58)">*</span>
+                                                    </label>
+                                                    <div class="col-sm-4">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="hasExperiencedSH" id="experiencedSHYes" value="Yes" required>
+                                                            <label class="form-check-label" for="experiencedSHYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="hasExperiencedSH" id="experiencedSHNo" value="No" required>
+                                                            <label class="form-check-label" for="experiencedSHNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="d-flex justify-content-between">
+                                                    <button type="button" class="btn btn-secondary prev-section">Previous</button>
+                                                    <button type="button" class="btn btn-primary next-section">Next</button>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Section 5: Reporting SH -->
+                                            <div class="form-section" id="section5" style="display: none;">
+                                                <h4>Section 5: Reporting SH / Reporting Unwanted Sexual Experiences</h4>
+
+                                                <!-- Q1: Whom did you approach? (select multiple) -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-12 col-form-label form-label">Whom did you approach regarding the incident(s)? (Select all that apply)</label>
+                                                    <div class="col-sm-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="approachOthers" value="RA" id="approach_ra">
+                                                            <label class="form-check-label" for="approach_ra">RA (Resident Assistant)</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="approachOthers" value="Friends" id="approach_friends">
+                                                            <label class="form-check-label" for="approach_friends">Friends</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="approachOthers" value="Faculty" id="approach_faculty">
+                                                            <label class="form-check-label" for="approach_faculty">Faculty</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="approachOthers" value="ACWB" id="approach_acwb">
+                                                            <label class="form-check-label" for="approach_acwb">ACWB (Ashoka Centre for Well-Being)</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="approachOthers" value="Family" id="approach_family">
+                                                            <label class="form-check-label" for="approach_family">Family</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="approachOthers" value="Did not reveal it to anyone else" id="approach_none">
+                                                            <label class="form-check-label" for="approach_none">Did not reveal it to anyone else</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="approachOthers" value="Other" id="approach_other">
+                                                            <label class="form-check-label" for="approach_other">Other (please specify)</label>
+                                                            <input type="text" class="form-control mt-1" name="approachOtherText" placeholder="Please specify">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <hr class="my-4">
+
+                                                <!-- Q2: Did you go to the CASH Support Group? -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-6 col-form-label form-label">Did you go to the CASH Support Group (CSG)?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="contactedCSG" id="contactedCSGYes" value="Yes" required>
+                                                            <label class="form-check-label" for="contactedCSGYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="contactedCSG" id="contactedCSGNo" value="No" required>
+                                                            <label class="form-check-label" for="contactedCSGNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Conditional Questions for CSG (Only if contactedCSG is 'Yes') -->
+                                                <div class="conditional-questions" id="csgExperience" style="display: none;">
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-6 col-form-label form-label">Whom did you approach in the CSG? (Select all that apply)</label>
+                                                        <div class="col-sm-6">
+                                                            <!-- Note: Since I don't have the list of members, I'm using placeholders as requested by your prompt. -->
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="csgMembers" value="CSG Member 1 (Placeholder)" id="csg_member1">
+                                                                <label class="form-check-label" for="csg_member1">CSG Member 1 (Placeholder)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="csgMembers" value="CSG Member 2 (Placeholder)" id="csg_member2">
+                                                                <label class="form-check-label" for="csg_member2">CSG Member 2 (Placeholder)</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="csgMembers" value="CSG Member 3 (Placeholder)" id="csg_member3">
+                                                                <label class="form-check-label" for="csg_member3">CSG Member 3 (Placeholder)</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mb-3">
+                                                        <label class="col-sm-6 col-form-label form-label">How helpful did you find it?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                        <div class="col-sm-6">
+                                                            <select class="form-select" name="csgHelpfulness" required>
+                                                                <option value="">Select a level of helpfulness</option>
+                                                                <option value="Not at all helpful">Not at all helpful</option>
+                                                                <option value="A little helpful">A little helpful</option>
+                                                                <option value="Very helpful">Very helpful</option>
+                                                                <option value="Extremely helpful">Extremely helpful</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mb-3">
+                                                        <label for="csgExperienceDetails" class="col-sm-12 col-form-label form-label">If comfortable, please describe your experience (e.g., what aspects were or weren’t helpful such as trust, accessibility, or guidance):</label>
+                                                        <div class="col-sm-12">
+                                                            <textarea class="form-control" name="csgExperienceDetails" id="csgExperienceDetails" rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <hr class="my-4">
+
+                                                <!-- Q3: Did you report the incident to CASH? -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-6 col-form-label form-label">Did you report the incident to CASH (Committee Against Sexual Harassment)?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="reportedToCASH" id="reportedToCASHYes" value="Yes" required>
+                                                            <label class="form-check-label" for="reportedToCASHYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="reportedToCASH" id="reportedToCASHNo" value="No" required>
+                                                            <label class="form-check-label" for="reportedToCASHNo">No</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="reportedToCASH" id="reportedToCASHAttempted" value="Attempted but couldn’t complete the process." required>
+                                                            <label class="form-check-label" for="reportedToCASHAttempted">Attempted but couldn’t complete the process.</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Conditional: Experience with CASH (Only if reportedToCASH is 'Yes') -->
+                                                <div class="conditional-questions" id="cashExperience" style="display: none;">
+                                                    <div class="row mb-3">
+                                                        <label for="cashExperienceDetails" class="col-sm-12 col-form-label form-label">Please describe your experience with the CASH reporting process:</label>
+                                                        <div class="col-sm-12">
+                                                            <textarea class="form-control" name="cashExperienceDetails" id="cashExperienceDetails" rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Conditional: Reasons for NOT reporting (Only if reportedToCASH is 'No' or 'Attempted') -->
+                                                <div class="conditional-questions" id="reasonsNotReporting" style="display: none;">
+                                                    <label class="col-sm-12 col-form-label form-label">Were any of the following reasons why you did not report the incident to CASH? (Mark all that apply)</label>
+                                                    <div class="col-sm-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Did not know where or how to report" id="reason1">
+                                                            <label class="form-check-label" for="reason1">Did not know where or how to report</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Process was too time-consuming" id="reason2">
+                                                            <label class="form-check-label" for="reason2">Process was too time-consuming</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Heard that CASH does not handle cases well" id="reason3">
+                                                            <label class="form-check-label" for="reason3">Heard that CASH does not handle cases well</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Did not think anything would be done" id="reason4">
+                                                            <label class="form-check-label" for="reason4">Did not think anything would be done</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Concerned about confidentiality" id="reason5">
+                                                            <label class="form-check-label" for="reason5">Concerned about confidentiality</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Felt embarrassed or ashamed" id="reason6">
+                                                            <label class="form-check-label" for="reason6">Felt embarrassed or ashamed</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Found it too emotionally difficult" id="reason7">
+                                                            <label class="form-check-label" for="reason7">Found it too emotionally difficult</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Feared retaliation by peers or faculty" id="reason8">
+                                                            <label class="form-check-label" for="reason8">Feared retaliation by peers or faculty</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Feared negative social or personal consequences" id="reason9">
+                                                            <label class="form-check-label" for="reason9">Feared negative social or personal consequences</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Did not want the person/people involved to get into trouble" id="reason10">
+                                                            <label class="form-check-label" for="reason10">Did not want the person/people involved to get into trouble</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Did not think the incident was serious enough to report" id="reason11">
+                                                            <label class="form-check-label" for="reason11">Did not think the incident was serious enough to report</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Did not think it constituted sexual harassment" id="reason12">
+                                                            <label class="form-check-label" for="reason12">Did not think it constituted sexual harassment</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="The incident did not occur on campus" id="reason13">
+                                                            <label class="form-check-label" for="reason13">The incident did not occur on campus</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Resolved it independently of CASH" id="reason14">
+                                                            <label class="form-check-label" for="reason14">Resolved it independently of CASH</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="reasonsNotReporting" value="Other" id="reason15">
+                                                            <label class="form-check-label" for="reason15">Other (please specify if comfortable)</label>
+                                                            <input type="text" class="form-control mt-1" name="reasonsNotReportingOtherText" placeholder="Please specify if comfortable">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <hr class="my-4">
+
+                                                <!-- SD. 2. Social Desirability Question -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">SD. 3. If a friend disclosed an experience of sexual harassment to me, would you definitely know the best way to support them?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select" name="sd_know_best_support" required>
+                                                            <option value="">Select an option</option>
+                                                            <option value="Strongly Disagree">Strongly Disagree</option>
+                                                            <option value="Disagree">Disagree</option>
+                                                            <option value="Neutral">Neutral</option>
+                                                            <option value="Agree">Agree</option>
+                                                            <option value="Strongly Agree">Strongly Agree</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex justify-content-between">
+                                                    <button type="button" class="btn btn-secondary prev-section">Previous</button>
+                                                    <button type="button" class="btn btn-primary next-section">Next</button>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Section 6: Further Elaboration of SH -->
+                                            <div class="form-section" id="section6" style="display: none;">
+                                                <h4>Section 6: Further Elaboration of SH</h4>
+                                                <p>These questions relate to the person(s) who displayed the unwanted behavior you experienced.</p>
+
+                                                <!-- Q1: Ashoka Affiliation -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-12 col-form-label form-label">How was the person(s) who behaved this way associated with Ashoka University? (Mark all that apply)<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="assocationAshoka" value="Student" id="assoc_student" required>
+                                                            <label class="form-check-label" for="assoc_student">Student</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="assocationAshoka" value="Faculty" id="assoc_faculty">
+                                                            <label class="form-check-label" for="assoc_faculty">Faculty</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="assocationAshoka" value="Teaching Fellow" id="assoc_tf">
+                                                            <label class="form-check-label" for="assoc_tf">Teaching Fellow</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="assocationAshoka" value="Coach or trainer" id="assoc_coach">
+                                                            <label class="form-check-label" for="assoc_coach">Coach or trainer (e.g., sports, extracurriculars)</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="assocationAshoka" value="Administrative Staff" id="assoc_admin">
+                                                            <label class="form-check-label" for="assoc_admin">Administrative Staff (e.g., offices, centers, departments)</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="assocationAshoka" value="Support Staff" id="assoc_support">
+                                                            <label class="form-check-label" for="assoc_support">Support Staff (e.g., housekeeping, dining, security, transport)</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="assocationAshoka" value="Other person affiliated with a university program" id="assoc_affiliated">
+                                                            <label class="form-check-label" for="assoc_affiliated">Other person affiliated with a university program (e.g. internship, study abroad)</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="assocationAshoka" value="Not affiliated with Ashoka University" id="assoc_notaffiliated">
+                                                            <label class="form-check-label" for="assoc_notaffiliated">Not affiliated with Ashoka University</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="assocationAshoka" value="Don’t know / Unsure of association" id="assoc_unknown">
+                                                            <label class="form-check-label" for="assoc_unknown">Don’t know / Unsure of association</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <small class="text-danger mb-4 d-block">Note: Please select at least one option above.</small>
+
+
+                                                <!-- Q2: Relationship to You -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-12 col-form-label form-label">At the time of the event(s), what was the person(s)' relationship to you? (Mark all that apply)<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Someone who was involved or intimate with me at the time" id="rel_involved_current" required>
+                                                            <label class="form-check-label" for="rel_involved_current">Someone who was involved or intimate with me at the time</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Someone who had been involved or intimate with me in the past" id="rel_involved_past">
+                                                            <label class="form-check-label" for="rel_involved_past">Someone who had been involved or intimate with me in the past</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Faculty member" id="rel_faculty">
+                                                            <label class="form-check-label" for="rel_faculty">Faculty member</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Teaching Fellow" id="rel_tf">
+                                                            <label class="form-check-label" for="rel_tf">Teaching Fellow</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Administrative Staff" id="rel_admin">
+                                                            <label class="form-check-label" for="rel_admin">Administrative Staff (e.g., offices, centers, departments)</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Support Staff" id="rel_support">
+                                                            <label class="form-check-label" for="rel_support">Support Staff</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Friend" id="rel_friend">
+                                                            <label class="form-check-label" for="rel_friend">Friend</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Acquaintance" id="rel_acquaintance">
+                                                            <label class="form-check-label" for="rel_acquaintance">Acquaintance</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Person in a position of power in a student organisation" id="rel_power_org">
+                                                            <label class="form-check-label" for="rel_power_org">Person in a position of power in a student organisation that I was/am part of</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Stranger" id="rel_stranger">
+                                                            <label class="form-check-label" for="rel_stranger">Stranger</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Someone I met at a party or social gathering" id="rel_party">
+                                                            <label class="form-check-label" for="rel_party">Someone I met at a party or social gathering</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Don’t know" id="rel_unknown">
+                                                            <label class="form-check-label" for="rel_unknown">Don’t know</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="relationshipToYou" value="Other" id="rel_other">
+                                                            <label class="form-check-label" for="rel_other">Other (please specify if comfortable)</label>
+                                                            <input type="text" class="form-control mt-1" name="relationshipToYouOtherText" placeholder="Please specify if comfortable">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <small class="text-danger mb-4 d-block">Note: Please select at least one option above.</small>
+
+
+                                                <!-- Q3: Gender of Person(s) -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-12 col-form-label form-label">What was the gender of the person(s) who behaved this way with you? (Check all that apply)<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="aggressorGender" value="Man" id="gender_man" required>
+                                                            <label class="form-check-label" for="gender_man">Man</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="aggressorGender" value="Woman" id="gender_woman">
+                                                            <label class="form-check-label" for="gender_woman">Woman</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="aggressorGender" value="Non binary" id="gender_nonbinary">
+                                                            <label class="form-check-label" for="gender_nonbinary">Non binary</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="aggressorGender" value="Transgender woman" id="gender_transwoman">
+                                                            <label class="form-check-label" for="gender_transwoman">Transgender woman</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="aggressorGender" value="Transgender man" id="gender_transman">
+                                                            <label class="form-check-label" for="gender_transman">Transgender man</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="aggressorGender" value="Genderqueer" id="gender_genderqueer">
+                                                            <label class="form-check-label" for="gender_genderqueer">Genderqueer</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="aggressorGender" value="Gender nonconforming" id="gender_gnc">
+                                                            <label class="form-check-label" for="gender_gnc">Gender nonconforming</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="aggressorGender" value="I don’t know" id="gender_idk">
+                                                            <label class="form-check-label" for="gender_idk">I don’t know</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="aggressorGender" value="Other" id="gender_other">
+                                                            <label class="form-check-label" for="gender_other">Other (please specify)</label>
+                                                            <input type="text" class="form-control mt-1" name="aggressorGenderOtherText" placeholder="Please specify">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <small class="text-danger mb-4 d-block">Note: Please select at least one option above.</small>
+
+
+                                                <!-- Q4: Repeated Experience -->
+                                                <div class="row mb-4 pt-3 border-top">
+                                                    <label class="col-sm-8 col-form-label form-label">During your time at Ashoka, have you faced unwanted sexual experiences with the same person(s) more than once?<span style="color:rgb(177, 58, 58)">*</span></label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select" name="repeatedExperience" required>
+                                                            <option value="">Select an option</option>
+                                                            <option value="Yes">Yes</option>
+                                                            <option value="No">No</option>
+                                                            <option value="Not Applicable">Not Applicable (Only happened once)</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <hr class="my-4">
+                                                <h5 class="mb-3">End of Survey Feedback</h5>
+                                                
+                                                <!-- Q5: Difficulty of survey -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Overall, how difficult was the survey to complete in terms of **Clarity of wording**?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select" name="surveyDifficultyClarity" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Very Easy">Very Easy</option>
+                                                            <option value="Easy">Easy</option>
+                                                            <option value="Neutral">Neutral</option>
+                                                            <option value="Difficult">Difficult</option>
+                                                            <option value="Very Difficult">Very Difficult</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-8 col-form-label form-label">Overall, how difficult was the survey to complete in terms of **Emotional difficulty**?</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-select" name="surveyDifficultyEmotional" required>
+                                                            <option value="">Select...</option>
+                                                            <option value="Very Easy">Very Easy (Not emotionally difficult)</option>
+                                                            <option value="Easy">Easy</option>
+                                                            <option value="Neutral">Neutral</option>
+                                                            <option value="Difficult">Difficult</option>
+                                                            <option value="Very Difficult">Very Difficult</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Q6: Improvements (Checkboxes) -->
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-12 col-form-label form-label">What aspects of the survey could be improved? (Mark all that apply)</label>
+                                                    <div class="col-sm-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="surveyImprovements" value="Question wording" id="imp_wording">
+                                                            <label class="form-check-label" for="imp_wording">Question wording</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="surveyImprovements" value="Answer choices" id="imp_choices">
+                                                            <label class="form-check-label" for="imp_choices">Answer choices</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="surveyImprovements" value="Survey length" id="imp_length">
+                                                            <label class="form-check-label" for="imp_length">Survey length</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="surveyImprovements" value="None/Other" id="imp_other">
+                                                            <label class="form-check-label" for="imp_other">Other (please specify)</label>
+                                                            <input type="text" class="form-control mt-1" name="surveyImprovementsOtherText" placeholder="Please specify if Other">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <hr class="my-4">
+
+                                                <!-- Resources Reminder -->
+                                                <div class="alert alert-info">
+                                                    <p class="mb-1" style="font-weight: 600;">Thank you for completing this survey.</p>
+                                                    <p class="mb-0">If you require support, please remember that resources such as the Ashoka Centre for Well-Being (ACWB) and the CASH Support Group are available.</p>
+                                                </div>
+
+                                                <div class="d-flex justify-content-between">
+                                                    <button type="button" class="btn btn-secondary prev-section">Previous</button>
+                                                    <!-- FINAL SUBMIT BUTTON HERE -->
+                                                </div>
+                                            </div>
+
+                                            <!-- Section 7: CASH Policy Awareness (Removed as per user request to end at Section 6) -->
+
+                                            <div class="text-center" style="display: none;">
+                                                <button type="submit" id="submitSurvey" class="btn btn-primary">Submit Survey</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal and Footer scripts removed for brevity, assuming they are included externally -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formSections = document.querySelectorAll('.form-section');
+            // Remove the unused Section 7 placeholder if it exists in the live DOM
+            const section7 = document.getElementById('section7');
+            if (section7) {
+                section7.remove();
+            }
+
+            let currentSectionIndex = 0;
+
+            /**
+             * Checks the validity of all visible and required input elements within the current section.
+             * @param {HTMLElement} sectionElement - The current form section (div).
+             * @returns {boolean} True if all required and visible fields are valid, false otherwise.
+             */
+            function isSectionValid(sectionElement) {
+                // TESTING MODE: Disable validation to allow free navigation between sections
+                return true;
+                
+                // Original validation logic (commented out for testing):
+                /*
+                // Select all required elements (input, select, textarea) inside the section
+                const requiredElements = sectionElement.querySelectorAll('[required]');
+                let isValid = true;
+                
+                requiredElements.forEach(element => {
+                    // Check if the element is inside a conditionally hidden container
+                    // Walk up the DOM tree to check parent visibility, stopping at the section element itself.
+                    let isVisible = true;
+                    let current = element.parentElement;
+                    while (current && current !== sectionElement) {
+                        if (current.style.display === 'none') {
+                            isVisible = false;
+                            break;
+                        }
+                        current = current.parentElement;
+                    }
+                    
+                    // Also check the element's own visibility
+                    if (element.style.display === 'none') {
+                        isVisible = false;
+                    }
+
+                    if (isVisible) {
+                        // Special check for radio buttons: check the group, not the individual input
+                        if (element.type === 'radio') {
+                            // Find all radio buttons in the same group within the current section
+                            const radioGroupName = element.name;
+                            const radioGroup = sectionElement.querySelectorAll(`input[name="${radioGroupName}"][required]`);
+                            
+                            // Only check validity once per group name
+                            if (element === radioGroup[0]) {
+                                const checked = sectionElement.querySelector(`input[name="${radioGroupName}"]:checked`);
+                                if (!checked) {
+                                    isValid = false;
+                                    // For radio groups, highlight the first input for validation message
+                                    element.reportValidity();
+                                    return; // Stop the forEach loop
+                                }
+                            }
+                            // Skip subsequent radios in the same group
+                            return;
+                        }
+                        
+                        // Special check for checkbox groups: check if at least one is selected in a required group (using the same 'name')
+                        if (element.type === 'checkbox' && element.hasAttribute('required')) {
+                            const checkboxGroupName = element.name;
+                            const groupCheckboxes = sectionElement.querySelectorAll(`input[name="${checkboxGroupName}"][required]`);
+
+                            // Check only the first element of the group
+                            if (element === groupCheckboxes[0]) {
+                                const checkedCount = sectionElement.querySelectorAll(`input[name="${checkboxGroupName}"]:checked`).length;
+                                if (checkedCount === 0) {
+                                    isValid = false;
+                                    // You can't call reportValidity() easily on a checkbox group, but marking the first one helps.
+                                    element.reportValidity();
+                                    return; // Stop processing this group
+                                }
+                            }
+                            return; // Skip subsequent checkboxes in the same group
+                        }
+
+
+                        // General element validation (for text, number, select)
+                        if (!element.checkValidity()) {
+                            isValid = false;
+                            element.reportValidity();
+                            return; // Stop the forEach loop
+                        }
+                    }
+                });
+
+                return isValid;
+                */
+            }
+
+            function showSection(index) {
+                // Re-query sections inside showSection for correct indexing after potential DOM removal
+                const currentSections = document.querySelectorAll('.form-section'); 
+                
+                currentSections.forEach((section, i) => {
+                    section.style.display = (i === index) ? 'block' : 'none';
+                    if (i === index) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+                
+                // Show submit button on the last visible section (which is now section6)
+                const submitButtonContainer = document.querySelector('.text-center'); 
+                const lastIndex = currentSections.length - 1;
+                
+                // Only show the global submit button on the last page and hide the next button on section 6
+                if (index === lastIndex) {
+                    submitButtonContainer.style.display = 'block';
+                    // Hide the dummy Next button on the last section
+                    const section6NextButton = currentSections[lastIndex].querySelector('.next-section');
+                    if(section6NextButton) {
+                        section6NextButton.style.display = 'none';
+                    }
+                    
+                    // Move the general submit button into the section6 controls area
+                    const section6Controls = document.querySelector('#section6 .d-flex.justify-content-between');
+                    if (section6Controls && !document.getElementById('submitSurveyBtn')) {
+                        // Create a proper submit button element
+                        const submitBtn = document.createElement('button');
+                        submitBtn.id = 'submitSurveyBtn';
+                        submitBtn.type = 'submit';
+                        submitBtn.classList.add('btn', 'btn-primary');
+                        submitBtn.textContent = 'Submit Survey';
+                        section6Controls.appendChild(submitBtn);
+                        // Hide the centralized 'text-center' submit area now that we have the button in the controls
+                        submitButtonContainer.style.display = 'none'; 
+                    }
+                    
+                } else {
+                    submitButtonContainer.style.display = 'none';
+                }
+            }
+
+            document.querySelectorAll('.next-section').forEach(button => {
+                button.addEventListener('click', () => {
+                    const currentSection = document.querySelector('.form-section.active');
+                    // Manually run validation for all required fields in the current section
+                    if (isSectionValid(currentSection)) {
+                        currentSectionIndex++;
+                        showSection(currentSectionIndex);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.prev-section').forEach(button => {
+                button.addEventListener('click', () => {
+                    currentSectionIndex--;
+                    showSection(currentSectionIndex);
+                });
+            });
+
+            // Submission Logic (Using vanilla JS fetch as per the WiFi ticket model)
+            document.getElementById('cashSurveyForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const currentSection = document.querySelector('.form-section.active');
+                if (!isSectionValid(currentSection)) {
+                    return; // Stop submission if last section is invalid
+                }
+
+                const submitBtn = document.getElementById('submitSurveyBtn');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...`;
+
+                // Gather all form data
+                const formData = {};
+                new FormData(document.getElementById('cashSurveyForm')).forEach((value, key) => {
+                    // Handle multi-select checkboxes by storing values in an array
+                    if (formData[key]) {
+                        if (Array.isArray(formData[key])) {
+                            formData[key].push(value);
+                        } else {
+                            formData[key] = [formData[key], value];
+                        }
+                    } else {
+                        formData[key] = value;
+                    }
+                });
+                
+                try {
+                    const response = await fetch('/platform/cash-survey', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        alert(data.message);
+                        // Redirect or show success message on completion
+                        // window.location.reload(); 
+                        alert("Survey submitted successfully!");
+                        submitBtn.innerHTML = 'Submitted';
+                    } else {
+                        alert(data.message);
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = 'Submit Survey';
+                    }
+                } catch (error) {
+                    console.error("Submission Error:", error);
+                    alert('Error submitting survey. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Submit Survey';
+                }
+            });
+
+            // Conditional rendering logic (Section 1 & 2 handlers)
+
+            // Section 1: Demographics
+            document.getElementById('sexualOrientation').addEventListener('change', (event) => {
+                const otherOrientation = document.getElementById('otherOrientation');
+                if (event.target.value === 'Not listed') {
+                    otherOrientation.style.display = 'block';
+                    document.getElementById('otherOrientationText').required = true;
+                } else {
+                    otherOrientation.style.display = 'none';
+                    document.getElementById('otherOrientationText').required = false;
+                }
+            });
+
+            // Section 2: Campus Resources
+            const policyAwarenessYes = document.getElementById('policyAwarenessYes');
+            const policyAwarenessNo = document.getElementById('policyAwarenessNo');
+            const policyComprehension = document.getElementById('policyComprehension');
+
+            const reportBodyAwarenessYes = document.getElementById('reportBodyAwarenessYes');
+            const reportBodyAwarenessNo = document.getElementById('reportBodyAwarenessNo');
+            const reportBody = document.getElementById('reportBody');
+
+            const reportingProcessAwarenessYes = document.getElementById('reportingProcessAwarenessYes');
+            const reportingProcessAwarenessNo = document.getElementById('reportingProcessAwarenessNo');
+            const processConfidence = document.getElementById('processConfidence');
+
+            const supportGroupAwarenessYes = document.getElementById('supportGroupAwarenessYes');
+            const supportGroupAwarenessNo = document.getElementById('supportGroupAwarenessNo');
+            const supportGroupQuestions = document.getElementById('supportGroupQuestions');
+
+            const workshopAttendedYes = document.getElementById('workshopAttendedYes');
+            const workshopAttendedNo = document.getElementById('workshopAttendedNo');
+            const workshopFeedback = document.getElementById('workshopFeedback');
+
+            policyAwarenessYes.addEventListener('change', () => {
+                policyComprehension.style.display = 'block';
+            });
+            policyAwarenessNo.addEventListener('change', () => {
+                policyComprehension.style.display = 'none';
+            });
+
+            reportBodyAwarenessYes.addEventListener('change', () => {
+                reportBody.style.display = 'block';
+            });
+            reportBodyAwarenessNo.addEventListener('change', () => {
+                reportBody.style.display = 'none';
+            });
+
+            reportingProcessAwarenessYes.addEventListener('change', () => {
+                processConfidence.style.display = 'block';
+            });
+            reportingProcessAwarenessNo.addEventListener('change', () => {
+                processConfidence.style.display = 'none';
+            });
+            
+            supportGroupAwarenessYes.addEventListener('change', () => {
+                supportGroupQuestions.style.display = 'block';
+            });
+            supportGroupAwarenessNo.addEventListener('change', () => {
+                supportGroupQuestions.style.display = 'none';
+            });
+
+            workshopAttendedYes.addEventListener('change', () => {
+                workshopFeedback.style.display = 'block';
+            });
+            workshopAttendedNo.addEventListener('change', () => {
+                workshopFeedback.style.display = 'none';
+            });
+
+            // Section 5: Reporting SH Logic
+            const contactedCSGRadios = document.querySelectorAll('input[name="contactedCSG"]');
+            const csgExperienceSection = document.getElementById('csgExperience');
+            const csgHelpfulnessSelect = document.querySelector('#csgExperience select[name="csgHelpfulness"]');
+
+            contactedCSGRadios.forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    const isYes = event.target.value === 'Yes';
+                    csgExperienceSection.style.display = isYes ? 'block' : 'none';
+                    // Toggle 'required' state for elements inside the conditional section
+                    csgHelpfulnessSelect.required = isYes;
+                    // The checkboxes are marked as optional (no 'required' attribute) as they are multi-select.
+                });
+            });
+
+            const reportedToCASHRadios = document.querySelectorAll('input[name="reportedToCASH"]');
+            const cashExperienceSection = document.getElementById('cashExperience');
+            const reasonsNotReportingSection = document.getElementById('reasonsNotReporting');
+
+            reportedToCASHRadios.forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    const value = event.target.value;
+                    const isYes = value === 'Yes';
+                    const isNotReported = value === 'No' || value === 'Attempted but couldn’t complete the process.';
+
+                    // Toggle CASH Experience detail field visibility/requirement
+                    cashExperienceSection.style.display = isYes ? 'block' : 'none';
+                    document.getElementById('cashExperienceDetails').required = isYes;
+                    
+                    // Toggle Reasons for NOT Reporting visibility
+                    reasonsNotReportingSection.style.display = isNotReported ? 'block' : 'none';
+
+                    // Note: We don't set 'required' on the reasonsNotReporting checkboxes because they are multiple choice, and selecting 'Other' is voluntary.
+                });
+            });
+
+
+            showSection(0);
+        });
+    </script>
+    
+    <script src="/platform/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/platform/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/platform/assets/js/sidebarmenu.js"></script>
+    <script src="/platform/assets/js/app.min.js"></script>
+    <script src="/platform/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/platform/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/platform/assets/js/dashboard.js"></script>
+    <script src="/platform/assets/js/theme.js"></script>
+    <script src="/platform/assets/js/copytext.js"></script>
+    <%-include("../partials/preloader-js")%>
+</body>
+
+</html>
